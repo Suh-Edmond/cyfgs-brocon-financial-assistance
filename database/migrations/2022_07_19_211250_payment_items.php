@@ -14,14 +14,14 @@ class PaymentItems extends Migration
     public function up()
     {
         Schema::create('payment_items', function (Blueprint $table) {
-            $table->uuid('id')->primary();
+            $table->id();
             $table->string('name');
             $table->double('amount');
             $table->boolean('complusory');
             $table->timestamps();
             $table->mediumText('created_by')->nullable(true);
             $table->mediumText('updated_by')->nullable(true);
-            $table->string('payment_category_id');
+            $table->unsignedBigInteger('payment_category_id');
 
             $table->foreign('payment_category_id')->references('id')->on('payment_categories');
         });

@@ -4,9 +4,15 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Faker\Generator as Faker;
 use App\Models\Organisation;
+use Ramsey\Uuid\Uuid;
 
 class UserSeeder extends Seeder
 {
+    public $organisation;
+    public function __construct()
+    {
+        $this->organisation = Organisation::latest()->first();
+    }
 
     /**
      * Run the database seeds.
@@ -16,7 +22,6 @@ class UserSeeder extends Seeder
     public function run(Faker $faker)
     {
         DB::table('users')->insert([
-            'id' => "4929bb93-e16e-41c8-a4bb-0724fccd352d",
             'name' => $faker->name,
             'email' => $faker->email(),
             'telephone' => $faker->phoneNumber(9),
@@ -26,7 +31,7 @@ class UserSeeder extends Seeder
             'gender' => $faker->randomElement(['MALE', 'FEMALE']),
             'created_by' => $faker->name,
             'updated_by' => $faker->name,
-            'organisation_id' =>  "1ed5ddb4-b0f9-4cea-a3bf-7849b27f4302"
+            'organisation_id' =>  $this->organisation->id
         ]);
     }
 }

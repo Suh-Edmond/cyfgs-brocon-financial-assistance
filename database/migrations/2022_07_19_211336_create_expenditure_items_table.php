@@ -14,7 +14,7 @@ class CreateExpenditureItemsTable extends Migration
     public function up()
     {
         Schema::create('expenditure_items', function (Blueprint $table) {
-            $table->uuid('id')->primary();
+            $table->id();
             $table->string('name');
             $table->double('amount');
             $table->string('scan_picture');//receipt
@@ -24,7 +24,7 @@ class CreateExpenditureItemsTable extends Migration
             $table->timestamps();
             $table->mediumText('created_by')->nullable(true);
             $table->mediumText('updated_by')->nullable(true);
-            $table->string('expenditure_category_id');
+            $table->unsignedBigInteger('expenditure_category_id');
 
             $table->foreign('expenditure_category_id')->references('id')->on('expenditure_categories');
         });

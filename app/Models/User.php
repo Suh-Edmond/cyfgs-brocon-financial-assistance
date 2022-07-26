@@ -2,9 +2,7 @@
 
 namespace App\Models;
 
-use Laravel\Sanctum\HasApiTokens;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Traits\GenerateUuid;
@@ -12,7 +10,7 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasRoles, HasFactory, Notifiable, GenerateUuid;
+    use HasRoles, Notifiable;
 
 
 
@@ -32,9 +30,6 @@ class User extends Authenticatable
         'organisation_id'
     ];
 
-    public $incrementing = false;
-    public $keyType = 'string';
-    public $primaryKey = 'uuid';
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -53,6 +48,10 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function guardName(){
+        return "api";
+    }
+
     public function hasUserSaving(){
         return $this->hasMany(UserSaving::class);
     }
@@ -65,7 +64,4 @@ class User extends Authenticatable
         return $this->belongsTo(Organisation::class);
     }
 
-    public function roles() {
-        return $this->hasMany(Role::class);
-    }
 }

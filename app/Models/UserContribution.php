@@ -7,7 +7,7 @@ use App\Traits\GenerateUuid;
 
 class UserContribution extends Model
 {
-    use GenerateUuid;
+
     protected $fillable = [
         'amount_deposited',
         'comment',
@@ -18,16 +18,15 @@ class UserContribution extends Model
         'payment_item_id'
     ];
 
-    public $incrementing = false;
-   public $keyType = 'string';
-   public $primaryKey = 'uuid';
 
-   public function user() {
+    public function user()
+    {
         return $this->belongsTo(User::class);
-   }
+    }
 
 
-   public function paymentItem() {
-    return $this->belongsTo(PaymentItem::class);
-   }
+    public function paymentItem()
+    {
+        return $this->belongsTo(PaymentItem::class);
+    }
 }

@@ -8,4 +8,5 @@ class Roles {
     public const TREASURER = 'TREASURER_ROLE';
     public const AUDITOR = 'AUDITOR_ROLE';
     public const USER_ROLE  = 'USER_ROLE';
+    public const ROLE_GUARD = 'api';
 }

@@ -7,7 +7,7 @@ use App\Traits\GenerateUuid;
 
 class UserSaving extends Model
 {
-    use GenerateUuid;
+
     protected $fillable = [
         'amount_deposited',
         'comment',
@@ -15,9 +15,6 @@ class UserSaving extends Model
         'approve'
     ];
 
-    public $incrementing = false;
-   public $keyType = 'string';
-   public $primaryKey = 'uuid';
 
 
    public function user(){

@@ -14,7 +14,7 @@ class CreateUserContributionsTable extends Migration
     public function up()
     {
         Schema::create('user_contributions', function (Blueprint $table) {
-            $table->uuid('id')->primary();
+            $table->id();
             $table->string('code')->unique();
             $table->string('scan_picture');
             $table->longText('comment');
@@ -24,8 +24,8 @@ class CreateUserContributionsTable extends Migration
             $table->timestamps();
             $table->mediumText('created_by')->nullable(true);
             $table->mediumText('updated_by')->nullable(true);
-            $table->string('user_id');
-            $table->string('payment_item_id');
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('payment_item_id');
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('payment_item_id')->references('id')->on('payment_items')->onDelete('cascade');

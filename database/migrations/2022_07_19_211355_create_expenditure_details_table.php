@@ -14,7 +14,7 @@ class CreateExpenditureDetailsTable extends Migration
     public function up()
     {
         Schema::create('expenditure_details', function (Blueprint $table) {
-            $table->uuid('id')->primary();
+            $table->id();
             $table->double('amount_given');
             $table->double('amount_spent');
             $table->string('name');
@@ -23,7 +23,7 @@ class CreateExpenditureDetailsTable extends Migration
             $table->timestamps();
             $table->mediumText('created_by')->nullable(true);
             $table->mediumText('updated_by')->nullable(true);
-            $table->string('expenditure_item_id');
+            $table->unsignedBigInteger('expenditure_item_id');
 
             $table->foreign('expenditure_item_id')->references('id')->on('expenditure_items');
         });

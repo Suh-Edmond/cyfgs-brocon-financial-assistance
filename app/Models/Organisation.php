@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Organisation extends Model
 {
-    use GenerateUuid;
+
     protected $fillable = [
         'name',
         'description',
@@ -18,9 +18,7 @@ class Organisation extends Model
         'salutation',
     ];
 
-    public $incrementing = false;
-    public $keyType = 'string';
-    public $primaryKey = 'uuid';
+
 
     public function expenditureCategory() {
         return $this->hasMany(ExpenditureCategory::class);

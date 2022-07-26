@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ExpenditureDetail extends Model
 {
-    use GenerateUuid;
+
     protected $fillable = [
         'amount_given',
         'amount_spent',
@@ -17,9 +17,7 @@ class ExpenditureDetail extends Model
         'expenditure_item_id'
     ];
 
-    public $incrementing = false;
-    public $keyType = 'string';
-    public $primaryKey = 'uuid';
+
 
 
     public function expenditureItem() {

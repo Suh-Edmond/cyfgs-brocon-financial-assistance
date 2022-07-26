@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class IncomeActivity extends Model
 {
-    use GenerateUuid;
+
     protected $fillable = [
         'name',
         'description',
@@ -18,9 +18,7 @@ class IncomeActivity extends Model
         'approve'
     ];
 
-    public $incrementing = false;
-    public $keyType = 'string';
-    public $primaryKey = 'uuid';
+
 
     public function organisation() {
         return $this->belongsTo(Organisation::class);
