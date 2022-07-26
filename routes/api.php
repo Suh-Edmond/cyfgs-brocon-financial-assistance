@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('protected/roles')->group(function () {
     Route::post('', [RoleController::class, 'addUserRole']);
-    Route::delete('/{role_id}/users/{user_id}', [RoleController::class, 'removeUserRole']);
     Route::get('', [RoleController::class, 'getAllRoles']);
-    Route::get('users/{user_id}', [RoleController::class, 'getUserRoles']);
+    Route::get('/users/{user_id}', [RoleController::class, 'getUserRoles']);
+    Route::delete('/{role_id}/users/{user_id}', [RoleController::class, 'removeUserRole']);
 });

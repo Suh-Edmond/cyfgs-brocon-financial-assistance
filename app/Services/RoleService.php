@@ -22,13 +22,13 @@ class RoleService implements RoleInterface {
     {
         $user = User::findOrFail($user_id);
         $deleted = Role::find($role_id);
-        return $user->removeRole($deleted);
+        $user->removeRole($deleted);
     }
 
     public function getUserRoles($user_id)
     {
         $user = User::findOrFail($user_id);
-        return $user->roles->toArray();
+        return $user->roles;
     }
 
     public function getAllRoles() {
