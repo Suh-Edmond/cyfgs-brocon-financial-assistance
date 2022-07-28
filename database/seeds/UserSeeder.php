@@ -8,10 +8,13 @@ use Ramsey\Uuid\Uuid;
 
 class UserSeeder extends Seeder
 {
-    public $organisation;
+    private $organisation_last;
+    private $ogranisation_first;
     public function __construct()
     {
-        $this->organisation = Organisation::latest()->first();
+        $this->organisation_last = Organisation::latest()->first();
+        $this->ogranisation_first = Organisation::first();
+
     }
 
     /**
@@ -21,17 +24,19 @@ class UserSeeder extends Seeder
      */
     public function run(Faker $faker)
     {
-        DB::table('users')->insert([
-            'name' => $faker->name,
-            'email' => $faker->email(),
-            'telephone' => $faker->phoneNumber(9),
-            'password' => $faker->password(6),
-            'address' => $faker->address(),
-            'occupation' => $faker->sentence(5),
-            'gender' => $faker->randomElement(['MALE', 'FEMALE']),
-            'created_by' => $faker->name,
-            'updated_by' => $faker->name,
-            'organisation_id' =>  $this->organisation->id
-        ]);
+        for($i = 0; $i < 100; $i++){
+            DB::table('users')->insert([
+                'name' => $faker->name,
+                'email' => $faker->email(),
+                'telephone' => $faker->phoneNumber(9),
+                'password' => $faker->password(6),
+                'address' => $faker->address(),
+                'occupation' => $faker->sentence(5),
+                'gender' => $faker->randomElement(['MALE', 'FEMALE']),
+                'created_by' => $faker->name,
+                'updated_by' => $faker->name,
+                'organisation_id' =>  $faker->randomElement([$this->organisation_last->id, $this->ogranisation_first->id])
+            ]);
+        }
     }
 }

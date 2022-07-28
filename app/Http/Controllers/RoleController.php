@@ -6,6 +6,7 @@ use App\Services\RoleService;
 use Illuminate\Http\Request;
 use App\Http\Requests\AddUserRoleRequest;
 use App\Http\Resources\RoleResource;
+use Illuminate\Support\Str;
 
 class RoleController extends Controller
 {
@@ -18,6 +19,7 @@ class RoleController extends Controller
 
     public function addUserRole(AddUserRoleRequest $request)
     {
+        (int)Str::uuid($request->role_id)->toString();
         $this->roleService->addUserRole($request->user_id, $request->role_id);
 
         return response()->json(['message' => "success"], 201);
@@ -26,6 +28,7 @@ class RoleController extends Controller
 
     public function getAllRoles()
     {
+
         $roles = $this->roleService->getAllRoles();
 
         return response()->json(["data" => RoleResource::collection($roles)], 200);

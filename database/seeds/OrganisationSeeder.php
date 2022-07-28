@@ -22,5 +22,15 @@ class OrganisationSeeder extends Seeder
             'logo' => $faker->name,
             'salutation' => $faker->sentence
         ]);
+
+        Organisation::create([
+            'name' => $faker->name,
+            'email' => $faker->email,
+            'telephone' => $faker->phoneNumber,
+            'address' => $faker->address,
+            'description' => $faker->sentence,
+            'logo' => $faker->name,
+            'salutation' => $faker->sentence
+        ]);
     }
 }

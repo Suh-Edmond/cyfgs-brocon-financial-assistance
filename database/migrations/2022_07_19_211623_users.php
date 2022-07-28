@@ -17,7 +17,7 @@ class Users extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique()->nullable(true);
-            $table->string('telephone')->nullable(true);
+            $table->string('telephone')->unique(true);
             $table->timestamp('email_verified_at')->nullable(true);
             $table->string('password');
             $table->string('gender');
@@ -27,7 +27,7 @@ class Users extends Migration
             $table->timestamps();
             $table->mediumText('created_by')->nullable(true);
             $table->mediumText('updated_by')->nullable(true);
-            $table->unsignedBigInteger('organisation_id');
+            $table->unsignedBigInteger('organisation_id')->nullable(true);
 
             $table->foreign('organisation_id')->references('id')->on('organisations');
         });

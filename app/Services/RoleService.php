@@ -13,9 +13,8 @@ class RoleService implements RoleInterface {
     {
         $user = User::findOrFail($user_id);
         $assignRole = Role::find($role_id);
-        if($user != null){
-            $user->assignRole($assignRole);
-        }
+        $user->assignRole($assignRole);
+
     }
 
     public function removeRole($user_id, $role_id)

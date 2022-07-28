@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Str;
 
 class RoleResource extends JsonResource
 {
@@ -15,7 +16,7 @@ class RoleResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id' => $this->id,
+            'id' => Str::uuid($this->id),
             'name' =>  $this->name,
             'guard_name' => $this->guard_name,
             'created_at'=> $this->created_at,

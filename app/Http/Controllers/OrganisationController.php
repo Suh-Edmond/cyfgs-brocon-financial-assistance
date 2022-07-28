@@ -2,84 +2,68 @@
 
 namespace App\Http\Controllers;
 
-use App\Organisation;
-use Illuminate\Http\Request;
+use App\Http\Requests\CreateOrganisationRequest;
+use App\Http\Requests\UpdateOrganisationRequest;
+use App\Services\OrganisationService;
+use App\Http\Resources\OrganisationResource;
 
 class OrganisationController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    private $organisation_service;
+
+    public function __construct(OrganisationService $organisation_service)
     {
-        //
+        $this->organisation_service = $organisation_service;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+
+
+    public function createOrganisation(CreateOrganisationRequest $request)
     {
-        //
+        $this->organisation_service->createOrganisation($request);
+
+        return response()->json(['message' => 'success', 'status' => '201'], 201);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+
+    public function getOrganisation($id)
     {
-        //
+        $organisation = $this->organisation_service->getOrganisation($id);
+
+        return response()->json(['data' => new OrganisationResource($organisation)], 200);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Organisation  $organisation
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Organisation $organisation)
+
+
+
+    public function getOrganisationInfo()
     {
-        //
+        $organisation = $this->organisation_service->getOrganisationInfo();
+
+        return response()->json(['data' => new OrganisationResource($organisation)], 200);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Organisation  $organisation
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Organisation $organisation)
+
+    public function getOrganisations()
     {
-        //
+        $organisations = $this->organisation_service->getOrganisations();
+
+        return response()->json(['data' => OrganisationResource::collection($organisations)], 200);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Organisation  $organisation
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Organisation $organisation)
+
+    public function updateOgransation(UpdateOrganisationRequest $request, $id)
     {
-        //
+        $this->organisation_service->updatedOrganisation($request, $id);
+
+        return response()->json(['message' => 'success', 'status' => '204'], 204);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Organisation  $organisation
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Organisation $organisation)
+
+    public function deleteOrganisation($id)
     {
-        //
+        $this->organisation_service->deleteOgranisation($id);
+
+        return response()->json(['message' => 'success', 'status' => '204'], 204);
     }
 }

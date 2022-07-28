@@ -259,6 +259,11 @@ class RoleAndPermissionSeeder extends Seeder
             'guard_name' => 'api'
         ]);
 
+        $user = Role::create([
+            'name' => Roles::USER,
+            'guard_name' => 'api'
+        ]);
+
 
         $adminRole->givePermissionTo([
             Permissions::CAN_DELETE_ORGANISATION,
