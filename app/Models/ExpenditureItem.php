@@ -11,10 +11,10 @@ class ExpenditureItem extends Model
     protected $fillable = [
         'name',
         'amount',
-        'scan_picture',
         'comment',
         'approve',
         'venue',
+        'date',
         'expenditure_category_id'
     ];
 
@@ -22,5 +22,11 @@ class ExpenditureItem extends Model
 
     public function expenditureDetail() {
         return $this->hasMany(ExpenditureDetail::class);
+    }
+
+
+    public function expenditureCategory()
+    {
+        return $this->belongsTo(ExpenditureCategory::class);
     }
 }

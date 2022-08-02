@@ -2,84 +2,62 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ExpenditureItem;
-use Illuminate\Http\Request;
+use App\Http\Requests\ExpenditureItemRequest;
+use App\Http\Resources\ExpenditureItemResource;
+use App\Services\ExpenditureItemService;
 
 class ExpenditureItemController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+
+    private $expenditure_item_service;
+
+
+    public function __construct(ExpenditureItemService $expenditure_item_service)
     {
-        //
+        $this->expenditure_item_service = $expenditure_item_service;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+
+
+
+    public function getExpenditureItems($expenditure_category_id)
     {
-        //
+        $items = $this->expenditure_item_service->getExpenditureItems($expenditure_category_id);
+
+        return response()->json(['data', ExpenditureItemResource::collection($items)], 200);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+
+    public function createExpenditureItem(ExpenditureItemRequest $request, $expenditure_category_id)
     {
-        //
+        $this->expenditure_item_service->createExpenditureItem($request, $expenditure_category_id);
+
+        return response()->json(['message' => 'success', 'status' => '201'], 201);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\ExpenditureItem  $expenditureItem
-     * @return \Illuminate\Http\Response
-     */
-    public function show(ExpenditureItem $expenditureItem)
+
+
+    public function getExpenditureItem($expenditure_category_id, $id)
     {
-        //
+        $item = $this->expenditure_item_service->getExpenditureItem($id, $expenditure_category_id);
+
+        return response()->json(['data', new ExpenditureItemResource($item)], 200);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\ExpenditureItem  $expenditureItem
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(ExpenditureItem $expenditureItem)
+
+
+    public function updateExpenditureItem(ExpenditureItemRequest $request, $expenditure_category_id, $id)
     {
-        //
+        $this->expenditure_item_service->updateExpenditureItem($request, $id, $expenditure_category_id);
+
+        return response()->json(['message' => 'success', 'status' => '204'], 204);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\ExpenditureItem  $expenditureItem
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, ExpenditureItem $expenditureItem)
-    {
-        //
-    }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\ExpenditureItem  $expenditureItem
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(ExpenditureItem $expenditureItem)
+    public function deleteExpenditureItem($expenditure_category_id, $id)
     {
-        //
+        $this->expenditure_item_service->deleteExpenditureItem($id, $expenditure_category_id);
+
+        return response()->json(['message' => 'success', 'status' => '204'], 204);
     }
 }

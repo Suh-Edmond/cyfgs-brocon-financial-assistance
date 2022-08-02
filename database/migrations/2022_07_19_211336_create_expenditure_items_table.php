@@ -21,6 +21,7 @@ class CreateExpenditureItemsTable extends Migration
             $table->boolean('approve')->default(false);
             $table->text('comment');
             $table->string('venue');
+            $table->date('date');
             $table->timestamps();
             $table->mediumText('created_by')->nullable(true);
             $table->mediumText('updated_by')->nullable(true);
