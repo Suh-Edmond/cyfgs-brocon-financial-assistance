@@ -13,9 +13,6 @@ class PaymentCategoryService implements PaymentCategoryInterface {
     public function createPaymentCategory($request, $id)
     {
         $organisation_id = Organisation::findOrFail($id);
-        if(!$organisation_id){
-            return response()->json(['message' => 'organisation id not found', 'status'=> "failed"], 404);
-        }
         PaymentCategory::created([
             'name'              => $request->name,
             'description'       =>$request->description,
@@ -31,7 +28,7 @@ class PaymentCategoryService implements PaymentCategoryInterface {
                             ->where('payment_categories.id', $id)
                             ->first();
         if(! $updated){
-            throw ResourceNotFoundException(['message' => 'PaymentCategory not found', 'status'=> '404'], 404);
+            return response()->json(['message' => 'PaymentCategory not found', 'status'=> '404'], 404);
         }
         $updated->update([
             'name'          => $request->name,
@@ -43,27 +40,40 @@ class PaymentCategoryService implements PaymentCategoryInterface {
     {
         $payment_categories = PaymentCategory::where('organisation_id', $organisation_id)->get();
 
-        return $payment_categories;
+        return $payment_categories->toArray();
     }
 
     public function getPaymentCategory($id, $organisation_id)
     {
-        $payment_categories = DB::table('payment_categories')
+
+        $payment_category = $this->findPaymentCategory($id, $organisation_id);
+        if(!$payment_category){
+            return response()->json(['message' => 'PaymentCategory not found', 'status'=> '404'], 404);
+        }
+
+        return $payment_category;
+    }
+
+    public function deletePaymentCategory($id, $organisation_id)
+    {
+        $payment_category = $this->findPaymentCategory($id, $organisation_id);
+
+        if(!$payment_category){
+           return response()->json(['message' => 'PaymentCategory not found', 'status'=> '404'], 404);
+        }
+
+        $payment_category->delete();
+    }
+
+
+    private function findPaymentCategory($id, $organisation_id)
+    {
+        $payment_category = DB::table('payment_categories')
                             ->join('organisations', ['payment_categories.organisation_id' => 'organisations.id'])
                             ->where('organisations.id', $organisation_id)
                             ->where('payment_categories.id', $id)
                             ->first();
 
-        return $payment_categories;
-    }
-
-    public function deletePaymentCategory($id, $organisation_id)
-    {
-        $payment_category = PaymentCategory::where('id', $id)->where('organisation_id', $organisation_id)->first();
-
-        if(!$payment_category){
-            throw ResourceNotFoundException(['message' => 'PaymentCategory not found', 'status'=> '404'], 404);
-        }
-        $payment_category->delete();
+        return $payment_category;
     }
 }

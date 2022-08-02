@@ -17,7 +17,7 @@ class PaymentItems extends Migration
             $table->id();
             $table->string('name');
             $table->double('amount');
-            $table->boolean('complusory');
+            $table->boolean('complusory')->default(true);
             $table->timestamps();
             $table->mediumText('created_by')->nullable(true);
             $table->mediumText('updated_by')->nullable(true);

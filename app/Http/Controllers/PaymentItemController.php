@@ -2,84 +2,61 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PaymentItemRequest;
+use App\Http\Resources\PaymentItemResource;
 use App\Models\PaymentItem;
+use App\Services\PaymentItemService;
 use Illuminate\Http\Request;
 
 class PaymentItemController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+
+    private $payment_item_service;
+
+
+    public function __construct(PaymentItemService $payment_item_service)
     {
-        //
+        $this->payment_item_service = $payment_item_service;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+
+
+    public function getPaymentItemsByCategory($id)
     {
-        //
+        $items = $this->payment_item_service->getPaymentItemsByCategory($id);
+
+        return response()->json(['data' => PaymentItemResource::collection($items)], 200);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+
+    public function store(PaymentItemRequest $request, $payment_category_id)
     {
-        //
+        $this->payment_item_service->createPaymentItem($request, $payment_category_id);
+
+        return response()->json(['message' => 'success', 'status' => "201"], 201);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\PaymentItem  $paymentItem
-     * @return \Illuminate\Http\Response
-     */
-    public function show(PaymentItem $paymentItem)
+
+    public function getPaymentItem(PaymentItem $payment_item_id, $payment_category_id)
     {
-        //
+        $payment_item = $this->payment_item_service->getPaymentItem($payment_item_id, $payment_category_id);
+
+        return response()->json(['data'=>new PaymentItemResource($payment_item)], 200);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\PaymentItem  $paymentItem
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(PaymentItem $paymentItem)
+
+    public function updatePaymentItem(PaymentItemRequest $request, $payment_item_id, $payment_category_id)
     {
-        //
+       $this->payment_item_service->updatePaymentItem($request, $payment_item_id, $payment_category_id);
+
+       return response()->json(['message' => 'success', 'status' => '204'], 204);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\PaymentItem  $paymentItem
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, PaymentItem $paymentItem)
-    {
-        //
-    }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\PaymentItem  $paymentItem
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(PaymentItem $paymentItem)
+    public function deletePaymentItem($payment_item_id, $payment_category_id)
     {
-        //
+        $this->payment_item_service->deletePaymentItem($payment_item_id, $payment_category_id);
+
+        return response()->json(['message' => 'success', 'status' => '204'], 204);
     }
 }
