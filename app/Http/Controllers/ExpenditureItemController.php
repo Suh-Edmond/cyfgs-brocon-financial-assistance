@@ -60,4 +60,11 @@ class ExpenditureItemController extends Controller
 
         return response()->json(['message' => 'success', 'status' => '204'], 204);
     }
+
+    public function approveExpenditureItem($id)
+    {
+        $this->expenditure_item_service->approveExpenditureItem($id);
+
+        return response()->json(['message' => 'success', 'status' => '204'], 204);
+    }
 }

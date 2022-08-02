@@ -82,4 +82,9 @@ class ExpenditureItemService implements ExpenditureItemInterface {
         $expenditure_item = ExpenditureItem::findOrFail($id);
         $expenditure_item->update(['approve' => true]);
     }
+
+    public function getExpenditureItemByStatus($status)
+    {
+
+    }
 }

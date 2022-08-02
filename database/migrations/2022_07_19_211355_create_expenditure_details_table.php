@@ -19,6 +19,7 @@ class CreateExpenditureDetailsTable extends Migration
             $table->double('amount_spent');
             $table->string('name');
             $table->longText('comment');
+            $table->boolean('approve')->default(false);
             $table->string('scan_picture');
             $table->timestamps();
             $table->mediumText('created_by')->nullable(true);

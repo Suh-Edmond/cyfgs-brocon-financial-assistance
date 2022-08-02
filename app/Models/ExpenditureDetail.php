@@ -11,9 +11,9 @@ class ExpenditureDetail extends Model
     protected $fillable = [
         'amount_given',
         'amount_spent',
-        'scan_picture',
         'name',
         'comment',
+        'aprove',
         'expenditure_item_id'
     ];
 
