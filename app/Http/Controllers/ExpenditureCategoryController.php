@@ -2,84 +2,61 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ExpenditureCategory;
-use Illuminate\Http\Request;
+use App\Http\Requests\ExpenditureCategoryRequest;
+use App\Http\Resources\ExpenditureCategoryResource;
+use App\Services\ExpenditureCategoryService;
 
 class ExpenditureCategoryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+
+    private $expenditure_category_service;
+
+    public function __construct(ExpenditureCategoryService $expenditure_category_service)
     {
-        //
+        $this->expenditure_category_service = $expenditure_category_service;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+
+
+    public function getExpenditureCategories($organisation_id)
     {
-        //
+        $expenditure_categories = $this->expenditure_category_service->getExpenditureCategories($organisation_id);
+
+        return response()->json(['data', ExpenditureCategoryResource::collection($expenditure_categories)], 200);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+
+    public function createExpenditureCategory(ExpenditureCategoryRequest $request, $organisation_id)
     {
-        //
+        $this->expenditure_category_service->createExpenditureCategory($request, $organisation_id);
+
+        return response()->json(['message'=>'success', 'status'=>'201'], 201);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\ExpenditureCategory  $expenditureCategory
-     * @return \Illuminate\Http\Response
-     */
-    public function show(ExpenditureCategory $expenditureCategory)
+
+
+    public function getExpenditureCategory($organisation_id, $id)
     {
-        //
+        $expenditure_category = $this->expenditure_category_service->getExpenditureCategory($id, $organisation_id);
+
+        return response()->json(['data', new ExpenditureCategoryResource($expenditure_category)], 200);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\ExpenditureCategory  $expenditureCategory
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(ExpenditureCategory $expenditureCategory)
+
+
+    public function updateExpenditureCategory(ExpenditureCategoryRequest $request, $organisation_id, $id)
     {
-        //
+        $this->expenditure_category_service->updateExpenditureCategory($request, $id, $organisation_id);
+
+        return response()->json(['message'=>'success', 'status'=>'204'], 204);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\ExpenditureCategory  $expenditureCategory
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, ExpenditureCategory $expenditureCategory)
-    {
-        //
-    }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\ExpenditureCategory  $expenditureCategory
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(ExpenditureCategory $expenditureCategory)
+
+    public function deleteExpenditureCategory($organisation_id, $id)
     {
-        //
+        $this->expenditure_category_service->deleteExpenditureCategory($id, $organisation_id);
+
+        return response()->json(['message'=>'success', 'status'=>'204'], 204);
     }
 }

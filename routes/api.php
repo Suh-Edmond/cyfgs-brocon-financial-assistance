@@ -1,10 +1,13 @@
 <?php
 
+use App\Http\Controllers\ExpenditureCategoryController;
 use App\Http\Controllers\OrganisationController;
 use App\Http\Controllers\PaymentCategoryController;
+use App\Http\Controllers\PaymentItemController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
+use App\Models\ExpenditureCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -53,3 +56,28 @@ Route::prefix('protected')->group(function() {
     Route::put('/organisations/{organisation_id}/payment-categories/{id}', [PaymentCategoryController::class, 'updatePaymentCategory']);
     Route::delete('/organisations/{organisation_id}/payment-categories/{id}', [PaymentCategoryController::class, 'deletePaymentCategory']);
 });
+
+Route::prefix('protected')->group(function() {
+    Route::post('/payment-categories/{payment_category_id}/payment-items', [PaymentItemController::class, 'createPaymentItem']);
+    Route::get('/payment-categories/{payment_category_id}/payment-items', [PaymentItemController::class, 'getPaymentItemsByCategory']);
+    Route::get('/payment-categories/{payment_category_id}/payment-items/{id}', [PaymentItemController::class, 'getPaymentItem']);
+    Route::put('/payment-categories/{payment_category_id}/payment-items/{id}', [PaymentItemController::class, 'updatePaymentItem']);
+    Route::delete('/payment-categories/{payment_category_id}/payment-items/{id}', [PaymentItemController::class, 'deletePaymentItem']);
+});
+
+Route::prefix('protected')->group(function() {
+    Route::post('/organisations/{organisation_id}/expenditure-categories', [ExpenditureCategoryController::class, 'createExpenditureCategory']);
+    Route::get('/organisations/{organisation_id}/expenditure-categories', [ExpenditureCategoryController::class, 'getExpenditureCategories']);
+    Route::get('/organisations/{organisation_id}/expenditure-categories/{id}', [ExpenditureCategoryController::class, 'getExpenditureCategory']);
+    Route::put('/organisations/{organisation_id}/expenditure-categories/{id}', [ExpenditureCategoryController::class, 'updateExpenditureCategory']);
+    Route::delete('/organisations/{organisation_id}/expenditure-categories/{id}', [ExpenditureCategoryController::class, 'deleteExpenditureCategory']);
+});
+
+
+
+Route::post('/organisations/{organisation_id}/expenditures', [PaymentCategoryController::class, 'createPaymentCategory']);
+Route::get('/organisations/{organisation_id}/expenditures', [PaymentCategoryController::class, 'getPaymentCategories']);
+Route::get('/organisations/{organisation_id}/expenditures/{id}', [PaymentCategoryController::class, 'getPaymentCategory']);
+Route::put('/organisations/{organisation_id}/expenditures/{id}', [PaymentCategoryController::class, 'updatePaymentCategory']);
+Route::delete('/organisations/{organisation_id}/expenditures/{id}', [PaymentCategoryController::class, 'deletePaymentCategory']);
+
