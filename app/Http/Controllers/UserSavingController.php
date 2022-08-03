@@ -2,84 +2,65 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\UserSaving;
-use Illuminate\Http\Request;
+use App\Http\Requests\UserSavingRequest;
+use App\Http\Resources\UserSavingResource;
+use App\Services\UserServingService;
 
 class UserSavingController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+
+    private $user_saving_service;
+
+    public function __construct(UserServingService $user_saving_service)
     {
-        //
+        $this->user_saving_service = $user_saving_service;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+
+    public function getUserSavings($user_id)
     {
-        //
+        $user_savings = $this->user_saving_service->getUserSavings($user_id);
+
+        return response()->json(['data' => UserSavingResource::collection($user_savings)], 200);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+
+    public function createUserSaving(UserSavingRequest $request)
     {
-        //
+        $this->user_saving_service->createUserSaving($request);
+
+        return response()->json(['message' => 'success', 'status'=> 'ok'], 201);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\UserSaving  $userSaving
-     * @return \Illuminate\Http\Response
-     */
-    public function show(UserSaving $userSaving)
+
+    public function getUserSaving($user_id, $id)
     {
-        //
+        $user_saving = $this->user_saving_service->getUserSaving($id, $user_id);
+
+        return response()->json(['data' => new UserSavingResource($user_saving)], 200);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\UserSaving  $userSaving
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(UserSaving $userSaving)
+
+    public function updateUserSaving(UserSavingRequest $request, $user_id, $id)
     {
-        //
+        $this->user_saving_service->updateUserSaving($request, $id, $user_id);
+
+        return response()->json(['message' => 'success', 'status'=> 'ok'], 204);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\UserSaving  $userSaving
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, UserSaving $userSaving)
+
+    public function deleteUserSaving($user_id, $id)
     {
-        //
+        $this->user_saving_service->deleteUserSaving($id, $user_id);
+
+        return response()->json(['message' => 'success', 'status'=> 'ok'], 204);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\UserSaving  $userSaving
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(UserSaving $userSaving)
+
+    public function approveUserSaving($id)
     {
-        //
+        $this->user_saving_service->approveUserSaving($id);
+
+        return response()->json(['message' => 'success', 'status'=> 'ok'], 204);
     }
 }

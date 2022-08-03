@@ -12,7 +12,6 @@ class UserSaving extends Model
         'amount_deposited',
         'comment',
         'user_id',
-        'approve'
     ];
 
 

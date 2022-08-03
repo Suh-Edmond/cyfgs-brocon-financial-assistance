@@ -11,7 +11,6 @@ class UserContribution extends Model
     protected $fillable = [
         'amount_deposited',
         'comment',
-        'scan_picture',
         'status',
         'approve',
         'user_id',

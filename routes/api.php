@@ -8,6 +8,7 @@ use App\Http\Controllers\PaymentItemController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserSavingController;
 use App\Models\ExpenditureCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -73,9 +74,15 @@ Route::get('/organisations/{organisation_id}/expenditure-categories/{id}', [Expe
 Route::put('/organisations/{organisation_id}/expenditure-categories/{id}', [ExpenditureCategoryController::class, 'updateExpenditureCategory']);
 Route::delete('/organisations/{organisation_id}/expenditure-categories/{id}', [ExpenditureCategoryController::class, 'deleteExpenditureCategory']);
 
-Route::post('/expenditure-categories/{expenditure-category_id}/expenditure-items', [ExpenditureItemController::class, 'createExpenditureItem']);
-Route::get('/expenditure-categories/{expenditure-category_id}/expenditure-items', [ExpenditureItemController::class, 'getExpenditureItems']);
-Route::get('/expenditure-categories/{expenditure-category_id}/expenditure-items/{id}', [ExpenditureItemController::class, 'getExpenditureItem']);
-Route::put('/expenditure-categories/{expenditure-category_id}/expenditure-items/{id}', [ExpenditureItemController::class, 'updateExpenditureItem']);
-Route::delete('/expenditure-categories/{expenditure-category_id}/expenditure-items/{id}', [ExpenditureItemController::class, 'deleteExpenditureItem']);
+Route::post('/expenditure-categories/{expenditure_category_id}/expenditure-items', [ExpenditureItemController::class, 'createExpenditureItem']);
+Route::get('/expenditure-categories/{expenditure_category_id}/expenditure-items', [ExpenditureItemController::class, 'getExpenditureItems']);
+Route::get('/expenditure-categories/{expenditure_category_id}/expenditure-items/{id}', [ExpenditureItemController::class, 'getExpenditureItem']);
+Route::put('/expenditure-categories/{expenditure_category_id}/expenditure-items/{id}', [ExpenditureItemController::class, 'updateExpenditureItem']);
+Route::delete('/expenditure-categories/{expenditure_category_id}/expenditure-items/{id}', [ExpenditureItemController::class, 'deleteExpenditureItem']);
 
+Route::post('/user-savings', [UserSavingController::class, 'createUserSaving']);
+Route::get('/user-savings/{user_id}', [UserSavingController::class, 'getUserSavings']);
+Route::get('/user-savings/{user_id}/{id}', [UserSavingController::class, 'getUserSaving']);
+Route::put('/user-savings/{user_id}/{id}', [UserSavingController::class, 'updateUserSaving']);
+Route::delete('/user-savings/{user_id}/{id}', [UserSavingController::class, 'deleteUserSaving']);
+Route::put('/user-savings/{id}', [UserSavingController::class, 'approveUserSaving']);
