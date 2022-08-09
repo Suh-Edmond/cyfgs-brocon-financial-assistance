@@ -4,14 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateOrganisationRequest;
 use App\Http\Requests\UpdateOrganisationRequest;
-use App\Services\OrganisationService;
 use App\Http\Resources\OrganisationResource;
+use App\Interfaces\OrganisationInterface;
 
 class OrganisationController extends Controller
 {
     private $organisation_service;
 
-    public function __construct(OrganisationService $organisation_service)
+    public function __construct(OrganisationInterface $organisation_service)
     {
         $this->organisation_service = $organisation_service;
     }

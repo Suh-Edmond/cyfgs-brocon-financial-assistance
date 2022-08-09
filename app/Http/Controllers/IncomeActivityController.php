@@ -3,16 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Models\IncomeActivity;
-use App\Services\IncomeActivityService;
 use App\Http\Resources\IncomeActivityResource;
 use App\Http\Requests\IncomeActivityRequest;
+use App\Interfaces\IncomeActivityInterface;
 
 class IncomeActivityController extends Controller
 {
 
     private $income_activity_service;
 
-    public function __construct(IncomeActivityService $income_activity_service)
+    public function __construct(IncomeActivityInterface $income_activity_service)
     {
         $this->income_activity_service = $income_activity_service;
     }

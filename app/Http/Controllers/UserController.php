@@ -5,15 +5,15 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateUserRequest;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\UpdateUserRequest;
-use App\Services\UserManagementService;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\UserResource;
+use App\Interfaces\UserManagementInterface;
 
 class UserController extends Controller
 {
     private $user_management_service;
 
-    public function __construct(UserManagementService $user_management_service)
+    public function __construct(UserManagementInterface $user_management_service)
     {
         $this->user_management_service = $user_management_service;
     }

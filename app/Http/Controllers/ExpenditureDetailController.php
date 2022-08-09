@@ -4,9 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ExpenditureDetailRequest;
 use App\Http\Resources\ExpenditureDetailResource;
-use App\Models\ExpenditureDetail;
-use App\Services\ExpenditureDetailService;
-use Illuminate\Http\Request;
+use App\Interfaces\ExpenditureDetailInterface;
+
 
 class ExpenditureDetailController extends Controller
 {
@@ -14,7 +13,7 @@ class ExpenditureDetailController extends Controller
     private $expenditure_detail_service;
 
 
-    public function __construct(ExpenditureDetailService $expenditure_detail_service)
+    public function __construct(ExpenditureDetailInterface $expenditure_detail_service)
     {
         $this->expenditure_detail_service = $expenditure_detail_service;
     }

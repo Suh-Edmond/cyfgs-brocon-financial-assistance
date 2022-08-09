@@ -4,9 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\PaymentItemRequest;
 use App\Http\Resources\PaymentItemResource;
-use App\Models\PaymentItem;
-use App\Services\PaymentItemService;
-use Illuminate\Http\Request;
+use App\Interfaces\PaymentItemInterface;
 
 class PaymentItemController extends Controller
 {
@@ -14,7 +12,7 @@ class PaymentItemController extends Controller
     private $payment_item_service;
 
 
-    public function __construct(PaymentItemService $payment_item_service)
+    public function __construct(PaymentItemInterface $payment_item_service)
     {
         $this->payment_item_service = $payment_item_service;
     }

@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\RoleService;
-use Illuminate\Http\Request;
+
 use App\Http\Requests\AddUserRoleRequest;
 use App\Http\Resources\RoleResource;
+use App\Interfaces\RoleInterface;
 use Illuminate\Support\Str;
 
 class RoleController extends Controller
 {
     private $roleService;
 
-    public function __construct(RoleService $roleService)
+    public function __construct(RoleInterface $roleService)
     {
         $this->roleService = $roleService;
     }
