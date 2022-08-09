@@ -11,9 +11,13 @@ interface UserContributionInterface {
 
     public function getUserContributionsByUser($user_id);
 
-    public function getUserContribution($payment_item_id, $user_id);
+    public function getContributionByUserAndItem($payment_item_id, $user_id);
 
-    public function deleteUserContribution($payment_item_id, $user_id);
+    public function deleteUserContribution($id);
 
     public function approveUserContribution($id);
+
+    public function filterContribution($status, $payment_item);
+
+    public function getContribution($id);
 }

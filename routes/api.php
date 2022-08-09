@@ -7,12 +7,10 @@ use App\Http\Controllers\IncomeActivityController;
 use App\Http\Controllers\OrganisationController;
 use App\Http\Controllers\PaymentCategoryController;
 use App\Http\Controllers\PaymentItemController;
-use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UserContributionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserSavingController;
-use App\Models\ExpenditureCategory;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -101,3 +99,16 @@ Route::get('expenditure-items/{id}/details', [ExpenditureDetailController::class
 Route::get('expenditure-details/{id}/', [ExpenditureDetailController::class, 'getExpenditureDetail']);
 Route::put('expenditure-details/{id}', [ExpenditureDetailController::class, 'updateExpenditureDetail']);
 Route::delete('expenditure-details/{id}', [ExpenditureDetailController::class, 'deleteExpenditureDetail']);
+Route::put('expenditure-details/{id}', [ExpenditureDetailController::class, 'approveExpenditureDetail']);
+Route::get('expenditure-details', [ExpenditureDetailController::class, 'filterExpenditureDetails']);
+
+
+Route::post('contributions', [UserContributionController::class, 'createUserContribution']);
+Route::put('contributions/{id}', [UserContributionController::class, 'updateUserContribution']);
+Route::get('contributions/payment-items/{id}', [UserContributionController::class, 'getUserContributionsByItem']);
+Route::get('contributions/users/{id}', [UserContributionController::class, 'getContributionByUser']);
+Route::get('contributions/users/{user_id}/payment-items/{item_id}', [UserContributionController::class, 'getContributionByUserAndItem']);
+Route::delete('contributions/{id}', [UserContributionController::class, 'deleteUserContributon']);
+Route::put('contributions/{id}', [UserContributionController::class, 'approveUserContribution']);
+Route::get('contributions/{id}', [UserContributionController::class, 'getContribution']);
+Route::get('contributions', [UserContributionController::class, 'filterContribution']);
