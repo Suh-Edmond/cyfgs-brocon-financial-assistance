@@ -2,84 +2,75 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ExpenditureDetailRequest;
+use App\Http\Resources\ExpenditureDetailResource;
 use App\Models\ExpenditureDetail;
+use App\Services\ExpenditureDetailService;
 use Illuminate\Http\Request;
 
 class ExpenditureDetailController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+
+    private $expenditure_detail_service;
+
+
+    public function __construct(ExpenditureDetailService $expenditure_detail_service)
     {
-        //
+        $this->expenditure_detail_service = $expenditure_detail_service;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+
+
+    public function createExpenditureDetail(ExpenditureDetailRequest $request, $id)
     {
-        //
+        $this->expenditure_detail_service->createExpenditureDetail($request, $id);
+
+        return response()->json(['message' => "success", "status" => "ok"], 201);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+
+    public function updateExpenditureDetail(ExpenditureDetailRequest $request, $id)
     {
-        //
+        $this->expenditure_detail_service->updateExpenditureDetail($request, $id);
+
+        return response()->json(['message' => "success", "status" => "ok"], 202);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\ExpenditureDetail  $expenditureDetail
-     * @return \Illuminate\Http\Response
-     */
-    public function show(ExpenditureDetail $expenditureDetail)
+
+    public function getExpenditureDetails($expenditure_item_id)
     {
-        //
+        $details = $this->expenditure_detail_service->getExpenditureDetails($expenditure_item_id);
+
+        return response()->json(['data' => ExpenditureDetailResource::collection($details), 'status' => 'ok'], 200);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\ExpenditureDetail  $expenditureDetail
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(ExpenditureDetail $expenditureDetail)
+
+    public function getExpenditureDetail($id)
     {
-        //
+        $detail  = $this->expenditure_detail_service->getExpenditureDetail($id);
+
+        return response()->json(['data' => new ExpenditureDetailResource($detail), 'status' => 'ok'], 200);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\ExpenditureDetail  $expenditureDetail
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, ExpenditureDetail $expenditureDetail)
+
+    public function deleteExpenditureDetail($id)
     {
-        //
+        $this->expenditure_detail_service->deleteExpenditureDetail($id);
+
+        return response()->json(['message' => "success", "status" => "ok"], 204);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\ExpenditureDetail  $expenditureDetail
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(ExpenditureDetail $expenditureDetail)
+    public function approveExpenditureDetail($id)
     {
-        //
+        $this->expenditure_detail_service->approveExpenditureDetail($id);
+
+        return response()->json(['message' => 'success', 'status' => 'ok'], 204);
+    }
+
+    public function filterExpenditureDetails($item, $status)
+    {
+        $details = $this->expenditure_detail_service->filterExpenditureDetail($item, $status);
+
+        return response()->json(['data' => ExpenditureDetailResource::collection($details), 'status' => 'ok'], 200);
     }
 }

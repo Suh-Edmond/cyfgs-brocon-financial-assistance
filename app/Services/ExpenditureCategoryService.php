@@ -12,9 +12,6 @@ class ExpenditureCategoryService implements ExpenditureCategoryInterface {
     public function createExpenditureCategory($request, $id)
     {
         $organisation = Organisation::findOrFail($id);
-        if(! $organisation){
-            return response()->json(['message' => 'Oganisation not found'], 404);
-        }
         ExpenditureCategory::create([
             'name'              => $request->name,
             'description'       => $request->description,
@@ -64,7 +61,7 @@ class ExpenditureCategoryService implements ExpenditureCategoryInterface {
 
     private function findExpenditureCategory($id, $organisation_id)
     {
-        $update_expenditure_category = DB::table('expenditure_categories')
+        $update_expenditure_category = ExpenditureCategory::select('expenditure_categories.*')
                                         ->join('organisations', ['organisations.id' => 'expenditure_categories.organisation_id'])
                                         ->where('expenditure_categories.id', $id)
                                         ->where('expenditure_categories.organisation_id', $organisation_id)

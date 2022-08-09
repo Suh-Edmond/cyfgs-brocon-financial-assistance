@@ -63,7 +63,7 @@ class PaymentItemService implements PaymentItemInterface {
 
     private function findPaymentItem($id, $payment_category_id)
     {
-        $updated =  DB::table('payment_items')->join('payment_categories', ['payment_categories.id' => 'payment_items.category_id'])
+        $updated =  PaymentItem::select('payment_items.*')->join('payment_categories', ['payment_categories.id' => 'payment_items.category_id'])
                     ->where('payment_items.id', $id)
                     ->where('payment_items.payment_category_id', $payment_category_id)
                     ->first();

@@ -12,11 +12,11 @@ class PaymentCategoryService implements PaymentCategoryInterface {
 
     public function createPaymentCategory($request, $id)
     {
-        $organisation_id = Organisation::findOrFail($id);
+        $organisation = Organisation::findOrFail($id);
         PaymentCategory::created([
             'name'              => $request->name,
             'description'       =>$request->description,
-            'organisation_id'   => $id
+            'organisation_id'   => $organisation->id
         ]);
     }
 
@@ -68,7 +68,7 @@ class PaymentCategoryService implements PaymentCategoryInterface {
 
     private function findPaymentCategory($id, $organisation_id)
     {
-        $payment_category = DB::table('payment_categories')
+        $payment_category = PaymentCategory::select('payment_categories.*')
                             ->join('organisations', ['payment_categories.organisation_id' => 'organisations.id'])
                             ->where('organisations.id', $organisation_id)
                             ->where('payment_categories.id', $id)

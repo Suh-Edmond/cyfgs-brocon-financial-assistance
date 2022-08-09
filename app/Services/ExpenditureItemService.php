@@ -69,7 +69,7 @@ class ExpenditureItemService implements ExpenditureItemInterface {
 
     private function findExpenditureItem($id, $expenditure_category_id)
     {
-        $expenditure_item = DB::table('expenditure_items')
+        $expenditure_item = ExpenditureItem::select('expenditure_items.*')
                                         ->join('expenditure_categories', ['expenditure_categories.id' => 'expenditure_items.expenditure_category_id'])
                                         ->where('expenditure_items.id', $id)
                                         ->where('expenditure_items.expenditure_category_id', $expenditure_category_id)

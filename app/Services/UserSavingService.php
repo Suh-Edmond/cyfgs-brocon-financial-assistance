@@ -68,14 +68,14 @@ class UserServingService implements UserSavingInterface {
         $user_saving->update(['approve' => true]);
     }
 
-    public function calculateExpenditureBalance($id, $expenditure_item_id)
+    public function calculateUserSaving($id, $expenditure_item_id)
     {
 
     }
 
     private function findUserSaving($id, $user_id)
     {
-        $saving = DB::table('user_savings')
+        $saving = UserSaving::select('user_savings.*')
                     ->join('users', ['users.id' => 'user_savings.user_id'])
                     ->where('users.id', $user_id)
                     ->where('user_savings.id', $id)

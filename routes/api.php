@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\ExpenditureCategoryController;
+use App\Http\Controllers\ExpenditureDetailController;
 use App\Http\Controllers\ExpenditureItemController;
+use App\Http\Controllers\IncomeActivityController;
 use App\Http\Controllers\OrganisationController;
 use App\Http\Controllers\PaymentCategoryController;
 use App\Http\Controllers\PaymentItemController;
@@ -86,3 +88,16 @@ Route::get('/user-savings/{user_id}/{id}', [UserSavingController::class, 'getUse
 Route::put('/user-savings/{user_id}/{id}', [UserSavingController::class, 'updateUserSaving']);
 Route::delete('/user-savings/{user_id}/{id}', [UserSavingController::class, 'deleteUserSaving']);
 Route::put('/user-savings/{id}', [UserSavingController::class, 'approveUserSaving']);
+
+Route::post('organisations/{id}/income-activities', [IncomeActivityController::class, 'createIncomeActivity']);
+Route::get('organisations/{id}/income-activities', [IncomeActivityController::class, 'getIncomeActivitiesByOrganisation']);
+Route::get('income-activities/{id}', [IncomeActivityController::class, 'getIncomeActivity']);
+Route::put('income-activities/{id}', [IncomeActivityController::class, 'updateIncomeActivity']);
+Route::delete('income-activities/{id}', [IncomeActivityController::class, 'deleteIncomeActivity']);
+Route::put('income-activities/{id}', [IncomeActivityController::class, 'approveIncomeActivity']);
+
+Route::post('expenditure-items/{id}/details', [ExpenditureDetailController::class, 'createExpenditureDetail']);
+Route::get('expenditure-items/{id}/details', [ExpenditureDetailController::class, 'updateIncomeActivity']);
+Route::get('expenditure-details/{id}/', [ExpenditureDetailController::class, 'getExpenditureDetail']);
+Route::put('expenditure-details/{id}', [ExpenditureDetailController::class, 'updateExpenditureDetail']);
+Route::delete('expenditure-details/{id}', [ExpenditureDetailController::class, 'deleteExpenditureDetail']);

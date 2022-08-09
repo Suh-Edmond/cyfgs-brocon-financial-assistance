@@ -8,14 +8,14 @@ interface UserSavingInterface {
 
     public function updateUserSaving($request, $id, $user_id);
 
-    public function getUserSavings($expenditure_item_id);
+    public function getUserSavings($user_id);
 
-    public function getUserSaving($id, $expenditure_item_id);
+    public function getUserSaving($id, $user_id);
 
-    public function deleteUserSaving($id, $expenditure_item_id);
+    public function deleteUserSaving($id, $user_id);
 
     public function approveUserSaving($id);
 
-    public function calculateExpenditureBalance($id, $expenditure_item_id);
+    public function calculateUserSaving($id, $user_id);
 }
 

@@ -3,83 +3,63 @@
 namespace App\Http\Controllers;
 
 use App\Models\IncomeActivity;
-use Illuminate\Http\Request;
+use App\Services\IncomeActivityService;
+use App\Http\Resources\IncomeActivityResource;
+use App\Http\Requests\IncomeActivityRequest;
 
 class IncomeActivityController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+
+    private $income_activity_service;
+
+    public function __construct(IncomeActivityService $income_activity_service)
     {
-        //
+        $this->income_activity_service = $income_activity_service;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+
+    public function createIncomeActivity(IncomeActivityRequest $request, $id)
     {
-        //
+        $this->income_activity_service->createIncomeActivity($request, $id);
+
+        return response()->json(['message' => 'success', 'status' => 'ok'], 201);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function updateIncomeActivity(IncomeActivityRequest $request,  $id)
     {
-        //
+        $this->income_activity_service->updateIncomeActivity($request, $id);
+
+        return response()->json(['message' => 'success', 'status' => 'ok'], 202);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\IncomeActivity  $incomeActivity
-     * @return \Illuminate\Http\Response
-     */
-    public function show(IncomeActivity $incomeActivity)
+
+    public function getIncomeActivitiesByOrganisation($id)
     {
-        //
+        $income_activities = $this->income_activity_service->getIncomeActivities($id);
+
+        return response()->json(['data' => IncomeActivityResource::collection($income_activities)], 200);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\IncomeActivity  $incomeActivity
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(IncomeActivity $incomeActivity)
+
+    public function getIncomeActivity($id)
     {
-        //
+        $income_activity = $this->income_activity_service->getIncomeActivity($id);
+
+        return response()->json(['data' => new IncomeActivity($income_activity)], 200);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\IncomeActivity  $incomeActivity
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, IncomeActivity $incomeActivity)
+
+    public function deleteIncomeActivity($id)
     {
-        //
+        $this->income_activity_service->deleteIncomeActivity($id);
+
+        return response()->json(['message' => 'success', 'status' => 'ok'], 204);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\IncomeActivity  $incomeActivity
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(IncomeActivity $incomeActivity)
+    public function approveIncomeActivity($id)
     {
-        //
+        $this->income_activity_service->approveIncomeActivity($id);
+
+        return response()->json(['message' => 'success', 'status' => 'ok'], 204);
     }
 }
