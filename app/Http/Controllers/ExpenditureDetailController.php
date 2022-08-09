@@ -66,9 +66,9 @@ class ExpenditureDetailController extends Controller
         return response()->json(['message' => 'success', 'status' => 'ok'], 204);
     }
 
-    public function filterExpenditureDetails($item, $status)
+    public function filterExpenditureDetails($expenditure_item_id, $status)
     {
-        $details = $this->expenditure_detail_service->filterExpenditureDetail($item, $status);
+        $details = $this->expenditure_detail_service->filterExpenditureDetail($expenditure_item_id, $status);
 
         return response()->json(['data' => ExpenditureDetailResource::collection($details), 'status' => 'ok'], 200);
     }

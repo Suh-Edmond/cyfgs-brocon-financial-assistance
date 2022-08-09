@@ -99,6 +99,8 @@ Route::get('expenditure-items/{id}/details', [ExpenditureDetailController::class
 Route::get('expenditure-details/{id}/', [ExpenditureDetailController::class, 'getExpenditureDetail']);
 Route::put('expenditure-details/{id}', [ExpenditureDetailController::class, 'updateExpenditureDetail']);
 Route::delete('expenditure-details/{id}', [ExpenditureDetailController::class, 'deleteExpenditureDetail']);
+Route::put('expenditure-details/{id}', [ExpenditureDetailController::class, 'approveExpenditureDetail']);
+Route::get('expenditure-details', [ExpenditureDetailController::class, 'filterExpenditureDetails']);
 
 
 Route::post('contributions', [UserContributionController::class, 'createUserContribution']);
