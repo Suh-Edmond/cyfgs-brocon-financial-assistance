@@ -17,7 +17,7 @@ class CreateExpenditureItemsTable extends Migration
             $table->id();
             $table->string('name');
             $table->double('amount');
-            $table->string('scan_picture');//receipt
+            $table->string('scan_picture')->nullable(true);//receipt
             $table->boolean('approve')->default(false);
             $table->text('comment');
             $table->string('venue');

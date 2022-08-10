@@ -4,16 +4,15 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Faker\Generator as Faker;
 use App\Models\Organisation;
-use Ramsey\Uuid\Uuid;
+
 
 class UserSeeder extends Seeder
 {
-    private $organisation_last;
-    private $ogranisation_first;
+
+    private $ogranisations;
     public function __construct()
     {
-        $this->organisation_last = Organisation::latest()->first();
-        $this->ogranisation_first = Organisation::first();
+        $this->ogranisations = Organisation::all()->count();
 
     }
 
@@ -35,7 +34,7 @@ class UserSeeder extends Seeder
                 'gender' => $faker->randomElement(['MALE', 'FEMALE']),
                 'created_by' => $faker->name,
                 'updated_by' => $faker->name,
-                'organisation_id' =>  $faker->randomElement([$this->organisation_last->id, $this->ogranisation_first->id])
+                'organisation_id' =>  $faker->randomElement([1, $this->ogranisations])
             ]);
         }
     }

@@ -12,7 +12,6 @@ class UserContribution extends Model
         'amount_deposited',
         'comment',
         'status',
-        'approve',
         'user_id',
         'payment_item_id'
     ];

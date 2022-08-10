@@ -16,7 +16,7 @@ class CreateUserContributionsTable extends Migration
         Schema::create('user_contributions', function (Blueprint $table) {
             $table->id();
             $table->string('code')->unique();
-            $table->string('scan_picture');
+            $table->string('scan_picture')->nullable(true);
             $table->longText('comment');
             $table->double('amount_deposited');
             $table->enum('status', ['COMPLETE', 'INCOMPLETE']);

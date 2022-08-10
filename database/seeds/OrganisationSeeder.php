@@ -13,24 +13,18 @@ class OrganisationSeeder extends Seeder
      */
     public function run(Faker $faker)
     {
-        Organisation::create([
-            'name' => $faker->name,
-            'email' => $faker->email,
-            'telephone' => $faker->phoneNumber,
-            'address' => $faker->address,
-            'description' => $faker->sentence,
-            'logo' => $faker->name,
-            'salutation' => $faker->sentence
-        ]);
+        for($i = 0; $i < 5; $i++)
+        {
+            Organisation::create([
+                'name' => $faker->name,
+                'email' => $faker->email,
+                'telephone' => $faker->phoneNumber,
+                'address' => $faker->address,
+                'description' => $faker->sentence,
+                'logo' => $faker->name,
+                'salutation' => $faker->sentence
+            ]);
+        }
 
-        Organisation::create([
-            'name' => $faker->name,
-            'email' => $faker->email,
-            'telephone' => $faker->phoneNumber,
-            'address' => $faker->address,
-            'description' => $faker->sentence,
-            'logo' => $faker->name,
-            'salutation' => $faker->sentence
-        ]);
     }
 }

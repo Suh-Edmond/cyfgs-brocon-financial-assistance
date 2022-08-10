@@ -15,7 +15,6 @@ class IncomeActivity extends Model
         'amount',
         'venue',
         'organisation_id',
-        'approve'
     ];
 
 

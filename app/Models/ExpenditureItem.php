@@ -12,7 +12,6 @@ class ExpenditureItem extends Model
         'name',
         'amount',
         'comment',
-        'approve',
         'venue',
         'date',
         'expenditure_category_id'

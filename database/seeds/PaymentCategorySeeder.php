@@ -1,16 +1,29 @@
 <?php
 
+use App\Models\Organisation;
+use App\Models\PaymentCategory;
 use Illuminate\Database\Seeder;
+use Faker\Generator as Faker;
 
 class PaymentCategorySeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
-    public function run()
+    private $organisations;
+
+    public function __construct()
     {
-        //
+        $this->organisations = Organisation::all()->count();
+    }
+
+
+    public function run(Faker $faker)
+    {
+       for($i = 0; $i < 50; $i++)
+       {
+            PaymentCategory::create([
+                'name'              => $faker->name,
+                'description'       => $faker->sentence,
+                'organisation_id'   => $faker->randomElement([1, $this->organisations])
+            ]);
+       }
     }
 }
