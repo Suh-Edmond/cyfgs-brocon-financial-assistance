@@ -18,8 +18,6 @@ class CreateExpenditureCategoriesTable extends Migration
             $table->string('name');
             $table->longText('description');
             $table->timestamps();
-            $table->mediumText('created_by')->nullable(true);
-            $table->mediumText('updated_by')->nullable(true);
             $table->unsignedBigInteger('organisation_id');
 
             $table->foreign('organisation_id')->references('id')->on('organisations');

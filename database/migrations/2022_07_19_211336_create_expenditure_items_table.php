@@ -23,8 +23,6 @@ class CreateExpenditureItemsTable extends Migration
             $table->string('venue');
             $table->date('date');
             $table->timestamps();
-            $table->mediumText('created_by')->nullable(true);
-            $table->mediumText('updated_by')->nullable(true);
             $table->unsignedBigInteger('expenditure_category_id');
 
             $table->foreign('expenditure_category_id')->references('id')->on('expenditure_categories');

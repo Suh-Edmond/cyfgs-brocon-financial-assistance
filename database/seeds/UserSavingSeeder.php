@@ -20,11 +20,10 @@ class UserSavingSeeder extends Seeder
         for($i = 0; $i < 500; $i++)
         {
             UserSaving::create([
-                'name'              => $faker->name,
                 'amount_deposited'  => $faker->numberBetween(1000, 100000),
                 'approve'           => $faker->randomElement([true, false]),
                 'comment'           => $faker->sentence,
-                'user_id'           => $faker->randomElement([1, $this->users])
+                'user_id'           => rand(1, $this->users)
             ]);
         }
     }

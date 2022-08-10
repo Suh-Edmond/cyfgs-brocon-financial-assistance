@@ -25,7 +25,7 @@ class IncomeActivitySeeder extends Seeder
                 'date'              => $faker->date(),
                 'venue'             => $faker->sentence,
                 'approve'           => $faker->randomElement([true, false]),
-                'organisation_id'   => $faker->randomElement([1, $this->oragnisations])
+                'organisation_id'   => rand(1, $this->oragnisations)
             ]);
         }
     }

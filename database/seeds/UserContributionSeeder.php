@@ -28,8 +28,8 @@ class UserContributionSeeder extends Seeder
                 'comment'               => $faker->sentence,
                 'amount_deposited'      => $faker->randomElement([500, 30000]),
                 'approve'               => $faker->randomElement([true, false]),
-                'user_id'               => $faker->randomElement([1, $this->users]),
-                'payment_item_id'       => $faker->randomElement([1, $this->payment_items]),
+                'user_id'               => rand(1, $this->users),
+                'payment_item_id'       => rand(1, $this->payment_items),
                 'status'                => $faker->randomElement(['COMPLETE', 'INCOMEPLETE'])
             ]);
         }

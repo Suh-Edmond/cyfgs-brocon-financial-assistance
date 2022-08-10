@@ -22,7 +22,7 @@ class PaymentCategorySeeder extends Seeder
             PaymentCategory::create([
                 'name'              => $faker->name,
                 'description'       => $faker->sentence,
-                'organisation_id'   => $faker->randomElement([1, $this->organisations])
+                'organisation_id'   => rand(1, $this->organisations)
             ]);
        }
     }

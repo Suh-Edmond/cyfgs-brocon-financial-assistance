@@ -32,9 +32,7 @@ class UserSeeder extends Seeder
                 'address' => $faker->address(),
                 'occupation' => $faker->sentence(5),
                 'gender' => $faker->randomElement(['MALE', 'FEMALE']),
-                'created_by' => $faker->name,
-                'updated_by' => $faker->name,
-                'organisation_id' =>  $faker->randomElement([1, $this->ogranisations])
+                'organisation_id' =>  rand(1, $this->ogranisations)
             ]);
         }
     }

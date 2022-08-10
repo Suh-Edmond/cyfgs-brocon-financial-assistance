@@ -19,10 +19,10 @@ class PaymentItemSeeder extends Seeder
         for($i = 0; $i < 400; $i++)
         {
             PaymentItem::create([
-                'name'          => $faker->name,
-                'amount'        => $faker->numberBetween(5000, 100000),
-                'complusory'    => $faker->randomElement([true, false]),
-                'payment_category_id'   => $faker->randomElement([1, $this->payment_categories])
+                'name'                  => $faker->name,
+                'amount'                => $faker->numberBetween(5000, 100000),
+                'complusory'            => $faker->randomElement([true, false]),
+                'payment_category_id'   => rand(1, $this->payment_categories)
             ]);
         }
     }

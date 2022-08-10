@@ -25,7 +25,7 @@ class ExpenditureDetailSeeder extends Seeder
                 'amount_given'          => $faker->numberBetween(4000, 50000),
                 'comment'               => $faker->sentence,
                 'approve'               => $faker->randomElement([true, false]),
-                'expenditure_item_id'   => $faker->randomElement([1, $this->expenditure_items])
+                'expenditure_item_id'   => rand(1, $this->expenditure_items)
             ]);
         }
     }

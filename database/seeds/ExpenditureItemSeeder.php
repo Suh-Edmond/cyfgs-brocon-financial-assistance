@@ -25,7 +25,7 @@ class ExpenditureItemSeeder extends Seeder
                 'comment'                   => $faker->sentence,
                 'approve'                   => $faker->randomElement([true, false]),
                 'venue'                     => $faker->country,
-                'expenditure_category_id'   => $faker->randomElement([1, $this->expenditure_categories]),
+                'expenditure_category_id'   => rand(1, $this->expenditure_categories),
                 'date'                      => $faker->date()
             ]);
         }

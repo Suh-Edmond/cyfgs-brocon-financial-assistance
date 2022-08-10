@@ -26,7 +26,7 @@ class ExpenditureCategorySeeder extends Seeder
             ExpenditureCategory::create([
                 'name'             => $faker->colorName,
                 'description'       => $faker->sentence,
-                'organisation_id'   => $faker->randomElement([1, $this->organisations])
+                'organisation_id'   => rand(1, $this->organisations)
             ]);
         }
     }

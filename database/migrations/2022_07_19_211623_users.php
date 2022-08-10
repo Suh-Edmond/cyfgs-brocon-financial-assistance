@@ -25,8 +25,6 @@ class Users extends Migration
             $table->string('occupation');
             $table->rememberToken();
             $table->timestamps();
-            $table->mediumText('created_by')->nullable(true);
-            $table->mediumText('updated_by')->nullable(true);
             $table->unsignedBigInteger('organisation_id')->nullable(true);
 
             $table->foreign('organisation_id')->references('id')->on('organisations');

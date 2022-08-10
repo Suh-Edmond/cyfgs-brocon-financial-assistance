@@ -20,8 +20,6 @@ class CreateUserSavingsTable extends Migration
             $table->unsignedBigInteger('user_id');
             $table->boolean('approve')->default(false);
             $table->timestamps();
-            $table->mediumText('created_by')->nullable(true);
-            $table->mediumText('updated_by')->nullable(true);
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 
