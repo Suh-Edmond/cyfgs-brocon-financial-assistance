@@ -4,14 +4,16 @@ namespace App\Services;
 
 use App\Interfaces\OrganisationInterface;
 use App\Models\Organisation;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 class OrganisationService implements OrganisationInterface
 {
     public function createOrganisation($request)
     {
+        $user = User::findOrFail(Auth::user()->id);
 
-        Organisation::create([
+        $saved = Organisation::create([
             'name'             => $request->name,
             'email'            => $request->email,
             'telephone'        => $request->telephone,
@@ -22,6 +24,10 @@ class OrganisationService implements OrganisationInterface
             'box_number'       => $request->box_number,
             'region'           => $request->region
         ]);
+
+        $user->update(['organisation_id' => $saved->id]);
+
+        return $saved->id;
     }
 
     public function getOrganisation($id)
@@ -37,13 +43,13 @@ class OrganisationService implements OrganisationInterface
 
     public function updatedOrganisation($request, $id)
     {
-        Organisation::findOrFail($id)->update([
-            'name'          =>$request->name,
-            'email'            => $request->email,
-            'telephone'        => $request->telephone,
-            'description'      => $request->description,
-            'address'          => $request->address,
-            'logo'             => $request->logo,
+        $saved = Organisation::findOrFail($id)->update([
+                    'name'             =>$request->name,
+                    'email'            => $request->email,
+                    'telephone'        => $request->telephone,
+                    'description'      => $request->description,
+                    'address'          => $request->address,
+                    'logo'             => $request->logo,
         ]);
     }
 

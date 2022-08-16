@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ExpenditureItemRequest;
 use App\Http\Resources\ExpenditureItemResource;
 use App\Interfaces\ExpenditureItemInterface;
+use App\Services\ExpenditureItemService;
 
 class ExpenditureItemController extends Controller
 {
@@ -12,7 +13,7 @@ class ExpenditureItemController extends Controller
     private $expenditure_item_service;
 
 
-    public function __construct(ExpenditureItemInterface $expenditure_item_service)
+    public function __construct(ExpenditureItemService $expenditure_item_service)
     {
         $this->expenditure_item_service = $expenditure_item_service;
     }

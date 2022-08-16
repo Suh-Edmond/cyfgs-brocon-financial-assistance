@@ -4,14 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UserSavingRequest;
 use App\Http\Resources\UserSavingResource;
-use App\Interfaces\UserSavingInterface;
+use App\Services\UserServingService;
 
 class UserSavingController extends Controller
 {
 
     private $user_saving_service;
 
-    public function __construct(UserSavingInterface $user_saving_service)
+    public function __construct(UserServingService $user_saving_service)
     {
         $this->user_saving_service = $user_saving_service;
     }

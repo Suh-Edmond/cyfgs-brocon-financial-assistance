@@ -25,8 +25,8 @@ class UpdateOrganisationRequest extends FormRequest
     {
         return [
            'name'          => 'required|max:255',
-           'telephone'     => 'required|size:9',
-           'email'         => 'email|unique:organisations,email',
+           'telephone'     => 'required|string',
+           'email'         => 'email',
            'address'       => 'required',
            'description'   => 'required|max:5000',
            'logo'          => 'string',

@@ -6,13 +6,14 @@ use App\Http\Requests\CreateUserContributionRequest;
 use App\Http\Requests\UpdateUserContributionRequest;
 use App\Http\Resources\UserContributionResource;
 use App\Interfaces\UserContributionInterface;
+use App\Services\UserContributionService;
 
 class UserContributionController extends Controller
 {
 
     private $user_contribution_interface;
 
-    public function __construct(UserContributionInterface $user_contributio_interface)
+    public function __construct(UserContributionService $user_contributio_interface)
     {
         $this->user_contribution_interface = $user_contributio_interface;
     }

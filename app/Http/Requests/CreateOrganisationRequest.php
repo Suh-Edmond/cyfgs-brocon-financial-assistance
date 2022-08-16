@@ -31,8 +31,8 @@ class CreateOrganisationRequest extends FormRequest
             'description'   => 'required|max:5000',
             'logo'          => 'string',
             'saluatation'   => 'string',
-            'region'        =>  'required',
-            'telephone'     => 'required|array'
+            'region'        => 'required',
+            'telephone'     => 'required|unique:organisations,telephone'//should be a string seperated by /
         ];
     }
 }

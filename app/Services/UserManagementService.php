@@ -3,31 +3,37 @@
 namespace App\Services;
 
 use App\Constants\Roles;
+use App\Http\Resources\UserResource;
 use App\Http\Resources\UserTokenResource;
 use App\Interfaces\UserManagementInterface;
 use App\Models\User;
+use Auth;
+use App\Traits\ResponseTrait;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\ValidationException;
+
 
 class UserManagementService implements UserManagementInterface {
 
-    public function createUser($request)
+    use ResponseTrait;
+    public function AddUserUserToOrganisation($request, $id)
     {
-        User::create([
+        $saved = User::create([
             'name'            => $request->name,
             'email'           => $request->email,
             'telephone'       => $request->telephone,
-            'password'        => Hash::make($request->password),
             'gender'          => $request->gender,
             'address'         => $request->address,
             'occupation'      => $request->occupation,
-            'organisation_id' => $request->organisation_id
+            'organisation_id' => $id
         ]);
+        $saved->assignRole(Roles::USER);
     }
 
     public function getUsers($organisation_id)
     {
-        return User::where('organisation_id', $organisation_id)->get();
+        $users =  User::where('organisation_id', $organisation_id)->get()->toArray();
+
+        return $users;
     }
 
     public function getUser($user_id)
@@ -54,14 +60,58 @@ class UserManagementService implements UserManagementInterface {
 
     public function loginUser($request)
     {
-        $user = User::where('telephone', $request->telephone)->first();
+        $user = User::where('telephone', $request->telephone)->orwhere('email', $request->email)->firstOrFail();
 
-        if(! $user || ! Hash::check($request->password, $user->password)){
-            return response()->json(['message' => 'incorrect credentials', 'status' => '404'], 404);
+        if(!Hash::check($request->password, $user->password)){
+            return $this->sendError('Unauthorized', 'Bad Credentials', 401);
+        }
+        $token = $this->generateToken($user);
+        $hasLoginBefore = $this->checkIfUserHasLogin($user);
+
+        return new UserResource($user, $token, $hasLoginBefore);
+    }
+
+    public function createAccount($request)
+    {
+        $saved =User::create([
+            'name'       => $request->name,
+            'telephone'  => $request->telephone,
+            'password'   => Hash::make($request->password)
+        ]);
+        $saved->assignRole(Roles::USER);
+        $saved->assignRole(Roles::PRESIDENT);
+    }
+
+
+    private function generateToken($user)
+    {
+       if(!is_null($user)){
+            $token = $user->createToken('access-token', $user->roles->toArray())->plainTextToken;
+       }
+
+        return $token;
+    }
+
+    private function checkIfUserHasLogin($user)
+    {
+        $hasLoginBefore = false;
+        if(!empty($user->password)){
+            $hasLoginBefore = true;
         }
 
-        $token = $user->createToken('access-token', [Roles::USER])->plainTextToken;
-
-        return new UserTokenResource($user);
+        return $hasLoginBefore;
     }
+
+    public function setPassword($request)
+    {
+        $user = User::where('telephone', $request->telephone)->orwhere('email', $request->email)->firstOrFail();
+        $user->password = Hash::make($request->password);
+        $user->save();
+
+        $token = $this->generateToken($user);
+        $hasLoginBefore = $this->checkIfUserHasLogin($user);
+
+        return new UserResource($user, $token, $hasLoginBefore);
+    }
+
 }

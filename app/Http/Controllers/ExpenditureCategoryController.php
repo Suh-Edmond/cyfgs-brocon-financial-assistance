@@ -4,14 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ExpenditureCategoryRequest;
 use App\Http\Resources\ExpenditureCategoryResource;
-use App\Interfaces\ExpenditureCategoryInterface;
+use App\Services\ExpenditureCategoryService;
 
 class ExpenditureCategoryController extends Controller
 {
 
     private $expenditure_category_service;
 
-    public function __construct(ExpenditureCategoryInterface $expenditure_category_service)
+    public function __construct(ExpenditureCategoryService $expenditure_category_service)
     {
         $this->expenditure_category_service = $expenditure_category_service;
     }

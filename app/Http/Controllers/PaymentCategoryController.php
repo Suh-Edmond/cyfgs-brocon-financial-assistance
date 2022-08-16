@@ -5,13 +5,14 @@ namespace App\Http\Controllers;
 use App\Http\Requests\PaymentCategoryRequest;
 use App\Http\Resources\PaymentCategoryResource;
 use App\Interfaces\PaymentCategoryInterface;
+use App\Services\PaymentCategoryService;
 
 class PaymentCategoryController extends Controller
 {
 
     private $payment_category_service;
 
-    public function __construct(PaymentCategoryInterface $payment_category_service)
+    public function __construct(PaymentCategoryService $payment_category_service)
     {
         $this->payment_category_service = $payment_category_service;
     }

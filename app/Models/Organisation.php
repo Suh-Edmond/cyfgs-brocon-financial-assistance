@@ -15,6 +15,7 @@ class Organisation extends Model
         'email',
         'address',
         'salutation',
+        'region'
     ];
 
 
