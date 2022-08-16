@@ -114,4 +114,11 @@ class UserManagementService implements UserManagementInterface {
         return new UserResource($user, $token, $hasLoginBefore);
     }
 
+
+    public function checkUserExist($request)
+    {
+        $user = User::where('telephone', $request->telephone)->orwhere('email', $request->email)->firstOrFail();
+
+        return $user;
+    }
 }

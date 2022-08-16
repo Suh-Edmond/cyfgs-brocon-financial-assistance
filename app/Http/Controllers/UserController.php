@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CheckUserRequest;
 use App\Http\Requests\CreateAccountRequest;
 use App\Http\Requests\CreateUserRequest;
 use App\Http\Requests\LoginRequest;
@@ -44,9 +45,17 @@ class UserController extends Controller
 
     public function updatePassword(UpdatePasswordRequest $request)
     {
-        $data = $this->user_management_service->loginUser($request);
+        $data = $this->user_management_service->setPassword($request);
 
-        return $this->sendResponse($data, 'success');
+        return $this->sendResponse($data, 'success', 200);
+    }
+
+
+    public function checkUserExist(CheckUserRequest $request)
+    {
+        $data = $this->user_management_service->checkUserExist($request);
+
+        return $this->sendResponse($data, 'success', 200);
     }
 
     public function getUsers($id)

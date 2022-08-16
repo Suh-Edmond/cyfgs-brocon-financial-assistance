@@ -36,6 +36,7 @@ Route::middleware('auth:sanctum')->group(function() {
 
     Route::prefix('protected/auth')->middleware('isUser')->group(function() {
         Route::post('/set-password', [UserController::class, 'updatePassword']);
+        Route::get('/check-user', [UserController::class, 'checkUserExist']);
     });
 
     Route::prefix('protected/roles')->middleware('isPresident')->group(function () {
