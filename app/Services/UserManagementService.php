@@ -104,7 +104,8 @@ class UserManagementService implements UserManagementInterface {
 
     public function setPassword($request)
     {
-        $user = User::where('telephone', $request->telephone)->orwhere('email', $request->email)->firstOrFail();
+
+        $user = $this->checkUserExist($request);
         $user->password = Hash::make($request->password);
         $user->save();
 
@@ -117,7 +118,14 @@ class UserManagementService implements UserManagementInterface {
 
     public function checkUserExist($request)
     {
-        $user = User::where('telephone', $request->telephone)->orwhere('email', $request->email)->firstOrFail();
+        if(!is_null($request->email) && is_null($request->telephone)){
+            $user = User::where('email', $request->email)->firstOrFail();
+        }
+        else if(is_null($request->email) && !is_null($request->telephone)){
+            $user = User::where('telephone', $request->telephone)->firstOrFail();
+        }else {
+            $user = User::where('telephone', $request->telephone)->firstOrFail();
+        }
 
         return $user;
     }

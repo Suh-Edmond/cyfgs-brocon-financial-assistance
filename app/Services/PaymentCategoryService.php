@@ -6,16 +6,16 @@ use App\Interfaces\PaymentCategoryInterface;
 use App\Models\Organisation;
 use App\Models\PaymentCategory;
 use Illuminate\Support\Facades\DB;
-use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+
 
 class PaymentCategoryService implements PaymentCategoryInterface {
 
     public function createPaymentCategory($request, $id)
     {
         $organisation = Organisation::findOrFail($id);
-        PaymentCategory::created([
+        PaymentCategory::create([
             'name'              => $request->name,
-            'description'       =>$request->description,
+            'description'       => $request->description,
             'organisation_id'   => $organisation->id
         ]);
     }
@@ -26,10 +26,7 @@ class PaymentCategoryService implements PaymentCategoryInterface {
                             ->join('organisations', ['payment_categories.organisation_id' => 'organisations.id'])
                             ->where('organisations.id', $organisation_id)
                             ->where('payment_categories.id', $id)
-                            ->first();
-        if(! $updated){
-            return response()->json(['message' => 'PaymentCategory not found', 'status'=> '404'], 404);
-        }
+                            ->firstOrFail();
         $updated->update([
             'name'          => $request->name,
             'description'   => $request->description
@@ -47,9 +44,6 @@ class PaymentCategoryService implements PaymentCategoryInterface {
     {
 
         $payment_category = $this->findPaymentCategory($id, $organisation_id);
-        if(!$payment_category){
-            return response()->json(['message' => 'PaymentCategory not found', 'status'=> '404'], 404);
-        }
 
         return $payment_category;
     }
@@ -57,10 +51,6 @@ class PaymentCategoryService implements PaymentCategoryInterface {
     public function deletePaymentCategory($id, $organisation_id)
     {
         $payment_category = $this->findPaymentCategory($id, $organisation_id);
-
-        if(!$payment_category){
-           return response()->json(['message' => 'PaymentCategory not found', 'status'=> '404'], 404);
-        }
 
         $payment_category->delete();
     }
@@ -72,7 +62,7 @@ class PaymentCategoryService implements PaymentCategoryInterface {
                             ->join('organisations', ['payment_categories.organisation_id' => 'organisations.id'])
                             ->where('organisations.id', $organisation_id)
                             ->where('payment_categories.id', $id)
-                            ->first();
+                            ->firstOrFail();
 
         return $payment_category;
     }

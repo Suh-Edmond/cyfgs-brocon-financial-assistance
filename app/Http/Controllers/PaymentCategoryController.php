@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\PaymentCategoryRequest;
 use App\Http\Resources\PaymentCategoryResource;
-use App\Interfaces\PaymentCategoryInterface;
 use App\Services\PaymentCategoryService;
 
 class PaymentCategoryController extends Controller
@@ -23,7 +22,7 @@ class PaymentCategoryController extends Controller
     {
         $this->payment_category_service->createPaymentCategory($request, $organisation_id);
 
-        return response()->json(['message' => 'success', 'status' =>'201'], 201);
+        return $this->sendResponse('success', 'Payment Category created successfully', 201);
     }
 
 
@@ -31,7 +30,8 @@ class PaymentCategoryController extends Controller
     {
         $payment_categories = $this->payment_category_service->getPaymentCategories($organisation_id);
 
-        return response()->json(['data' => PaymentCategoryResource::collection($payment_categories)], 200);
+        return $this->sendResponse($payment_categories, 200);
+
     }
 
 
@@ -39,22 +39,22 @@ class PaymentCategoryController extends Controller
     {
         $payment_category = $this->payment_category_service->getPaymentCategory($id, $organisation_id);
 
-        return response()->json(['data' => new PaymentCategoryResource($payment_category)], 200);
+        return $this->sendResponse(new PaymentCategoryResource($payment_category), 'success');
     }
 
 
-    public function updatePaymentCategory(PaymentCategoryRequest $request, $id, $organisation_id)
+    public function updatePaymentCategory(PaymentCategoryRequest $request, $organisation_id, $id)
     {
         $this->payment_category_service->updatePaymentCategory($request, $id,  $organisation_id);
 
-        return response()->json(['message' => 'success', 'status' => '204'], 204);
+        return $this->sendResponse('success', 'Payment Category updated successfully', 204);
     }
 
 
-    public function deletePaymentCategory($id, $organisation_id)
+    public function deletePaymentCategory($organisation_id, $id)
     {
        $this->payment_category_service->deletePaymentCategory($id, $organisation_id);
 
-       return response()->json(['message' => 'success', 'status' => '204'], 204);
+       return $this->sendResponse('success', 'Payment Category deleted successfully', 204);
     }
 }
