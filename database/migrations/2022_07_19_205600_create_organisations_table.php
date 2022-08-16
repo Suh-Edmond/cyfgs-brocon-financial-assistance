@@ -26,8 +26,6 @@ class CreateOrganisationsTable extends Migration
             $table->string('region')->nullable(true);
             //data for to produce the report header
             $table->timestamps();
-            $table->mediumText('created_by')->nullable(true);
-            $table->mediumText('updated_by')->nullable(true);
         });
     }
 

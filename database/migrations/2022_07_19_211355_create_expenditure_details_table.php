@@ -20,10 +20,8 @@ class CreateExpenditureDetailsTable extends Migration
             $table->string('name');
             $table->longText('comment');
             $table->boolean('approve')->default(false);
-            $table->string('scan_picture');
+            $table->string('scan_picture')->nullable(true);
             $table->timestamps();
-            $table->mediumText('created_by')->nullable(true);
-            $table->mediumText('updated_by')->nullable(true);
             $table->unsignedBigInteger('expenditure_item_id');
 
             $table->foreign('expenditure_item_id')->references('id')->on('expenditure_items');

@@ -20,9 +20,8 @@ class CreateIncomeActivitiesTable extends Migration
             $table->date('date');
             $table->boolean('approve')->default(false);
             $table->string('venue');
+            $table->string('scan_picture')->nullable(true);
             $table->timestamps();
-            $table->mediumText('created_by')->nullable(true);
-            $table->mediumText('updated_by')->nullable(true);
 
             $table->unsignedBigInteger('organisation_id');
 

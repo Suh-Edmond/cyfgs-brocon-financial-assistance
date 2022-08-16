@@ -5,13 +5,13 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateOrganisationRequest;
 use App\Http\Requests\UpdateOrganisationRequest;
 use App\Http\Resources\OrganisationResource;
-use App\Interfaces\OrganisationInterface;
+use App\Services\OrganisationService;
 
 class OrganisationController extends Controller
 {
     private $organisation_service;
 
-    public function __construct(OrganisationInterface $organisation_service)
+    public function __construct(OrganisationService $organisation_service)
     {
         $this->organisation_service = $organisation_service;
     }
@@ -22,7 +22,7 @@ class OrganisationController extends Controller
     {
         $this->organisation_service->createOrganisation($request);
 
-        return response()->json(['message' => 'success', 'status' => '201'], 201);
+        return $this->sendResponse('success', 'Organisation created successfully' , 201);
     }
 
 
@@ -30,7 +30,7 @@ class OrganisationController extends Controller
     {
         $organisation = $this->organisation_service->getOrganisation($id);
 
-        return response()->json(['data' => new OrganisationResource($organisation)], 200);
+        return $this->sendResponse('success',  new OrganisationResource($organisation), 200);
     }
 
 
@@ -40,7 +40,7 @@ class OrganisationController extends Controller
     {
         $organisation = $this->organisation_service->getOrganisationInfo();
 
-        return response()->json(['data' => new OrganisationResource($organisation)], 200);
+        return $this->sendResponse('success', new OrganisationResource($organisation), 200);
     }
 
 
@@ -48,15 +48,15 @@ class OrganisationController extends Controller
     {
         $organisations = $this->organisation_service->getOrganisations();
 
-        return response()->json(['data' => OrganisationResource::collection($organisations)], 200);
+        return $this->sendResponse('success', OrganisationResource::collection($organisations), 200);
     }
 
 
-    public function updateOgransation(UpdateOrganisationRequest $request, $id)
+    public function updateOrgansation(UpdateOrganisationRequest $request, $id)
     {
         $this->organisation_service->updatedOrganisation($request, $id);
 
-        return response()->json(['message' => 'success', 'status' => '204'], 204);
+        return $this->sendResponse( 'success', 'successfully updated organisation', 204);
     }
 
 
@@ -64,6 +64,6 @@ class OrganisationController extends Controller
     {
         $this->organisation_service->deleteOgranisation($id);
 
-        return response()->json(['message' => 'success', 'status' => '204'], 204);
+        return $this->sendResponse('success','successfully deleted organisation', 204);
     }
 }

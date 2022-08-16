@@ -17,6 +17,16 @@ class RoleAndPermissionSeeder extends Seeder
     public function run()
     {
         Permission::create([
+            'name'      => Permissions::CAN_GET_USER_CONTRIBUTION,
+            'guard_name' => 'api'
+        ]);
+
+        Permission::create([
+            'name'      => Permissions::CAN_GET_USER_CONTRIBUTIONS,
+            'guard_name' => 'api'
+        ]);
+
+        Permission::create([
             'name' => Permissions::CAN_ASSIGN_USER_ROLE,
             'guard_name' => 'api'
         ]);
@@ -283,6 +293,9 @@ class RoleAndPermissionSeeder extends Seeder
             Permissions::CAN_CREATE_EXPENDITURE_CATEGORY,
             Permissions::CAN_UPDATE_USER,
             Permissions::CAN_DELETE_USER,
+            Permissions::CAN_GET_PAYMENT_CATEGORIES,
+            Permissions::CAN_GET_PAYMENT_CATEGORY,
+            Permissions::CAN_UPDATE_PAYMENT_CATEGORY,
             Permissions::CAN_DELETE_EXPENDITURE_CATEGORY,
             Permissions::CAN_DELETE_EXPENDITURE_DETAIL,
             Permissions::CAN_DELETE_EXPENDITURE_ITEM,
@@ -294,6 +307,8 @@ class RoleAndPermissionSeeder extends Seeder
         ]);
 
         $financialSecretaryRole->givePermissionTo([
+            Permissions::CAN_GET_USER_CONTRIBUTIONS,
+            Permissions::CAN_GET_USER_CONTRIBUTION,
             Permissions::CAN_CREATE_EXPENDITURE_CATEGORY,
             Permissions::CAN_CREATE_EXPENDITURE_DETAIL,
             Permissions::CAN_CREATE_EXPENDITURE_ITEM,
@@ -315,7 +330,6 @@ class RoleAndPermissionSeeder extends Seeder
             Permissions::CAN_GET_EXPENDITURE_CATEGORY,
             Permissions::CAN_GET_EXPENDITURE_DETAIL,
             Permissions::CAN_GET_EXPENDITURE_DETAILS,
-            Permissions::CAN_GET_EXPENDITURE_CATEGORIES,
             Permissions::CAN_GET_EXPENDITURE_ITEM,
             Permissions::CAN_GET_EXPENDITURE_ITEMS,
             Permissions::CAN_GET_PAYMENT_CATEGORIES,
@@ -333,6 +347,8 @@ class RoleAndPermissionSeeder extends Seeder
         ]);
 
         $treasurerRole->givePermissionTo([
+            Permissions::CAN_GET_USER_CONTRIBUTIONS,
+            Permissions::CAN_GET_USER_CONTRIBUTION,
             Permissions::CAN_APPROVE_INCOME_FOR_EXPENDITURE_ITEM,
             Permissions::CAN_APPROVE_INCOME_FOR_INCOME_ACTIVITY,
             Permissions::CAN_APPROVE_USER_PAYMENT,
@@ -341,7 +357,6 @@ class RoleAndPermissionSeeder extends Seeder
             Permissions::CAN_GET_EXPENDITURE_CATEGORY,
             Permissions::CAN_GET_EXPENDITURE_DETAIL,
             Permissions::CAN_GET_EXPENDITURE_DETAILS,
-            Permissions::CAN_GET_EXPENDITURE_CATEGORIES,
             Permissions::CAN_GET_EXPENDITURE_ITEM,
             Permissions::CAN_GET_EXPENDITURE_ITEMS,
             Permissions::CAN_GET_PAYMENT_CATEGORIES,

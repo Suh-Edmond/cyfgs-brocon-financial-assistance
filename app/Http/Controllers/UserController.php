@@ -2,52 +2,66 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateAccountRequest;
 use App\Http\Requests\CreateUserRequest;
 use App\Http\Requests\LoginRequest;
+use App\Http\Requests\UpdatePasswordRequest;
 use App\Http\Requests\UpdateUserRequest;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\UserResource;
-use App\Interfaces\UserManagementInterface;
+use App\Services\UserManagementService;
 
 class UserController extends Controller
 {
     private $user_management_service;
 
-    public function __construct(UserManagementInterface $user_management_service)
+    public function __construct(UserManagementService $user_management_service)
     {
         $this->user_management_service = $user_management_service;
     }
 
-
-    public function createUser(CreateUserRequest $request)
+    public function createAccount(CreateAccountRequest $request)
     {
-        $this->user_management_service->createUser($request);
+        $this->user_management_service->createAccount($request);
 
-        return response()->json(['message' => 'success', 'status'=> '201'], 201);
+        return $this->sendResponse("success", "Account created successfully");
+    }
+
+
+    public function addUser(CreateUserRequest $request, $id)
+    {
+        $this->user_management_service->AddUserUserToOrganisation($request, $id);
+
+        return $this->sendResponse('success', 'User added successfully', 201);
     }
 
     public function logInUser(LoginRequest $request)
     {
-        $userToken = $this->user_management_service->loginUser($request);
+        $data = $this->user_management_service->loginUser($request);
 
-        return response()->json(['data' => $userToken, 'status' => '200'], 200);
+        return $this->sendResponse($data, 'success');
     }
 
-    public function getUsers()
+
+    public function updatePassword(UpdatePasswordRequest $request)
     {
-        $organisation_id = Auth::user()->organisation->id;
-        $users = $this->user_management_service->getUsers($organisation_id);
+        $data = $this->user_management_service->loginUser($request);
 
-        return response()->json(['data' => UserResource::collection($users)], 200);
+        return $this->sendResponse($data, 'success');
     }
 
+    public function getUsers($id)
+    {
+        $users = $this->user_management_service->getUsers($id);
+
+        return $this->sendResponse('success', $users, 200);
+    }
 
 
     public function getUser($user_id)
     {
        $user = $this->user_management_service->getUser($user_id);
 
-       return response()->json(['data' => new UserResource($user)], 200);
+       return $this->sendResponse(new UserResource($user, "", false), 200);
     }
 
 
@@ -55,7 +69,7 @@ class UserController extends Controller
     {
        $this->user_management_service->updateUser($id, $request);
 
-       return response()->json(['message' => 'success', 'status' => '204'], 204);
+       return $this->sendResponse('success', 'Account updated sucessfully', 204);
     }
 
 
@@ -64,7 +78,7 @@ class UserController extends Controller
     {
         $this->user_management_service->deleteUser($id);
 
-        return response()->json(['message' => 'success', 'status' => '204'], 204);
+        return $this->sendResponse('success', 'User successfully been removed', 204);
     }
 
 }

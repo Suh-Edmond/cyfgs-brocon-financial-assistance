@@ -16,14 +16,12 @@ class CreateUserContributionsTable extends Migration
         Schema::create('user_contributions', function (Blueprint $table) {
             $table->id();
             $table->string('code')->unique();
-            $table->string('scan_picture');
+            $table->string('scan_picture')->nullable(true);
             $table->longText('comment');
             $table->double('amount_deposited');
-            $table->enum('status', ['COMPLETE', 'INCOMPLETE']);
+            $table->string('status');
             $table->boolean('approve')->default(false);
             $table->timestamps();
-            $table->mediumText('created_by')->nullable(true);
-            $table->mediumText('updated_by')->nullable(true);
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('payment_item_id');
 

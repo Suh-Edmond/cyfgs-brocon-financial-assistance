@@ -17,14 +17,12 @@ class CreateExpenditureItemsTable extends Migration
             $table->id();
             $table->string('name');
             $table->double('amount');
-            $table->string('scan_picture');//receipt
+            $table->string('scan_picture')->nullable(true);//receipt
             $table->boolean('approve')->default(false);
             $table->text('comment');
             $table->string('venue');
             $table->date('date');
             $table->timestamps();
-            $table->mediumText('created_by')->nullable(true);
-            $table->mediumText('updated_by')->nullable(true);
             $table->unsignedBigInteger('expenditure_category_id');
 
             $table->foreign('expenditure_category_id')->references('id')->on('expenditure_categories');

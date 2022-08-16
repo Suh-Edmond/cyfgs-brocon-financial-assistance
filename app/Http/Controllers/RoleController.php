@@ -6,13 +6,14 @@ namespace App\Http\Controllers;
 use App\Http\Requests\AddUserRoleRequest;
 use App\Http\Resources\RoleResource;
 use App\Interfaces\RoleInterface;
+use App\Services\RoleService;
 use Illuminate\Support\Str;
 
 class RoleController extends Controller
 {
     private $roleService;
 
-    public function __construct(RoleInterface $roleService)
+    public function __construct(RoleService $roleService)
     {
         $this->roleService = $roleService;
     }
@@ -22,7 +23,7 @@ class RoleController extends Controller
         (int)Str::uuid($request->role_id)->toString();
         $this->roleService->addUserRole($request->user_id, $request->role_id);
 
-        return response()->json(['message' => "success"], 201);
+        return $this->sendResponse('success', 'Role successfully added', 201);
     }
 
 
@@ -31,7 +32,7 @@ class RoleController extends Controller
 
         $roles = $this->roleService->getAllRoles();
 
-        return response()->json(["data" => RoleResource::collection($roles)], 200);
+        return $this->sendResponse('sucess', RoleResource::collection($roles), 200);
     }
 
 
@@ -40,14 +41,14 @@ class RoleController extends Controller
     {
         $user_roles = $this->roleService->getUserRoles($user_id);
 
-        return response()->json(["data" => RoleResource::collection($user_roles)], 200);
+        return $this->sendResponse('success', RoleResource::collection($user_roles), 200);
     }
 
 
-    public function removeUserRole($user_id, $role_id)
+    public function removeUserRole($role_id, $user_id)
     {
-        $this->roleService->removeRole($user_id, $role_id);
-
-        return response()->json(['message' => 'success'], 204);
+        $user = $this->roleService->removeRole($user_id, $role_id);
+        dd($user);
+        return $this->sendResponse('success', 'Role remove successfully', 204);
     }
 }
