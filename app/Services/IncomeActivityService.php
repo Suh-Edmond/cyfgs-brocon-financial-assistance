@@ -1,6 +1,7 @@
 <?php
 namespace App\Services;
 
+use App\Http\Resources\IncomeActivityResource;
 use App\Interfaces\IncomeActivityInterface;
 use App\Models\IncomeActivity;
 use App\Models\Organisation;
@@ -35,9 +36,9 @@ class IncomeActivityService implements IncomeActivityInterface {
 
     public function getIncomeActivities($organisation_id)
     {
-        $activities = IncomeActivity::where('organisation_id', $organisation_id);
+        $activities = IncomeActivity::where('organisation_id', $organisation_id)->get();
 
-        return $activities->toArray();
+        return $activities;
     }
 
     public function getIncomeActivity($id)
@@ -57,8 +58,8 @@ class IncomeActivityService implements IncomeActivityInterface {
     public function approveIncomeActivity($id)
     {
         $activity = $this->findIncomeActivity($id);
-
-        $activity->update(['approve' => true]);
+        $activity->approve = 1;
+        $activity->save();
     }
 
 

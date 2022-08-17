@@ -18,6 +18,7 @@ class PaymentItems extends Migration
             $table->string('name');
             $table->double('amount');
             $table->boolean('complusory')->default(true);
+            $table->mediumText('description')->nullable(true);
             $table->timestamps();
             $table->unsignedBigInteger('payment_category_id');
 

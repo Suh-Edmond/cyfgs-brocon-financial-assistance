@@ -31,7 +31,7 @@ class UserManagementService implements UserManagementInterface {
 
     public function getUsers($organisation_id)
     {
-        $users =  User::where('organisation_id', $organisation_id)->get()->toArray();
+        $users =  User::where('organisation_id', $organisation_id)->get();
 
         return $users;
     }
@@ -104,7 +104,8 @@ class UserManagementService implements UserManagementInterface {
 
     public function setPassword($request)
     {
-        $user = User::where('telephone', $request->telephone)->orwhere('email', $request->email)->firstOrFail();
+
+        $user = $this->checkUserExist($request);
         $user->password = Hash::make($request->password);
         $user->save();
 
@@ -114,4 +115,18 @@ class UserManagementService implements UserManagementInterface {
         return new UserResource($user, $token, $hasLoginBefore);
     }
 
+
+    public function checkUserExist($request)
+    {
+        if(!is_null($request->email) && is_null($request->telephone)){
+            $user = User::where('email', $request->email)->firstOrFail();
+        }
+        else if(is_null($request->email) && !is_null($request->telephone)){
+            $user = User::where('telephone', $request->telephone)->firstOrFail();
+        }else {
+            $user = User::where('telephone', $request->telephone)->firstOrFail();
+        }
+
+        return $user;
+    }
 }

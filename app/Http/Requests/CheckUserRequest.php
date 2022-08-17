@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class IncomeActivityRequest extends FormRequest
+class CheckUserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,11 +24,8 @@ class IncomeActivityRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'                  => 'required|max:255',
-            'description'           => 'string|max:5000',
-            'venue'                 => 'required|string',
-            'date'                  => 'required|date',
-            'amount'                => 'required|numeric|min:1',
+            'email'      =>  'string',
+            'telephone'  =>  'string'
         ];
     }
 }

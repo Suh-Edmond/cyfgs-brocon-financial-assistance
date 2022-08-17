@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CheckUserRequest;
 use App\Http\Requests\CreateAccountRequest;
 use App\Http\Requests\CreateUserRequest;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\UpdatePasswordRequest;
 use App\Http\Requests\UpdateUserRequest;
+use App\Http\Resources\UserCollection;
 use App\Http\Resources\UserResource;
 use App\Services\UserManagementService;
 
@@ -44,16 +46,24 @@ class UserController extends Controller
 
     public function updatePassword(UpdatePasswordRequest $request)
     {
-        $data = $this->user_management_service->loginUser($request);
+        $data = $this->user_management_service->setPassword($request);
 
-        return $this->sendResponse($data, 'success');
+        return $this->sendResponse($data, 'success', 200);
+    }
+
+
+    public function checkUserExist(CheckUserRequest $request)
+    {
+        $data = $this->user_management_service->checkUserExist($request);
+
+        return $this->sendResponse($data, 'success', 200);
     }
 
     public function getUsers($id)
     {
         $users = $this->user_management_service->getUsers($id);
 
-        return $this->sendResponse('success', $users, 200);
+        return $this->sendResponse(UserResource::collection($users), 'success');
     }
 
 

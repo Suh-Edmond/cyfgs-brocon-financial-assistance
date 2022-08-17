@@ -36,7 +36,7 @@ class ExpenditureDetailService implements ExpenditureDetailInterface {
     {
         $details = ExpenditureDetail::where('expenditure_item_id', $expenditure_item_id)->sum('amount_spent');
 
-        $details->toArray();
+        $details;
     }
 
     public function getExpenditureDetail($id)
@@ -71,8 +71,7 @@ class ExpenditureDetailService implements ExpenditureDetailInterface {
                                     ->join('expenditure_items', ['expenditure_items.id' => 'expenditure_details.expenditure_item_id'])
                                     ->where('expenditure_items.id', $item)
                                     ->orWhere('expenditure_details.status', $status)
-                                    ->get()
-                                    ->toArray();
+                                    ->get();
         return $details;
     }
 

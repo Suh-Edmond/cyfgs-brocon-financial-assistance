@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Interfaces\ExpenditureCategoryInterface;
 use App\Models\ExpenditureCategory;
 use App\Models\Organisation;
-use Illuminate\Support\Facades\DB;
 
 class ExpenditureCategoryService implements ExpenditureCategoryInterface {
 
@@ -22,9 +21,6 @@ class ExpenditureCategoryService implements ExpenditureCategoryInterface {
     public function updateExpenditureCategory($request, $id, $organisation_id)
     {
         $update_expenditure_category = $this->findExpenditureCategory($id, $organisation_id);
-        if(! $update_expenditure_category){
-            return response()->json(['message'=> 'Expenditure Category not found', 'status' => '404'], 404);
-        }
         $update_expenditure_category->update([
             'name'              => $request->name,
             'description'       => $request->description,
@@ -33,17 +29,14 @@ class ExpenditureCategoryService implements ExpenditureCategoryInterface {
 
     public function getExpenditureCategories($organisation_id)
     {
-        $expendiure_categories = ExpenditureCategory::where('organisation_id', $organisation_id);
+        $expendiure_categories = ExpenditureCategory::where('organisation_id', $organisation_id)->get();
 
-        return $expendiure_categories->toArray();
+        return $expendiure_categories;
     }
 
     public function getExpenditureCategory($id, $organisation_id)
     {
         $expendiure_category = $this->findExpenditureCategory($id, $organisation_id);
-        if(! $expendiure_category){
-            return response()->json(['message'=> 'Expenditure Category not found', 'status' => '404'], 404);
-        }
 
         return $expendiure_category;
     }
@@ -51,9 +44,6 @@ class ExpenditureCategoryService implements ExpenditureCategoryInterface {
     public function deleteExpenditureCategory($id, $organisation_id)
     {
         $expendiure_category = $this->findExpenditureCategory($id, $organisation_id);
-        if(! $expendiure_category){
-            return response()->json(['message'=> 'Expenditure Category not found', 'status' => '404'], 404);
-        }
 
         $expendiure_category->delete();
 
@@ -65,7 +55,7 @@ class ExpenditureCategoryService implements ExpenditureCategoryInterface {
                                         ->join('organisations', ['organisations.id' => 'expenditure_categories.organisation_id'])
                                         ->where('expenditure_categories.id', $id)
                                         ->where('expenditure_categories.organisation_id', $organisation_id)
-                                        ->first();
+                                        ->firstOrFail();
         return $update_expenditure_category;
     }
 }

@@ -23,10 +23,9 @@ class RoleService implements RoleInterface {
     {
         $user = User::findOrFail($user_id);
         $user_role = Role::find($role_id);
-        $delete_role =array_filter($user->roles->toArray(), function($role, $role_id) {
-            return $role->id == $role_id;
+        $delete_role =array_filter($user->roles->toArray(), function($role, $user_role) {
+            return $role->id == $user_role->id;
         });
-        // $user->removeRole($user_role);
 
         return $delete_role;
     }

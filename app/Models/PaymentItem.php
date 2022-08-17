@@ -12,7 +12,8 @@ class PaymentItem extends Model
         'name',
         'amount',
         'complusory',
-        'payment_category_id'
+        'payment_category_id',
+        'description'
     ];
 
 

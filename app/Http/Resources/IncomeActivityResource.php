@@ -2,10 +2,12 @@
 
 namespace App\Http\Resources;
 
+use App\Traits\ResponseTrait;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class IncomeActivityResource extends JsonResource
 {
+    use ResponseTrait;
     /**
      * Transform the resource into an array.
      *
@@ -20,8 +22,8 @@ class IncomeActivityResource extends JsonResource
             'venue'                 => $this->venue,
             'date'                  => $this->date,
             'amount'                => $this->amount,
-            'approve'               => $this->approve,
-            'organisation_id'       => $this->organisation->id,
+            'approve'               => ResponseTrait::convertBooleanValue($this->approve),
+            'organisation'          => $this->organisation,
             'created_at'            => $this->created_at,
             'updated_at'            => $this->updated_at,
             'updated_by'            => $this->updated_by,

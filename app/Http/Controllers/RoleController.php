@@ -32,7 +32,7 @@ class RoleController extends Controller
 
         $roles = $this->roleService->getAllRoles();
 
-        return $this->sendResponse('sucess', RoleResource::collection($roles), 200);
+        return $this->sendResponse(RoleResource::collection($roles), 'success');
     }
 
 
@@ -41,14 +41,13 @@ class RoleController extends Controller
     {
         $user_roles = $this->roleService->getUserRoles($user_id);
 
-        return $this->sendResponse('success', RoleResource::collection($user_roles), 200);
+        return $this->sendResponse(RoleResource::collection($user_roles), 'success');
     }
 
 
     public function removeUserRole($role_id, $user_id)
     {
         $user = $this->roleService->removeRole($user_id, $role_id);
-        dd($user);
         return $this->sendResponse('success', 'Role remove successfully', 204);
     }
 }

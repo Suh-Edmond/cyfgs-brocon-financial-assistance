@@ -17,5 +17,7 @@ interface UserSavingInterface {
     public function approveUserSaving($id);
 
     public function calculateUserSaving($id, $user_id);
+
+    public function getAllUserSavingsByOrganisation($id);
 }
 

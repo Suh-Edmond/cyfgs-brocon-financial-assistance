@@ -68,12 +68,14 @@ class Kernel extends HttpKernel
         'role'                  => \Spatie\Permission\Middlewares\RoleMiddleware::class,
         'permission'            => \Spatie\Permission\Middlewares\PermissionMiddleware::class,
         'role_or_permission'    => \Spatie\Permission\Middlewares\RoleOrPermissionMiddleware::class,
-        'isPresident'           => \App\Http\Middleware\isPresidentMiddleware::class,
+        'isPresident'           => \App\Http\Middleware\IsPresidentMiddleware::class,
         'isAdmin'               => \App\Http\Middleware\IsAdminMiddleware::class,
         'isAuditor'             => \App\Http\Middleware\IsAuditorMiddleware::class,
         'isFinancialSecretary'  => \App\Http\Middleware\IsFinancialSecretaryMiddleware::class,
         'isTreasurer'           => \App\Http\Middleware\IsTreasurerMiddleware::class,
         'isUser'                => \App\Http\Middleware\IsUserMiddleware::class,
-
+        'isPresidentOrIsFinancialSecretary' => \App\Http\Middleware\IsPresidentOrIsFinancialSecretary::class,
+        'isTreasurerOrIsFinancialSecretary' => \App\Http\Middleware\IsTreasurerOrIsFinancialSecretary::class,
+        'isTreasurerOrIsFinancialSecretaryOrIsPresident' => \App\Http\Middleware\IsTreasurerOrIsFinancialSecretaryOrIsPresident::class,
     ];
 }

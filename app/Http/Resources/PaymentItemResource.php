@@ -6,6 +6,8 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class PaymentItemResource extends JsonResource
 {
+
+
     /**
      * Transform the resource into an array.
      *
@@ -22,7 +24,7 @@ class PaymentItemResource extends JsonResource
             'payment_category_id'   => $this->paymentCategory->id,
             'payment_category_name' => $this->paymentCategory->name,
             'created_at'            => $this->created_at,
-            'updated_at'            => $this->updated_at
+            'updated_at'            => $this->updated_at,
         ];
     }
 }

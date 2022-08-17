@@ -9,7 +9,7 @@ class UserResource extends JsonResource
     private $token;
     private $hasLoginBefore;
 
-    public function __construct($resource, $token, $hasLoginBefore)
+    public function __construct($resource, $token = null, $hasLoginBefore = null)
     {
         parent::__construct($resource);
         $this->token = $token;
@@ -32,9 +32,10 @@ class UserResource extends JsonResource
             'occupation'     => $this->occupation,
             'gender'         => $this->gender,
             'organsation_id' => $this->organisation->id,
+            'organsation_name' => $this->organisation->name,
             'created_at'     => $this->created_at,
             'updated_at'     => $this->updated_at,
-            'roles'          => $this->roles,
+            'roles'          => RoleResource::collection($this->roles),
             'token'          => $this->token,
             'hasLoginBefore' => $this->hasLoginBefore
         ];
