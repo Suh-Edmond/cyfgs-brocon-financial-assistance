@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\IncomeActivity;
+
 use App\Http\Resources\IncomeActivityResource;
 use App\Http\Requests\IncomeActivityRequest;
-use App\Interfaces\IncomeActivityInterface;
 use App\Services\IncomeActivityService;
 
 class IncomeActivityController extends Controller
@@ -23,14 +22,14 @@ class IncomeActivityController extends Controller
     {
         $this->income_activity_service->createIncomeActivity($request, $id);
 
-        return response()->json(['message' => 'success', 'status' => 'ok'], 201);
+        return $this->sendResponse('success', 'Income activity saved successfully', 201);
     }
 
     public function updateIncomeActivity(IncomeActivityRequest $request,  $id)
     {
         $this->income_activity_service->updateIncomeActivity($request, $id);
 
-        return response()->json(['message' => 'success', 'status' => 'ok'], 202);
+        return $this->sendResponse('success', 'Income activity updated successfully', 202);
     }
 
 
@@ -38,7 +37,7 @@ class IncomeActivityController extends Controller
     {
         $income_activities = $this->income_activity_service->getIncomeActivities($id);
 
-        return response()->json(['data' => IncomeActivityResource::collection($income_activities)], 200);
+        return $this->sendResponse(IncomeActivityResource::collection($income_activities), 200);
     }
 
 
@@ -46,7 +45,7 @@ class IncomeActivityController extends Controller
     {
         $income_activity = $this->income_activity_service->getIncomeActivity($id);
 
-        return response()->json(['data' => new IncomeActivity($income_activity)], 200);
+        return $this->sendResponse(new IncomeActivityResource($income_activity), 200);
     }
 
 
@@ -54,13 +53,13 @@ class IncomeActivityController extends Controller
     {
         $this->income_activity_service->deleteIncomeActivity($id);
 
-        return response()->json(['message' => 'success', 'status' => 'ok'], 204);
+        return $this->sendResponse('success', 'Income activity deleted successfully', 204);
     }
 
     public function approveIncomeActivity($id)
     {
         $this->income_activity_service->approveIncomeActivity($id);
 
-        return response()->json(['message' => 'success', 'status' => 'ok'], 204);
+        return $this->sendResponse('success', 'Income Activity approved successfully', 204);
     }
 }

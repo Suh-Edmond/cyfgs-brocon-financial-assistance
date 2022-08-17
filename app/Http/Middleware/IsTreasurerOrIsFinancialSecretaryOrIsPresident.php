@@ -3,12 +3,14 @@
 namespace App\Http\Middleware;
 
 use App\Constants\Roles;
+use App\Traits\ResponseTrait;
 use Closure;
 use Illuminate\Http\Request;
 use Spatie\Permission\Contracts\Role;
 
 class IsTreasurerOrIsFinancialSecretaryOrIsPresident
 {
+    use ResponseTrait;
     /**
      * Handle an incoming request.
      *
@@ -22,15 +24,15 @@ class IsTreasurerOrIsFinancialSecretaryOrIsPresident
         {
             return $next($request);
         }
-        if($request->user()->hasRole(Roles::FINANCIAL_SECRETARY) )
+        else if($request->user()->hasRole(Roles::FINANCIAL_SECRETARY) )
         {
             return $next($request);
         }
-        if($request->user()->hasRole(Roles::TREASURER)) {
+        else if($request->user()->hasRole(Roles::TREASURER)) {
             return $next($request);
         }
         else{
-            return response()->json(['message' => 'Access denied', 'status' => '403'], 403);
+            return ResponseTrait::sendError('Access denied', 'You dont have the role to access this route', 403);
         }
 
     }

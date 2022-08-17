@@ -40,8 +40,7 @@ class UserContributionService implements UserContributionInterface {
         $user_contributions = UserContribution::select('user_contributions.*')
                                                 ->join('payment_items', ['payment_items.id' => 'user_contributions.payment_item_id'])
                                                 ->where('user_contributions.payment_item_id', $payment_item)
-                                                ->get()
-                                                ->toArray();
+                                                ->get();
         return $user_contributions;
     }
 
@@ -50,8 +49,7 @@ class UserContributionService implements UserContributionInterface {
         $user_contributions = UserContribution::select('user_contributions.*')
                                                 ->join('users', ['users.id' => 'user_contributions.user_id'])
                                                 ->where('user_contributions.user_id', $user_id)
-                                                ->get()
-                                                ->toArray();
+                                                ->get();
         return $user_contributions;
     }
 
@@ -85,8 +83,7 @@ class UserContributionService implements UserContributionInterface {
                                                 ->join('payment_items', ['payment_items.id' => 'user_contributions.payment_item_id'])
                                                 ->where('user_contributions.payment_item_id', $payment_item)
                                                 ->where('user_contributions.status', $status)
-                                                ->get()
-                                                ->toArray();
+                                                ->get();
 
         return $user_contributions;
     }

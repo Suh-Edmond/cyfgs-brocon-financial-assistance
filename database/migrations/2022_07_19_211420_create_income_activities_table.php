@@ -15,7 +15,8 @@ class CreateIncomeActivitiesTable extends Migration
     {
         Schema::create('income_activities', function (Blueprint $table) {
             $table->id();
-            $table->longText('description');
+            $table->string('name');
+            $table->mediumText('description');
             $table->double('amount');
             $table->date('date');
             $table->boolean('approve')->default(false);

@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ExpenditureCategoryRequest;
+use App\Http\Resources\ExpenditureCategoryCollection;
 use App\Http\Resources\ExpenditureCategoryResource;
+use App\Http\Resources\ExpenditureCollection;
 use App\Services\ExpenditureCategoryService;
 
 class ExpenditureCategoryController extends Controller
@@ -22,7 +24,7 @@ class ExpenditureCategoryController extends Controller
     {
         $expenditure_categories = $this->expenditure_category_service->getExpenditureCategories($organisation_id);
 
-        return response()->json(['data', ExpenditureCategoryResource::collection($expenditure_categories)], 200);
+        return $this->sendResponse(new ExpenditureCategoryCollection($expenditure_categories), 200);
     }
 
 
@@ -30,7 +32,7 @@ class ExpenditureCategoryController extends Controller
     {
         $this->expenditure_category_service->createExpenditureCategory($request, $organisation_id);
 
-        return response()->json(['message'=>'success', 'status'=>'201'], 201);
+        return $this->sendResponse('success', 'Expenditure Category created successfully', 201);
     }
 
 
@@ -39,7 +41,7 @@ class ExpenditureCategoryController extends Controller
     {
         $expenditure_category = $this->expenditure_category_service->getExpenditureCategory($id, $organisation_id);
 
-        return response()->json(['data', new ExpenditureCategoryResource($expenditure_category)], 200);
+        return $this->sendResponse(new ExpenditureCategoryResource($expenditure_category), 200);
     }
 
 
@@ -48,7 +50,7 @@ class ExpenditureCategoryController extends Controller
     {
         $this->expenditure_category_service->updateExpenditureCategory($request, $id, $organisation_id);
 
-        return response()->json(['message'=>'success', 'status'=>'204'], 204);
+        return $this->sendResponse('success', 'Expenditure Category updated successfully', 202);
     }
 
 
@@ -57,6 +59,6 @@ class ExpenditureCategoryController extends Controller
     {
         $this->expenditure_category_service->deleteExpenditureCategory($id, $organisation_id);
 
-        return response()->json(['message'=>'success', 'status'=>'204'], 204);
+        return $this->sendResponse('success', 'Expenditure Category deleted successfully', 204);
     }
 }

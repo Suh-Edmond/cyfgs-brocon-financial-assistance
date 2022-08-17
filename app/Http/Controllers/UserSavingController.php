@@ -21,7 +21,7 @@ class UserSavingController extends Controller
     {
         $user_savings = $this->user_saving_service->getUserSavings($user_id);
 
-        return response()->json(['data' => UserSavingResource::collection($user_savings)], 200);
+        return $this->sendResponse(UserSavingResource::collection($user_savings), 200);
     }
 
 
@@ -29,7 +29,7 @@ class UserSavingController extends Controller
     {
         $this->user_saving_service->createUserSaving($request);
 
-        return response()->json(['message' => 'success', 'status'=> 'ok'], 201);
+        return $this->sendResponse('success', 'User saving saved successfully', 201);
     }
 
 
@@ -37,7 +37,7 @@ class UserSavingController extends Controller
     {
         $user_saving = $this->user_saving_service->getUserSaving($id, $user_id);
 
-        return response()->json(['data' => new UserSavingResource($user_saving)], 200);
+        return $this->sendResponse(new UserSavingResource($user_saving), 200);
     }
 
 
@@ -45,7 +45,7 @@ class UserSavingController extends Controller
     {
         $this->user_saving_service->updateUserSaving($request, $id, $user_id);
 
-        return response()->json(['message' => 'success', 'status'=> 'ok'], 204);
+        return $this->sendResponse('success', 'User saving updated successfully', 204);
     }
 
 
@@ -53,7 +53,7 @@ class UserSavingController extends Controller
     {
         $this->user_saving_service->deleteUserSaving($id, $user_id);
 
-        return response()->json(['message' => 'success', 'status'=> 'ok'], 204);
+        return $this->sendResponse('success', 'User saving deleted sucessfully', 204);
     }
 
 
@@ -61,6 +61,13 @@ class UserSavingController extends Controller
     {
         $this->user_saving_service->approveUserSaving($id);
 
-        return response()->json(['message' => 'success', 'status'=> 'ok'], 204);
+        return $this->sendResponse('success', 'User saving approved sucessfully', 204);
+    }
+
+    public function getAllUserSavingsByOrganisation($id)
+    {
+        $savings = $this->user_saving_service->getAllUserSavingsByOrganisation($id);
+
+        return $this->sendResponse(UserSavingResource::collection($savings), 200);
     }
 }

@@ -40,4 +40,16 @@ trait ResponseTrait {
 
         return response()->json($response, 200);
     }
+
+
+    public static function convertBooleanValue($value)
+    {
+        if($value == 0){
+            $response = false;
+        }else{
+            $response = true;
+        }
+
+        return $response;
+    }
 }

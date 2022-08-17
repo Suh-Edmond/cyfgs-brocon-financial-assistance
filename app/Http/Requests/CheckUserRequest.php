@@ -25,7 +25,7 @@ class CheckUserRequest extends FormRequest
     {
         return [
             'email'      =>  'string',
-            'telephone'  => 'string'
+            'telephone'  =>  'string'
         ];
     }
 }

@@ -30,7 +30,7 @@ class OrganisationController extends Controller
     {
         $organisation = $this->organisation_service->getOrganisation($id);
 
-        return $this->sendResponse('success',  new OrganisationResource($organisation), 200);
+        return $this->sendResponse(new OrganisationResource($organisation), 'success');
     }
 
 
@@ -40,7 +40,7 @@ class OrganisationController extends Controller
     {
         $organisation = $this->organisation_service->getOrganisationInfo();
 
-        return $this->sendResponse('success', new OrganisationResource($organisation), 200);
+        return $this->sendResponse(new OrganisationResource($organisation), 'success');
     }
 
 
@@ -48,7 +48,7 @@ class OrganisationController extends Controller
     {
         $organisations = $this->organisation_service->getOrganisations();
 
-        return $this->sendResponse('success', OrganisationResource::collection($organisations), 200);
+        return $this->sendResponse(OrganisationResource::collection($organisations), 'success');
     }
 
 

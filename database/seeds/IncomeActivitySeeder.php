@@ -23,6 +23,7 @@ class IncomeActivitySeeder extends Seeder
                 'description'       => $faker->sentence,
                 'amount'            => $faker->numberBetween(10000, 100000),
                 'date'              => $faker->date(),
+                'name'              => $faker->countryISOAlpha3(),
                 'venue'             => $faker->sentence,
                 'approve'           => $faker->randomElement([true, false]),
                 'organisation_id'   => rand(1, $this->oragnisations)

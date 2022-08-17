@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\PaymentItemRequest;
+use App\Http\Resources\PaymentItemCollection;
 use App\Http\Resources\PaymentItemResource;
 use App\Interfaces\PaymentItemInterface;
 use App\Services\PaymentItemService;
@@ -24,7 +25,7 @@ class PaymentItemController extends Controller
     {
         $items = $this->payment_item_service->getPaymentItemsByCategory($payment_category_id);
 
-        return response()->json(['data' => PaymentItemResource::collection($items)], 200);
+        return $this->sendResponse($items, 200);
     }
 
 
@@ -32,7 +33,7 @@ class PaymentItemController extends Controller
     {
         $this->payment_item_service->createPaymentItem($request, $payment_category_id);
 
-        return response()->json(['message' => 'success', 'status' => "201"], 201);
+        return $this->sendResponse('success', 'Payment Item created Successfully', 201);
     }
 
 
@@ -40,7 +41,7 @@ class PaymentItemController extends Controller
     {
         $payment_item = $this->payment_item_service->getPaymentItem($id, $payment_category_id);
 
-        return response()->json(['data'=>new PaymentItemResource($payment_item)], 200);
+        return $this->sendResponse(new PaymentItemResource($payment_item), 200);
     }
 
 
@@ -48,7 +49,7 @@ class PaymentItemController extends Controller
     {
        $this->payment_item_service->updatePaymentItem($request, $id, $payment_category_id);
 
-       return response()->json(['message' => 'success', 'status' => '204'], 204);
+       return $this->sendResponse('success', 'Payment Item created Successfully', 204);
     }
 
 
@@ -56,6 +57,6 @@ class PaymentItemController extends Controller
     {
         $this->payment_item_service->deletePaymentItem($id, $payment_category_id);
 
-        return response()->json(['message' => 'success', 'status' => '204'], 204);
+        return $this->sendResponse('success', 'Payment Item deleted successfully', 204);
     }
 }

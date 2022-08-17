@@ -3,10 +3,12 @@
 namespace App\Http\Middleware;
 
 use App\Constants\Roles;
+use App\Traits\ResponseTrait;
 use Closure;
 
 class IsFinancialSecretaryMiddleware
 {
+    use ResponseTrait;
     /**
      * Handle an incoming request.
      *
@@ -17,7 +19,7 @@ class IsFinancialSecretaryMiddleware
     public function handle($request, Closure $next)
     {
         if(! $request->user()->hasRole(Roles::FINANCIAL_SECRETARY)){
-            return response()->json(['message' => 'Access denied', 'status' => '403'], 403);
+            return ResponseTrait::sendError('Access denied', 'You dont have the role to access this route', 403);
         }
         return $next($request);
     }

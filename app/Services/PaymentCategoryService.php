@@ -37,7 +37,7 @@ class PaymentCategoryService implements PaymentCategoryInterface {
     {
         $payment_categories = PaymentCategory::where('organisation_id', $organisation_id)->get();
 
-        return $payment_categories->toArray();
+        return $payment_categories;
     }
 
     public function getPaymentCategory($id, $organisation_id)

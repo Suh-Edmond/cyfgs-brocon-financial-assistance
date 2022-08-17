@@ -8,6 +8,7 @@ use App\Http\Requests\CreateUserRequest;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\UpdatePasswordRequest;
 use App\Http\Requests\UpdateUserRequest;
+use App\Http\Resources\UserCollection;
 use App\Http\Resources\UserResource;
 use App\Services\UserManagementService;
 
@@ -62,7 +63,7 @@ class UserController extends Controller
     {
         $users = $this->user_management_service->getUsers($id);
 
-        return $this->sendResponse('success', $users, 200);
+        return $this->sendResponse(UserResource::collection($users), 'success');
     }
 
 

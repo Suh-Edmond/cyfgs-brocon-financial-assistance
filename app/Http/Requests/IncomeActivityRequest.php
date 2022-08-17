@@ -24,7 +24,8 @@ class IncomeActivityRequest extends FormRequest
     public function rules()
     {
         return [
-            'description'           => 'required|string|max:5000',
+            'name'                  => 'required|max:255',
+            'description'           => 'string|max:5000',
             'venue'                 => 'required|string',
             'date'                  => 'required|date',
             'amount'                => 'required|numeric|min:1',

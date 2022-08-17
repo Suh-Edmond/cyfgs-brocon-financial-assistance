@@ -20,9 +20,6 @@ class UserServingService implements UserSavingInterface {
     public function updateUserSaving($request, $id, $user_id)
     {
         $user = $this->findUserSaving($id, $user_id);
-        if(! $user){
-            return response()->json(['message'=> 'User  Savingnot found', 'status' => '404'], 404);
-        }
         $user->update([
             'amount_deposited'      => $request->amount_deposited,
             'comment'               => $request->comment,
@@ -31,15 +28,12 @@ class UserServingService implements UserSavingInterface {
 
     public function getUserSavings($user_id)
     {
-        return UserSaving::where('user_id', $user_id)->toArray();
+        return UserSaving::where('user_id', $user_id);
     }
 
     public function getUserSaving($id, $user_id)
     {
         $user_saving = $this->findUserSaving($id, $user_id);
-        if(! $user_saving){
-            return response()->json(['message'=> 'User Saving not found', 'status' => '404'], 404);
-        }
 
         return $user_saving;
     }
@@ -47,9 +41,6 @@ class UserServingService implements UserSavingInterface {
     public function deleteUserSaving($id, $user_id)
     {
         $user_saving = $this->findUserSaving($id, $user_id);
-        if(! $user_saving){
-            return response()->json(['message'=> 'User Saving not found', 'status' => '404'], 404);
-        }
 
         $user_saving->delete();
     }
@@ -57,13 +48,23 @@ class UserServingService implements UserSavingInterface {
     public function approveUserSaving($id)
     {
         $user_saving = UserSaving::findOrFail($id);
-
-        $user_saving->update(['approve' => true]);
+        $user_saving->approve = 1;
+        $user_saving->save();
     }
 
     public function calculateUserSaving($id, $expenditure_item_id)
     {
 
+    }
+
+    public function getAllUserSavingsByOrganisation($id)
+    {
+        $savings = UserSaving::select('user_savings.*, SUM(user_savings.amount_deposited) as total_amount')
+                                ->join('users', ['users.id' => 'user_savings.user_id'])
+                                ->join('organisations', ['users.organisation_id' => 'organisations.id'])
+                                ->orderBy('name', 'ASC')
+                                ->get();
+        return $savings;
     }
 
     private function findUserSaving($id, $user_id)
@@ -72,7 +73,7 @@ class UserServingService implements UserSavingInterface {
                     ->join('users', ['users.id' => 'user_savings.user_id'])
                     ->where('users.id', $user_id)
                     ->where('user_savings.id', $id)
-                    ->first();
+                    ->firstOrFail();
         return $saving;
     }
 

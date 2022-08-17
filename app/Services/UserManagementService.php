@@ -31,7 +31,7 @@ class UserManagementService implements UserManagementInterface {
 
     public function getUsers($organisation_id)
     {
-        $users =  User::where('organisation_id', $organisation_id)->get()->toArray();
+        $users =  User::where('organisation_id', $organisation_id)->get();
 
         return $users;
     }

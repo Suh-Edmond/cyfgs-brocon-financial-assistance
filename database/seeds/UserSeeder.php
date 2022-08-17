@@ -1,10 +1,12 @@
 <?php
 
+use App\Constants\Roles;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Faker\Generator as Faker;
 use App\Models\Organisation;
-
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class UserSeeder extends Seeder
 {
@@ -24,16 +26,32 @@ class UserSeeder extends Seeder
     public function run(Faker $faker)
     {
         for($i = 0; $i < 100; $i++){
-            DB::table('users')->insert([
-                'name' => $faker->name,
-                'email' => $faker->email(),
-                'telephone' => $faker->phoneNumber(9),
-                'password' => $faker->password(6),
-                'address' => $faker->address(),
-                'occupation' => $faker->sentence(5),
-                'gender' => $faker->randomElement(['MALE', 'FEMALE']),
-                'organisation_id' =>  rand(1, $this->ogranisations)
-            ]);
+            $saved = User::create([
+                    'name' => $faker->name,
+                    'email' => $faker->email(),
+                    'telephone' => $faker->phoneNumber(9),
+                    'password' => $faker->password(6),
+                    'address' => $faker->address(),
+                    'occupation' => $faker->sentence(5),
+                    'gender' => $faker->randomElement(['MALE', 'FEMALE']),
+                    'organisation_id' =>  rand(1, $this->ogranisations)
+                ]);
+            $saved->assignRole(Roles::USER);
         }
+
+        $saved = User::create([
+            'name' => "Suh Edmond",
+            'email' => 'email@gmail.com',
+            'telephone' => '671809232',
+            'password' => Hash::make('password'),
+            'address' => $faker->address(),
+            'occupation' => $faker->sentence(5),
+            'gender' => $faker->randomElement(['MALE', 'FEMALE']),
+            'organisation_id' =>  rand(1, $this->ogranisations)
+        ]);
+        $saved->assignRole(Roles::USER);
+        $saved->assignRole(Roles::ADMIN);
+        $saved->assignRole(Roles::PRESIDENT);
+
     }
 }
