@@ -1,6 +1,7 @@
 <?php
 namespace App\Services;
 
+use App\Http\Resources\IncomeActivityCollection;
 use App\Http\Resources\IncomeActivityResource;
 use App\Interfaces\IncomeActivityInterface;
 use App\Models\IncomeActivity;
@@ -36,9 +37,14 @@ class IncomeActivityService implements IncomeActivityInterface {
 
     public function getIncomeActivities($organisation_id)
     {
+        $total = 0.0;
         $activities = IncomeActivity::where('organisation_id', $organisation_id)->get();
 
-        return $activities;
+        foreach($activities as $activity){
+            $total += $activity->amount;
+        }
+
+        return new IncomeActivityCollection($activities, $total);
     }
 
     public function getIncomeActivity($id)

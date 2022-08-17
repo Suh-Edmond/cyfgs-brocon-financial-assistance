@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class PaymentItemCollection extends ResourceCollection
+class IncomeActivityCollection extends ResourceCollection
 {
     private $total;
 

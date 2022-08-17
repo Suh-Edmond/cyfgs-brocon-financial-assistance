@@ -37,7 +37,7 @@ class IncomeActivityController extends Controller
     {
         $income_activities = $this->income_activity_service->getIncomeActivities($id);
 
-        return $this->sendResponse(IncomeActivityResource::collection($income_activities), 200);
+        return $this->sendResponse($income_activities, 200);
     }
 
 
