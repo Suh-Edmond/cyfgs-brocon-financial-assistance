@@ -2,11 +2,12 @@
 
 namespace App\Http\Resources;
 
+use App\Traits\ResponseTrait;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class PaymentItemResource extends JsonResource
 {
-
+    use ResponseTrait;
 
     /**
      * Transform the resource into an array.
@@ -20,7 +21,7 @@ class PaymentItemResource extends JsonResource
             'id'                    => $this->id,
             'name'                  => $this->name,
             'amount'                => $this->amount,
-            'complusory'            => $this->complusory,
+            'complusory'            => ResponseTrait::convertBooleanValue($this->complusory),
             'payment_category_id'   => $this->paymentCategory->id,
             'payment_category_name' => $this->paymentCategory->name,
             'created_at'            => $this->created_at,

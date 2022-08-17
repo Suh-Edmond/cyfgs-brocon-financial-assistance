@@ -24,7 +24,7 @@ class ExpenditureCategoryController extends Controller
     {
         $expenditure_categories = $this->expenditure_category_service->getExpenditureCategories($organisation_id);
 
-        return $this->sendResponse(new ExpenditureCategoryCollection($expenditure_categories), 200);
+        return $this->sendResponse(ExpenditureCategoryResource::collection($expenditure_categories), 200);
     }
 
 
