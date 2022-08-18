@@ -39,7 +39,8 @@ class ExpenditureItemService implements ExpenditureItemInterface {
     {
         $items = ExpenditureItem::where('expenditure_category_id', $expenditure_category_id);
 
-        return $items->toArray();
+
+        return $items;
     }
 
     public function getExpenditureItem($id, $expenditure_category_id)

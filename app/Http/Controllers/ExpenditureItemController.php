@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ExpenditureItemRequest;
 use App\Http\Resources\ExpenditureItemResource;
-use App\Interfaces\ExpenditureItemInterface;
 use App\Services\ExpenditureItemService;
 
 class ExpenditureItemController extends Controller
@@ -19,13 +18,11 @@ class ExpenditureItemController extends Controller
     }
 
 
-
-
     public function getExpenditureItems($expenditure_category_id)
     {
         $items = $this->expenditure_item_service->getExpenditureItems($expenditure_category_id);
 
-        return response()->json(['data', ExpenditureItemResource::collection($items)], 200);
+        return $this->sendResponse(ExpenditureItemResource::collection($items), 200);
     }
 
 
@@ -33,7 +30,7 @@ class ExpenditureItemController extends Controller
     {
         $this->expenditure_item_service->createExpenditureItem($request, $expenditure_category_id);
 
-        return response()->json(['message' => 'success', 'status' => '201'], 201);
+        return $this->sendResponse('success', 'Expenditure Item created successfully', 201);
     }
 
 
@@ -42,7 +39,7 @@ class ExpenditureItemController extends Controller
     {
         $item = $this->expenditure_item_service->getExpenditureItem($id, $expenditure_category_id);
 
-        return response()->json(['data', new ExpenditureItemResource($item)], 200);
+        return $this->sendResponse(new ExpenditureItemResource($item), 200);
     }
 
 
@@ -51,7 +48,7 @@ class ExpenditureItemController extends Controller
     {
         $this->expenditure_item_service->updateExpenditureItem($request, $id, $expenditure_category_id);
 
-        return response()->json(['message' => 'success', 'status' => '204'], 204);
+        return $this->sendResponse('success', 'Expenditure Item updated successfully', 204);
     }
 
 
@@ -59,13 +56,13 @@ class ExpenditureItemController extends Controller
     {
         $this->expenditure_item_service->deleteExpenditureItem($id, $expenditure_category_id);
 
-        return response()->json(['message' => 'success', 'status' => '204'], 204);
+        return $this->sendResponse('success', 'Expenditure Item deleted successfully', 204);
     }
 
     public function approveExpenditureItem($id)
     {
         $this->expenditure_item_service->approveExpenditureItem($id);
 
-        return response()->json(['message' => 'success', 'status' => '204'], 204);
+        return $this->sendResponse('success', 'Expenditure Item approved successfully', 204);
     }
 }

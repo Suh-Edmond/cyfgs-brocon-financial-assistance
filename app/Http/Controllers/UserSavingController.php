@@ -3,25 +3,28 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UserSavingRequest;
+use App\Http\Requests\UpdateUserSavingRequest;
 use App\Http\Resources\UserSavingResource;
-use App\Services\UserServingService;
+use App\Services\UsersavingService;
+use Illuminate\Http\Request;
 
 class UserSavingController extends Controller
 {
 
     private $user_saving_service;
 
-    public function __construct(UserServingService $user_saving_service)
+    public function __construct(UsersavingService $user_saving_service)
     {
         $this->user_saving_service = $user_saving_service;
     }
+
 
 
     public function getUserSavings($user_id)
     {
         $user_savings = $this->user_saving_service->getUserSavings($user_id);
 
-        return $this->sendResponse(UserSavingResource::collection($user_savings), 200);
+        return $this->sendResponse($user_savings, 200);
     }
 
 
@@ -41,7 +44,7 @@ class UserSavingController extends Controller
     }
 
 
-    public function updateUserSaving(UserSavingRequest $request, $user_id, $id)
+    public function updateUserSaving(UpdateUserSavingRequest $request, $user_id, $id)
     {
         $this->user_saving_service->updateUserSaving($request, $id, $user_id);
 
@@ -64,10 +67,20 @@ class UserSavingController extends Controller
         return $this->sendResponse('success', 'User saving approved sucessfully', 204);
     }
 
+
     public function getAllUserSavingsByOrganisation($id)
     {
         $savings = $this->user_saving_service->getAllUserSavingsByOrganisation($id);
 
-        return $this->sendResponse(UserSavingResource::collection($savings), 200);
+        return $this->sendResponse($savings, 200);
+    }
+
+
+    public function getUserSavingsByStatusAndOrganisation($id, Request $request)
+    {
+
+        $savings = $this->user_saving_service->findUserSavingByStatus($request->status, $id);
+
+        return $this->sendResponse($savings, 200);
     }
 }
