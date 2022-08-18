@@ -3,9 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ExpenditureDetailRequest;
-use App\Http\Resources\ExpenditureDetailResource;
-use App\Interfaces\ExpenditureDetailInterface;
 use App\Services\ExpenditureDetailService;
+use Illuminate\Http\Request;
 
 class ExpenditureDetailController extends Controller
 {
@@ -24,7 +23,7 @@ class ExpenditureDetailController extends Controller
     {
         $this->expenditure_detail_service->createExpenditureDetail($request, $id);
 
-        return response()->json(['message' => "success", "status" => "ok"], 201);
+        return $this->sendResponse('success', 'Expenditure detail saved successfully', 201);
     }
 
 
@@ -32,7 +31,7 @@ class ExpenditureDetailController extends Controller
     {
         $this->expenditure_detail_service->updateExpenditureDetail($request, $id);
 
-        return response()->json(['message' => "success", "status" => "ok"], 202);
+        return $this->sendResponse('success', 'Expenditure detail updated successfully', 202);
     }
 
 
@@ -40,7 +39,7 @@ class ExpenditureDetailController extends Controller
     {
         $details = $this->expenditure_detail_service->getExpenditureDetails($expenditure_item_id);
 
-        return response()->json(['data' => ExpenditureDetailResource::collection($details), 'status' => 'ok'], 200);
+        return $this->sendResponse($details, 200);
     }
 
 
@@ -48,7 +47,7 @@ class ExpenditureDetailController extends Controller
     {
         $detail  = $this->expenditure_detail_service->getExpenditureDetail($id);
 
-        return response()->json(['data' => new ExpenditureDetailResource($detail), 'status' => 'ok'], 200);
+        return $this->sendResponse($detail, 200);
     }
 
 
@@ -56,20 +55,20 @@ class ExpenditureDetailController extends Controller
     {
         $this->expenditure_detail_service->deleteExpenditureDetail($id);
 
-        return response()->json(['message' => "success", "status" => "ok"], 204);
+        return $this->sendResponse('success', 'Expenditure detail deleted successfully', 204);
     }
 
     public function approveExpenditureDetail($id)
     {
         $this->expenditure_detail_service->approveExpenditureDetail($id);
 
-        return response()->json(['message' => 'success', 'status' => 'ok'], 204);
+        return $this->sendResponse('success', 'Expenditure detail approved successfully', 204);
     }
 
-    public function filterExpenditureDetails($expenditure_item_id, $status)
+    public function filterExpenditureDetails(Request $request)
     {
-        $details = $this->expenditure_detail_service->filterExpenditureDetail($expenditure_item_id, $status);
+        $details = $this->expenditure_detail_service->filterExpenditureDetail($request->expenditure_item_id, $request->status);
 
-        return response()->json(['data' => ExpenditureDetailResource::collection($details), 'status' => 'ok'], 200);
+        return $this->sendResponse($details, 200);
     }
 }

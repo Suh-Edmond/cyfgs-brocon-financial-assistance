@@ -11,6 +11,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserContributionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserSavingController;
+use App\Models\ExpenditureItem;
 use App\Models\IncomeActivity;
 use Illuminate\Support\Facades\Route;
 use Spatie\Permission\Contracts\Role;
@@ -117,9 +118,10 @@ Route::middleware('auth:sanctum')->group(function() {
     });
 
     Route::prefix('protected')->middleware('isFinancialSecretary')->group(function() {
-        Route::post('/expenditure-categories/{expenditure_category_id}/expenditure-items', [ExpenditureItemController::class, 'createExpenditureItem']);
         Route::put('/expenditure-categories/{expenditure_category_id}/expenditure-items/{id}', [ExpenditureItemController::class, 'updateExpenditureItem']);
+        Route::post('expenditure-categories/{id}/expenditure-items', [ExpenditureItemController::class, 'createExpenditureItem']);
     });
+
 
     Route::prefix('protected')->middleware(['isTreasurerOrIsFinancialSecretary'])->group(function() {
         Route::get('/expenditure-categories/{expenditure_category_id}/expenditure-items', [ExpenditureItemController::class, 'getExpenditureItems']);
@@ -128,6 +130,10 @@ Route::middleware('auth:sanctum')->group(function() {
 
     Route::prefix('protected')->middleware('isPresident')->group(function() {
         Route::delete('/expenditure-categories/{expenditure_category_id}/expenditure-items/{id}', [ExpenditureItemController::class, 'deleteExpenditureItem']);
+    });
+
+    Route::prefix('protected')->middleware('isTreasurer')->group(function() {
+        Route::put('expenditure-items/{id}/approve', [ExpenditureItemController::class, 'approveExpenditureItem']);
     });
 
     Route::prefix('protected')->middleware('isFinancialSecretary')->group(function() {
@@ -175,13 +181,13 @@ Route::middleware('auth:sanctum')->group(function() {
 
     Route::prefix('protected')->middleware('isFinancialSecretary')->group(function() {
         Route::post('expenditure-items/{id}/details', [ExpenditureDetailController::class, 'createExpenditureDetail']);
-        Route::put('expenditure-details/{id}', [ExpenditureDetailController::class, 'updateExpenditureDetail']);
+        Route::put('expenditure-details/{id}/update', [ExpenditureDetailController::class, 'updateExpenditureDetail']);
     });
 
 
     Route::prefix('protected')->middleware(['isTreasurerOrIsFinancialSecretary'])->group(function() {
-        Route::get('expenditure-items/{id}/details', [ExpenditureDetailController::class, 'updateExpenditureDetail']);
-        Route::get('expenditure-details/{id}/', [ExpenditureDetailController::class, 'getExpenditureDetail']);
+        Route::get('expenditure-items/{id}/details', [ExpenditureDetailController::class, 'getExpenditureDetails']);
+        Route::get('expenditure-details/{id}', [ExpenditureDetailController::class, 'getExpenditureDetail']);
         Route::get('expenditure-details', [ExpenditureDetailController::class, 'filterExpenditureDetails']);
     });
 
