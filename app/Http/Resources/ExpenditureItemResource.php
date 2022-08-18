@@ -2,16 +2,14 @@
 
 namespace App\Http\Resources;
 
+use App\Traits\ResponseTrait;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ExpenditureItemResource extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array
-     */
+    use ResponseTrait;
+
+
     public function toArray($request)
     {
         return [
@@ -21,7 +19,7 @@ class ExpenditureItemResource extends JsonResource
             'comment'                       => $this->comment,
             'venue'                         => $this->venue,
             'date'                          => $this->date,
-            'approve'                       => $this->approve,
+            'approve'                       => ResponseTrait::convertBooleanValue($this->approve),
             'expenditure_category_id'       => $this->expenditureCategory->id,
             'created_at'                    => $this->created_at,
             'updated_at'                    => $this->updated_at,

@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\IncomeActivityResource;
 use App\Http\Requests\IncomeActivityRequest;
 use App\Services\IncomeActivityService;
+use Illuminate\Http\Request;
 
 class IncomeActivityController extends Controller
 {
@@ -37,7 +38,7 @@ class IncomeActivityController extends Controller
     {
         $income_activities = $this->income_activity_service->getIncomeActivities($id);
 
-        return $this->sendResponse(IncomeActivityResource::collection($income_activities), 200);
+        return $this->sendResponse($income_activities, 200);
     }
 
 
@@ -61,5 +62,14 @@ class IncomeActivityController extends Controller
         $this->income_activity_service->approveIncomeActivity($id);
 
         return $this->sendResponse('success', 'Income Activity approved successfully', 204);
+    }
+
+
+    public function filterIncomeActivity(Request $request)
+    {
+        // dd((int)$request->month);
+        $income_activities = $this->income_activity_service->filterIncomeActivity($request->organisation_id, $request->month, $request->year, $request->status);
+
+        return $this->sendResponse($income_activities, 200);
     }
 }

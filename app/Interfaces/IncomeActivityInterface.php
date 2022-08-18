@@ -15,4 +15,6 @@ interface IncomeActivityInterface {
 
     public function approveIncomeActivity($id);
 
+    public function filterIncomeActivity($organisation_id, $month, $year, $status);
+
 }

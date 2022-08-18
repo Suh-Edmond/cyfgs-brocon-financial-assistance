@@ -11,6 +11,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserContributionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserSavingController;
+use App\Models\IncomeActivity;
 use Illuminate\Support\Facades\Route;
 use Spatie\Permission\Contracts\Role;
 
@@ -148,7 +149,8 @@ Route::middleware('auth:sanctum')->group(function() {
     });
 
     Route::prefix('protected')->middleware('isTreasurerOrIsFinancialSecretaryOrIsPresident')->group(function() {
-        Route::get('organisation/{id}/user-savings', [UserSavingController::class], 'getAllUserSavingsByOrganisation');
+        Route::get('/organisations/{id}/user-savings', [UserSavingController::class, 'getAllUserSavingsByOrganisation']);
+        Route::get('/organisations/{id}/user-savings/approve', [UserSavingController::class, 'getUserSavingsByStatusAndOrganisation']);
     });
 
 
@@ -160,6 +162,7 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::prefix('protected')->middleware(['isTreasurerOrIsFinancialSecretary'])->group(function() {
         Route::get('organisations/{id}/income-activities', [IncomeActivityController::class, 'getIncomeActivitiesByOrganisation']);
         Route::get('income-activities/{id}', [IncomeActivityController::class, 'getIncomeActivity']);
+        Route::get('/income-activities', [IncomeActivityController::class, 'filterIncomeActivity']);
     });
 
     Route::prefix('protected')->middleware('isTreasurer')->group(function() {

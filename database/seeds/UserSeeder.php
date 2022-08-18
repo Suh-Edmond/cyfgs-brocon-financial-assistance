@@ -52,6 +52,9 @@ class UserSeeder extends Seeder
         $saved->assignRole(Roles::USER);
         $saved->assignRole(Roles::ADMIN);
         $saved->assignRole(Roles::PRESIDENT);
+        $saved->assignRole(Roles::FINANCIAL_SECRETARY);
+        $saved->assignRole(Roles::TREASURER);
+        $saved->assignRole(Roles::AUDITOR);
 
     }
 }

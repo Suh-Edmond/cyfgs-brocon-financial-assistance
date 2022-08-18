@@ -4,8 +4,9 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class PaymentItemCollection extends ResourceCollection
+class UserSavingCollection extends ResourceCollection
 {
+
     private $total;
 
     public function __construct($collection, $total)
@@ -15,12 +16,11 @@ class PaymentItemCollection extends ResourceCollection
     }
 
 
-
     public function toArray($request)
     {
         return [
-            "data"  =>$this->collection,
-            'total_amount' => $this->total
+            "data"          => $this->collection,
+            'total_amount'  => $this->total
         ];
     }
 }
