@@ -1,18 +1,24 @@
 <?php
 namespace App\Services;
 
+use App\Http\Resources\ExpenditureDetailCollection;
+use App\Http\Resources\ExpenditureDetailResource;
 use App\Interfaces\ExpenditureDetailInterface;
 use App\Models\ExpenditureDetail;
 use App\Models\ExpenditureItem;
+use App\Traits\ResponseTrait;
 
 class ExpenditureDetailService implements ExpenditureDetailInterface {
+
+    use ResponseTrait;
+
 
     public function createExpenditureDetail($request, $id)
     {
         $item = ExpenditureItem::findOrFail($id);
         ExpenditureDetail::create([
             'name'                  => $request->name,
-            'amount_spend'          => $request->amount_spend,
+            'amount_spent'          => $request->amount_spent,
             'amount_given'          => $request->amount_given,
             'comment'               => $request->comment,
             'expenditure_item_id'   => $item->id
@@ -26,7 +32,7 @@ class ExpenditureDetailService implements ExpenditureDetailInterface {
 
         $detail->update([
             'name'                  => $request->name,
-            'amount_spend'          => $request->amount_spend,
+            'amount_spent'          => $request->amount_spent,
             'amount_given'          => $request->amount_given,
             'comment'               => $request->comment,
         ]);
@@ -34,16 +40,22 @@ class ExpenditureDetailService implements ExpenditureDetailInterface {
 
     public function getExpenditureDetails($expenditure_item_id)
     {
-        $details = ExpenditureDetail::where('expenditure_item_id', $expenditure_item_id)->sum('amount_spent');
+        $details            = $this->findExpenditureDetails($expenditure_item_id);
 
-        $details;
+        $response           = $this->generateResponseForExpenditureDetails($details);
+        $item_amount        = $details[0]->expenditure_item_amount;
+        $total_amount_given = $this->calculateTotalAmountGiven($details);
+        $total_amount_spent = $this->calculateTotalAmountSpent($details);
+        $balance            = $this->calculateExpenditureBalanceByExpenditureItem($details, $item_amount);
+        return new ExpenditureDetailCollection($response, $item_amount, $total_amount_given, $total_amount_spent, $balance);
     }
 
     public function getExpenditureDetail($id)
     {
         $detail = $this->findExpenditureDetail($id);
+        $balance = $this->calculateExpenditureBalance($detail);
 
-        return $detail;
+        return new ExpenditureDetailResource($detail, $balance);
     }
 
     public function deleteExpenditureDetail($id)
@@ -56,27 +68,38 @@ class ExpenditureDetailService implements ExpenditureDetailInterface {
     public function approveExpenditureDetail($id)
     {
         $detail = $this->findExpenditureDetail($id);
-
-        $detail->update(['approve' => true]);
-    }
-
-    public function calculateExpenditureBalance($id, $expenditure_item_id)
-    {
-
+        $detail->approve = 1;
+        $detail->save();
     }
 
     public function filterExpenditureDetail($item, $status)
     {
-        $details = ExpenditureDetail::select('expenditure_details.*')
+        $details = ExpenditureDetail::select('expenditure_details.*', 'expenditure_items.amount as expenditure_item_amount')
                                     ->join('expenditure_items', ['expenditure_items.id' => 'expenditure_details.expenditure_item_id'])
                                     ->where('expenditure_items.id', $item)
-                                    ->orWhere('expenditure_details.status', $status)
+                                    ->Where('expenditure_details.approve', $status)
                                     ->get();
-        return $details;
+
+        $response           = $this->generateResponseForExpenditureDetails($details);
+        $item_amount        = $details[0]->expenditure_item_amount;
+        $total_amount_given = $this->calculateTotalAmountGiven($details);
+        $total_amount_spent = $this->calculateTotalAmountSpent($details);
+        $balance            = $this->calculateExpenditureBalanceByExpenditureItem($details, $item_amount);
+        return new ExpenditureDetailCollection($response, $item_amount, $total_amount_given, $total_amount_spent, $balance);
     }
 
     private function findExpenditureDetail($id)
     {
         return ExpenditureDetail::findOrFail($id);
+    }
+
+    private function findExpenditureDetails($id)
+    {
+        $details  =  ExpenditureDetail::select('expenditure_details.*', 'expenditure_items.amount as expenditure_item_amount')
+                                ->join('expenditure_items', ['expenditure_items.id' => 'expenditure_details.expenditure_item_id'])
+                                ->where('expenditure_items.id', $id)
+                                ->orderBy('expenditure_details.name', 'ASC')
+                                ->get();
+        return $details;
     }
 }

@@ -19,7 +19,7 @@ class ExpenditureItem extends Model
 
 
 
-    public function expenditureDetail() {
+    public function expendiureDetails() {
         return $this->hasMany(ExpenditureDetail::class);
     }
 

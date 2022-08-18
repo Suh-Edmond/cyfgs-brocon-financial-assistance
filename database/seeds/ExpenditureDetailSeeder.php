@@ -21,8 +21,8 @@ class ExpenditureDetailSeeder extends Seeder
         {
             ExpenditureDetail::create([
                 'name'                  => $faker->name,
-                'amount_spent'          => $faker->numberBetween(5000, 50000),
-                'amount_given'          => $faker->numberBetween(4000, 50000),
+                'amount_spent'          => $faker->numberBetween(5000, 40000),
+                'amount_given'          => $faker->numberBetween(10000, 50000),
                 'comment'               => $faker->sentence,
                 'approve'               => $faker->randomElement([true, false]),
                 'expenditure_item_id'   => rand(1, $this->expenditure_items)

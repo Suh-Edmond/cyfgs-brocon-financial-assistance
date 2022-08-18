@@ -21,7 +21,7 @@ class ExpenditureItemSeeder extends Seeder
         {
             ExpenditureItem::create([
                 'name'                      => $faker->name,
-                'amount'                    => $faker->numberBetween(1000, 10000),
+                'amount'                    => $faker->numberBetween(50000, 300000),
                 'comment'                   => $faker->sentence,
                 'approve'                   => $faker->randomElement([true, false]),
                 'venue'                     => $faker->country,

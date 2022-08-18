@@ -1,12 +1,16 @@
 <?php
 namespace App\Services;
 
+use App\Http\Resources\ExpenditureItemResource;
 use App\Interfaces\ExpenditureItemInterface;
 use App\Models\ExpenditureCategory;
 use App\Models\ExpenditureItem;
-
+use App\Traits\ResponseTrait;
 
 class ExpenditureItemService implements ExpenditureItemInterface {
+
+    use ResponseTrait;
+
 
     public function createExpenditureItem($request, $expenditure_category_id)
     {
@@ -35,19 +39,22 @@ class ExpenditureItemService implements ExpenditureItemInterface {
         ]);
     }
 
-    public function getExpenditureItems($expenditure_category_id)
+    public function getExpenditureItems($expenditure_category_id, $status)
     {
-        $items = ExpenditureItem::where('expenditure_category_id', $expenditure_category_id);
+        $items = $this->findExpenditureItems($expenditure_category_id, $status);
 
 
-        return $items;
+        return $this->generateExpenditureItemResponse($items);
     }
 
     public function getExpenditureItem($id, $expenditure_category_id)
     {
         $expenditure_item = $this->findExpenditureItem($id, $expenditure_category_id);
 
-        return $expenditure_item;
+        return new ExpenditureItemResource($expenditure_item,
+                                        $this->calculateTotalAmountGiven($expenditure_item->expendiureDetails),
+                                        $this->calculateTotalAmountSpent($expenditure_item->expendiureDetails),
+                                        $this->calculateExpenditureBalanceByExpenditureItem($expenditure_item->expendiureDetails, $expenditure_item->amount));
     }
 
     public function deleteExpenditureItem($id, $expenditure_category_id)
@@ -55,17 +62,6 @@ class ExpenditureItemService implements ExpenditureItemInterface {
         $expenditure_item = $this->findExpenditureItem($id, $expenditure_category_id);
 
         $expenditure_item->delete();
-    }
-
-
-    private function findExpenditureItem($id, $expenditure_category_id)
-    {
-        $expenditure_item = ExpenditureItem::select('expenditure_items.*')
-                                        ->join('expenditure_categories', ['expenditure_categories.id' => 'expenditure_items.expenditure_category_id'])
-                                        ->where('expenditure_items.id', $id)
-                                        ->where('expenditure_items.expenditure_category_id', $expenditure_category_id)
-                                        ->firstOrFail();
-        return $expenditure_item;
     }
 
     public function approveExpenditureItem($id)
@@ -80,4 +76,41 @@ class ExpenditureItemService implements ExpenditureItemInterface {
     {
 
     }
+
+    private function findExpenditureItem($id, $expenditure_category_id)
+    {
+        $expenditure_items = ExpenditureItem::select('expenditure_items.*')
+                                        ->join('expenditure_categories', ['expenditure_categories.id' => 'expenditure_items.expenditure_category_id'])
+                                        ->where('expenditure_items.id', $id)
+                                        ->where('expenditure_items.expenditure_category_id', $expenditure_category_id)
+                                        ->firstOrFail();
+        return $expenditure_items;
+    }
+
+    private function findExpenditureItems($expenditure_category_id, $status)//1 means true
+    {
+        $expenditure_item = ExpenditureItem::select('expenditure_items.*')
+                            ->join('expenditure_categories', ['expenditure_categories.id' => 'expenditure_items.expenditure_category_id'])
+                            ->where('expenditure_items.expenditure_category_id', $expenditure_category_id)
+                            ->where('expenditure_items.approve', $status)
+                            ->orderBy('expenditure_items.name', 'ASC')
+                            ->get();
+
+        return $expenditure_item;
+    }
+
+    private function generateExpenditureItemResponse($items)
+    {
+        $response = array();
+        foreach($items as $item)
+        {
+            array_push($response, new ExpenditureItemResource($item, $this->calculateTotalAmountGiven($item->expendiureDetails),
+                                                                    $this->calculateTotalAmountSpent($item->expendiureDetails),
+                                                                    $this->calculateExpenditureBalanceByExpenditureItem($item->expendiureDetails,
+                                                                    $item->amount)));
+        }
+
+        return $response;
+    }
+
 }
