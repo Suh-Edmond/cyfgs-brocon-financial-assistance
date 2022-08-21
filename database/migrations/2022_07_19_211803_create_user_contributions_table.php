@@ -17,7 +17,7 @@ class CreateUserContributionsTable extends Migration
             $table->id();
             $table->string('code')->unique();
             $table->string('scan_picture')->nullable(true);
-            $table->longText('comment');
+            $table->longText('comment')->nullable(true);
             $table->double('amount_deposited');
             $table->string('status');
             $table->boolean('approve')->default(false);

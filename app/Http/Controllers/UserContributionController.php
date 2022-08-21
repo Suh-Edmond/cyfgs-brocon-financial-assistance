@@ -5,8 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateUserContributionRequest;
 use App\Http\Requests\UpdateUserContributionRequest;
 use App\Http\Resources\UserContributionResource;
-use App\Interfaces\UserContributionInterface;
+use App\Models\UserContribution;
 use App\Services\UserContributionService;
+use Illuminate\Http\Request;
 
 class UserContributionController extends Controller
 {
@@ -23,7 +24,7 @@ class UserContributionController extends Controller
     {
         $this->user_contribution_interface->createUserContribution($request);
 
-        return response()->json(['message' => 'success', 'status' => 'ok'], 201);
+        return $this->sendResponse('success', 'Contribution saved successfully', 201);
     }
 
 
@@ -32,15 +33,15 @@ class UserContributionController extends Controller
     {
        $this->user_contribution_interface->updateUserContribution($request, $id);
 
-       return response()->json(['message' => 'success', 'status' => 'ok'], 202);
+       return $this->sendResponse('success', 'Contribution updated successfully', 202);
     }
 
 
     public function getUserContributionsByItem($id)
     {
-        $contributions = $this->user_contribution_interface->getUserContributionsByItem($id);
+        $contributions = $this->user_contribution_interface->getContributionsByItem($id);
 
-        return response()->json(['data' => UserContributionResource::collection($contributions), 'status' => 'ok'], 200);
+        return $this->sendResponse($contributions, 200);
     }
 
 
@@ -48,15 +49,15 @@ class UserContributionController extends Controller
     {
         $contributions = $this->user_contribution_interface->getUserContributionsByUser($id);
 
-        return response()->json(['data' => UserContributionResource::collection($contributions), 'status' => 'ok'], 200);
+        return $this->sendResponse($contributions, 200);
     }
 
 
-    public function getContributionByUserAndItem($item_id, $user_id)
+    public function getContributionByUserAndItem($user_id, $id)
     {
-        $contributions = $this->user_contribution_interface->getContributionByUserAndItem($item_id, $user_id);
+        $contributions = $this->user_contribution_interface->getContributionByUserAndItem($id, $user_id);
 
-        return response()->json(['data' => UserContributionResource::collection($contributions), 'status' => 'ok'], 200);
+        return $this->sendResponse($contributions, 200);
     }
 
 
@@ -64,7 +65,7 @@ class UserContributionController extends Controller
     {
         $this->user_contribution_interface->deleteUserContribution($id);
 
-        return response()->json(['message' => 'success', 'status' => 'ok'], 204);
+        return $this->sendResponse( 'success', 'Contribution deleted sucessfully', 204);
     }
 
 
@@ -72,22 +73,37 @@ class UserContributionController extends Controller
     {
         $this->user_contribution_interface->approveUserContribution($id);
 
-        return response()->json(['message' => 'success', 'status' => 'ok'], 204);
+        return $this->sendResponse('success', 'Contribution approve successfully', 204);
     }
 
 
-    public function filterContribution($payment_item_id, $status)
+    public function filterContribution(Request $request)
     {
-        $contributions = $this->user_contribution_interface->filterContribution($payment_item_id, $status);
 
-        return response()->json(['data' => UserContributionResource::collection($contributions), 'status' => 'ok'], 200);
+        $contributions = $this->user_contribution_interface->filterContribution($request->status, $request->payment_item_id);
+
+        return $this->sendResponse(UserContributionResource::collection($contributions), 200);
     }
 
+    public function filterContributionByMonth(Request $request)
+    {
+        $contributions = $this->user_contribution_interface->filterContributionByMonth($request->payment_item_id, $request->month);
+
+        return $this->sendResponse($contributions, 200);
+    }
+
+    public function filterContributionByYear(Request $request)
+    {
+
+        $contributions = $this->user_contribution_interface->filterContributionByYear($request->payment_item_id, $request->year);
+
+        return $this->sendResponse($contributions, 200);
+    }
 
     public function getContribution($id)
     {
         $contribution = $this->user_contribution_interface->getContribution($id);
 
-        return response()->json(['data' => new UserContributionResource($contribution), 'status' => 'ok'], 200);
+        return $this->sendResponse(new UserContributionResource($contribution), 200);
     }
 }
