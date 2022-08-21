@@ -7,7 +7,7 @@ interface UserContributionInterface {
 
     public function updateUserContribution($request, $id);
 
-    public function getUserContributionsByItem($payment_item);
+    public function getContributionsByItem($payment_item);
 
     public function getUserContributionsByUser($user_id);
 
@@ -20,4 +20,10 @@ interface UserContributionInterface {
     public function filterContribution($status, $payment_item);
 
     public function getContribution($id);
+
+    public function getTotalAmountPaidByUserAndItem($user_id, $payment_item_id);
+
+    public function filterContributionByMonth($payment_item_id, $month);
+
+    public function filterContributionByYear($payment_item_id, $year);
 }

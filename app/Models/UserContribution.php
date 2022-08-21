@@ -13,7 +13,8 @@ class UserContribution extends Model
         'comment',
         'status',
         'user_id',
-        'payment_item_id'
+        'payment_item_id',
+        'code'
     ];
 
 
