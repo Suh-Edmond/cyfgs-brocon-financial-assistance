@@ -11,6 +11,7 @@ use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\UserCollection;
 use App\Http\Resources\UserResource;
 use App\Services\UserManagementService;
+use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
@@ -91,4 +92,11 @@ class UserController extends Controller
         return $this->sendResponse('success', 'User successfully been removed', 204);
     }
 
+
+    public function importUsers(Request $request, $id)
+    {
+        $this->user_management_service->importUsers($id, $request);
+
+        return $this->sendResponse('success', 'Users successfully imported', 201);
+    }
 }

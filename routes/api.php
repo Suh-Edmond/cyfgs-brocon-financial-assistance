@@ -51,6 +51,7 @@ Route::middleware('auth:sanctum')->group(function() {
         Route::get('/{id}/users', [UserController::class, 'getUsers']);
         Route::get('/users/{id}', [UserController::class, 'getUser']);
         Route::post('{id}/add-users', [UserController::class, 'addUser']);
+        Route::post('{id}/import-users', [UserController::class, 'importUsers']);
     });
 
 
