@@ -5,12 +5,13 @@ namespace App\Services;
 use App\Constants\Roles;
 use App\Http\Resources\UserResource;
 use App\Http\Resources\UserTokenResource;
+use App\Imports\UsersImport;
 use App\Interfaces\UserManagementInterface;
 use App\Models\User;
 use Auth;
 use App\Traits\ResponseTrait;
 use Illuminate\Support\Facades\Hash;
-
+use Maatwebsite\Excel\Facades\Excel;
 
 class UserManagementService implements UserManagementInterface {
 
@@ -82,26 +83,6 @@ class UserManagementService implements UserManagementInterface {
         $saved->assignRole(Roles::PRESIDENT);
     }
 
-
-    private function generateToken($user)
-    {
-       if(!is_null($user)){
-            $token = $user->createToken('access-token', $user->roles->toArray())->plainTextToken;
-       }
-
-        return $token;
-    }
-
-    private function checkIfUserHasLogin($user)
-    {
-        $hasLoginBefore = false;
-        if(!empty($user->password)){
-            $hasLoginBefore = true;
-        }
-
-        return $hasLoginBefore;
-    }
-
     public function setPassword($request)
     {
 
@@ -128,5 +109,29 @@ class UserManagementService implements UserManagementInterface {
         }
 
         return $user;
+    }
+
+    public function importUsers($organisation_id, $request)
+    {
+        Excel::import(new UsersImport($organisation_id), $request->file('file'));
+    }
+
+    private function generateToken($user)
+    {
+       if(!is_null($user)){
+            $token = $user->createToken('access-token', $user->roles->toArray())->plainTextToken;
+       }
+
+        return $token;
+    }
+
+    private function checkIfUserHasLogin($user)
+    {
+        $hasLoginBefore = false;
+        if(!is_null($user->password)){
+            $hasLoginBefore = true;
+        }
+
+        return $hasLoginBefore;
     }
 }

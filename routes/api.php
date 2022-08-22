@@ -27,6 +27,7 @@ use Spatie\Permission\Contracts\Role;
 |
 */
 
+Route::get('protected/income-activity/generate-pdf', [IncomeActivityController::class, 'generateIncomeActivityPDF']);
 Route::prefix('public/auth')->group(function(){
     Route::post('/login', [UserController::class, 'logInUser']);
     Route::post('/signup', [UserController::class, 'createAccount']);
@@ -51,6 +52,7 @@ Route::middleware('auth:sanctum')->group(function() {
         Route::get('/{id}/users', [UserController::class, 'getUsers']);
         Route::get('/users/{id}', [UserController::class, 'getUser']);
         Route::post('{id}/add-users', [UserController::class, 'addUser']);
+        Route::post('{id}/import-users', [UserController::class, 'importUsers']);
     });
 
 
@@ -168,8 +170,11 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::prefix('protected')->middleware(['isTreasurerOrIsFinancialSecretary'])->group(function() {
         Route::get('organisations/{id}/income-activities', [IncomeActivityController::class, 'getIncomeActivitiesByOrganisation']);
         Route::get('income-activities/{id}', [IncomeActivityController::class, 'getIncomeActivity']);
-        Route::get('/income-activities', [IncomeActivityController::class, 'filterIncomeActivity']);
+        Route::get('income-activities', [IncomeActivityController::class, 'filterIncomeActivity']);
     });
+    // Route::prefix('protected')->middleware(['isTreasurerOrIsFinancialSecretary'])->group(function() {
+    //     Route::get('income-activity/generate-pdf', [IncomeActivityController::class, 'generateIncomeActivityPDF']);
+    // });
 
     Route::prefix('protected')->middleware('isTreasurer')->group(function() {
         Route::put('income-activities/{id}/approve', [IncomeActivityController::class, 'approveIncomeActivity']);

@@ -21,4 +21,6 @@ interface UserManagementInterface {
     public function setPassword($request);
 
     public function checkUserExist($request);
+
+    public function importUsers($organisation_id, $request);
 }

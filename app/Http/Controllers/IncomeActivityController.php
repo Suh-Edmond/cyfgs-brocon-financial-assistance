@@ -7,6 +7,7 @@ use App\Http\Resources\IncomeActivityResource;
 use App\Http\Requests\IncomeActivityRequest;
 use App\Services\IncomeActivityService;
 use Illuminate\Http\Request;
+use PDF;
 
 class IncomeActivityController extends Controller
 {
@@ -67,9 +68,19 @@ class IncomeActivityController extends Controller
 
     public function filterIncomeActivity(Request $request)
     {
-        // dd((int)$request->month);
         $income_activities = $this->income_activity_service->filterIncomeActivity($request->organisation_id, $request->month, $request->year, $request->status);
 
         return $this->sendResponse($income_activities, 200);
+    }
+
+    public function generateIncomeActivityPDF()
+    {
+        $data = [
+            'title' => 'Welcome to Financial-Assistance.com',
+            'date' => date('m/d/Y')
+        ];
+        $pdf = PDF::loadView('IncomeActivities.IncomeActivities', $data);
+
+        return $pdf->download('IncomeActivities.pdf');
     }
 }
