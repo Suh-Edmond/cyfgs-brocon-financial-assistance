@@ -5,8 +5,11 @@ use App\Http\Resources\IncomeActivityCollection;
 use App\Interfaces\IncomeActivityInterface;
 use App\Models\IncomeActivity;
 use App\Models\Organisation;
+use PDF;
 
 class IncomeActivityService implements IncomeActivityInterface {
+
+
 
     public function createIncomeActivity($request, $id)
     {
@@ -80,6 +83,17 @@ class IncomeActivityService implements IncomeActivityInterface {
         return new IncomeActivityCollection($activities, $total);
     }
 
+
+    public function generateIncomeActivityPdf()
+    {
+        $data = [
+            'title' => 'Welcome to Financial-Assistance.com',
+            'date' => date('m/d/Y')
+        ];
+        $pdf = PDF::loadView('IncomeActivities.IncomeActivities', $data);
+
+        return $pdf->download('IncomeActivities.pdf');
+    }
 
     private function findIncomeActivity($id)
     {
