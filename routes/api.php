@@ -3,6 +3,7 @@
 use App\Http\Controllers\ExpenditureCategoryController;
 use App\Http\Controllers\ExpenditureDetailController;
 use App\Http\Controllers\ExpenditureItemController;
+use App\Http\Controllers\FileUploadController;
 use App\Http\Controllers\IncomeActivityController;
 use App\Http\Controllers\OrganisationController;
 use App\Http\Controllers\PaymentCategoryController;
@@ -226,6 +227,12 @@ Route::middleware('auth:sanctum')->group(function() {
 
     Route::prefix('protected')->middleware('isPresident')->group(function() {
         Route::delete('contributions/{id}', [UserContributionController::class, 'deleteUserContributon']);
+    });
+
+
+    Route::prefix('protected')->middleware('isUser')->group(function() {
+        Route::post('upload-file', [FileUploadController::class, 'uploadFile']);
+        Route::get('fetch-file', [FileUploadController::class, 'getUploadFile']);
     });
 
 });

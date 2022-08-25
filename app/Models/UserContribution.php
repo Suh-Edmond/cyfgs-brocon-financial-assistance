@@ -14,7 +14,8 @@ class UserContribution extends Model
         'status',
         'user_id',
         'payment_item_id',
-        'code'
+        'code',
+        'scan_picture'
     ];
 
 

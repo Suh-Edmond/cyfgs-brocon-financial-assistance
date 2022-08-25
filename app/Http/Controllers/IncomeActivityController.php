@@ -75,9 +75,12 @@ class IncomeActivityController extends Controller
 
     public function generateIncomeActivityPDF()
     {
+        // $organisation = auth()->user()->organisation;
+        // $organisation->split('/');
         $data = [
-            'title' => 'Welcome to Financial-Assistance.com',
-            'date' => date('m/d/Y')
+            'title'         => 'Welcome to Financial-Assistance.com',
+            'date'          => date('m/d/Y'),
+            // 'organisation'  => $organisation,
         ];
         $pdf = PDF::loadView('IncomeActivities.IncomeActivities', $data);
 

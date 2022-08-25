@@ -23,6 +23,7 @@ class ExpenditureItemService implements ExpenditureItemInterface {
             'comment'                   => $request->comment,
             'date'                      => $request->date,
             'expenditure_category_id'   => $expenditure_category->id,
+            'scan_picture'              => $request->scan_picture
         ]);
     }
 
@@ -35,7 +36,8 @@ class ExpenditureItemService implements ExpenditureItemInterface {
             'amount'                    => $request->amount,
             'venue'                     => $request->venue,
             'comment'                   => $request->comment,
-            'date'                      => $request->date
+            'date'                      => $request->date,
+            'scan_picture'              => $request->scan_picture
         ]);
     }
 

@@ -104,4 +104,11 @@ trait ResponseTrait {
 
         return $total;
     }
+
+    public static function getAppName()
+    {
+        $app_name = config('app.name');
+
+        return $app_name;
+    }
 }

@@ -7,12 +7,10 @@ use App\Models\PaymentItem;
 use App\Models\User;
 use App\Models\UserContribution;
 use Ramsey\Uuid\Uuid;
-use App\Constants\TransactionStatus;
-use App\Http\Resources\ContributionResource;
+use App\Constants\PaymentStatus;
 use App\Http\Resources\UserContributionCollection;
-use App\Http\Resources\UserContributionResource;
 use App\Traits\ResponseTrait;
-use Illuminate\Support\Facades\DB;
+
 
 class UserContributionService implements UserContributionInterface {
 
@@ -40,6 +38,7 @@ class UserContributionService implements UserContributionInterface {
                 'user_id'           => $user->id,
                 'payment_item_id'   => $payment_item->id,
                 'status'            => $status,
+                'scan_picture'      => $request->scan_picture
             ]);
         }
 
@@ -57,6 +56,7 @@ class UserContributionService implements UserContributionInterface {
             $user_contribution->update([
                 'amount_deposited' => $request->amount_deposited,
                 'comment'          => $request->comment,
+                'scan_picture'     => $request->scan_picture
             ]);
         }
     }
@@ -203,9 +203,9 @@ class UserContributionService implements UserContributionInterface {
     private function getUserContributionStatus($payment_item_amount, $total_amount_contributed)
     {
         if($payment_item_amount === $total_amount_contributed){
-            $status = TransactionStatus::COMPLETE;
+            $status = PaymentStatus::COMPLETE;
         }else{
-            $status = TransactionStatus::INCOMPLETE;
+            $status = PaymentStatus::INCOMPLETE;
         }
         return $status;
     }

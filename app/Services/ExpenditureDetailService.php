@@ -12,22 +12,25 @@ class ExpenditureDetailService implements ExpenditureDetailInterface {
 
     use ResponseTrait;
 
-
     public function createExpenditureDetail($request, $id)
     {
+
         $item = ExpenditureItem::findOrFail($id);
+
         ExpenditureDetail::create([
             'name'                  => $request->name,
             'amount_spent'          => $request->amount_spent,
             'amount_given'          => $request->amount_given,
             'comment'               => $request->comment,
-            'expenditure_item_id'   => $item->id
+            'expenditure_item_id'   => $item->id,
+            'scan_picture'          => $request->scan_picture
         ]);
 
     }
 
     public function updateExpenditureDetail($request, $id)
     {
+
         $detail = $this->findExpenditureDetail($id);
 
         $detail->update([
@@ -35,6 +38,7 @@ class ExpenditureDetailService implements ExpenditureDetailInterface {
             'amount_spent'          => $request->amount_spent,
             'amount_given'          => $request->amount_given,
             'comment'               => $request->comment,
+            'scan_picture'          => $request->scan_picture
         ]);
     }
 

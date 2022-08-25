@@ -14,13 +14,15 @@ class IncomeActivityService implements IncomeActivityInterface {
     public function createIncomeActivity($request, $id)
     {
         $organisation = Organisation::findOrFail($id);
+
         IncomeActivity::create([
             'name'              => $request->name,
             'description'       => $request->description,
             'date'              => $request->date,
             'amount'            => $request->amount,
             'venue'             => $request->venue,
-            'organisation_id'   => $organisation->id
+            'organisation_id'   => $organisation->id,
+            'scan_picture'      => $request->scan_picture
         ]);
     }
 
