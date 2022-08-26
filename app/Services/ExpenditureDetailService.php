@@ -106,4 +106,6 @@ class ExpenditureDetailService implements ExpenditureDetailInterface {
                                 ->get();
         return $details;
     }
+
+
 }

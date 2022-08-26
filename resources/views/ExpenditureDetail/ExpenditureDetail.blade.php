@@ -24,30 +24,34 @@
     </div>
     <div>
         <table style="border: 1px solid black; border-collapse: collapse;width: 100%">
-            <tr style="padding: 13px;border: 1px solid black; font-size: smaller;">
-                <th style="padding: 1px; border: 1px solid black;">S/N</th>
+            <tr style="border: 1px solid black; font-size: smaller;">
+                <th style="border: 1px solid black;" style="width: 5%">S/N</th>
                 <th style="padding: 12px; border: 1px solid black;">Name</th>
-                <th style="padding: 12px; border: 1px solid black;">Amount (FCFA)</th>
-                <th style="padding: 12px; border: 1px solid black;">Date</th>
-                <th style="padding: 12px; border: 1px solid black;">Venue</th>
+                <th style="padding: 12px; border: 1px solid black;">Amount Given(FCFA)</th>
+                <th style="padding: 12px; border: 1px solid black;">Amount Given(FCFA)</th>
+                <th style="padding: 12px; border: 1px solid black;">Balance</th>
             </tr>
-            @foreach ($income_activities as $key => $income_activity)
-                <tr style="border: 1px solid black; font-size: smaller">
-                    <td style="padding: 5px;">{{ $key + 1 }}</td>
-                    <td style="border: 1px solid black; padding: 11px;">{{ $income_activity->name }}</td>
-                    <td style="border: 1px solid black; padding: 11px;">{{ number_format($income_activity->amount) }}</td>
-                    <td style="border: 1px solid black; padding: 11px;">{{ $income_activity->date }}</td>
-                    <td style="border: 1px solid black; padding: 11px;">{{ $income_activity->venue }}</td>
+            @foreach ($expenditure_details as $key => $value)
+                <tr style="border: 1px solid black; font-size: medium">
+                    <td style="padding: 10px">{{ $key + 1 }}</td>
+                    <td style="border: 1px solid black; padding: 11px;">{{ $value->name }}</td>
+                    <td style="border: 1px solid black; padding: 11px;">{{ number_format($value->amount_given) }}</td>
+                    <td style="border: 1px solid black; padding: 11px;">{{ number_format($value->amount_spent) }}</td>
+                    <td style="border: 1px solid black; padding: 11px;">
+                        {{ number_format($value->amount_given - $value->amount_spent) }}</td>
+
                 </tr>
             @endforeach
-            <tr style="padding: 12px; border: 1px solid black; font-size: smaller">
-                <td style="padding: 15px; font-weight: 200" colspan="2"> Total Amount: {{ number_format($total) }} FCFA
-                </td>
-                <td style="padding: 15px;font-weight: 200"> </td>
-                <td style="padding: 15px;font-weight: 200"> </td>
-                <td style="padding: 15px;font-weight: 200"> </td>
-            </tr>
         </table>
+        <p> <label style="font-size: 15px; font-weight: bold">Total Amount Specify for <span
+                    style="text-transform: uppercase">{{ $item->name }}</span>:
+                {{ number_format($item->amount) }} <span style="padding-left: 5px;">FCFA</span> </label></p>
+        <p> <label style="font-size: 15px;; font-weight: bold">Total Amount Given:
+                {{ number_format($total_amount_given) }} <span style="padding-left: 5px;">FCFA</span> </label></p>
+        <p><label style="font-size: 15px;; font-weight: bold">Total Amount Spent: {{ number_format($total_amount_spent) }}
+                <span style="padding-left: 5px;">FCFA</span> </label></p>
+        <p><label style="font-size: 15px;; font-weight: bold">Balance: {{ number_format($balance) }} <span
+                    style="padding-left: 5px;">FCFA</span> </label></p>
     </div>
     <div style="margin-top: 100px;">
         <div style="float: left;">

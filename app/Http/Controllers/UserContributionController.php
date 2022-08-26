@@ -5,12 +5,15 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateUserContributionRequest;
 use App\Http\Requests\UpdateUserContributionRequest;
 use App\Http\Resources\UserContributionResource;
-use App\Models\UserContribution;
 use App\Services\UserContributionService;
+use App\Traits\ResponseTrait;
 use Illuminate\Http\Request;
+use PDF;
 
 class UserContributionController extends Controller
 {
+
+    use ResponseTrait;
 
     private $user_contribution_interface;
 
@@ -105,5 +108,31 @@ class UserContributionController extends Controller
         $contribution = $this->user_contribution_interface->getContribution($id);
 
         return $this->sendResponse(new UserContributionResource($contribution), 200);
+    }
+
+    public function downloadContrition(Request $request)
+    {
+        $organisation   = $request->user()->organisation;
+        $contributions  = $this->user_contribution_interface->getContributionsByItem($request->payment_item_id);
+        $administrators = ResponseTrait::getOrganisationAdministrators($organisation->users);
+        $president      = $administrators[0];
+        $treasurer      = $administrators[1];
+        $fin_sec        = $administrators[2];
+        $total          = ResponseTrait::computeTotalContribution($contributions);
+
+        $data = [
+            'title'             => 'User Contribution for '.$contributions[0]->paymentItem->name,
+            'date'              => date('m/d/Y'),
+            'organisation'      => $organisation,
+            'contributions'     => $contributions,
+            'president'         => $president,
+            'treasurer'         => $treasurer,
+            'fin_secretary'     => $fin_sec,
+            'total'             => $total
+        ];
+
+        $pdf = PDF::loadView('Contribution.UserContribution', $data);
+
+        return $pdf->download('User_Contributions.pdf');
     }
 }

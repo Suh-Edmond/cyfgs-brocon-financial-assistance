@@ -88,13 +88,7 @@ class IncomeActivityService implements IncomeActivityInterface {
 
     public function generateIncomeActivityPdf()
     {
-        $data = [
-            'title' => 'Welcome to Financial-Assistance.com',
-            'date' => date('m/d/Y')
-        ];
-        $pdf = PDF::loadView('IncomeActivities.IncomeActivities', $data);
 
-        return $pdf->download('IncomeActivities.pdf');
     }
 
     private function findIncomeActivity($id)
@@ -111,7 +105,7 @@ class IncomeActivityService implements IncomeActivityInterface {
         return $income_activities;
     }
 
-    private function calculateTotal($activities)
+    public function calculateTotal($activities)
     {
         $total = 0;
         foreach($activities as $activity){

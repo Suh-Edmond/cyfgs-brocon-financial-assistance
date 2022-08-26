@@ -1,22 +1,26 @@
 <?php
+
 namespace App\Traits;
+
+use App\Constants\Roles;
 use App\Http\Resources\ExpenditureDetailResource;
 
-trait ResponseTrait {
-     /**
+trait ResponseTrait
+{
+    /**
      * return error response.
      *
      * @return \Illuminate\Http\Response
      */
     public static function sendError($error, $errorMessages = [], $code = 404)
     {
-    	$response = [
+        $response = [
             'success' => false,
             'message' => $error,
         ];
 
 
-        if(!empty($errorMessages)){
+        if (!empty($errorMessages)) {
             $response['data'] = $errorMessages;
         }
 
@@ -32,7 +36,7 @@ trait ResponseTrait {
      */
     public static function sendResponse($result, $message)
     {
-    	$response = [
+        $response = [
             'success' => true,
             'data'    => $result,
             'message' => $message,
@@ -45,9 +49,9 @@ trait ResponseTrait {
 
     public static function convertBooleanValue($value)
     {
-        if($value == 0){
+        if ($value == 0) {
             $response = false;
-        }else{
+        } else {
             $response = true;
         }
 
@@ -59,7 +63,7 @@ trait ResponseTrait {
     {
         $response = array();
 
-        foreach($details as $detail){
+        foreach ($details as $detail) {
             $balance = ResponseTrait::calculateExpenditureBalance($detail);
 
             array_push($response, new ExpenditureDetailResource($detail, $balance));
@@ -82,13 +86,12 @@ trait ResponseTrait {
         $balance += $this->calculateTotalAmountGiven($expenditure_details) - $this->calculateTotalAmountSpent($expenditure_details);
 
         return $balance;
-
     }
 
     private function calculateTotalAmountGiven($expenditure_details)
     {
         $total = 0;
-        foreach($expenditure_details as $expenditure_detail){
+        foreach ($expenditure_details as $expenditure_detail) {
             $total += $expenditure_detail->amount_given;
         }
 
@@ -98,7 +101,7 @@ trait ResponseTrait {
     private function calculateTotalAmountSpent($expenditure_details)
     {
         $total = 0;
-        foreach($expenditure_details as $expenditure_detail){
+        foreach ($expenditure_details as $expenditure_detail) {
             $total += $expenditure_detail->amount_spent;
         }
 
@@ -111,4 +114,48 @@ trait ResponseTrait {
 
         return $app_name;
     }
+
+
+    public static function getOrganisationAdministrators($users)
+    {
+        $administrators = [];
+        foreach ($users as $user) {
+            if (!empty($user->roles)) {
+                foreach ($user->roles as $role) {
+                    if (Roles::PRESIDENT === $role->name) {
+                        array_push($administrators, $user);
+                    }
+                    if (Roles::TREASURER === $role->name) {
+                        array_push($administrators, $user);
+                    }
+                    if (Roles::FINANCIAL_SECRETARY === $role->name) {
+                        array_push($administrators, $user);
+                    }
+                }
+            }
+        }
+
+        return $administrators;
+    }
+
+    public static function computeTotalAmountByPaymentCategory($items)
+    {
+        $total = 0;
+        foreach ($items as $item) {
+            $total += $item->amount;
+        }
+
+        return $total;
+    }
+
+    public function computeTotalContribution($contributions)
+    {
+        $total = 0;
+        foreach ($contributions as $contribution) {
+            $total += $contribution->amount_deposited;
+        }
+
+        return $total;
+    }
+
 }

@@ -18,6 +18,7 @@ class UserSavingResource extends JsonResource
             'approve'           => ResponseTrait::convertBooleanValue($this->approve),
             'user_id'           => $this->user->id,
             'user_name'         => $this->user->name,
+            'telephone'         => $this->user->telephone,
             'created_at'        => $this->created_at,
             'updated_at'        => $this->updated_at,
         ];

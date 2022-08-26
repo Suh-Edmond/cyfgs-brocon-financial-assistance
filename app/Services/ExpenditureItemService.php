@@ -115,4 +115,15 @@ class ExpenditureItemService implements ExpenditureItemInterface {
         return $response;
     }
 
+
+    public function calculateTotal($items)
+    {
+        $total = 0;
+        foreach($items as $item)
+        {
+            $total += $item->amount;
+        }
+
+        return $total;
+    }
 }

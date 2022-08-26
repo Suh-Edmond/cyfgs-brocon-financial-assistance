@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ExpenditureItemRequest;
-use App\Http\Resources\ExpenditureItemResource;
 use App\Services\ExpenditureItemService;
+use App\Traits\ResponseTrait;
 use Illuminate\Http\Request;
-
+use PDF;
 class ExpenditureItemController extends Controller
 {
+
+    use ResponseTrait;
 
     private $expenditure_item_service;
 
@@ -63,5 +65,31 @@ class ExpenditureItemController extends Controller
         $this->expenditure_item_service->approveExpenditureItem($id);
 
         return $this->sendResponse('success', 'Expenditure Item approved successfully', 204);
+    }
+
+    public function downloadExpenditureItems(Request $request)
+    {
+        $organisation      = auth()->user()->organisation;
+        $expenditure_items = $this->expenditure_item_service->getExpenditureItems($request->expenditure_category_id, $request->status);
+        $administrators    = ResponseTrait::getOrganisationAdministrators($organisation->users);
+        $president         = $administrators[0];
+        $treasurer         = $administrators[1];
+        $fin_sec           = $administrators[2];
+
+
+        $data = [
+            'title'               => 'Expenditure Items',
+            'date'                => date('m/d/Y'),
+            'organisation'        => $organisation,
+            'expenditure_items'   => $expenditure_items,
+            'president'           => $president,
+            'treasurer'           => $treasurer,
+            'fin_secretary'       => $fin_sec,
+            'total'               => $this->expenditure_item_service->calculateTotal($expenditure_items)
+        ];
+
+        $pdf = PDF::loadView('ExpenditureItem.ExpenditureItems', $data);
+
+        return $pdf->download('Expenditure_items.pdf');
     }
 }
