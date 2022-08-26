@@ -6,11 +6,14 @@ namespace App\Http\Controllers;
 use App\Http\Resources\IncomeActivityResource;
 use App\Http\Requests\IncomeActivityRequest;
 use App\Services\IncomeActivityService;
+use App\Traits\ResponseTrait;
 use Illuminate\Http\Request;
 use PDF;
 
 class IncomeActivityController extends Controller
 {
+
+    use ResponseTrait;
 
     private $income_activity_service;
 
@@ -73,12 +76,29 @@ class IncomeActivityController extends Controller
         return $this->sendResponse($income_activities, 200);
     }
 
+    //I will have to pass the parameters in the request and run the query to download the data
     public function generateIncomeActivityPDF()
     {
+        $organisation      = auth()->user()->organisation;
+        $income_activities = $this->income_activity_service->getIncomeActivities(1);
+        $total             = $this->income_activity_service->calculateTotal($income_activities);
+        $administrators    = ResponseTrait::getOrganisationAdministrators($organisation->users);
+        $president         = $administrators[0];
+        $treasurer         = $administrators[1];
+        $fin_sec           = $administrators[2];
+
+
         $data = [
-            'title' => 'Welcome to Financial-Assistance.com',
-            'date' => date('m/d/Y')
+            'title'               => 'Transaction Report For Income Activity',
+            'date'                => date('m/d/Y'),
+            'organisation'        => $organisation,
+            'income_activities'   => $income_activities,
+            'total'               => $total,
+            'president'         => $president,
+            'treasurer'         => $treasurer,
+            'fin_secretary'     => $fin_sec
         ];
+
         $pdf = PDF::loadView('IncomeActivities.IncomeActivities', $data);
 
         return $pdf->download('IncomeActivities.pdf');

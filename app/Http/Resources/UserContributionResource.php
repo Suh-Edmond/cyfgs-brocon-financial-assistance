@@ -20,6 +20,7 @@ class UserContributionResource extends JsonResource
             'approve'                  => $this->convertBooleanValue($this->approve),
             'user_id'                  => $this->user->id,
             'user_name'                => $this->user->name,
+            'user_telephone'           => $this->user->telephone,
             'payment_item_id'          => $this->paymentItem->id,
             'payment_item_name'        => $this->paymentItem->name,
             'payment_item_amount'      => $this->paymentItem->amount,

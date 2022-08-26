@@ -21,6 +21,7 @@ class ExpenditureDetailResource extends JsonResource
     {
         return [
             'id'                            => $this->id,
+            'name'                          => $this->name,
             'amount_given'                  => $this->amount_given,
             'amount_spent'                  => $this->amount_spent,
             'comment'                       => $this->comment,

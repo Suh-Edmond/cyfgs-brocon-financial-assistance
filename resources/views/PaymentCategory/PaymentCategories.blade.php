@@ -24,29 +24,16 @@
     </div>
     <div>
         <table style="border: 1px solid black; border-collapse: collapse;width: 100%">
-            <tr style="padding: 13px;border: 1px solid black; font-size: smaller;">
-                <th style="padding: 1px; border: 1px solid black;">S/N</th>
+            <tr style="border: 1px solid black; font-size: smaller;">
+                <th style="border: 1px solid black;">S/N</th>
                 <th style="padding: 12px; border: 1px solid black;">Name</th>
-                <th style="padding: 12px; border: 1px solid black;">Amount (FCFA)</th>
-                <th style="padding: 12px; border: 1px solid black;">Date</th>
-                <th style="padding: 12px; border: 1px solid black;">Venue</th>
             </tr>
-            @foreach ($income_activities as $key => $income_activity)
+            @foreach ($categories as $key => $value)
                 <tr style="border: 1px solid black; font-size: smaller">
                     <td style="padding: 5px;">{{ $key + 1 }}</td>
-                    <td style="border: 1px solid black; padding: 11px;">{{ $income_activity->name }}</td>
-                    <td style="border: 1px solid black; padding: 11px;">{{ number_format($income_activity->amount) }}</td>
-                    <td style="border: 1px solid black; padding: 11px;">{{ $income_activity->date }}</td>
-                    <td style="border: 1px solid black; padding: 11px;">{{ $income_activity->venue }}</td>
+                    <td style="border: 1px solid black; padding: 11px;">{{ $value->name }}</td>
                 </tr>
             @endforeach
-            <tr style="padding: 12px; border: 1px solid black; font-size: smaller">
-                <td style="padding: 15px; font-weight: 200" colspan="2"> Total Amount: {{ number_format($total) }} FCFA
-                </td>
-                <td style="padding: 15px;font-weight: 200"> </td>
-                <td style="padding: 15px;font-weight: 200"> </td>
-                <td style="padding: 15px;font-weight: 200"> </td>
-            </tr>
         </table>
     </div>
     <div style="margin-top: 100px;">

@@ -3,14 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\PaymentItemRequest;
-use App\Http\Resources\PaymentItemCollection;
 use App\Http\Resources\PaymentItemResource;
-use App\Interfaces\PaymentItemInterface;
+use App\Models\PaymentCategory;
 use App\Services\PaymentItemService;
+use App\Traits\ResponseTrait;
+use Illuminate\Http\Request;
+use PDF;
 
 class PaymentItemController extends Controller
 {
 
+    use ResponseTrait;
     private $payment_item_service;
 
 
@@ -58,5 +61,31 @@ class PaymentItemController extends Controller
         $this->payment_item_service->deletePaymentItem($id, $payment_category_id);
 
         return $this->sendResponse('success', 'Payment Item deleted successfully', 204);
+    }
+
+    public function downloadPaymentItem(Request $request)
+    {
+        $organisation      = auth()->user()->organisation;
+        $items             = $this->payment_item_service->getPaymentItemsByCategory($request->payment_category_id);
+        $administrators    = ResponseTrait::getOrganisationAdministrators($organisation->users);
+        $president         = $administrators[0];
+        $treasurer         = $administrators[1];
+        $fin_sec           = $administrators[2];
+
+
+        $data = [
+            'title'               => 'Payment Items for '.$items[0]->paymentCategory->name,
+            'date'                => date('m/d/Y'),
+            'organisation'        => $organisation,
+            'payment_items'       => $items,
+            'president'           => $president,
+            'treasurer'           => $treasurer,
+            'fin_secretary'       => $fin_sec,
+            'total'               => ResponseTrait::computeTotalAmountByPaymentCategory($items)
+        ];
+
+        $pdf = PDF::loadView('PaymentItem.PaymentItems', $data);
+
+        return $pdf->download('Payment_items.pdf');
     }
 }

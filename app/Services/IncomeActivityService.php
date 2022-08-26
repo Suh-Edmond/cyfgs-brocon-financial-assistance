@@ -14,13 +14,15 @@ class IncomeActivityService implements IncomeActivityInterface {
     public function createIncomeActivity($request, $id)
     {
         $organisation = Organisation::findOrFail($id);
+
         IncomeActivity::create([
             'name'              => $request->name,
             'description'       => $request->description,
             'date'              => $request->date,
             'amount'            => $request->amount,
             'venue'             => $request->venue,
-            'organisation_id'   => $organisation->id
+            'organisation_id'   => $organisation->id,
+            'scan_picture'      => $request->scan_picture
         ]);
     }
 
@@ -86,13 +88,7 @@ class IncomeActivityService implements IncomeActivityInterface {
 
     public function generateIncomeActivityPdf()
     {
-        $data = [
-            'title' => 'Welcome to Financial-Assistance.com',
-            'date' => date('m/d/Y')
-        ];
-        $pdf = PDF::loadView('IncomeActivities.IncomeActivities', $data);
 
-        return $pdf->download('IncomeActivities.pdf');
     }
 
     private function findIncomeActivity($id)
@@ -109,7 +105,7 @@ class IncomeActivityService implements IncomeActivityInterface {
         return $income_activities;
     }
 
-    private function calculateTotal($activities)
+    public function calculateTotal($activities)
     {
         $total = 0;
         foreach($activities as $activity){

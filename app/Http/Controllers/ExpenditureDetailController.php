@@ -3,11 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ExpenditureDetailRequest;
+use App\Models\ExpenditureItem;
 use App\Services\ExpenditureDetailService;
+use App\Traits\ResponseTrait;
 use Illuminate\Http\Request;
+use PDF;
 
 class ExpenditureDetailController extends Controller
 {
+
+    use ResponseTrait;
 
     private $expenditure_detail_service;
 
@@ -70,5 +75,36 @@ class ExpenditureDetailController extends Controller
         $details = $this->expenditure_detail_service->filterExpenditureDetail($request->expenditure_item_id, $request->status);
 
         return $this->sendResponse($details, 200);
+    }
+
+    public function downloadExpenditureDetail(Request $request)
+    {
+        $organisation        = auth()->user()->organisation;
+        $expenditure_details = $this->expenditure_detail_service->getExpenditureDetails($request->expenditure_item_id);
+        $administrators      = ResponseTrait::getOrganisationAdministrators($organisation->users);
+        $president           = $administrators[0];
+        $treasurer           = $administrators[1];
+        $fin_sec             = $administrators[2];
+        $total_amount_given = $this->calculateTotalAmountGiven($expenditure_details);
+        $total_amount_spent = $this->calculateTotalAmountSpent($expenditure_details);
+        $balance            = $this->calculateExpenditureBalanceByExpenditureItem($expenditure_details, $expenditure_details[0]->expenditureItem->amount);
+
+        $data = [
+            'title'                 => 'Expenditure Details for '.$expenditure_details[0]->expenditureItem->name,
+            'date'                  => date('m/d/Y'),
+            'organisation'          => $organisation,
+            'expenditure_details'   => $expenditure_details,
+            'president'             => $president,
+            'treasurer'             => $treasurer,
+            'fin_secretary'         => $fin_sec,
+            'total_amount_given'    => $total_amount_given,
+            'total_amount_spent'    => $total_amount_spent,
+            'balance'               => $balance,
+            'item'                  => $expenditure_details[0]->expenditureItem
+        ];
+
+        $pdf = PDF::loadView('ExpenditureDetail.ExpenditureDetail', $data);
+
+        return $pdf->download('Expenditure_Details.pdf');
     }
 }

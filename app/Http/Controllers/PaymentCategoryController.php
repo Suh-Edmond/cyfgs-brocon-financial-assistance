@@ -5,9 +5,18 @@ namespace App\Http\Controllers;
 use App\Http\Requests\PaymentCategoryRequest;
 use App\Http\Resources\PaymentCategoryResource;
 use App\Services\PaymentCategoryService;
+use App\Traits\ResponseTrait;
+use Illuminate\Http\Request;
+use PDF;
+
+
+
 
 class PaymentCategoryController extends Controller
 {
+
+    use ResponseTrait;
+
 
     private $payment_category_service;
 
@@ -56,5 +65,28 @@ class PaymentCategoryController extends Controller
        $this->payment_category_service->deletePaymentCategory($id, $organisation_id);
 
        return $this->sendResponse('success', 'Payment Category deleted successfully', 204);
+    }
+
+    public function downloadPaymentCategory(Request $request)
+    {
+        $organisation = $request->user()->organisation;
+        $administrators = ResponseTrait::getOrganisationAdministrators($organisation->users);
+        $president = $administrators[0];
+        $treasurer = $administrators[1];
+        $fin_sec   = $administrators[2];
+
+        $data = [
+            'title'             =>'Payment Categories',
+            'date'              => date('m/d/Y'),
+            'organisation'      => $organisation,
+            'categories'        => $this->payment_category_service->getPaymentCategories(1),
+            'president'         => $president,
+            'treasurer'         => $treasurer,
+            'fin_secretary'     => $fin_sec
+        ];
+
+        $pdf = PDF::loadView('PaymentCategory.PaymentCategories', $data);
+
+        return $pdf->download('Payment_Categories.pdf');
     }
 }

@@ -14,7 +14,8 @@ class ExpenditureItem extends Model
         'comment',
         'venue',
         'date',
-        'expenditure_category_id'
+        'expenditure_category_id',
+        'scan_picture'
     ];
 
 

@@ -1,7 +1,7 @@
 <?php
 namespace App\Constants;
 
-class TransactionStatus {
+class PaymentStatus {
     public const COMPLETE = 'COMPLETE';
     public const INCOMPLETE = 'INCOMPLETE';
 }

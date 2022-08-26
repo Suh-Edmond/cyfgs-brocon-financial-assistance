@@ -13,7 +13,8 @@ class ExpenditureDetail extends Model
         'amount_spent',
         'name',
         'comment',
-        'expenditure_item_id'
+        'expenditure_item_id',
+        'scan_picture'
     ];
 
 

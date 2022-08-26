@@ -6,10 +6,13 @@ use App\Http\Requests\UserSavingRequest;
 use App\Http\Requests\UpdateUserSavingRequest;
 use App\Http\Resources\UserSavingResource;
 use App\Services\UsersavingService;
+use App\Traits\ResponseTrait;
 use Illuminate\Http\Request;
-
+use PDF;
 class UserSavingController extends Controller
 {
+
+    use ResponseTrait;
 
     private $user_saving_service;
 
@@ -82,5 +85,33 @@ class UserSavingController extends Controller
         $savings = $this->user_saving_service->findUserSavingByStatus($request->status, $id);
 
         return $this->sendResponse($savings, 200);
+    }
+
+    public function downloadUserSaving(Request $request)
+    {
+
+        $organisation      = auth()->user()->organisation;
+        $savings           = $this->user_saving_service->findOrganisationUserSavings($request->organisation_id);
+        $total             = $this->user_saving_service->calculateTotalSaving($savings);
+        $administrators    = ResponseTrait::getOrganisationAdministrators($organisation->users);
+        $president         = $administrators[0];
+        $treasurer         = $administrators[1];
+        $fin_sec           = $administrators[2];
+
+
+        $data = [
+            'title'               => 'User Savings for 2022',
+            'date'                => date('m/d/Y'),
+            'organisation'        => $organisation,
+            'user_savings'        => $savings,
+            'total'               => $total,
+            'president'           => $president,
+            'treasurer'           => $treasurer,
+            'fin_secretary'       => $fin_sec
+        ];
+        // return ($user_savings);
+        $pdf = PDF::loadView('UserSaving.Usersaving', $data);
+
+        return $pdf->download('User_Saving.pdf');
     }
 }

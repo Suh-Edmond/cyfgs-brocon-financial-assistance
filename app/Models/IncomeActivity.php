@@ -15,6 +15,7 @@ class IncomeActivity extends Model
         'amount',
         'venue',
         'organisation_id',
+        'scan_picture'
     ];
 
 

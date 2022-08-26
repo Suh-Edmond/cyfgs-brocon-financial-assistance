@@ -32,7 +32,7 @@ class Organisation extends Model
         return $this->hasMany(PaymentCategory::class);
     }
 
-    public function user() {
+    public function users() {
         return $this->hasMany(User::class);
     }
 }
