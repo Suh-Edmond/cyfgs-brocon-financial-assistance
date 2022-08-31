@@ -3,6 +3,8 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Crypt;
+use Ramsey\Uuid\Uuid;
 
 class UserResource extends JsonResource
 {
@@ -31,8 +33,8 @@ class UserResource extends JsonResource
             'address'        => $this->address,
             'occupation'     => $this->occupation,
             'gender'         => $this->gender,
-            'organsation_id' => $this->organisation->id,
-            'organsation_name' => $this->organisation->name,
+            'organsation_id' => optional($this->organisation->id),
+            'organsation_name' => optional($this->organisation->name),
             'created_at'     => $this->created_at,
             'updated_at'     => $this->updated_at,
             'roles'          => RoleResource::collection($this->roles),

@@ -7,6 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class ExpenditureCategory extends Model
 {
+    use GenerateUuid;
+
+    protected $primaryKey = 'id';
+    public $incrementing  = false;
+    protected $keyType    = 'string';
 
 
     protected $fillable = [
@@ -15,8 +20,6 @@ class ExpenditureCategory extends Model
         'organisation_id'
     ];
 
-
-
     public function expenditureItem(){
         return $this->hasMany(ExpenditureItem::class);
     }
@@ -24,4 +27,7 @@ class ExpenditureCategory extends Model
     public function organisation() {
         return $this->belongsTo(Organisation::class);
     }
+
+
+
 }

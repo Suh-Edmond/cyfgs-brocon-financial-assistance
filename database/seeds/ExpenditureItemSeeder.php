@@ -12,7 +12,7 @@ class ExpenditureItemSeeder extends Seeder
 
     public function __construct()
     {
-        $this->expenditure_categories = ExpenditureCategory::all()->count();
+        $this->expenditure_categories = ExpenditureCategory::all()->pluck('id');
     }
 
     public function run(Faker $faker)
@@ -25,7 +25,7 @@ class ExpenditureItemSeeder extends Seeder
                 'comment'                   => $faker->sentence,
                 'approve'                   => $faker->randomElement([true, false]),
                 'venue'                     => $faker->country,
-                'expenditure_category_id'   => rand(1, $this->expenditure_categories),
+                'expenditure_category_id'   => $faker->randomElement($this->expenditure_categories),
                 'date'                      => $faker->date()
             ]);
         }

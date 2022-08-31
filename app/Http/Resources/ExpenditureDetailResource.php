@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use App\Traits\ResponseTrait;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Ramsey\Uuid\Uuid;
 
 class ExpenditureDetailResource extends JsonResource
 {
@@ -28,7 +29,7 @@ class ExpenditureDetailResource extends JsonResource
             'approve'                       => ResponseTrait::convertBooleanValue($this->approve),
             'created_at'                    => $this->created_at,
             'updated_at'                    => $this->updated_at,
-            'expenditure_item_id'           => $this->expenditureItem->id,
+            'expenditure_item_id'           =>  $this->expenditureItem->id,
             'balance'                       => $this->balance
         ];
     }

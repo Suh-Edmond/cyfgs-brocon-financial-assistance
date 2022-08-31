@@ -1,28 +1,33 @@
 <?php
+
 namespace App\Traits;
 
 use Exception;
-use Ramsey\Uuid\Uuid;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Auth;
+use Facades\Str;
 
-trait GenerateUuid {
 
-    protected static function boot () {
+trait GenerateUuid
+{
+
+    protected static function boot()
+    {
         parent::boot();
 
         static::creating(function ($model) {
-            $user = Auth::user();
-            try {
-                $model->id =  Uuid::uuid4();
+            $model->keyType = 'string';
+            $model->incrementing = false;
 
-                if($user){
-                    $model->created_by = Auth::user()->name;
-                    $model->updated_by = Auth::user()->name;
-                }
-            }catch (Exception $e) {
-                abort(500, $e->getMessage());
-            }
+            $model->{$model->getKeyName()} = $model->{$model->getKeyName()} ?: (string) Str::orderedUuid();
         });
+    }
+
+    public function getIncrementing()
+    {
+        return false;
+    }
+
+    public function getKeyType()
+    {
+        return 'string';
     }
 }

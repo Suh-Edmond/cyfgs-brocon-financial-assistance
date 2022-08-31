@@ -1,7 +1,7 @@
 <?php
 namespace App\Models;
 
-
+use App\Traits\GenerateUuid;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
@@ -10,8 +10,11 @@ use Laravel\Sanctum\HasApiTokens;
 class User extends Authenticatable
 {
     use HasRoles, Notifiable, HasApiTokens;
+    use GenerateUuid;
 
-
+    protected $primaryKey = 'id';
+    public $incrementing  = false;
+    protected $keyType    = 'string';
 
     /**
      * The attributes that are mass assignable.
@@ -47,9 +50,7 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function guardName(){
-        return "api";
-    }
+    protected  $guard_name = "api";
 
     public function hasUserSaving(){
         return $this->hasMany(UserSaving::class);
@@ -62,5 +63,8 @@ class User extends Authenticatable
     public function organisation() {
         return $this->belongsTo(Organisation::class);
     }
+
+
+
 
 }

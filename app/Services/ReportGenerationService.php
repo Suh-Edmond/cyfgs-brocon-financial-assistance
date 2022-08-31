@@ -80,24 +80,20 @@ class ReportGenerationService implements ReportGenerationInterface
     public function groupUserContributionsByPaymentItem($contributions, $month)
     {
         $user_contributions = [];
-        $paymentItems       = $this->getPaymentItemsByMonth($month);
-        foreach($paymentItems as $paymentItem)
-        {
-            // array_filter($contributions->toArray(),function());
+        $payment_items       = $this->getPaymentItemsByMonth($month);
+        foreach ($payment_items as $payment_item) {
+        $user_contributions = array_filter($contributions->toArray(), function ($item) use ($payment_item) {
+                                return $item->payment_item_id === $payment_item->id ? true : false;
+                            });
         }
-    }
-
-    private function filterPaymentItems($item, $payment_item_id)
-    {
-        return ($item->id === $payment_item_id);
     }
 
 
     public function getPaymentItemsByMonth($month)
     {
         $items = PaymentItem::select('*')
-                            ->where('payment_items.created_at', $month)
-                            ->get();
+            ->where('payment_items.created_at', $month)
+            ->get();
 
         return $items;
     }

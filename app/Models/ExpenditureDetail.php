@@ -7,6 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class ExpenditureDetail extends Model
 {
+    use GenerateUuid;
+
+    protected $primaryKey = 'id';
+    public $incrementing  = false;
+    protected $keyType    = 'string';
+
 
     protected $fillable = [
         'amount_given',
@@ -17,10 +23,9 @@ class ExpenditureDetail extends Model
         'scan_picture'
     ];
 
-
-
-
     public function expenditureItem() {
         return $this->belongsTo(ExpenditureItem::class);
     }
+
+
 }

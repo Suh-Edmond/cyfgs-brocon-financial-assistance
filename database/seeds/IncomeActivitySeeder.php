@@ -11,7 +11,7 @@ class IncomeActivitySeeder extends Seeder
 
     public function __construct()
     {
-        $this->oragnisations = Organisation::all()->count();
+        $this->oragnisations = Organisation::all()->pluck('id');
     }
 
 
@@ -26,7 +26,7 @@ class IncomeActivitySeeder extends Seeder
                 'name'              => $faker->countryISOAlpha3(),
                 'venue'             => $faker->sentence,
                 'approve'           => $faker->randomElement([true, false]),
-                'organisation_id'   => rand(1, $this->oragnisations)
+                'organisation_id'   => $this->oragnisations[0]
             ]);
         }
     }

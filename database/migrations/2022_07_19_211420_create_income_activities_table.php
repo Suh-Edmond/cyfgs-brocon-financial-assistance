@@ -14,7 +14,7 @@ class CreateIncomeActivitiesTable extends Migration
     public function up()
     {
         Schema::create('income_activities', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->string('name');
             $table->mediumText('description');
             $table->double('amount');
@@ -24,7 +24,7 @@ class CreateIncomeActivitiesTable extends Migration
             $table->string('scan_picture')->nullable(true);
             $table->timestamps();
 
-            $table->unsignedBigInteger('organisation_id');
+            $table->uuid('organisation_id');
 
             $table->foreign('organisation_id')->references('id')->on('organisations');
 

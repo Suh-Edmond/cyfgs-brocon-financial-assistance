@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Ramsey\Uuid\Uuid;
 
 class OrganisationResource extends JsonResource
 {
@@ -26,7 +27,7 @@ class OrganisationResource extends JsonResource
             'logo'          => $this->logo,
             'saluatation'   => $this->saluatation,
             'created_at'    => $this->created_at,
-            'updated_at'    =>$this->updated_at
+            'updated_at'    => $this->updated_at
         ];
     }
 }

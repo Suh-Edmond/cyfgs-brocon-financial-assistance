@@ -7,6 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class IncomeActivity extends Model
 {
+    use GenerateUuid;
+
+    protected $primaryKey = 'id';
+    public $incrementing  = false;
+    protected $keyType    = 'string';
 
     protected $fillable = [
         'name',
@@ -18,9 +23,8 @@ class IncomeActivity extends Model
         'scan_picture'
     ];
 
-
-
     public function organisation() {
         return $this->belongsTo(Organisation::class);
     }
+
 }
