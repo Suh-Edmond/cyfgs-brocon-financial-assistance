@@ -77,5 +77,6 @@ class Kernel extends HttpKernel
         'isPresidentOrIsFinancialSecretary' => \App\Http\Middleware\IsPresidentOrIsFinancialSecretary::class,
         'isTreasurerOrIsFinancialSecretary' => \App\Http\Middleware\IsTreasurerOrIsFinancialSecretary::class,
         'isTreasurerOrIsFinancialSecretaryOrIsPresident' => \App\Http\Middleware\IsTreasurerOrIsFinancialSecretaryOrIsPresident::class,
+
     ];
 }

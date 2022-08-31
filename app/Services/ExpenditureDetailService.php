@@ -107,5 +107,4 @@ class ExpenditureDetailService implements ExpenditureDetailInterface {
         return $details;
     }
 
-
 }

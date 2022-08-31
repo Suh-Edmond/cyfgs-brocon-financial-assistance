@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Ramsey\Uuid\Uuid;
 
 class ExpenditureCategoryResource extends JsonResource
 {

@@ -14,8 +14,8 @@ class UserContributionSeeder extends Seeder
 
     public function __construct()
     {
-        $this->payment_items = PaymentItem::all()->count();
-        $this->users         = User::all()->count();
+        $this->payment_items = PaymentItem::all()->pluck('id');
+        $this->users         = User::all()->pluck('id');
     }
 
 
@@ -28,8 +28,8 @@ class UserContributionSeeder extends Seeder
                 'comment'               => $faker->sentence,
                 'amount_deposited'      => $faker->randomElement([500, 30000]),
                 'approve'               => $faker->randomElement([true, false]),
-                'user_id'               => rand(1, $this->users),
-                'payment_item_id'       => rand(1, $this->payment_items),
+                'user_id'               => $faker->randomElement($this->users),
+                'payment_item_id'       => $faker->randomElement($this->payment_items),
                 'status'                => $faker->randomElement(['COMPLETE', 'INCOMEPLETE'])
             ]);
         }

@@ -11,7 +11,7 @@ class PaymentItemSeeder extends Seeder
 
     public function __construct()
     {
-        $this->payment_categories = PaymentCategory::all()->count();
+        $this->payment_categories = PaymentCategory::all()->pluck('id');
     }
 
     public function run(Faker $faker)
@@ -22,7 +22,7 @@ class PaymentItemSeeder extends Seeder
                 'name'                  => $faker->name,
                 'amount'                => $faker->numberBetween(5000, 100000),
                 'complusory'            => $faker->randomElement([true, false]),
-                'payment_category_id'   => rand(1, $this->payment_categories)
+                'payment_category_id'   => $faker->randomElement($this->payment_categories)
             ]);
         }
     }

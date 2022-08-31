@@ -11,7 +11,7 @@ class PaymentCategorySeeder extends Seeder
 
     public function __construct()
     {
-        $this->organisations = Organisation::all()->count();
+        $this->organisations = Organisation::all()->pluck('id');
     }
 
 
@@ -22,7 +22,7 @@ class PaymentCategorySeeder extends Seeder
             PaymentCategory::create([
                 'name'              => $faker->name,
                 'description'       => $faker->sentence,
-                'organisation_id'   => rand(1, $this->organisations)
+                'organisation_id'   => $this->organisations[0]
             ]);
        }
     }

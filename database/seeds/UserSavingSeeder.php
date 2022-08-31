@@ -11,7 +11,7 @@ class UserSavingSeeder extends Seeder
 
     public function __construct()
     {
-        $this->users = User::all()->count();
+        $this->users = User::all()->pluck('id');
     }
 
 
@@ -23,7 +23,7 @@ class UserSavingSeeder extends Seeder
                 'amount_deposited'  => $faker->numberBetween(1000, 100000),
                 'approve'           => $faker->randomElement([true, false]),
                 'comment'           => $faker->sentence,
-                'user_id'           => rand(1, $this->users)
+                'user_id'           => $faker->randomElement($this->users)
             ]);
         }
     }

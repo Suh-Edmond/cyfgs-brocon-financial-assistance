@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use App\Traits\ResponseTrait;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Ramsey\Uuid\Uuid;
 
 class UserSavingResource extends JsonResource
 {

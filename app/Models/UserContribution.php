@@ -7,6 +7,12 @@ use App\Traits\GenerateUuid;
 
 class UserContribution extends Model
 {
+    use GenerateUuid;
+
+    protected $primaryKey = 'id';
+    public $incrementing  = false;
+    protected $keyType    = 'string';
+
 
     protected $fillable = [
         'amount_deposited',
@@ -24,9 +30,11 @@ class UserContribution extends Model
         return $this->belongsTo(User::class);
     }
 
-
     public function paymentItem()
     {
         return $this->belongsTo(PaymentItem::class);
     }
+
+
+
 }

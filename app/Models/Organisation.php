@@ -2,11 +2,16 @@
 
 namespace App\Models;
 use App\Traits\GenerateUuid;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Organisation extends Model
 {
+    use GenerateUuid;
+
+    protected $primaryKey = 'id';
+    public $incrementing  = false;
+    protected $keyType    = 'string';
+
 
     protected $fillable = [
         'name',
@@ -17,8 +22,6 @@ class Organisation extends Model
         'salutation',
         'region'
     ];
-
-
 
     public function expenditureCategory() {
         return $this->hasMany(ExpenditureCategory::class);
@@ -35,4 +38,5 @@ class Organisation extends Model
     public function users() {
         return $this->hasMany(User::class);
     }
+
 }

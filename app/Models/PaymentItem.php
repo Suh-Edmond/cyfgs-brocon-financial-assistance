@@ -7,6 +7,12 @@ use App\Traits\GenerateUuid;
 
 class PaymentItem extends Model
 {
+    use GenerateUuid;
+
+    protected $primaryKey = 'id';
+    public $incrementing  = false;
+    protected $keyType    = 'string';
+
 
     protected $fillable = [
         'name',
@@ -16,7 +22,6 @@ class PaymentItem extends Model
         'description'
     ];
 
-
     public function paymentCategory(){
         return $this->belongsTo(PaymentCategory::class);
     }
@@ -24,4 +29,5 @@ class PaymentItem extends Model
     public function userPayment() {
         return $this->hasMany(UserPayment::class);
     }
+
 }

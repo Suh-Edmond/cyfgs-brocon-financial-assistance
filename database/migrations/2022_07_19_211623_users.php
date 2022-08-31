@@ -14,7 +14,7 @@ class Users extends Migration
     public function up()
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->string('name');
             $table->string('email')->unique()->nullable(true);
             $table->string('telephone')->unique(true);
@@ -25,7 +25,7 @@ class Users extends Migration
             $table->string('occupation')->nullable(true);
             $table->rememberToken();
             $table->timestamps();
-            $table->unsignedBigInteger('organisation_id')->nullable(true);
+            $table->uuid('organisation_id')->nullable(true);
 
             $table->foreign('organisation_id')->references('id')->on('organisations');
         });

@@ -14,11 +14,11 @@ class CreatePaymentCategoriesTable extends Migration
     public function up()
     {
         Schema::create('payment_categories', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->string('name');
             $table->text('description');
             $table->timestamps();
-            $table->unsignedBigInteger('organisation_id');
+            $table->uuid('organisation_id');
 
             $table->foreign('organisation_id')->references('id')->on('organisations');
         });

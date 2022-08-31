@@ -12,7 +12,7 @@ class ExpenditureCategorySeeder extends Seeder
 
     public function __construct()
     {
-        $this->organisations = Organisation::all()->count();
+        $this->organisations = Organisation::all()->pluck('id');
     }
     /**
      * Run the database seeds.
@@ -26,7 +26,7 @@ class ExpenditureCategorySeeder extends Seeder
             ExpenditureCategory::create([
                 'name'             => $faker->colorName,
                 'description'       => $faker->sentence,
-                'organisation_id'   => rand(1, $this->organisations)
+                'organisation_id'   => $this->organisations[0]
             ]);
         }
     }

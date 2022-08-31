@@ -14,10 +14,10 @@ class CreateUserSavingsTable extends Migration
     public function up()
     {
         Schema::create('user_savings', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->double('amount_deposited');
             $table->text('comment');
-            $table->unsignedBigInteger('user_id');
+            $table->uuid('user_id');
             $table->boolean('approve')->default(false);
             $table->timestamps();
 

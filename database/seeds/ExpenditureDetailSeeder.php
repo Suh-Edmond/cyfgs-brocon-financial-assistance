@@ -11,7 +11,7 @@ class ExpenditureDetailSeeder extends Seeder
 
    public function __construct()
    {
-        $this->expenditure_items = ExpenditureItem::all()->count();
+        $this->expenditure_items = ExpenditureItem::all()->pluck('id');
    }
 
 
@@ -25,7 +25,7 @@ class ExpenditureDetailSeeder extends Seeder
                 'amount_given'          => $faker->numberBetween(10000, 50000),
                 'comment'               => $faker->sentence,
                 'approve'               => $faker->randomElement([true, false]),
-                'expenditure_item_id'   => rand(1, $this->expenditure_items)
+                'expenditure_item_id'   => $faker->randomElement($this->expenditure_items)
             ]);
         }
     }
