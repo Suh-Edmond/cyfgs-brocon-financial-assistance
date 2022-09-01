@@ -43,7 +43,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('', [RoleController::class, 'addUserRole']);
         Route::get('', [RoleController::class, 'getAllRoles']);
         Route::get('/users/{user_id}', [RoleController::class, 'getUserRoles']);
-        Route::delete('/{role_id}/users/{user_id}', [RoleController::class, 'removeUserRole']);
+        Route::delete('/users/{user_id}', [RoleController::class, 'removeUserRole']);
     });
 
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Constants\Roles;
 use App\Http\Requests\CheckUserRequest;
 use App\Http\Requests\CreateAccountRequest;
 use App\Http\Requests\CreateUserRequest;
@@ -9,6 +10,7 @@ use App\Http\Requests\LoginRequest;
 use App\Http\Requests\UpdatePasswordRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\UserResource;
+use App\Services\RoleService;
 use App\Services\UserManagementService;
 use App\Traits\ResponseTrait;
 use Illuminate\Http\Request;
@@ -19,15 +21,19 @@ class UserController extends Controller
     use ResponseTrait;
 
     private $user_management_service;
+    private $role_service;
 
-    public function __construct(UserManagementService $user_management_service)
+    public function __construct(UserManagementService $user_management_service, RoleService $role_service)
     {
         $this->user_management_service = $user_management_service;
+        $this->role_service            = $role_service;
     }
 
     public function createAccount(CreateAccountRequest $request)
     {
-        $this->user_management_service->createAccount($request);
+        $new_user = $this->user_management_service->createAccount($request);
+        $this->role_service->addUserRole($new_user->id, Roles::USER);
+        $this->role_service->addUserRole($new_user->id, Roles::PRESIDENT);
 
         return $this->sendResponse("success", "Account created successfully");
     }
@@ -35,7 +41,8 @@ class UserController extends Controller
 
     public function addUser(CreateUserRequest $request, $id)
     {
-        $this->user_management_service->AddUserUserToOrganisation($request, $id);
+        $new_user = $this->user_management_service->AddUserUserToOrganisation($request, $id);
+        $this->role_service->addUserRole($new_user->id, Roles::USER);
 
         return $this->sendResponse('success', 'User added successfully', 201);
     }
@@ -45,6 +52,7 @@ class UserController extends Controller
         $data = $this->user_management_service->loginUser($request);
 
         return $this->sendResponse($data, 'success');
+
     }
 
 

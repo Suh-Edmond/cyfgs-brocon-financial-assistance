@@ -22,7 +22,7 @@ class PaymentItems extends Migration
             $table->timestamps();
             $table->uuid('payment_category_id');
 
-            $table->foreign('payment_category_id')->references('id')->on('payment_categories');
+            $table->foreign('payment_category_id')->references('id')->on('payment_categories')->cascadeOnDelete();
         });
     }
 

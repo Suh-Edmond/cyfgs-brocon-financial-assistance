@@ -4,6 +4,7 @@ namespace App\Traits;
 
 use App\Constants\Roles;
 use App\Http\Resources\ExpenditureDetailResource;
+use App\Models\CustomRole;
 
 trait ResponseTrait
 {

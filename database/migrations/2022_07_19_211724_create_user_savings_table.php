@@ -21,7 +21,7 @@ class CreateUserSavingsTable extends Migration
             $table->boolean('approve')->default(false);
             $table->timestamps();
 
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->cascadeOnDelete();
 
         });
     }

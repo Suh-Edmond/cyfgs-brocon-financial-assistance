@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers;
 
-
 use App\Http\Requests\AddUserRoleRequest;
 use App\Http\Resources\RoleResource;
-use App\Interfaces\RoleInterface;
 use App\Services\RoleService;
-use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 
 class RoleController extends Controller
 {
@@ -20,8 +18,8 @@ class RoleController extends Controller
 
     public function addUserRole(AddUserRoleRequest $request)
     {
-        (int)Str::uuid($request->role_id)->toString();
-        $this->roleService->addUserRole($request->user_id, $request->role_id);
+
+        $this->roleService->addUserRole($request->user_id, $request->role);
 
         return $this->sendResponse('success', 'Role successfully added', 201);
     }
@@ -41,13 +39,13 @@ class RoleController extends Controller
     {
         $user_roles = $this->roleService->getUserRoles($user_id);
 
-        return $this->sendResponse(RoleResource::collection($user_roles), 'success');
+        return $this->sendResponse($user_roles, 'success');
     }
 
 
-    public function removeUserRole($role_id, $user_id)
+    public function removeUserRole(Request $request, $user_id)
     {
-        $user = $this->roleService->removeRole($user_id, $role_id);
+        $this->roleService->removeRole($user_id, $request->role);
         return $this->sendResponse('success', 'Role remove successfully', 204);
     }
 }

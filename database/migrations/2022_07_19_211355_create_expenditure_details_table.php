@@ -24,7 +24,7 @@ class CreateExpenditureDetailsTable extends Migration
             $table->timestamps();
             $table->uuid('expenditure_item_id');
 
-            $table->foreign('expenditure_item_id')->references('id')->on('expenditure_items');
+            $table->foreign('expenditure_item_id')->references('id')->on('expenditure_items')->cascadeOnDelete();
         });
     }
 

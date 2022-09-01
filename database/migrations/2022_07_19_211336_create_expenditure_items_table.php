@@ -25,7 +25,7 @@ class CreateExpenditureItemsTable extends Migration
             $table->timestamps();
             $table->uuid('expenditure_category_id');
 
-            $table->foreign('expenditure_category_id')->references('id')->on('expenditure_categories');
+            $table->foreign('expenditure_category_id')->references('id')->on('expenditure_categories')->cascadeOnDelete();
         });
     }
 

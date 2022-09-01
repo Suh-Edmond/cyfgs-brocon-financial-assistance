@@ -2,14 +2,14 @@
 
 namespace App\Http\Resources;
 
+use App\Traits\ResponseTrait;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Facades\Crypt;
-use Ramsey\Uuid\Uuid;
 
 class UserResource extends JsonResource
 {
     private $token;
     private $hasLoginBefore;
+    use ResponseTrait;
 
     public function __construct($resource, $token = null, $hasLoginBefore = null)
     {
@@ -33,11 +33,9 @@ class UserResource extends JsonResource
             'address'        => $this->address,
             'occupation'     => $this->occupation,
             'gender'         => $this->gender,
-            'organsation_id' => optional($this->organisation->id),
-            'organsation_name' => optional($this->organisation->name),
             'created_at'     => $this->created_at,
             'updated_at'     => $this->updated_at,
-            'roles'          => RoleResource::collection($this->roles),
+            'roles'          => $this->roles,
             'token'          => $this->token,
             'hasLoginBefore' => $this->hasLoginBefore
         ];
