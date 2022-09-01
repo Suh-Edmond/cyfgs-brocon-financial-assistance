@@ -26,7 +26,7 @@ class CreateIncomeActivitiesTable extends Migration
 
             $table->uuid('organisation_id');
 
-            $table->foreign('organisation_id')->references('id')->on('organisations');
+            $table->foreign('organisation_id')->references('id')->on('organisations')->cascadeOnDelete();
 
         });
     }

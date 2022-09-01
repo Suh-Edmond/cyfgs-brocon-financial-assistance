@@ -4,41 +4,52 @@ namespace App\Services;
 
 use App\Models\User;
 use App\Interfaces\RoleInterface;
+use App\Models\CustomRole;
 use App\Traits\ResponseTrait;
-use Spatie\Permission\Models\Role;
 
 class RoleService implements RoleInterface {
 
     use ResponseTrait;
 
-    public function addUserRole($user_id, $role_id)
+    public function addUserRole($user_id, $role)
     {
         $user = User::findOrFail($user_id);
-        $assignRole = Role::find($role_id);
+        $assignRole = CustomRole::findByName($role, 'api');
         $user->assignRole($assignRole);
 
     }
 
-    public function removeRole($user_id, $role_id)
+    public function removeRole($user_id, $role)
     {
         $user = User::findOrFail($user_id);
-        $user_role = Role::find($role_id);
-        $delete_role =array_filter($user->roles->toArray(), function($role, $user_role) {
-            return $role->id == $user_role->id;
-        });
+        $user_role = CustomRole::findByName($role, 'api');
+        $user->removeRole($user_role);
 
-        return $delete_role;
     }
 
     public function getUserRoles($user_id)
     {
         $user = User::findOrFail($user_id);
-        return $user->roles;
+        $roles = [];
+        foreach($user->roles as $role){
+            array_push($roles, CustomRole::findByName($role->name, 'api'));
+        }
+        return $roles;
     }
 
 
     public function getAllRoles() {
-        return Role::all();
+        return CustomRole::all();
+    }
+
+
+    public function findRole($role_name){
+        $role = CustomRole::findByName($role_name, 'api');
+        if(is_null($role)){
+            return $this->sendError('Role not found', 404);
+        }
+
+        return $role;
     }
 
 

@@ -7,6 +7,7 @@ use App\Http\Resources\UserResource;
 use App\Http\Resources\UserTokenResource;
 use App\Imports\UsersImport;
 use App\Interfaces\UserManagementInterface;
+use App\Models\CustomRole;
 use App\Models\User;
 use Auth;
 use App\Traits\ResponseTrait;
@@ -27,7 +28,8 @@ class UserManagementService implements UserManagementInterface {
             'occupation'      => $request->occupation,
             'organisation_id' => $id
         ]);
-        $saved->assignRole(Roles::USER);
+
+        return $saved;
     }
 
     public function getUsers($organisation_id)
@@ -70,17 +72,18 @@ class UserManagementService implements UserManagementInterface {
         $hasLoginBefore = $this->checkIfUserHasLogin($user);
 
         return new UserResource($user, $token, $hasLoginBefore);
+
     }
 
     public function createAccount($request)
     {
-        $saved =User::create([
+        $saved =  User::create([
             'name'       => $request->name,
             'telephone'  => $request->telephone,
             'password'   => Hash::make($request->password)
         ]);
-        $saved->assignRole(Roles::USER);
-        $saved->assignRole(Roles::PRESIDENT);
+
+        return $saved;
     }
 
     public function setPassword($request)

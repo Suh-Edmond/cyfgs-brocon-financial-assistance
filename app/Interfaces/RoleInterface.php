@@ -3,12 +3,16 @@ namespace App\Interfaces;
 
 interface RoleInterface {
 
-    public function addUserRole($userId, $role);
+    public function addUserRole($user_id, $role);
 
-    public function removeRole($userId, $role);
+    public function removeRole($user_id, $role);
 
-    public function getUserRoles($userId);
+    public function getUserRoles($user_id);
 
     public function getAllRoles();
+
+    public function findRole($role_name);
+
+
 
 }

@@ -20,7 +20,7 @@ class CreatePaymentCategoriesTable extends Migration
             $table->timestamps();
             $table->uuid('organisation_id');
 
-            $table->foreign('organisation_id')->references('id')->on('organisations');
+            $table->foreign('organisation_id')->references('id')->on('organisations')->cascadeOnDelete();
         });
     }
 
