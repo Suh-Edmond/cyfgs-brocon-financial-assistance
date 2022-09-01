@@ -241,3 +241,4 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('fetch-file', [FileUploadController::class, 'getUploadFile']);
     });
 });
+
