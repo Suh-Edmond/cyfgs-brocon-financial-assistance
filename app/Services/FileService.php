@@ -17,7 +17,7 @@ class FileService implements FileServiceInterface {
     {
         $organisation   = $request->user()->organisation;
         $directory      = ResponseTrait::getAppName()."/".$organisation->name."/".$request->directory;
-        $url            = FileStorageConstants::BASE_URL."/upload-files?courseName=".$directory."&fileCategory=".FileStorageConstants::FILE_STORAGE_BASE_DIRECTORY;
+        $url            = FileStorageConstants::BASE_URL."/upload-file?directory=".$directory."&fileCategory=".FileStorageConstants::FILE_STORAGE_BASE_DIRECTORY;
 
         Http::attach('file', file_get_contents($request->file('file')), $request->file('file')->getClientOriginalName())->post($url);
     }
@@ -28,7 +28,7 @@ class FileService implements FileServiceInterface {
         $directory      = ResponseTrait::getAppName()."/".$organisation->name."/".$request->directory;
         $file_name      = $request->file_name;
 
-        $url            = FileStorageConstants::BASE_URL."/course-material?courseName=".$directory."&fileCategory=".FileStorageConstants::FILE_STORAGE_BASE_DIRECTORY."&fileName=".$file_name;
+        $url            = FileStorageConstants::BASE_URL."/file?directory=".$directory."&fileCategory=".FileStorageConstants::FILE_STORAGE_BASE_DIRECTORY."&fileName=".$file_name;
 
         $file_response  = Http::get($url);
 
