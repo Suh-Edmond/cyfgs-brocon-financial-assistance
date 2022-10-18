@@ -24,8 +24,7 @@ class CheckUserRequest extends FormRequest
     public function rules()
     {
         return [
-            'email'      =>  'string',
-            'telephone'  =>  'string'
+            'credential'      =>  'required',
         ];
     }
 }

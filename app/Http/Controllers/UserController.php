@@ -51,8 +51,7 @@ class UserController extends Controller
     {
         $data = $this->user_management_service->loginUser($request);
 
-        return $this->sendResponse($data, 'success');
-
+        return $this->sendResponse($data, 'success', 200);
     }
 
 
@@ -68,7 +67,7 @@ class UserController extends Controller
     {
         $data = $this->user_management_service->checkUserExist($request);
 
-        return $this->sendResponse($data, 'success', 200);
+        return $this->sendResponse($data, 200);
     }
 
     public function getUsers($id)
@@ -81,17 +80,17 @@ class UserController extends Controller
 
     public function getUser($user_id)
     {
-       $user = $this->user_management_service->getUser($user_id);
+        $user = $this->user_management_service->getUser($user_id);
 
-       return $this->sendResponse(new UserResource($user, "", false), 200);
+        return $this->sendResponse(new UserResource($user, "", false), 200);
     }
 
 
     public function updateUser(UpdateUserRequest $request, $id)
     {
-       $this->user_management_service->updateUser($id, $request);
+        $this->user_management_service->updateUser($id, $request);
 
-       return $this->sendResponse('success', 'Account updated sucessfully', 204);
+        return $this->sendResponse('success', 'Account updated sucessfully', 204);
     }
 
 

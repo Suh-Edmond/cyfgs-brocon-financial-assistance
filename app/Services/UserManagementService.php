@@ -7,9 +7,7 @@ use App\Http\Resources\UserResource;
 use App\Http\Resources\UserTokenResource;
 use App\Imports\UsersImport;
 use App\Interfaces\UserManagementInterface;
-use App\Models\CustomRole;
 use App\Models\User;
-use Auth;
 use App\Traits\ResponseTrait;
 use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
@@ -66,7 +64,7 @@ class UserManagementService implements UserManagementInterface {
         $user = User::where('telephone', $request->telephone)->orwhere('email', $request->email)->firstOrFail();
 
         if(!Hash::check($request->password, $user->password)){
-            return $this->sendError('Unauthorized', 'Bad Credentials', 401);
+            return $this->sendError('Unauthorized', 'Bad Credentials', "401");
         }
         $token = $this->generateToken($user);
         $hasLoginBefore = $this->checkIfUserHasLogin($user);
@@ -80,7 +78,8 @@ class UserManagementService implements UserManagementInterface {
         $saved =  User::create([
             'name'       => $request->name,
             'telephone'  => $request->telephone,
-            'password'   => Hash::make($request->password)
+            'password'   => Hash::make($request->password),
+            'email'      => $request->email
         ]);
 
         return $saved;
@@ -102,15 +101,7 @@ class UserManagementService implements UserManagementInterface {
 
     public function checkUserExist($request)
     {
-        if(!is_null($request->email) && is_null($request->telephone)){
-            $user = User::where('email', $request->email)->firstOrFail();
-        }
-        else if(is_null($request->email) && !is_null($request->telephone)){
-            $user = User::where('telephone', $request->telephone)->firstOrFail();
-        }else {
-            $user = User::where('telephone', $request->telephone)->firstOrFail();
-        }
-
+        $user = User::where('telephone', $request->credential)->orWhere('email', $request->credential)->firstOrFail();
         return $user;
     }
 
