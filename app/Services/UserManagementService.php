@@ -12,7 +12,8 @@ use App\Traits\ResponseTrait;
 use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
 
-class UserManagementService implements UserManagementInterface {
+class UserManagementService implements UserManagementInterface
+{
 
     use ResponseTrait;
     public function AddUserUserToOrganisation($request, $id)
@@ -63,14 +64,14 @@ class UserManagementService implements UserManagementInterface {
     {
         $user = User::where('telephone', $request->telephone)->orwhere('email', $request->email)->firstOrFail();
 
-        if(!Hash::check($request->password, $user->password)){
+        if (!Hash::check($request->password, $user->password)) {
             return $this->sendError('Unauthorized', 'Bad Credentials', "401");
+        } else {
+            $token = $this->generateToken($user);
+            $hasLoginBefore = $this->checkIfUserHasLogin($user);
+
+            return new UserResource($user, $token, $hasLoginBefore);
         }
-        $token = $this->generateToken($user);
-        $hasLoginBefore = $this->checkIfUserHasLogin($user);
-
-        return new UserResource($user, $token, $hasLoginBefore);
-
     }
 
     public function createAccount($request)
@@ -112,9 +113,9 @@ class UserManagementService implements UserManagementInterface {
 
     private function generateToken($user)
     {
-       if(!is_null($user)){
+        if (!is_null($user)) {
             $token = $user->createToken('access-token', $user->roles->toArray())->plainTextToken;
-       }
+        }
 
         return $token;
     }
@@ -122,7 +123,7 @@ class UserManagementService implements UserManagementInterface {
     private function checkIfUserHasLogin($user)
     {
         $hasLoginBefore = false;
-        if(!is_null($user->password)){
+        if (!is_null($user->password)) {
             $hasLoginBefore = true;
         }
 

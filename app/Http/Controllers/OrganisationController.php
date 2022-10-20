@@ -20,7 +20,7 @@ class OrganisationController extends Controller
 
     public function createOrganisation(CreateOrganisationRequest $request)
     {
-        $this->organisation_service->createOrganisation($request);
+        $data = $this->organisation_service->createOrganisation($request);
 
         return $this->sendResponse('success', 'Organisation created successfully' , 201);
     }

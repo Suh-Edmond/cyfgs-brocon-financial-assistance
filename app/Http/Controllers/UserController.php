@@ -51,7 +51,7 @@ class UserController extends Controller
     {
         $data = $this->user_management_service->loginUser($request);
 
-        return $this->sendResponse($data, 'success', 200);
+        return $data;
     }
 
 
