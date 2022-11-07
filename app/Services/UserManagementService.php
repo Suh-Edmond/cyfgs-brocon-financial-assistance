@@ -52,6 +52,7 @@ class UserManagementService implements UserManagementInterface
             'telephone'       => $request->telephone,
             'address'         => $request->address,
             'occupation'      => $request->occupation,
+            'gender'          => $request->gender,
         ]);
     }
 

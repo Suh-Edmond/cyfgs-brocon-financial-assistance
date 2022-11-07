@@ -22,7 +22,7 @@ class OrganisationController extends Controller
     {
         $data = $this->organisation_service->createOrganisation($request);
 
-        return $this->sendResponse('success', 'Organisation created successfully' , 201);
+        return $this->sendResponse($request->box_number, 'Organisation created successfully' , 201);
     }
 
 
@@ -52,7 +52,7 @@ class OrganisationController extends Controller
     }
 
 
-    public function updateOrgansation(UpdateOrganisationRequest $request, $id)
+    public function updateOrgansation(CreateOrganisationRequest $request, $id)
     {
         $this->organisation_service->updatedOrganisation($request, $id);
 

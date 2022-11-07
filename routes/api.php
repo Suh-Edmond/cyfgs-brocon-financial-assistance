@@ -56,7 +56,7 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
 
-    Route::prefix('protected')->middleware('isFinancialSecretary')->group(function () {
+    Route::prefix('protected')->middleware('isPresidentOrIsFinancialSecretary')->group(function () {
         Route::put('/users/{id}', [UserController::class, 'updateUser']);
         Route::delete('/users/{id}', [UserController::class, 'deleteUser']);
     });

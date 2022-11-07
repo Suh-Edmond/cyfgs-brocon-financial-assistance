@@ -28,10 +28,10 @@ class OrganisationService implements OrganisationInterface
             ]);
             $user->update(['organisation_id' => $saved->id]);
         } else {
-            $organisation->name  =  $request->name;
-            $organisation->email = $request->email;
-            $organisation->telephone  = $request->telephone;
-            $organisation->description = $request->description;
+            $organisation->name             =  $request->name;
+            $organisation->email            = $request->email;
+            $organisation->telephone        = $request->telephone;
+            $organisation->description      = $request->description;
             $organisation->address          = $request->address;
             $organisation->logo             = $request->logo;
             $organisation->salutation       = $request->salutation;
@@ -48,7 +48,10 @@ class OrganisationService implements OrganisationInterface
 
     public function getOrganisationInfo()
     {
-        $id = Auth::user()->organisation->id;
+        $id = null;
+        if(!is_null(Auth::user()->organisation)){
+            $id = Auth::user()->organisation->id;
+        }
         return Organisation::findOrFail($id);
     }
 
@@ -61,6 +64,7 @@ class OrganisationService implements OrganisationInterface
             'description'      => $request->description,
             'address'          => $request->address,
             'logo'             => $request->logo,
+           'box_number'        => $request->box_number,
         ]);
     }
 

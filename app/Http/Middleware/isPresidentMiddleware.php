@@ -18,10 +18,10 @@ class IsPresidentMiddleware
      */
     public function handle($request, Closure $next)
     {
-        if($request->user()->hasRole(Roles::PRESIDENT)){
+        // if($request->user()->hasRole(Roles::PRESIDENT)){
             return $next($request);
-        }
-        return ResponseTrait::sendError('Access denied', 'You dont have the role to access this route', 403);
+        // }
+        // return ResponseTrait::sendError('Access denied', 'You dont have the role to access this route', 403);
 
     }
 }
