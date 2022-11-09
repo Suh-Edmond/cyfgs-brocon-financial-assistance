@@ -15,7 +15,7 @@ class OrganisationService implements OrganisationInterface
 
         $organisation = Organisation::where('id', $request->id)->first();
 
-        if (!$organisation) {
+        if (is_null($organisation)) {
             $saved = Organisation::create([
                 'name'             => $request->name,
                 'email'            => $request->email,
@@ -28,7 +28,7 @@ class OrganisationService implements OrganisationInterface
             ]);
             $user->update(['organisation_id' => $saved->id]);
         } else {
-            $organisation->name             =  $request->name;
+            $organisation->name             = $request->name;
             $organisation->email            = $request->email;
             $organisation->telephone        = $request->telephone;
             $organisation->description      = $request->description;
