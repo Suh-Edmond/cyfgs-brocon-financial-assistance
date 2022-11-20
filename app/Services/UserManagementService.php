@@ -2,9 +2,7 @@
 
 namespace App\Services;
 
-use App\Constants\Roles;
 use App\Http\Resources\UserResource;
-use App\Http\Resources\UserTokenResource;
 use App\Imports\UsersImport;
 use App\Interfaces\UserManagementInterface;
 use App\Models\User;
@@ -72,7 +70,7 @@ class UserManagementService implements UserManagementInterface
         $user = User::where('telephone', $request->telephone)->orwhere('email', $request->email)->firstOrFail();
 
         if (!Hash::check($request->password, $user->password)) {
-            return $this->sendError('Unauthorized', 'Bad Credentials', "401");
+            return $this->sendError('Unauthorized', 'Bad Credentials', 401);
         } else {
             $token = $this->generateToken($user);
             $hasLoginBefore = $this->checkIfUserHasLogin($user);

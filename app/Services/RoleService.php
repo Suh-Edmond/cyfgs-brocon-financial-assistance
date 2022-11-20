@@ -50,7 +50,7 @@ class RoleService implements RoleInterface {
     public function findRole($role_name){
         $role = CustomRole::findByName($role_name, 'api');
         if(is_null($role)){
-            return $this->sendError('Role not found', 404);
+            return $this->sendError('Role not found', 'The role to be assigned does not exist', 404);
         }
 
         return $role;

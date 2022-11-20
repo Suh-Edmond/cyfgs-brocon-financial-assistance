@@ -23,7 +23,7 @@ class RoleController extends Controller
         if($exist){
             return $this->sendResponse('success', 'Role added successfully', 200);
         }else {
-            return $this->sendError('Only two(02) members of your organisation are allowed to have this Role', 409);
+            return $this->sendError('Multiple Member with a single Role', 'Only two(02) members of your organisation are allowed to have this Role', 409);
         }
     }
 
