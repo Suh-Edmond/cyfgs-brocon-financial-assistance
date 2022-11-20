@@ -4,14 +4,19 @@ namespace App\Imports;
 
 use App\Models\User;
 use Maatwebsite\Excel\Concerns\ToModel;
+use App\Services\RoleService;
+use App\Constants\Roles;
+
 
 class UsersImport implements ToModel
 {
     private $organisation_id;
+    private  $role_service;
 
-    public function __construct($organisation_id)
+    public function __construct($organisation_id,  RoleService $role_service)
     {
         $this->organisation_id = $organisation_id;
+        $this->role_service = $role_service;
     }
 
     public function startRow(): int
@@ -32,7 +37,7 @@ class UsersImport implements ToModel
     */
     public function model(array $row)
     {
-        return new User([
+        $saved =  new User([
             'name'            => $row[0],
             'email'           => $row[1],
             'telephone'       => $row[2],
@@ -41,5 +46,7 @@ class UsersImport implements ToModel
             'occupation'      => $row[5],
             'organisation_id' => $this->organisation_id
         ]);
+
+        $this->role_service->addUserRole($saved->id, Roles::USER);
     }
 }

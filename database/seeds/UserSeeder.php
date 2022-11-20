@@ -61,11 +61,11 @@ class UserSeeder extends Seeder
 
 
         $system_user->assignRole($this->role_user);
-        $system_user->assignRole($role_admin);
-        $system_user->assignRole($role_auditor);
+        // $system_user->assignRole($role_admin);
+        // $system_user->assignRole($role_auditor);
         $system_user->assignRole($role_president);
-        $system_user->assignRole($role_fin_sec);
-        $system_user->assignRole($role_treasurer);
+        // $system_user->assignRole($role_fin_sec);
+        // $system_user->assignRole($role_treasurer);
 
     }
 }

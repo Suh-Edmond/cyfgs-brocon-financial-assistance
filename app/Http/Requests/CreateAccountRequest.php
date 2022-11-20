@@ -24,9 +24,10 @@ class CreateAccountRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'            => 'required|max:255',
-            'telephone'       => 'required|string|size:9|unique:users,telephone',
+            'name'            => 'required|max:255|min:4',
+            'telephone'       => 'required|string|unique:users,telephone',
             'password'        => 'required|confirmed|min:8',
+            'email'           => 'email'
         ];
     }
 }

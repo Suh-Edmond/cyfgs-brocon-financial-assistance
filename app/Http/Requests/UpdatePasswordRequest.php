@@ -26,7 +26,7 @@ class UpdatePasswordRequest extends FormRequest
         return [
             'telephone'  =>   'string',
             'email'      =>   'string',
-            'password'   =>   'string|required'
+            'password'   =>   'string|required|confirmed|min:8'
         ];
     }
 }

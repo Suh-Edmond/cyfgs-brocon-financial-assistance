@@ -25,14 +25,15 @@ class CreateOrganisationRequest extends FormRequest
     {
         return [
             'name'          => 'required|max:255',
-            'email'         => 'email|unique:organisations,email',
+            'email'         => 'email',
             'address'       => 'required',
             'box_number'    => 'integer',
             'description'   => 'required|max:5000',
             'logo'          => 'string',
-            'saluatation'   => 'string',
-            'region'        => 'required',
-            'telephone'     => 'required|unique:organisations,telephone'//should be a string seperated by /
+            'salutation'    => 'string',
+            'region'        => 'string',
+            'telephone'     => 'required',//should be a string seperated by /
+            'id'            => 'string'
         ];
     }
 }

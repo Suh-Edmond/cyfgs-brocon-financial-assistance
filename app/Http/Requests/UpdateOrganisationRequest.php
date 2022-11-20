@@ -30,6 +30,7 @@ class UpdateOrganisationRequest extends FormRequest
            'address'       => 'required',
            'description'   => 'required|max:5000',
            'logo'          => 'string',
+           'box_number'    => 'integer'
         ];
     }
 }

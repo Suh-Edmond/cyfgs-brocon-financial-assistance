@@ -13,21 +13,33 @@ class OrganisationService implements OrganisationInterface
     {
         $user = User::findOrFail(Auth::user()->id);
 
-        $saved = Organisation::create([
-            'name'             => $request->name,
-            'email'            => $request->email,
-            'telephone'        => $request->telephone,
-            'description'      => $request->description,
-            'address'          => $request->address,
-            'logo'             => $request->logo,
-            'saluatation'      => $request->saluatation,
-            'box_number'       => $request->box_number,
-            'region'           => $request->region
-        ]);
+        $organisation = Organisation::where('id', $request->id)->first();
 
-        $user->update(['organisation_id' => $saved->id]);
+        if (is_null($organisation)) {
+            $saved = Organisation::create([
+                'name'             => $request->name,
+                'email'            => $request->email,
+                'telephone'        => $request->telephone,
+                'description'      => $request->description,
+                'address'          => $request->address,
+                'logo'             => $request->logo,
+                'salutation'       => $request->salutation,
+                'box_number'       => $request->box_number,
+                'region'           => $request->region
+            ]);
+            $user->update(['organisation_id' => $saved->id]);
+        } else {
+            $organisation->name             = $request->name;
+            $organisation->email            = $request->email;
+            $organisation->telephone        = $request->telephone;
+            $organisation->description      = $request->description;
+            $organisation->address          = $request->address;
+            $organisation->logo             = $request->logo;
+            $organisation->salutation       = $request->salutation;
+            $organisation->box_number       = $request->box_number;
 
-        return $saved->id;
+            $organisation->save();
+        }
     }
 
     public function getOrganisation($id)
@@ -37,19 +49,23 @@ class OrganisationService implements OrganisationInterface
 
     public function getOrganisationInfo()
     {
-        $id = Auth::user()->organisation->id;
+        $id = null;
+        if(!is_null(Auth::user()->organisation)){
+            $id = Auth::user()->organisation->id;
+        }
         return Organisation::findOrFail($id);
     }
 
     public function updatedOrganisation($request, $id)
     {
         $saved = Organisation::findOrFail($id)->update([
-                    'name'             =>$request->name,
-                    'email'            => $request->email,
-                    'telephone'        => $request->telephone,
-                    'description'      => $request->description,
-                    'address'          => $request->address,
-                    'logo'             => $request->logo,
+            'name'             => $request->name,
+            'email'            => $request->email,
+            'telephone'        => $request->telephone,
+            'description'      => $request->description,
+            'address'          => $request->address,
+            'logo'             => $request->logo,
+           'box_number'        => $request->box_number,
         ]);
     }
 
@@ -62,4 +78,4 @@ class OrganisationService implements OrganisationInterface
     {
         return Organisation::all();
     }
- }
+}

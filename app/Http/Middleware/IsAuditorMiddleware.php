@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Constants\Roles;
+use App\Models\CustomRole;
 use App\Traits\ResponseTrait;
 use Closure;
 
@@ -18,7 +19,7 @@ class IsAuditorMiddleware
      */
     public function handle($request, Closure $next)
     {
-        if($request->user()->hasRole(Roles::AUDITOR)){
+        if($request->user()->hasRole(CustomRole::findByName(Roles::AUDITOR, 'api'))){
             return $next($request);
         }
 

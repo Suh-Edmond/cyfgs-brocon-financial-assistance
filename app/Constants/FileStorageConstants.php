@@ -2,7 +2,7 @@
 namespace App\Constants;
 
 class FileStorageConstants {
-    public const BASE_URL = "http://localhost:7000/api/v1/protected";
+    public const BASE_URL = "https://file-storage-web-api.herokuapp.com/api/v1/protected";
     public const FILE_STORAGE_BASE_DIRECTORY = "IMAGES";
 
     public const EXPENDITURE_DETAILS = "EXPENDITURE_DETAILS";

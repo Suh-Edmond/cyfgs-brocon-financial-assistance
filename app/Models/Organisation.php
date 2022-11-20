@@ -20,7 +20,8 @@ class Organisation extends Model
         'email',
         'address',
         'salutation',
-        'region'
+        'region',
+        'box_number'
     ];
 
     public function expenditureCategory() {

@@ -34,7 +34,7 @@ Route::prefix('public/auth')->group(function () {
 
 Route::prefix('public/auth')->group(function () {
     Route::post('/set-password', [UserController::class, 'updatePassword']);
-    Route::get('/check-user', [UserController::class, 'checkUserExist']);
+    Route::post('/check-user', [UserController::class, 'checkUserExist']);
 });
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -56,7 +56,7 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
 
-    Route::prefix('protected')->middleware('isFinancialSecretary')->group(function () {
+    Route::prefix('protected')->middleware('isPresidentOrIsFinancialSecretary')->group(function () {
         Route::put('/users/{id}', [UserController::class, 'updateUser']);
         Route::delete('/users/{id}', [UserController::class, 'deleteUser']);
     });
