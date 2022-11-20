@@ -28,42 +28,42 @@ class UserSeeder extends Seeder
      */
     public function run(Faker $faker)
     {
-        // for($i = 0; $i < 100; $i++){
-        //     $saved = User::create([
-        //             'name'            => $faker->name,
-        //             'email'           => $faker->email(),
-        //             'telephone'       => $faker->phoneNumber(9),
-        //             'password'        => $faker->password(6),
-        //             'address'         => $faker->address(),
-        //             'occupation'      => $faker->sentence(5),
-        //             'gender'          => $faker->randomElement(['MALE', 'FEMALE']),
-        //             'organisation_id' => $this->organisations[0]
-        //         ]);
-        //     // $saved->assignRole($this->role_user);
-        // }
+        for($i = 0; $i < 100; $i++){
+            $saved = User::create([
+                    'name'            => $faker->name,
+                    'email'           => $faker->email(),
+                    'telephone'       => $faker->phoneNumber(9),
+                    'password'        => $faker->password(6),
+                    'address'         => $faker->address(),
+                    'occupation'      => $faker->sentence(5),
+                    'gender'          => $faker->randomElement(['MALE', 'FEMALE']),
+                    'organisation_id' => $this->organisations[0]
+                ]);
+            $saved->assignRole($this->role_user);
+        }
 
-        // $system_user = User::create([
-        //     'name'              => "Suh Edmond",
-        //     'email'             => 'email@gmail.com',
-        //     'telephone'         => '671809232',
-        //     'password'          => Hash::make('password'),
-        //     'address'           => $faker->address(),
-        //     'occupation'        => $faker->sentence(5),
-        //     'gender'            => $faker->randomElement(['MALE', 'FEMALE']),
-        //     'organisation_id'   => $this->organisations[0]
-        // ]);
+        $system_user = User::create([
+            'name'              => "Suh Edmond",
+            'email'             => 'email@gmail.com',
+            'telephone'         => '671809232',
+            'password'          => Hash::make('password'),
+            'address'           => $faker->address(),
+            'occupation'        => $faker->sentence(5),
+            'gender'            => $faker->randomElement(['MALE', 'FEMALE']),
+            'organisation_id'   => $this->organisations[0]
+        ]);
 
-        // $role_admin     = CustomRole::findByName(Roles::ADMIN, 'api');
-        // $role_auditor   = CustomRole::findByName(Roles::AUDITOR, 'api');
-        // $role_president = CustomRole::findByName(Roles::PRESIDENT, 'api');
-        // $role_fin_sec   = CustomRole::findByName(Roles::FINANCIAL_SECRETARY, 'api');
-        // $role_treasurer = CustomRole::findByName(Roles::TREASURER, 'api');
+        $role_admin     = CustomRole::findByName(Roles::ADMIN, 'api');
+        $role_auditor   = CustomRole::findByName(Roles::AUDITOR, 'api');
+        $role_president = CustomRole::findByName(Roles::PRESIDENT, 'api');
+        $role_fin_sec   = CustomRole::findByName(Roles::FINANCIAL_SECRETARY, 'api');
+        $role_treasurer = CustomRole::findByName(Roles::TREASURER, 'api');
 
 
-        // $system_user->assignRole($this->role_user);
+        $system_user->assignRole($this->role_user);
         // $system_user->assignRole($role_admin);
         // $system_user->assignRole($role_auditor);
-        // $system_user->assignRole($role_president);
+        $system_user->assignRole($role_president);
         // $system_user->assignRole($role_fin_sec);
         // $system_user->assignRole($role_treasurer);
 

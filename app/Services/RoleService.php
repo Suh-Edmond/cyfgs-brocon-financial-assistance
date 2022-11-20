@@ -15,8 +15,12 @@ class RoleService implements RoleInterface {
     {
         $user = User::findOrFail($user_id);
         $assignRole = CustomRole::findByName($role, 'api');
-        $user->assignRole($assignRole);
+        $role_exist = $this->checkIfAUserAlreadyHasTheRole($user, $assignRole);
 
+        if($role_exist){
+            $user->assignRole($assignRole);
+        }
+        return $role_exist;
     }
 
     public function removeRole($user_id, $role)
@@ -52,5 +56,13 @@ class RoleService implements RoleInterface {
         return $role;
     }
 
-
+    private function checkIfAUserAlreadyHasTheRole($user, $role){
+        $users_with_same_role = [];
+        foreach($user->organisation->users as $user) {
+            if($user->hasRole($role)){
+                array_push($users_with_same_role, $user);
+            }
+        }
+        return count($users_with_same_role ) <= 2;
+    }
 }

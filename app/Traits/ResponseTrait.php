@@ -13,17 +13,13 @@ trait ResponseTrait
      *
      * @return \Illuminate\Http\Response
      */
-    public static function sendError($error, $errorMessages = [], $code = 404)
+    public static function sendError($error, $code = 404)
     {
         $response = [
             'success' => false,
             'message' => $error,
+            'code'    => $code
         ];
-
-
-        if (!empty($errorMessages)) {
-            $response['data'] = $errorMessages;
-        }
 
 
         return response()->json($response, $code);

@@ -14,6 +14,12 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class UserManagementService implements UserManagementInterface
 {
+    private $role_service;
+
+    public function __construct(RoleService $role_service)
+    {
+        $this->role_service = $role_service;
+    }
 
     use ResponseTrait;
     public function AddUserUserToOrganisation($request, $id)
@@ -109,7 +115,7 @@ class UserManagementService implements UserManagementInterface
 
     public function importUsers($organisation_id, $request)
     {
-        Excel::import(new UsersImport($organisation_id), $request->file('file'));
+        Excel::import(new UsersImport($organisation_id, $this->role_service), $request->file('file'));
     }
 
     private function generateToken($user)

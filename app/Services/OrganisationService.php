@@ -25,6 +25,7 @@ class OrganisationService implements OrganisationInterface
                 'logo'             => $request->logo,
                 'salutation'       => $request->salutation,
                 'box_number'       => $request->box_number,
+                'region'           => $request->region
             ]);
             $user->update(['organisation_id' => $saved->id]);
         } else {
