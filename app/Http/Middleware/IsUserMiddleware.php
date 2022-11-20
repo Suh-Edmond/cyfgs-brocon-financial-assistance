@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Constants\Roles;
+use App\Models\CustomRole;
 use App\Traits\ResponseTrait;
 use Closure;
 
@@ -18,7 +19,7 @@ class IsUserMiddleware
      */
     public function handle($request, Closure $next)
     {
-        if($request->user()->hasRole(Roles::USER)){
+        if($request->user()->hasRole(CustomRole::findByName(Roles::USER, 'api'))){
             return $next($request);
         }
         return ResponseTrait::sendError('Access denied', 'You dont have the role to access this route', 403);

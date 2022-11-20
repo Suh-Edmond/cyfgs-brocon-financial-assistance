@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Constants\Roles;
+use App\Models\CustomRole;
 use App\Traits\ResponseTrait;
 use Closure;
 
@@ -18,7 +19,7 @@ class IsFinancialSecretaryMiddleware
      */
     public function handle($request, Closure $next)
     {
-        if($request->user()->hasRole(Roles::FINANCIAL_SECRETARY)){
+        if($request->user()->hasRole(CustomRole::findByName(Roles::FINANCIAL_SECRETARY, 'api'))){
             return $next($request);
         }
 
