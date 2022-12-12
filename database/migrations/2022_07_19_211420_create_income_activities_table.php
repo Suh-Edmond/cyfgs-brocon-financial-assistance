@@ -23,7 +23,7 @@ class CreateIncomeActivitiesTable extends Migration
             $table->string('venue');
             $table->string('scan_picture')->nullable(true);
             $table->timestamps();
-
+            $table->string('updated_by');
             $table->uuid('organisation_id');
 
             $table->foreign('organisation_id')->references('id')->on('organisations')->cascadeOnDelete();

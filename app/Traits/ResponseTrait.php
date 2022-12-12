@@ -5,6 +5,8 @@ namespace App\Traits;
 use App\Constants\Roles;
 use App\Http\Resources\ExpenditureDetailResource;
 use App\Models\CustomRole;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 trait ResponseTrait
 {
@@ -154,6 +156,16 @@ trait ResponseTrait
         }
 
         return $total;
+    }
+
+    public function  saveUserRole($user, $role)
+    {
+        DB::table('model_has_roles')->insert([
+            'role_id'       => $role->id,
+            'model_id'      => $user->id,
+            'model_type'    => 'App\Models\User',
+            'updated_by'    => is_null(auth::user()) ? $user->name: auth::user()->name
+        ]);
     }
 
 }

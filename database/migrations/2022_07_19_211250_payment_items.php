@@ -21,6 +21,7 @@ class PaymentItems extends Migration
             $table->mediumText('description')->nullable(true);
             $table->timestamps();
             $table->uuid('payment_category_id');
+            $table->string('updated_by');
 
             $table->foreign('payment_category_id')->references('id')->on('payment_categories')->cascadeOnDelete();
         });

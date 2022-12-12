@@ -2,8 +2,8 @@
 
 namespace App\Traits;
 
-use Exception;
-use Facades\Str;
+use Illuminate\Support\Str;
+
 
 
 trait GenerateUuid
@@ -17,7 +17,8 @@ trait GenerateUuid
             $model->keyType = 'string';
             $model->incrementing = false;
 
-            $model->{$model->getKeyName()} = $model->{$model->getKeyName()} ?: (string) Str::orderedUuid();
+            $model->{ $model->getKeyName() } = $model->{$model->getKeyName()} ? : Str::uuid()->toString();
+
         });
     }
 
@@ -30,4 +31,5 @@ trait GenerateUuid
     {
         return 'string';
     }
+
 }

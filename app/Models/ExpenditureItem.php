@@ -20,7 +20,8 @@ class ExpenditureItem extends Model
         'venue',
         'date',
         'expenditure_category_id',
-        'scan_picture'
+        'scan_picture',
+        'updated_by'
     ];
 
     public function expendiureDetails() {

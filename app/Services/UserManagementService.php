@@ -2,9 +2,11 @@
 
 namespace App\Services;
 
+use App\Constants\Roles;
 use App\Http\Resources\UserResource;
 use App\Imports\UsersImport;
 use App\Interfaces\UserManagementInterface;
+use App\Models\CustomRole;
 use App\Models\User;
 use App\Traits\ResponseTrait;
 use Illuminate\Support\Facades\Hash;
@@ -12,34 +14,34 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class UserManagementService implements UserManagementInterface
 {
-    private $role_service;
+    use ResponseTrait;
+    private RoleService $role_service;
 
     public function __construct(RoleService $role_service)
     {
         $this->role_service = $role_service;
     }
 
-    use ResponseTrait;
     public function AddUserUserToOrganisation($request, $id)
     {
-        $saved = User::create([
+        $created =  User::create([
             'name'            => $request->name,
             'email'           => $request->email,
             'telephone'       => $request->telephone,
             'gender'          => $request->gender,
             'address'         => $request->address,
             'occupation'      => $request->occupation,
-            'organisation_id' => $id
+            'organisation_id' => $id,
+            'updated_by'      => $request->user()->name
         ]);
 
-        return $saved;
+        $role = CustomRole::findByName(Roles::USER, 'api');
+        $this->saveUserRole($created, $role);
     }
 
     public function getUsers($organisation_id)
     {
-        $users =  User::where('organisation_id', $organisation_id)->get();
-
-        return $users;
+        return User::where('organisation_id', $organisation_id)->get();
     }
 
     public function getUser($user_id)
@@ -53,10 +55,10 @@ class UserManagementService implements UserManagementInterface
         $updated->update([
             'name'            => $request->name,
             'email'           => $request->email,
-            'telephone'       => $request->telephone,
             'address'         => $request->address,
             'occupation'      => $request->occupation,
             'gender'          => $request->gender,
+            'updated_by'      => $request->user()->name
         ]);
     }
 
@@ -81,14 +83,12 @@ class UserManagementService implements UserManagementInterface
 
     public function createAccount($request)
     {
-        $saved =  User::create([
+        return User::create([
             'name'       => $request->name,
             'telephone'  => $request->telephone,
             'password'   => Hash::make($request->password),
-            'email'      => $request->email
+            'email'      => $request->email,
         ]);
-
-        return $saved;
     }
 
     public function setPassword($request)
@@ -107,8 +107,7 @@ class UserManagementService implements UserManagementInterface
 
     public function checkUserExist($request)
     {
-        $user = User::where('telephone', $request->credential)->orWhere('email', $request->credential)->firstOrFail();
-        return $user;
+        return User::where('telephone', $request->credential)->orWhere('email', $request->credential)->firstOrFail();
     }
 
     public function importUsers($organisation_id, $request)
@@ -118,6 +117,7 @@ class UserManagementService implements UserManagementInterface
 
     private function generateToken($user)
     {
+        $token = "";
         if (!is_null($user)) {
             $token = $user->createToken('access-token', $user->roles->toArray())->plainTextToken;
         }

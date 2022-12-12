@@ -29,7 +29,8 @@ class User extends Authenticatable
         'gender',
         'address',
         'occupation',
-        'organisation_id'
+        'organisation_id',
+        'updated_by'
     ];
 
     /**

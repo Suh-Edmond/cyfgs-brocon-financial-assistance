@@ -21,7 +21,8 @@ class Organisation extends Model
         'address',
         'salutation',
         'region',
-        'box_number'
+        'box_number',
+        'updated_by'
     ];
 
     public function expenditureCategory() {

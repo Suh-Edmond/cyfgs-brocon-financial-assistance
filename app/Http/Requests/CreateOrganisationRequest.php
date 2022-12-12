@@ -33,7 +33,7 @@ class CreateOrganisationRequest extends FormRequest
             'salutation'    => 'string',
             'region'        => 'string',
             'telephone'     => 'required',//should be a string seperated by /
-            'id'            => 'string'
+            'id'            => ''
         ];
     }
 }

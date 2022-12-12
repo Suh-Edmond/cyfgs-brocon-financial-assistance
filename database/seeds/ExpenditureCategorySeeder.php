@@ -8,7 +8,7 @@ use Faker\Generator as Faker;
 class ExpenditureCategorySeeder extends Seeder
 {
 
-    private $organisations;
+    private \Illuminate\Support\Collection $organisations;
 
     public function __construct()
     {

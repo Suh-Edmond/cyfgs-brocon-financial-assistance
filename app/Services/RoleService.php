@@ -2,23 +2,25 @@
 
 namespace App\Services;
 
+use App\Http\Resources\RoleResource;
 use App\Models\User;
 use App\Interfaces\RoleInterface;
 use App\Models\CustomRole;
 use App\Traits\ResponseTrait;
+use Illuminate\Support\Facades\DB;
 
 class RoleService implements RoleInterface {
 
     use ResponseTrait;
 
-    public function addUserRole($user_id, $role)
+    public function addUserRole($user_id, $role): bool
     {
         $user = User::findOrFail($user_id);
         $assignRole = CustomRole::findByName($role, 'api');
         $role_exist = $this->checkIfAUserAlreadyHasTheRole($user, $assignRole);
 
-        if($role_exist){
-            $user->assignRole($assignRole);
+        if(!$role_exist){
+            $this->saveUserRole($user, $assignRole);
         }
         return $role_exist;
     }
@@ -35,8 +37,11 @@ class RoleService implements RoleInterface {
     {
         $user = User::findOrFail($user_id);
         $roles = [];
-        foreach($user->roles as $role){
-            array_push($roles, CustomRole::findByName($role->name, 'api'));
+
+        $user_roles = DB::table('model_has_roles')->where('model_id', $user->id)->get();
+        foreach ($user_roles as $role) {
+            $assignedRole = DB::table('roles')->where('id', $role->role_id)->first();
+            array_push($roles, new RoleResource($assignedRole, $role->updated_by));
         }
         return $roles;
     }
@@ -56,13 +61,17 @@ class RoleService implements RoleInterface {
         return $role;
     }
 
-    private function checkIfAUserAlreadyHasTheRole($user, $role){
+    private function checkIfAUserAlreadyHasTheRole($user, $role): bool
+    {
+        $max_num_user_with_same_role = 2;
         $users_with_same_role = [];
-        foreach($user->organisation->users as $user) {
-            if($user->hasRole($role)){
-                array_push($users_with_same_role, $user);
+        if(!is_null($user->organisation)){
+            foreach($user->organisation->users as $user) {
+                if($user->hasRole($role)){
+                    array_push($users_with_same_role, $user);
+                }
             }
         }
-        return count($users_with_same_role ) <= 2;
+        return count($users_with_same_role ) == $max_num_user_with_same_role;
     }
 }

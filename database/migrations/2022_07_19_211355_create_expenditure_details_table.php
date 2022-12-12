@@ -23,6 +23,7 @@ class CreateExpenditureDetailsTable extends Migration
             $table->string('scan_picture')->nullable(true);
             $table->timestamps();
             $table->uuid('expenditure_item_id');
+            $table->string('updated_by');
 
             $table->foreign('expenditure_item_id')->references('id')->on('expenditure_items')->cascadeOnDelete();
         });

@@ -20,6 +20,7 @@ class CreateUserSavingsTable extends Migration
             $table->uuid('user_id');
             $table->boolean('approve')->default(false);
             $table->timestamps();
+            $table->string('updated_by');
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->cascadeOnDelete();
 
