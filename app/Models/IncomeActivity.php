@@ -20,7 +20,8 @@ class IncomeActivity extends Model
         'amount',
         'venue',
         'organisation_id',
-        'scan_picture'
+        'scan_picture',
+        'updated_by'
     ];
 
     public function organisation() {

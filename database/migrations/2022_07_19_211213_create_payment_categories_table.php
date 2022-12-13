@@ -19,6 +19,7 @@ class CreatePaymentCategoriesTable extends Migration
             $table->text('description');
             $table->timestamps();
             $table->uuid('organisation_id');
+            $table->string('updated_by');
 
             $table->foreign('organisation_id')->references('id')->on('organisations')->cascadeOnDelete();
         });

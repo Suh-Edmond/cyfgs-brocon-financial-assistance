@@ -7,7 +7,7 @@ use App\Models\CustomRole;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Illuminate\Database\Seeder;
-use Ramsey\Uuid\Uuid;
+use \Illuminate\Support\Str;
 
 class RoleAndPermissionSeeder extends Seeder
 {
@@ -21,328 +21,328 @@ class RoleAndPermissionSeeder extends Seeder
         $CAN_GET_USER_CONTRIBUTION = Permission::create([
             'name'       => Permissions::CAN_GET_USER_CONTRIBUTION,
             'guard_name' => 'api',
-            'id'         => Uuid::uuid4()
+            'id'         => Str::uuid()->toString()
         ]);
 
         $CAN_GET_USER_CONTRIBUTIONS = Permission::create([
             'name'       => Permissions::CAN_GET_USER_CONTRIBUTIONS,
             'guard_name' => 'api',
-            'id'         => Uuid::uuid4()
+            'id'         => Str::uuid()->toString()
         ]);
 
         $CAN_ASSIGN_USER_ROLE = Permission::create([
             'name' => Permissions::CAN_ASSIGN_USER_ROLE,
             'guard_name' => 'api',
-            'id'         => Uuid::uuid4()
+            'id'         => Str::uuid()->toString()
         ]);
         $CAN_CREATE_EXPENDITURE_CATEGORY = Permission::create([
             'name' => Permissions::CAN_CREATE_EXPENDITURE_CATEGORY,
             'guard_name' => 'api',
-            'id'         => Uuid::uuid4()
+            'id'         => Str::uuid()->toString()
         ]);
         $CAN_CREATE_EXPENDITURE_DETAIL = Permission::create([
             'name' => Permissions::CAN_CREATE_EXPENDITURE_DETAIL,
             'guard_name' => 'api',
-            'id'         => Uuid::uuid4()
+            'id'         => Str::uuid()->toString()
         ]);
         $CAN_CREATE_EXPENDITURE_ITEM = Permission::create([
             'name' => Permissions::CAN_CREATE_EXPENDITURE_ITEM,
             'guard_name' => 'api',
-            'id'         => Uuid::uuid4()
+            'id'         => Str::uuid()->toString()
         ]);
         $CAN_CREATE_INCOME_ACTIVITY =Permission::create([
             'name' => Permissions::CAN_CREATE_INCOME_ACTIVITY,
             'guard_name' => 'api',
-            'id'         => Uuid::uuid4()
+            'id'         => Str::uuid()->toString()
         ]);
         $CAN_CREATE_ORGANISATION = Permission::create([
             'name' => Permissions::CAN_CREATE_ORGANISATION,
             'guard_name' => 'api',
-            'id'         => Uuid::uuid4()
+            'id'         => Str::uuid()->toString()
         ]);
         $CAN_CREATE_PAYMENT_CATEGORY = Permission::create([
             'name' => Permissions::CAN_CREATE_PAYMENT_CATEGORY,
             'guard_name' => 'api',
-            'id'         => Uuid::uuid4()
+            'id'         => Str::uuid()->toString()
         ]);
         $CAN_CREATE_PAYMENT_ITEM = Permission::create([
             'name' => Permissions::CAN_CREATE_PAYMENT_ITEM,
             'guard_name' => 'api',
-            'id'         => Uuid::uuid4()
+            'id'         => Str::uuid()->toString()
         ]);
         $CAN_CREATE_USER = Permission::create([
             'name' => Permissions::CAN_CREATE_USER,
             'guard_name' => 'api',
-            'id'         => Uuid::uuid4()
+            'id'         => Str::uuid()->toString()
         ]);
         $CAN_DELETE_ORGANISATION = Permission::create([
             'name'       => Permissions::CAN_DELETE_ORGANISATION,
             'guard_name' => 'api',
-            'id'         => Uuid::uuid4()
+            'id'         => Str::uuid()->toString()
         ]);
         $CAN_DELETE_ROLE = Permission::create([
             'name'       => Permissions::CAN_DELETE_ROLE,
             'guard_name' => 'api',
-            'id'         => Uuid::uuid4()
+            'id'         => Str::uuid()->toString()
 
         ]);
         $CAN_CREATE_USER_PAYMENT = Permission::create([
             'name'       => Permissions::CAN_CREATE_USER_PAYMENT,
             'guard_name' => 'api',
-            'id'         => Uuid::uuid4()
+            'id'         => Str::uuid()->toString()
         ]);
         $CAN_CREATE_USER_SAVING = Permission::create([
             'name'       => Permissions::CAN_CREATE_USER_SAVING,
             'guard_name' => 'api',
-            'id'         => Uuid::uuid4()
+            'id'         => Str::uuid()->toString()
         ]);
         $CAN_DELETE_EXPENDITURE_CATEGORY = Permission::create([
             'name'       => Permissions::CAN_DELETE_EXPENDITURE_CATEGORY,
             'guard_name' => 'api',
-            'id'         => Uuid::uuid4()
+            'id'         => Str::uuid()->toString()
         ]);
         $CAN_DELETE_EXPENDITURE_DETAIL = Permission::create([
             'name'       => Permissions::CAN_DELETE_EXPENDITURE_DETAIL,
             'guard_name' => 'api',
-            'id'         => Uuid::uuid4()
+            'id'         => Str::uuid()->toString()
         ]);
         $CAN_DELETE_EXPENDITURE_ITEM = Permission::create([
             'name' => Permissions::CAN_DELETE_EXPENDITURE_ITEM,
             'guard_name' => 'api',
-            'id'         => Uuid::uuid4()
+            'id'         => Str::uuid()->toString()
         ]);
         $CAN_DELETE_INCOME_ACTIVITY = Permission::create([
             'name' => Permissions::CAN_DELETE_INCOME_ACTIVITY,
             'guard_name' => 'api',
-            'id'         => Uuid::uuid4()
+            'id'         => Str::uuid()->toString()
         ]);
         $CAN_DELETE_PAYMENT_ITEM = Permission::create([
             'name' => Permissions::CAN_DELETE_PAYMENT_ITEM,
             'guard_name' => 'api',
-            'id'         => Uuid::uuid4()
+            'id'         => Str::uuid()->toString()
         ]);
         $CAN_DELETE_USER = Permission::create([
             'name' => Permissions::CAN_DELETE_USER,
             'guard_name' => 'api',
-            'id'         => Uuid::uuid4()
+            'id'         => Str::uuid()->toString()
         ]);
         $CAN_DELETE_USER_PAYMENT = Permission::create([
             'name' => Permissions::CAN_DELETE_USER_PAYMENT,
             'guard_name' => 'api',
-            'id'         => Uuid::uuid4()
+            'id'         => Str::uuid()->toString()
         ]);
         $CAN_DELETE_USER_SAVING = Permission::create([
             'name' => Permissions::CAN_DELETE_USER_SAVING,
             'guard_name' => 'api',
-            'id'         => Uuid::uuid4()
+            'id'         => Str::uuid()->toString()
         ]);
         $CAN_GET_EXPENDITURE_CATEGORIES = Permission::create([
             'name'       => Permissions::CAN_GET_EXPENDITURE_CATEGORIES,
             'guard_name' => 'api',
-            'id'         => Uuid::uuid4()
+            'id'         => Str::uuid()->toString()
         ]);
         $CAN_GET_EXPENDITURE_CATEGORY = Permission::create([
             'name' => Permissions::CAN_GET_EXPENDITURE_CATEGORY,
             'guard_name' => 'api',
-            'id'         => Uuid::uuid4()
+            'id'         => Str::uuid()->toString()
         ]);
         $CAN_GET_EXPENDITURE_DETAIL = Permission::create([
             'name' => Permissions::CAN_GET_EXPENDITURE_DETAIL,
             'guard_name' => 'api',
-            'id'         => Uuid::uuid4()
+            'id'         => Str::uuid()->toString()
         ]);
        $CAN_GET_EXPENDITURE_DETAILS = Permission::create([
             'name'       => Permissions::CAN_GET_EXPENDITURE_DETAILS,
             'guard_name' => 'api',
-            'id'         => Uuid::uuid4()
+            'id'         => Str::uuid()->toString()
         ]);
         $CAN_GET_EXPENDITURE_ITEM = Permission::create([
             'name'       => Permissions::CAN_GET_EXPENDITURE_ITEM,
             'guard_name' => 'api',
-            'id'         => Uuid::uuid4()
+            'id'         => Str::uuid()->toString()
         ]);
         $CAN_GET_EXPENDITURE_ITEMS = Permission::create([
             'name'       => Permissions::CAN_GET_EXPENDITURE_ITEMS,
             'guard_name' => 'api',
-            'id'         => Uuid::uuid4()
+            'id'         => Str::uuid()->toString()
         ]);
         $CAN_GET_INCOME_ACTIVITIES = Permission::create([
             'name'       => Permissions::CAN_GET_INCOME_ACTIVITIES,
             'guard_name' => 'api',
-            'id'         => Uuid::uuid4()
+            'id'         => Str::uuid()->toString()
         ]);
         $CAN_GET_INCOME_ACTIVITY = Permission::create([
             'name'       => Permissions::CAN_GET_INCOME_ACTIVITY,
             'guard_name' => 'api',
-            'id'         => Uuid::uuid4()
+            'id'         => Str::uuid()->toString()
         ]);
         $CAN_GET_ORGANISATION = Permission::create([
             'name'       => Permissions::CAN_GET_ORGANISATION,
             'guard_name' => 'api',
-            'id'         => Uuid::uuid4()
+            'id'         => Str::uuid()->toString()
         ]);
         $CAN_GET_PAYMENT_CATEGORIES = Permission::create([
             'name'       => Permissions::CAN_GET_PAYMENT_CATEGORIES,
             'guard_name' => 'api',
-            'id'         => Uuid::uuid4()
+            'id'         => Str::uuid()->toString()
         ]);
         $CAN_GET_PAYMENT_CATEGORY = Permission::create([
             'name'       => Permissions::CAN_GET_PAYMENT_CATEGORY,
             'guard_name' => 'api',
-            'id'         => Uuid::uuid4()
+            'id'         => Str::uuid()->toString()
         ]);
         $CAN_GET_PAYMENT_ITEM = Permission::create([
             'name'       => Permissions::CAN_GET_PAYMENT_ITEM,
             'guard_name' => 'api',
-            'id'         => Uuid::uuid4()
+            'id'         => Str::uuid()->toString()
         ]);
         $CAN_GET_PAYMENT_ITEMS = Permission::create([
             'name'       => Permissions::CAN_GET_PAYMENT_ITEMS,
             'guard_name' => 'api',
-            'id'         => Uuid::uuid4()
+            'id'         => Str::uuid()->toString()
         ]);
         $CAN_GET_USER = Permission::create([
             'name'       => Permissions::CAN_GET_USER,
             'guard_name' => 'api',
-            'id'         => Uuid::uuid4()
+            'id'         =>Str::uuid()->toString()
         ]);
         $CAN_GET_USER_PAYMENT = Permission::create([
             'name'       => Permissions::CAN_GET_USER_PAYMENT,
             'guard_name' => 'api',
-            'id'         => Uuid::uuid4()
+            'id'         => Str::uuid()->toString()
         ]);
         $CAN_GET_USER_PAYMENTS = Permission::create([
             'name'       => Permissions::CAN_GET_USER_PAYMENTS,
             'guard_name' => 'api',
-            'id'         => Uuid::uuid4()
+            'id'         => Str::uuid()->toString()
         ]);
         $CAN_GET_USER_SAVING = Permission::create([
             'name'       => Permissions::CAN_GET_USER_SAVING,
             'guard_name' => 'api',
-            'id'         => Uuid::uuid4()
+            'id'         => Str::uuid()->toString()
         ]);
         $CAN_GET_USER_SAVINGS = Permission::create([
             'name'       => Permissions::CAN_GET_USER_SAVINGS,
             'guard_name' => 'api',
-            'id'         => Uuid::uuid4()
+            'id'         => Str::uuid()->toString()
         ]);
         $CAN_GET_USERS = Permission::create([
             'name'       => Permissions::CAN_GET_USERS,
             'guard_name' => 'api',
-            'id'         => Uuid::uuid4()
+            'id'         => Str::uuid()->toString()
         ]);
         $CAN_REMOVE_USER_ROLE = Permission::create([
             'name'       => Permissions::CAN_REMOVE_USER_ROLE,
             'guard_name' => 'api',
-            'id'         => Uuid::uuid4()
+            'id'         => Str::uuid()->toString()
         ]);
         $CAN_UPDATE_EXPENDITURE_CATEGORY = Permission::create([
             'name'       => Permissions::CAN_UPDATE_EXPENDITURE_CATEGORY,
             'guard_name' => 'api',
-            'id'         => Uuid::uuid4()
+            'id'         => Str::uuid()->toString()
         ]);
         $CAN_UPDATE_EXPENDITURE_DETAIL = Permission::create([
             'name'       => Permissions::CAN_UPDATE_EXPENDITURE_DETAIL,
             'guard_name' => 'api',
-            'id'         => Uuid::uuid4()
+            'id'         => Str::uuid()->toString()
         ]);
         $CAN_UPDATE_EXPENDITURE_ITEM = Permission::create([
             'name'       => Permissions::CAN_UPDATE_EXPENDITURE_ITEM,
             'guard_name' => 'api',
-            'id'         => Uuid::uuid4()
+            'id'         => Str::uuid()->toString()
         ]);
         $CAN_UPDATE_INCOME_ACTIVITY = Permission::create([
             'name'       => Permissions::CAN_UPDATE_INCOME_ACTIVITY,
             'guard_name' => 'api',
-            'id'         => Uuid::uuid4()
+            'id'         => Str::uuid()->toString()
         ]);
         $CAN_UPDATE_ORGANISATION = Permission::create([
             'name'       => Permissions::CAN_UPDATE_ORGANISATION,
             'guard_name' => 'api',
-            'id'         => Uuid::uuid4()
+            'id'         => Str::uuid()->toString()
         ]);
         $CAN_UPDATE_PAYMENT_CATEGORY = Permission::create([
             'name'       => Permissions::CAN_UPDATE_PAYMENT_CATEGORY,
             'guard_name' => 'api',
-            'id'         => Uuid::uuid4()
+            'id'         => Str::uuid()->toString()
         ]);
         $CAN_UPDATE_USER = Permission::create([
             'name'       => Permissions::CAN_UPDATE_USER,
             'guard_name' => 'api',
-            'id'         => Uuid::uuid4()
+            'id'         => Str::uuid()->toString()
         ]);
         $CAN_UPDATE_USER_PAYMENT = Permission::create([
             'name'       => Permissions::CAN_UPDATE_USER_PAYMENT,
             'guard_name' => 'api',
-            'id'         => Uuid::uuid4()
+            'id'         => Str::uuid()->toString()
         ]);
         $CAN_UPDATE_USER_SAVING = Permission::create([
             'name' => Permissions::CAN_UPDATE_USER_SAVING,
             'guard_name' => 'api',
-            'id'         => Uuid::uuid4()
+            'id'         => Str::uuid()->toString()
         ]);
         $CAN_DELETE_PAYMENT_CATEGORY = Permission::create([
             'name'       => Permissions::CAN_DELETE_PAYMENT_CATEGORY,
             'guard_name' => 'api',
-            'id'         => Uuid::uuid4()
+            'id'         => Str::uuid()->toString()
         ]);
         $CAN_UPDATE_PAYMENT_ITEM = Permission::create([
             'name'       => Permissions::CAN_UPDATE_PAYMENT_ITEM,
             'guard_name' => 'api',
-            'id'         => Uuid::uuid4()
+            'id'         => Str::uuid()->toString()
         ]);
         $CAN_APPROVE_USER_SAVING = Permission::create([
             'name'       => Permissions::CAN_APPROVE_USER_SAVING,
             'guard_name' => 'api',
-            'id'         => Uuid::uuid4()
+            'id'         => Str::uuid()->toString()
         ]);
         $CAN_APPROVE_INCOME_FOR_INCOME_ACTIVITY = Permission::create([
             'name'       => Permissions::CAN_APPROVE_INCOME_FOR_INCOME_ACTIVITY,
             'guard_name' => 'api',
-            'id'         => Uuid::uuid4()
+            'id'         => Str::uuid()->toString()
         ]);
         $CAN_APPROVE_INCOME_FOR_EXPENDITURE_ITEM = Permission::create([
             'name'       => Permissions::CAN_APPROVE_INCOME_FOR_EXPENDITURE_ITEM,
             'guard_name' => 'api',
-            'id'         => Uuid::uuid4()
+            'id'         => Str::uuid()->toString()
         ]);
         $CAN_APPROVE_USER_PAYMENT = Permission::create([
                     'name'       => Permissions::CAN_APPROVE_USER_PAYMENT,
                     'guard_name' => 'api',
-                    'id'         => Uuid::uuid4()
+                    'id'         => Str::uuid()->toString()
         ]);
 
 
         $adminRole = Role::create([
             'name'       => Roles::ADMIN,
             'guard_name' => 'api',
-            'id'         => Uuid::uuid4()
+            'id'         => Str::uuid()->toString()
         ]);
         $financialSecretaryRole = Role::create([
             'name'          => Roles::FINANCIAL_SECRETARY,
             'guard_name'    => 'api',
-            'id'            => Uuid::uuid4()
+            'id'            => Str::uuid()->toString()
         ]);
         $treasurerRole = Role::create([
             'name'       => Roles::TREASURER,
             'guard_name' => 'api',
-            'id'         => Uuid::uuid4()
+            'id'         => Str::uuid()->toString()
         ]);
         $auditorRole = Role::create([
             'name'       => Roles::AUDITOR,
             'guard_name' => 'api',
-            'id'         => Uuid::uuid4()
+            'id'         => Str::uuid()->toString()
         ]);
         $presidentRole = Role::create([
             'name'       => Roles::PRESIDENT,
             'guard_name' => 'api',
-            'id'         => Uuid::uuid4()
+            'id'         => Str::uuid()->toString()
         ]);
 
         $user = Role::create([
             'name'       => Roles::USER,
             'guard_name' => 'api',
-            'id'         => Uuid::uuid4()
+            'id'         => Str::uuid()->toString()
         ]);
 
 

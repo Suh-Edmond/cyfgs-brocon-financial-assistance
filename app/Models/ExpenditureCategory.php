@@ -17,7 +17,8 @@ class ExpenditureCategory extends Model
     protected $fillable = [
         'name',
         'description',
-        'organisation_id'
+        'organisation_id',
+        'updated_by'
     ];
 
     public function expenditureItem(){

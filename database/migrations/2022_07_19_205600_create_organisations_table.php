@@ -24,8 +24,9 @@ class CreateOrganisationsTable extends Migration
             $table->string('salutation')->nullable(true);
             $table->string('box_number')->nullable(true);
             $table->string('region')->nullable(true);
-            //data for to produce the report header
+            //data to produce the report header
             $table->timestamps();
+            $table->string('updated_by');
         });
     }
 

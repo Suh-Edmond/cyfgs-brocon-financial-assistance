@@ -20,7 +20,8 @@ class ExpenditureDetail extends Model
         'name',
         'comment',
         'expenditure_item_id',
-        'scan_picture'
+        'scan_picture',
+        'updated_by'
     ];
 
     public function expenditureItem() {

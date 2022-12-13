@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 
 class RoleController extends Controller
 {
-    private $roleService;
+    private RoleService $roleService;
 
     public function __construct(RoleService $roleService)
     {
@@ -20,8 +20,8 @@ class RoleController extends Controller
     {
 
         $exist = $this->roleService->addUserRole($request->user_id, $request->role);
-        if($exist){
-            return $this->sendResponse('success', 'Role added successfully', 200);
+        if(!$exist){
+            return $this->sendResponse('success', 'Role added successfully');
         }else {
             return $this->sendError('Multiple Member with a single Role', 'Only two(02) members of your organisation are allowed to have this Role', 409);
         }
@@ -33,7 +33,7 @@ class RoleController extends Controller
 
         $roles = $this->roleService->getAllRoles();
 
-        return $this->sendResponse(RoleResource::collection($roles), 'success');
+        return $this->sendResponse($roles, 'success');
     }
 
 
@@ -49,6 +49,6 @@ class RoleController extends Controller
     public function removeUserRole(Request $request, $user_id)
     {
         $this->roleService->removeRole($user_id, $request->role);
-        return $this->sendResponse('success', 'Role remove successfully', 204);
+        return $this->sendResponse('success', 'Role remove successfully');
     }
 }

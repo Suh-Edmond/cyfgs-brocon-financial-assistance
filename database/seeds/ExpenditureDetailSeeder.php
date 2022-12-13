@@ -7,7 +7,7 @@ use Faker\Generator as Faker;
 
 class ExpenditureDetailSeeder extends Seeder
 {
-   private $expenditure_items;
+   private \Illuminate\Support\Collection $expenditure_items;
 
    public function __construct()
    {

@@ -2,7 +2,10 @@
 
 namespace App\Imports;
 
+use App\Models\CustomRole;
 use App\Models\User;
+use App\Traits\ResponseTrait;
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\ToModel;
 use App\Services\RoleService;
 use App\Constants\Roles;
@@ -10,8 +13,10 @@ use App\Constants\Roles;
 
 class UsersImport implements ToModel
 {
-    private $organisation_id;
-    private  $role_service;
+    use ResponseTrait;
+
+    private string $organisation_id;
+    private RoleService $role_service;
 
     public function __construct($organisation_id,  RoleService $role_service)
     {
@@ -37,7 +42,7 @@ class UsersImport implements ToModel
     */
     public function model(array $row)
     {
-        $saved =  new User([
+        $created =  User::create([
             'name'            => $row[0],
             'email'           => $row[1],
             'telephone'       => $row[2],
@@ -46,7 +51,7 @@ class UsersImport implements ToModel
             'occupation'      => $row[5],
             'organisation_id' => $this->organisation_id
         ]);
-
-        $this->role_service->addUserRole($saved->id, Roles::USER);
+        $assignRole = CustomRole::findByName(Roles::USER, 'api');
+        $this->saveUserRole($created, $assignRole);
     }
 }

@@ -18,6 +18,7 @@ class UserSaving extends Model
         'amount_deposited',
         'comment',
         'user_id',
+        'updated_by'
     ];
 
    public function user() {

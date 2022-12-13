@@ -14,14 +14,14 @@ use App\Services\RoleService;
 use App\Services\UserManagementService;
 use App\Traits\ResponseTrait;
 use Illuminate\Http\Request;
-use PDF;
+use Barryvdh\DomPDF\PDF;
 
 class UserController extends Controller
 {
     use ResponseTrait;
 
-    private $user_management_service;
-    private $role_service;
+    private UserManagementService $user_management_service;
+    private RoleService $role_service;
 
     public function __construct(UserManagementService $user_management_service, RoleService $role_service)
     {
@@ -41,17 +41,14 @@ class UserController extends Controller
 
     public function addUser(CreateUserRequest $request, $id)
     {
-        $new_user = $this->user_management_service->AddUserUserToOrganisation($request, $id);
-        $this->role_service->addUserRole($new_user->id, Roles::USER);
+        $this->user_management_service->AddUserUserToOrganisation($request, $id);
 
-        return $this->sendResponse('success', 'User added successfully', 201);
+        return $this->sendResponse('success', 'User added successfully');
     }
 
     public function logInUser(LoginRequest $request)
     {
-        $data = $this->user_management_service->loginUser($request);
-
-        return $data;
+        return $this->user_management_service->loginUser($request);
     }
 
 
@@ -59,7 +56,7 @@ class UserController extends Controller
     {
         $data = $this->user_management_service->setPassword($request);
 
-        return $this->sendResponse($data, 'success', 200);
+        return $this->sendResponse($data, 'success');
     }
 
 
@@ -90,7 +87,7 @@ class UserController extends Controller
     {
         $this->user_management_service->updateUser($id, $request);
 
-        return $this->sendResponse('success', 'Account updated sucessfully', 204);
+        return $this->sendResponse('success', 'Account updated sucessfully');
     }
 
 
@@ -99,7 +96,7 @@ class UserController extends Controller
     {
         $this->user_management_service->deleteUser($id);
 
-        return $this->sendResponse('success', 'User successfully been removed', 204);
+        return $this->sendResponse('success', 'User successfully been removed');
     }
 
 
@@ -107,7 +104,7 @@ class UserController extends Controller
     {
         $this->user_management_service->importUsers($id, $request);
 
-        return $this->sendResponse('success', 'Users successfully imported', 201);
+        return $this->sendResponse('success', 'Users successfully imported');
     }
 
     public function downloadUsers(Request $request)
