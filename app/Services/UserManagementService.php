@@ -123,9 +123,11 @@ class UserManagementService implements UserManagementInterface
         $users = [];
         $filter_users = DB::table('users')->where('organisation_id', $request->organisation_id)->orderBy('name', 'ASC')->get()->toArray();
         if($request->gender != "null"){
-           $filter_users =  array_filter($filter_users, function($user) use ($request) {
-                                return $user->gender == $request->gender;
-                            });
+          if($request->gender !== "ALL"){
+              $filter_users =  array_filter($filter_users, function($user) use ($request) {
+                  return $user->gender == $request->gender;
+              });
+          }
         }
         if($request->year != "null") {
             $filter_users = array_filter($filter_users, function($user) use ($request) {
