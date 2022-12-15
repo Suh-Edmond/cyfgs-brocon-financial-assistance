@@ -23,7 +23,6 @@ class OrganisationService implements OrganisationInterface
                 'telephone'        => $request->telephone,
                 'description'      => $request->description,
                 'address'          => $request->address,
-                'logo'             => $request->logo,
                 'salutation'       => $request->salutation,
                 'box_number'       => $request->box_number,
                 'region'           => $request->region,
@@ -39,7 +38,6 @@ class OrganisationService implements OrganisationInterface
             $organisation->telephone        = $request->telephone;
             $organisation->description      = $request->description;
             $organisation->address          = $request->address;
-            $organisation->logo             = $request->logo;
             $organisation->salutation       = $request->salutation;
             $organisation->box_number       = $request->box_number;
             $organisation->updated_by       = $request->user()->name;
@@ -64,14 +62,8 @@ class OrganisationService implements OrganisationInterface
 
     public function updatedOrganisation($request, $id)
     {
-        $saved = Organisation::findOrFail($id)->update([
-            'name'             => $request->name,
-            'email'            => $request->email,
-            'telephone'        => $request->telephone,
-            'description'      => $request->description,
-            'address'          => $request->address,
+        Organisation::findOrFail($id)->update([
             'logo'             => $request->logo,
-           'box_number'        => $request->box_number,
         ]);
     }
 

@@ -29,10 +29,9 @@ class CreateOrganisationRequest extends FormRequest
             'address'       => 'required',
             'box_number'    => 'integer',
             'description'   => 'required|max:5000',
-            'logo'          => 'string',
             'salutation'    => 'string',
             'region'        => 'string',
-            'telephone'     => 'required',//should be a string seperated by /
+            'telephone'     => 'required',//should be a string separated by /
             'id'            => ''
         ];
     }

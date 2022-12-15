@@ -52,7 +52,7 @@ class OrganisationController extends Controller
     }
 
 
-    public function updateOrgansation(CreateOrganisationRequest $request, $id)
+    public function updateOrganisation(UpdateOrganisationRequest $request, $id)
     {
         $this->organisation_service->updatedOrganisation($request, $id);
 

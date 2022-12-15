@@ -51,7 +51,7 @@ class UsersImport implements ToModel
             'address'         => $row[4],
             'occupation'      => $row[5],
             'organisation_id' => $this->organisation_id,
-            'updated_by'      => auth()->user()->getAuthIdentifierName()
+            'updated_by'      => User::find(auth()->user()['id'])->name
         ]);
         $assignRole = CustomRole::findByName(Roles::USER, 'api');
         $this->saveUserRole($created, $assignRole);

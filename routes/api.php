@@ -67,7 +67,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/organisations', [OrganisationController::class, 'createOrganisation']);
         Route::get('/organisations/{id}', [OrganisationController::class, 'getOrganisation']);
         Route::get('/organisation-info', [OrganisationController::class, 'getOrganisationInfo']);
-        Route::put('/organisations/{id}', [OrganisationController::class, 'updateOrgansation']);
+        Route::put('/organisations/{id}', [OrganisationController::class, 'updateOrganisation']);
     });
 
 

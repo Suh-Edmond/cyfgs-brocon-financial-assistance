@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Interfaces\FileServiceInterface;
 use App\Constants\FileStorageConstants;
-use App\Http\Resources\FileUploadResource;
 use App\Traits\HelpTrait;
 use App\Traits\ResponseTrait;
 use Illuminate\Support\Facades\Http;

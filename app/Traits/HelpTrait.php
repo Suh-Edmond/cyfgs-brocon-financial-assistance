@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use App\Http\Resources\ExpenditureDetailResource;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -109,7 +110,7 @@ trait HelpTrait {
             'role_id'       => $role->id,
             'model_id'      => $user->id,
             'model_type'    => 'App\Models\User',
-            'updated_by'    => is_null(auth::user()) ? $user->name: auth::user()->getAuthIdentifierName()
+            'updated_by'    => is_null(auth::user()) ? $user->name: User::find(Auth::user()['id'])->name
         ]);
     }
 
