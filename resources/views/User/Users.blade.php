@@ -14,7 +14,7 @@
             <label style="font-size: small;">P.O Box {{ $organisation->box_number }}</label><br />
             <label style="font-size: small;">{{ $organisation->address }}</label><br />
             <label style="font-size: small;">Phone_No:</label><br />
-            <label style="font-size: small;">{{ $organisation->telephone }}</label><br />
+            <label style="font-size: small;">{{ $organisation_telephone }}</label><br />
             <label style="font-size: small;">Email: {{ $organisation->email }}</label><br /><br />
             <label style="font-size: small;">Printed date: {{ $date }}</label>
         </div>
@@ -59,6 +59,7 @@
                 <br />
                 {{ $treasurer->name }}
             </label><br /><br />
+
         </div>
     </div>
     <div style="text-align:center; margin-top:80px">

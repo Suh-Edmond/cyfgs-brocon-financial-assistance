@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\PaymentCategoryRequest;
 use App\Http\Resources\PaymentCategoryResource;
+use App\Models\User;
 use App\Services\PaymentCategoryService;
+use App\Traits\HelpTrait;
 use App\Traits\ResponseTrait;
 use Illuminate\Http\Request;
 use PDF;
@@ -15,10 +17,10 @@ use PDF;
 class PaymentCategoryController extends Controller
 {
 
-    use ResponseTrait;
+    use ResponseTrait, HelpTrait;
 
 
-    private $payment_category_service;
+    private PaymentCategoryService $payment_category_service;
 
     public function __construct(PaymentCategoryService $payment_category_service)
     {
@@ -31,7 +33,7 @@ class PaymentCategoryController extends Controller
     {
         $this->payment_category_service->createPaymentCategory($request, $organisation_id);
 
-        return $this->sendResponse('success', 'Payment Category created successfully', 201);
+        return $this->sendResponse('success', 'Payment Category created successfully');
     }
 
 
@@ -56,7 +58,7 @@ class PaymentCategoryController extends Controller
     {
         $this->payment_category_service->updatePaymentCategory($request, $id,  $organisation_id);
 
-        return $this->sendResponse('success', 'Payment Category updated successfully', 204);
+        return $this->sendResponse('success', 'Payment Category updated successfully');
     }
 
 
@@ -64,13 +66,14 @@ class PaymentCategoryController extends Controller
     {
        $this->payment_category_service->deletePaymentCategory($id, $organisation_id);
 
-       return $this->sendResponse('success', 'Payment Category deleted successfully', 204);
+       return $this->sendResponse('success', 'Payment Category deleted successfully');
     }
 
     public function downloadPaymentCategory(Request $request)
     {
-        $organisation = $request->user()->organisation;
-        $administrators = ResponseTrait::getOrganisationAdministrators($organisation->users);
+        $auth_user         = auth()->user();
+        $organisation      = User::find($auth_user['id'])->organisation;
+        $administrators    = $this->getOrganisationAdministrators($organisation->users);
         $president = $administrators[0];
         $treasurer = $administrators[1];
         $fin_sec   = $administrators[2];
@@ -79,7 +82,7 @@ class PaymentCategoryController extends Controller
             'title'             =>'Payment Categories',
             'date'              => date('m/d/Y'),
             'organisation'      => $organisation,
-            'categories'        => $this->payment_category_service->getPaymentCategories(1),
+            'categories'        => $this->payment_category_service->getPaymentCategories($organisation->id),
             'president'         => $president,
             'treasurer'         => $treasurer,
             'fin_secretary'     => $fin_sec

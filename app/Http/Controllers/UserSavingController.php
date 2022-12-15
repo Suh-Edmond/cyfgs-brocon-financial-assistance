@@ -2,19 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Constants\Roles;
 use App\Http\Requests\UserSavingRequest;
 use App\Http\Requests\UpdateUserSavingRequest;
 use App\Http\Resources\UserSavingResource;
 use App\Services\UsersavingService;
+use App\Traits\HelpTrait;
 use App\Traits\ResponseTrait;
 use Illuminate\Http\Request;
 use PDF;
 class UserSavingController extends Controller
 {
 
-    use ResponseTrait;
+    use ResponseTrait, HelpTrait;
 
-    private $user_saving_service;
+    private UsersavingService $user_saving_service;
 
     public function __construct(UsersavingService $user_saving_service)
     {
@@ -35,7 +37,7 @@ class UserSavingController extends Controller
     {
         $this->user_saving_service->createUserSaving($request);
 
-        return $this->sendResponse('success', 'User saving saved successfully', 201);
+        return $this->sendResponse('success', 'User saving saved successfully');
     }
 
 
@@ -51,7 +53,7 @@ class UserSavingController extends Controller
     {
         $this->user_saving_service->updateUserSaving($request, $id, $user_id);
 
-        return $this->sendResponse('success', 'User saving updated successfully', 204);
+        return $this->sendResponse('success', 'User saving updated successfully');
     }
 
 
@@ -59,7 +61,7 @@ class UserSavingController extends Controller
     {
         $this->user_saving_service->deleteUserSaving($id, $user_id);
 
-        return $this->sendResponse('success', 'User saving deleted sucessfully', 204);
+        return $this->sendResponse('success', 'User saving deleted sucessfully');
     }
 
 
@@ -67,7 +69,7 @@ class UserSavingController extends Controller
     {
         $this->user_saving_service->approveUserSaving($id);
 
-        return $this->sendResponse('success', 'User saving approved sucessfully', 204);
+        return $this->sendResponse('success', 'User saving approved sucessfully');
     }
 
 
@@ -93,10 +95,9 @@ class UserSavingController extends Controller
         $organisation      = auth()->user()->organisation;
         $savings           = $this->user_saving_service->findOrganisationUserSavings($request->organisation_id);
         $total             = $this->user_saving_service->calculateTotalSaving($savings);
-        $administrators    = ResponseTrait::getOrganisationAdministrators($organisation->users);
-        $president         = $administrators[0];
-        $treasurer         = $administrators[1];
-        $fin_sec           = $administrators[2];
+        $president         = HelpTrait::getOrganisationAdministrators(Roles::PRESIDENT);
+        $treasurer         = HelpTrait::getOrganisationAdministrators(Roles::TREASURER);
+        $fin_sec           = HelpTrait::getOrganisationAdministrators(Roles::FINANCIAL_SECRETARY);
 
 
         $data = [

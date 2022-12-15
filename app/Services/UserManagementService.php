@@ -8,13 +8,16 @@ use App\Imports\UsersImport;
 use App\Interfaces\UserManagementInterface;
 use App\Models\CustomRole;
 use App\Models\User;
+use App\Traits\HelpTrait;
 use App\Traits\ResponseTrait;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
 
 class UserManagementService implements UserManagementInterface
 {
-    use ResponseTrait;
+    use ResponseTrait, HelpTrait;
+
     private RoleService $role_service;
 
     public function __construct(RoleService $role_service)
@@ -41,7 +44,7 @@ class UserManagementService implements UserManagementInterface
 
     public function getUsers($organisation_id)
     {
-        return User::where('organisation_id', $organisation_id)->get();
+        return User::where('organisation_id', $organisation_id)->orderBy('name', 'ASC')->get();
     }
 
     public function getUser($user_id)
@@ -115,6 +118,29 @@ class UserManagementService implements UserManagementInterface
         Excel::import(new UsersImport($organisation_id, $this->role_service), $request->file('file'));
     }
 
+    public function filterUsers($request)
+    {
+        $users = [];
+        $filter_users = DB::table('users')->where('organisation_id', $request->organisation_id)->orderBy('name', 'ASC')->get()->toArray();
+        if($request->gender != "null"){
+           $filter_users =  array_filter($filter_users, function($user) use ($request) {
+                                return $user->gender == $request->gender;
+                            });
+        }
+        if($request->year != "null") {
+            $filter_users = array_filter($filter_users, function($user) use ($request) {
+                                $year = substr($user->created_at, 0, 4);
+                                return $year == $request->year;
+                            });
+        }
+        foreach ($filter_users as $user){
+           array_push($users, $user);
+        }
+        return $users;
+    }
+
+
+
     private function generateToken($user)
     {
         $token = "";
@@ -134,4 +160,6 @@ class UserManagementService implements UserManagementInterface
 
         return $hasLoginBefore;
     }
+
+
 }

@@ -24,13 +24,7 @@ class UpdateOrganisationRequest extends FormRequest
     public function rules()
     {
         return [
-           'name'          => 'required|max:255',
-           'telephone'     => 'required|string',
-           'email'         => 'email',
-           'address'       => 'required',
-           'description'   => 'required|max:5000',
-           'logo'          => 'string',
-           'box_number'    => 'integer'
+           'logo'          => 'required|string',
         ];
     }
 }

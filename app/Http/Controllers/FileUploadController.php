@@ -8,7 +8,7 @@ use App\Services\FileService;
 
 class FileUploadController extends Controller
 {
-    private $file_service;
+    private FileService $file_service;
 
     public function __construct(FileService $file_service)
     {
@@ -18,7 +18,6 @@ class FileUploadController extends Controller
 
     public function uploadFile(FileUploadRequest $request)
     {
-
         $this->file_service->uploadFile($request);
 
         return $this->sendResponse('success', 'File upload sucessfully');
@@ -26,8 +25,8 @@ class FileUploadController extends Controller
 
     public function getUploadFile(GetFileRequest $request)
     {
-        $response = $this->file_service->getUploadedFile($request);
+        return $this->file_service->getUploadedFile($request);
 
-        return $this->sendResponse($response, 200);
+//        return $this->sendResponse($response, 200);
     }
 }

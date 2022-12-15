@@ -23,4 +23,6 @@ interface UserManagementInterface {
     public function checkUserExist($request);
 
     public function importUsers($organisation_id, $request);
+
+    public function filterUsers($request);
 }

@@ -9,7 +9,7 @@ use App\Services\OrganisationService;
 
 class OrganisationController extends Controller
 {
-    private $organisation_service;
+    private OrganisationService $organisation_service;
 
     public function __construct(OrganisationService $organisation_service)
     {
@@ -20,9 +20,9 @@ class OrganisationController extends Controller
 
     public function createOrganisation(CreateOrganisationRequest $request)
     {
-        $data = $this->organisation_service->createOrganisation($request);
+        $this->organisation_service->createOrganisation($request);
 
-        return $this->sendResponse('success', 'Organisation created successfully' , 201);
+        return $this->sendResponse('success', 'Organisation created successfully' );
     }
 
 
@@ -52,11 +52,11 @@ class OrganisationController extends Controller
     }
 
 
-    public function updateOrgansation(CreateOrganisationRequest $request, $id)
+    public function updateOrganisation(UpdateOrganisationRequest $request, $id)
     {
         $this->organisation_service->updatedOrganisation($request, $id);
 
-        return $this->sendResponse( 'success', 'successfully updated organisation', 204);
+        return $this->sendResponse( 'success', 'successfully updated organisation');
     }
 
 
@@ -64,6 +64,6 @@ class OrganisationController extends Controller
     {
         $this->organisation_service->deleteOgranisation($id);
 
-        return $this->sendResponse('success','successfully deleted organisation', 204);
+        return $this->sendResponse('success','successfully deleted organisation');
     }
 }
