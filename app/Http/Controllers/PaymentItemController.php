@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\PaymentItemRequest;
 use App\Http\Resources\PaymentItemResource;
 use App\Models\PaymentCategory;
+use App\Models\User;
 use App\Services\PaymentItemService;
+use App\Traits\HelpTrait;
 use App\Traits\ResponseTrait;
 use Illuminate\Http\Request;
 use PDF;
@@ -13,8 +15,8 @@ use PDF;
 class PaymentItemController extends Controller
 {
 
-    use ResponseTrait;
-    private $payment_item_service;
+    use ResponseTrait, HelpTrait;
+    private PaymentItemService $payment_item_service;
 
 
     public function __construct(PaymentItemService $payment_item_service)
@@ -36,7 +38,7 @@ class PaymentItemController extends Controller
     {
         $this->payment_item_service->createPaymentItem($request, $payment_category_id);
 
-        return $this->sendResponse('success', 'Payment Item created Successfully', 201);
+        return $this->sendResponse('success', 'Payment Item created Successfully');
     }
 
 
@@ -52,7 +54,7 @@ class PaymentItemController extends Controller
     {
        $this->payment_item_service->updatePaymentItem($request, $id, $payment_category_id);
 
-       return $this->sendResponse('success', 'Payment Item created Successfully', 204);
+       return $this->sendResponse('success', 'Payment Item created Successfully');
     }
 
 
@@ -60,14 +62,15 @@ class PaymentItemController extends Controller
     {
         $this->payment_item_service->deletePaymentItem($id, $payment_category_id);
 
-        return $this->sendResponse('success', 'Payment Item deleted successfully', 204);
+        return $this->sendResponse('success', 'Payment Item deleted successfully');
     }
 
     public function downloadPaymentItem(Request $request)
     {
-        $organisation      = auth()->user()->organisation;
+        $auth_user         = auth()->user();
+        $organisation      = User::find($auth_user['id'])->organisation;
         $items             = $this->payment_item_service->getPaymentItemsByCategory($request->payment_category_id);
-        $administrators    = ResponseTrait::getOrganisationAdministrators($organisation->users);
+        $administrators    = $this->getOrganisationAdministrators($organisation->users);
         $president         = $administrators[0];
         $treasurer         = $administrators[1];
         $fin_sec           = $administrators[2];
@@ -81,7 +84,7 @@ class PaymentItemController extends Controller
             'president'           => $president,
             'treasurer'           => $treasurer,
             'fin_secretary'       => $fin_sec,
-            'total'               => ResponseTrait::computeTotalAmountByPaymentCategory($items)
+            'total'               => $this->computeTotalAmountByPaymentCategory($items)
         ];
 
         $pdf = PDF::loadView('PaymentItem.PaymentItems', $data);

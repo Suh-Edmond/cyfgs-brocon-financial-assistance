@@ -5,11 +5,11 @@ use App\Http\Resources\ExpenditureItemResource;
 use App\Interfaces\ExpenditureItemInterface;
 use App\Models\ExpenditureCategory;
 use App\Models\ExpenditureItem;
-use App\Traits\ResponseTrait;
+use App\Traits\HelpTrait;
 
 class ExpenditureItemService implements ExpenditureItemInterface {
 
-    use ResponseTrait;
+    use HelpTrait;
 
 
     public function createExpenditureItem($request, $expenditure_category_id)

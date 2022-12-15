@@ -20,10 +20,10 @@ class RoleController extends Controller
     {
 
         $exist = $this->roleService->addUserRole($request->user_id, $request->role);
-        if(!$exist){
+        if($exist){
             return $this->sendResponse('success', 'Role added successfully');
         }else {
-            return $this->sendError('Multiple Member with a single Role', 'Only two(02) members of your organisation are allowed to have this Role', 409);
+            return $this->sendError('Multiple Member with a single Role', 'Only one(01) member of your organisation are allowed to have this Role', 409);
         }
     }
 

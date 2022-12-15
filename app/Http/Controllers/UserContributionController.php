@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateUserContributionRequest;
 use App\Http\Requests\UpdateUserContributionRequest;
 use App\Http\Resources\UserContributionResource;
+use App\Models\User;
 use App\Services\UserContributionService;
+use App\Traits\HelpTrait;
 use App\Traits\ResponseTrait;
 use Illuminate\Http\Request;
 use PDF;
@@ -13,13 +15,13 @@ use PDF;
 class UserContributionController extends Controller
 {
 
-    use ResponseTrait;
+    use ResponseTrait, HelpTrait;
 
-    private $user_contribution_interface;
+    private UserContributionService $user_contribution_interface;
 
-    public function __construct(UserContributionService $user_contributio_interface)
+    public function __construct(UserContributionService $user_contribution_interface)
     {
-        $this->user_contribution_interface = $user_contributio_interface;
+        $this->user_contribution_interface = $user_contribution_interface;
     }
 
 
@@ -27,7 +29,7 @@ class UserContributionController extends Controller
     {
         $this->user_contribution_interface->createUserContribution($request);
 
-        return $this->sendResponse('success', 'Contribution saved successfully', 201);
+        return $this->sendResponse('success', 'Contribution saved successfully');
     }
 
 
@@ -36,7 +38,7 @@ class UserContributionController extends Controller
     {
        $this->user_contribution_interface->updateUserContribution($request, $id);
 
-       return $this->sendResponse('success', 'Contribution updated successfully', 202);
+       return $this->sendResponse('success', 'Contribution updated successfully');
     }
 
 
@@ -68,7 +70,7 @@ class UserContributionController extends Controller
     {
         $this->user_contribution_interface->deleteUserContribution($id);
 
-        return $this->sendResponse( 'success', 'Contribution deleted sucessfully', 204);
+        return $this->sendResponse( 'success', 'Contribution deleted sucessfully');
     }
 
 
@@ -76,7 +78,7 @@ class UserContributionController extends Controller
     {
         $this->user_contribution_interface->approveUserContribution($id);
 
-        return $this->sendResponse('success', 'Contribution approve successfully', 204);
+        return $this->sendResponse('success', 'Contribution approve successfully');
     }
 
 
@@ -112,13 +114,14 @@ class UserContributionController extends Controller
 
     public function downloadContrition(Request $request)
     {
-        $organisation   = $request->user()->organisation;
+        $auth_user         = auth()->user();
+        $organisation      = User::find($auth_user['id'])->organisation;
         $contributions  = $this->user_contribution_interface->getContributionsByItem($request->payment_item_id);
-        $administrators = ResponseTrait::getOrganisationAdministrators($organisation->users);
+        $administrators = $this->getOrganisationAdministrators($organisation->users);
         $president      = $administrators[0];
         $treasurer      = $administrators[1];
         $fin_sec        = $administrators[2];
-        $total          = ResponseTrait::computeTotalContribution($contributions);
+        $total          = $this->computeTotalContribution($contributions);
 
         $data = [
             'title'             => 'User Contribution for '.$contributions[0]->paymentItem->name,

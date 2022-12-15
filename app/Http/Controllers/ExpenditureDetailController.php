@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ExpenditureDetailRequest;
 use App\Models\ExpenditureItem;
+use App\Models\User;
 use App\Services\ExpenditureDetailService;
+use App\Traits\HelpTrait;
 use App\Traits\ResponseTrait;
 use Illuminate\Http\Request;
 use PDF;
@@ -12,9 +14,9 @@ use PDF;
 class ExpenditureDetailController extends Controller
 {
 
-    use ResponseTrait;
+    use ResponseTrait, HelpTrait;
 
-    private $expenditure_detail_service;
+    private ExpenditureDetailService $expenditure_detail_service;
 
 
     public function __construct(ExpenditureDetailService $expenditure_detail_service)
@@ -28,7 +30,7 @@ class ExpenditureDetailController extends Controller
     {
         $this->expenditure_detail_service->createExpenditureDetail($request, $id);
 
-        return $this->sendResponse('success', 'Expenditure detail saved successfully', 201);
+        return $this->sendResponse('success', 'Expenditure detail saved successfully');
     }
 
 
@@ -36,7 +38,7 @@ class ExpenditureDetailController extends Controller
     {
         $this->expenditure_detail_service->updateExpenditureDetail($request, $id);
 
-        return $this->sendResponse('success', 'Expenditure detail updated successfully', 202);
+        return $this->sendResponse('success', 'Expenditure detail updated successfully');
     }
 
 
@@ -60,14 +62,14 @@ class ExpenditureDetailController extends Controller
     {
         $this->expenditure_detail_service->deleteExpenditureDetail($id);
 
-        return $this->sendResponse('success', 'Expenditure detail deleted successfully', 204);
+        return $this->sendResponse('success', 'Expenditure detail deleted successfully');
     }
 
     public function approveExpenditureDetail($id)
     {
         $this->expenditure_detail_service->approveExpenditureDetail($id);
 
-        return $this->sendResponse('success', 'Expenditure detail approved successfully', 204);
+        return $this->sendResponse('success', 'Expenditure detail approved successfully');
     }
 
     public function filterExpenditureDetails(Request $request)
@@ -79,9 +81,10 @@ class ExpenditureDetailController extends Controller
 
     public function downloadExpenditureDetail(Request $request)
     {
-        $organisation        = auth()->user()->organisation;
+        $auth_user         = auth()->user();
+        $organisation      = User::find($auth_user['id'])->organisation;
         $expenditure_details = $this->expenditure_detail_service->getExpenditureDetails($request->expenditure_item_id);
-        $administrators      = ResponseTrait::getOrganisationAdministrators($organisation->users);
+        $administrators      = $this->getOrganisationAdministrators($organisation->users);
         $president           = $administrators[0];
         $treasurer           = $administrators[1];
         $fin_sec             = $administrators[2];

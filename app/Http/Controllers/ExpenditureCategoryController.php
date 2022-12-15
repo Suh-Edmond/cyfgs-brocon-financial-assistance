@@ -4,16 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ExpenditureCategoryRequest;
 use App\Http\Resources\ExpenditureCategoryResource;
+use App\Models\User;
 use App\Services\ExpenditureCategoryService;
+use App\Traits\HelpTrait;
 use App\Traits\ResponseTrait;
 use Illuminate\Http\Request;
 use PDF;
 class ExpenditureCategoryController extends Controller
 {
 
-    use ResponseTrait;
+    use ResponseTrait,HelpTrait;
 
-    private $expenditure_category_service;
+    private ExpenditureCategoryService $expenditure_category_service;
 
     public function __construct(ExpenditureCategoryService $expenditure_category_service)
     {
@@ -34,7 +36,7 @@ class ExpenditureCategoryController extends Controller
     {
         $this->expenditure_category_service->createExpenditureCategory($request, $organisation_id);
 
-        return $this->sendResponse('success', 'Expenditure Category created successfully', 201);
+        return $this->sendResponse('success', 'Expenditure Category created successfully');
     }
 
 
@@ -52,7 +54,7 @@ class ExpenditureCategoryController extends Controller
     {
         $this->expenditure_category_service->updateExpenditureCategory($request, $id, $organisation_id);
 
-        return $this->sendResponse('success', 'Expenditure Category updated successfully', 202);
+        return $this->sendResponse('success', 'Expenditure Category updated successfully');
     }
 
 
@@ -61,15 +63,16 @@ class ExpenditureCategoryController extends Controller
     {
         $this->expenditure_category_service->deleteExpenditureCategory($id, $organisation_id);
 
-        return $this->sendResponse('success', 'Expenditure Category deleted successfully', 204);
+        return $this->sendResponse('success', 'Expenditure Category deleted successfully');
     }
 
     public function downloadExpenditureCategory(Request $request)
     {
-        $organisation      = auth()->user()->organisation;
+        $auth_user         = auth()->user();
+        $organisation      = User::find($auth_user['id'])->organisation;
         $expenditure_categories = $this->expenditure_category_service->getExpenditureCategories($request->organisation_id);
 
-        $administrators    = ResponseTrait::getOrganisationAdministrators($organisation->users);
+        $administrators    = $this->getOrganisationAdministrators($organisation->users);
         $president         = $administrators[0];
         $treasurer         = $administrators[1];
         $fin_sec           = $administrators[2];

@@ -6,6 +6,7 @@ use App\Interfaces\UserContributionInterface;
 use App\Models\PaymentItem;
 use App\Models\User;
 use App\Models\UserContribution;
+use App\Traits\HelpTrait;
 use Ramsey\Uuid\Uuid;
 use App\Constants\PaymentStatus;
 use App\Http\Resources\UserContributionCollection;
@@ -14,7 +15,7 @@ use App\Traits\ResponseTrait;
 
 class UserContributionService implements UserContributionInterface {
 
-    use ResponseTrait;
+    use HelpTrait;
 
     public function createUserContribution($request)
     {
@@ -80,13 +81,11 @@ class UserContributionService implements UserContributionInterface {
 
     public function getUserContributionsByUser($user_id)
     {
-        $user_contributions = UserContribution::select('user_contributions.*')
+        return UserContribution::select('user_contributions.*')
                                                 ->join('users', ['users.id' => 'user_contributions.user_id'])
                                                 ->where('user_contributions.user_id', $user_id)
                                                 ->get()
                                                 ->groupBy('user_contributions.payment_item_id');
-
-        return $user_contributions;
 
     }
 
@@ -99,9 +98,7 @@ class UserContributionService implements UserContributionInterface {
                                     ->where('user_contributions.payment_item_id', $payment_item_id)
                                     ->get();
 
-        $response = $this->generateResponse($user_contributions, $user_id, $payment_item_id);
-
-        return $response;
+        return $this->generateResponse($user_contributions, $user_id, $payment_item_id);
     }
 
     public function deleteUserContribution($id)
@@ -121,13 +118,11 @@ class UserContributionService implements UserContributionInterface {
 
     public function filterContribution($status, $payment_item)
     {
-        $user_contributions = UserContribution::select('user_contributions.*')
+        return UserContribution::select('user_contributions.*')
                                                 ->join('payment_items', ['payment_items.id' => 'user_contributions.payment_item_id'])
                                                 ->where('user_contributions.payment_item_id', $payment_item)
                                                 ->where('user_contributions.status', $status)
                                                 ->get();
-
-        return $user_contributions;
     }
 
     public function getContribution($id)
@@ -138,20 +133,16 @@ class UserContributionService implements UserContributionInterface {
 
     public function getTotalBalanceByUserAndItem($payment_item_amount, $total)
     {
-        $balance = ($payment_item_amount - $total);
-
-        return $balance;
+        return ($payment_item_amount - $total);
     }
 
     public function getTotalAmountPaidByUserAndItem($user_id, $payment_item_id)
     {
-        $total = UserContribution::join('users', ['users.id' => 'user_contributions.user_id'])
+        return UserContribution::join('users', ['users.id' => 'user_contributions.user_id'])
                                 ->join('payment_items', ['payment_items.id' => 'user_contributions.payment_item_id'])
                                 ->where('users.id', $user_id)
                                 ->where('payment_items.id', $payment_item_id)
                                 ->sum('user_contributions.amount_deposited');
-
-        return $total;
     }
 
 
@@ -217,14 +208,12 @@ class UserContributionService implements UserContributionInterface {
 
     private function getLastContributionByUserPerItem($payment_item, $user)
     {
-        $amount_deposited = UserContribution::select('user_contributions.*')
+        return UserContribution::select('user_contributions.*')
                                                 ->join('payment_items', ['payment_items.id' => 'user_contributions.payment_item_id'])
                                                 ->join('users', ['users.id' => 'user_contributions.user_id'])
                                                 ->where('user_contributions.payment_item_id', $payment_item)
                                                 ->where('user_contributions.user_id', $user)
                                                 ->latest()->get();
-
-        return $amount_deposited;
     }
 
     private function getTotalAmountContributed($amounts_contributed, $amount_to_be_deposited)
@@ -240,7 +229,7 @@ class UserContributionService implements UserContributionInterface {
 
     private function verifyExcessUserContribution($total_amount_contributed, $payment_item_amount)
     {
-        return ($total_amount_contributed === $payment_item_amount)? true : false;
+        return $total_amount_contributed == $payment_item_amount;
     }
 
     private function filterPaymentItem($item, $value)

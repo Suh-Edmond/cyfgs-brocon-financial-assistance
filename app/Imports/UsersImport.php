@@ -4,6 +4,7 @@ namespace App\Imports;
 
 use App\Models\CustomRole;
 use App\Models\User;
+use App\Traits\HelpTrait;
 use App\Traits\ResponseTrait;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\ToModel;
@@ -13,7 +14,7 @@ use App\Constants\Roles;
 
 class UsersImport implements ToModel
 {
-    use ResponseTrait;
+    use HelpTrait;
 
     private string $organisation_id;
     private RoleService $role_service;
@@ -49,7 +50,8 @@ class UsersImport implements ToModel
             'gender'          => $row[3],
             'address'         => $row[4],
             'occupation'      => $row[5],
-            'organisation_id' => $this->organisation_id
+            'organisation_id' => $this->organisation_id,
+            'updated_by'      => auth()->user()->getAuthIdentifierName()
         ]);
         $assignRole = CustomRole::findByName(Roles::USER, 'api');
         $this->saveUserRole($created, $assignRole);

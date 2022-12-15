@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\IncomeActivityResource;
 use App\Http\Requests\IncomeActivityRequest;
+use App\Models\User;
 use App\Services\IncomeActivityService;
+use App\Traits\HelpTrait;
 use App\Traits\ResponseTrait;
 use Illuminate\Http\Request;
 use PDF;
@@ -13,9 +15,9 @@ use PDF;
 class IncomeActivityController extends Controller
 {
 
-    use ResponseTrait;
+    use ResponseTrait, HelpTrait;
 
-    private $income_activity_service;
+    private IncomeActivityService $income_activity_service;
 
     public function __construct(IncomeActivityService $income_activity_service)
     {
@@ -27,14 +29,14 @@ class IncomeActivityController extends Controller
     {
         $this->income_activity_service->createIncomeActivity($request, $id);
 
-        return $this->sendResponse('success', 'Income activity saved successfully', 201);
+        return $this->sendResponse('success', 'Income activity saved successfully');
     }
 
     public function updateIncomeActivity(IncomeActivityRequest $request,  $id)
     {
         $this->income_activity_service->updateIncomeActivity($request, $id);
 
-        return $this->sendResponse('success', 'Income activity updated successfully', 202);
+        return $this->sendResponse('success', 'Income activity updated successfully');
     }
 
 
@@ -58,14 +60,14 @@ class IncomeActivityController extends Controller
     {
         $this->income_activity_service->deleteIncomeActivity($id);
 
-        return $this->sendResponse('success', 'Income activity deleted successfully', 204);
+        return $this->sendResponse('success', 'Income activity deleted successfully');
     }
 
     public function approveIncomeActivity($id)
     {
         $this->income_activity_service->approveIncomeActivity($id);
 
-        return $this->sendResponse('success', 'Income Activity approved successfully', 204);
+        return $this->sendResponse('success', 'Income Activity approved successfully');
     }
 
 
@@ -79,10 +81,12 @@ class IncomeActivityController extends Controller
     //I will have to pass the parameters in the request and run the query to download the data
     public function generateIncomeActivityPDF()
     {
-        $organisation      = auth()->user()->organisation;
-        $income_activities = $this->income_activity_service->getIncomeActivities(1);
+        $auth_user         = auth()->user();
+        $organisation      = User::find($auth_user['id'])->organisation;
+
+        $income_activities = $this->income_activity_service->getIncomeActivities($organisation->id);
         $total             = $this->income_activity_service->calculateTotal($income_activities);
-        $administrators    = ResponseTrait::getOrganisationAdministrators($organisation->users);
+        $administrators    = $this->getOrganisationAdministrators($organisation->users);
         $president         = $administrators[0];
         $treasurer         = $administrators[1];
         $fin_sec           = $administrators[2];

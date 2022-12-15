@@ -3,16 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ExpenditureItemRequest;
+use App\Models\User;
 use App\Services\ExpenditureItemService;
+use App\Traits\HelpTrait;
 use App\Traits\ResponseTrait;
 use Illuminate\Http\Request;
 use PDF;
 class ExpenditureItemController extends Controller
 {
 
-    use ResponseTrait;
+    use ResponseTrait, HelpTrait;
 
-    private $expenditure_item_service;
+    private ExpenditureItemService $expenditure_item_service;
 
 
     public function __construct(ExpenditureItemService $expenditure_item_service)
@@ -24,7 +26,7 @@ class ExpenditureItemController extends Controller
     {
         $this->expenditure_item_service->createExpenditureItem($request, $id);
 
-        return $this->sendResponse('success', 'Expenditure Item created successfully', 201);
+        return $this->sendResponse('success', 'Expenditure Item created successfully');
     }
 
 
@@ -49,7 +51,7 @@ class ExpenditureItemController extends Controller
     {
         $this->expenditure_item_service->updateExpenditureItem($request, $id, $expenditure_category_id);
 
-        return $this->sendResponse('success', 'Expenditure Item updated successfully', 204);
+        return $this->sendResponse('success', 'Expenditure Item updated successfully');
     }
 
 
@@ -57,21 +59,22 @@ class ExpenditureItemController extends Controller
     {
         $this->expenditure_item_service->deleteExpenditureItem($id, $expenditure_category_id);
 
-        return $this->sendResponse('success', 'Expenditure Item deleted successfully', 204);
+        return $this->sendResponse('success', 'Expenditure Item deleted successfully');
     }
 
     public function approveExpenditureItem($id)
     {
         $this->expenditure_item_service->approveExpenditureItem($id);
 
-        return $this->sendResponse('success', 'Expenditure Item approved successfully', 204);
+        return $this->sendResponse('success', 'Expenditure Item approved successfully');
     }
 
     public function downloadExpenditureItems(Request $request)
     {
-        $organisation      = auth()->user()->organisation;
+        $auth_user         = auth()->user();
+        $organisation      = User::find($auth_user['id'])->organisation;
         $expenditure_items = $this->expenditure_item_service->getExpenditureItems($request->expenditure_category_id, $request->status);
-        $administrators    = ResponseTrait::getOrganisationAdministrators($organisation->users);
+        $administrators    = $this->getOrganisationAdministrators($organisation->users);
         $president         = $administrators[0];
         $treasurer         = $administrators[1];
         $fin_sec           = $administrators[2];

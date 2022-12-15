@@ -6,11 +6,11 @@ use App\Http\Resources\ExpenditureDetailResource;
 use App\Interfaces\ExpenditureDetailInterface;
 use App\Models\ExpenditureDetail;
 use App\Models\ExpenditureItem;
-use App\Traits\ResponseTrait;
+use App\Traits\HelpTrait;
 
 class ExpenditureDetailService implements ExpenditureDetailInterface {
 
-    use ResponseTrait;
+    use HelpTrait;
 
     public function createExpenditureDetail($request, $id)
     {
@@ -99,12 +99,11 @@ class ExpenditureDetailService implements ExpenditureDetailInterface {
 
     private function findExpenditureDetails($id)
     {
-        $details  =  ExpenditureDetail::select('expenditure_details.*', 'expenditure_items.amount as expenditure_item_amount')
+        return ExpenditureDetail::select('expenditure_details.*', 'expenditure_items.amount as expenditure_item_amount')
                                 ->join('expenditure_items', ['expenditure_items.id' => 'expenditure_details.expenditure_item_id'])
                                 ->where('expenditure_items.id', $id)
                                 ->orderBy('expenditure_details.name', 'ASC')
                                 ->get();
-        return $details;
     }
 
 }

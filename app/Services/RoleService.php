@@ -6,20 +6,21 @@ use App\Http\Resources\RoleResource;
 use App\Models\User;
 use App\Interfaces\RoleInterface;
 use App\Models\CustomRole;
+use App\Traits\HelpTrait;
 use App\Traits\ResponseTrait;
 use Illuminate\Support\Facades\DB;
 
 class RoleService implements RoleInterface {
 
-    use ResponseTrait;
+    use ResponseTrait, HelpTrait;
 
     public function addUserRole($user_id, $role): bool
     {
         $user = User::findOrFail($user_id);
         $assignRole = CustomRole::findByName($role, 'api');
-        $role_exist = $this->checkIfAUserAlreadyHasTheRole($user, $assignRole);
 
-        if(!$role_exist){
+        $role_exist = $this->checkIfAUserAlreadyHasTheRole($user, $role);
+        if($role_exist){
             $this->saveUserRole($user, $assignRole);
         }
         return $role_exist;
@@ -63,15 +64,15 @@ class RoleService implements RoleInterface {
 
     private function checkIfAUserAlreadyHasTheRole($user, $role): bool
     {
-        $max_num_user_with_same_role = 2;
-        $users_with_same_role = [];
-        if(!is_null($user->organisation)){
-            foreach($user->organisation->users as $user) {
-                if($user->hasRole($role)){
-                    array_push($users_with_same_role, $user);
-                }
-            }
-        }
-        return count($users_with_same_role ) == $max_num_user_with_same_role;
+        $max_num_users_with_same_role = 1;
+
+        $users = DB::table('users')
+            ->join('model_has_roles', 'users.id', '=', 'model_has_roles.model_id')
+            ->join('roles', 'roles.id', '=', 'model_has_roles.role_id')
+            ->select('users.*')
+            ->where('roles.name', $role)
+            ->count();
+
+        return $users <= $max_num_users_with_same_role;
     }
 }

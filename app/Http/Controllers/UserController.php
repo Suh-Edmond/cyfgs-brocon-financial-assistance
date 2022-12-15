@@ -10,15 +10,16 @@ use App\Http\Requests\LoginRequest;
 use App\Http\Requests\UpdatePasswordRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\UserResource;
+use App\Models\User;
 use App\Services\RoleService;
 use App\Services\UserManagementService;
-use App\Traits\ResponseTrait;
+use App\Traits\HelpTrait;
 use Illuminate\Http\Request;
-use Barryvdh\DomPDF\PDF;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class UserController extends Controller
 {
-    use ResponseTrait;
+    use HelpTrait;
 
     private UserManagementService $user_management_service;
     private RoleService $role_service;
@@ -71,7 +72,7 @@ class UserController extends Controller
     {
         $users = $this->user_management_service->getUsers($id);
 
-        return $this->sendResponse(UserResource::collection($users), 'success');
+        return $this->sendResponse($users, 'success');
     }
 
 
@@ -109,26 +110,35 @@ class UserController extends Controller
 
     public function downloadUsers(Request $request)
     {
-        $organisation      = auth()->user()->organisation;
-        $users             = $this->user_management_service->getUsers($request->organisation_id);
-        $administrators    = ResponseTrait::getOrganisationAdministrators($users);
-        $president         = $administrators[0];
-        $treasurer         = $administrators[1];
-        $fin_sec           = $administrators[2];
+        $auth_user         = auth()->user();
+        $organisation      = User::find($auth_user['id'])->organisation;
+        $users             = $this->user_management_service->filterUsers($request);
 
+        $president         = $this->getOrganisationAdministrators(Roles::PRESIDENT);
+        $treasurer         = $this->getOrganisationAdministrators(Roles::TREASURER);
+        $fin_sec           = $this->getOrganisationAdministrators(Roles::FINANCIAL_SECRETARY);
 
         $data = [
-            'title'               => 'Registered Members',
-            'date'                => date('m/d/Y'),
-            'organisation'        => $organisation,
-            'users'               => $users,
-            'president'           => $president,
-            'treasurer'           => $treasurer,
-            'fin_secretary'       => $fin_sec
+        'title'                      => 'Organisation Members',
+            'date'                   => date('m/d/Y'),
+            'organisation'           => $organisation,
+            'organisation_telephone' => $this->setOrganisationTelephone($organisation->telephone),
+            'users'                  => $users,
+            'president'              => $president,
+            'treasurer'              => $treasurer,
+            'fin_secretary'          => $fin_sec
         ];
 
         $pdf = PDF::loadView('User.Users', $data);
 
         return $pdf->download('Organisation_Users.pdf');
+    }
+
+
+    public function filterUsers(Request $request)
+    {
+        $users = $this->user_management_service->filterUsers($request);
+
+        return $this->sendResponse($users, 'success');
     }
 }
