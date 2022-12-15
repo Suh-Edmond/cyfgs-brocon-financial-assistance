@@ -4,7 +4,7 @@
 @section('section')
     <div style="margin-bottom: 220px;">
         <div style="float: left;">
-            <img src="{{ public_path('/images/eu_money.png') }}" alt="organisation logo" width="100px;" height="100px;"
+            <img src="{{ $organisation->logo }}" alt="organisation logo" width="100px;" height="100px;"
                 style="border-radius: 2px">
         </div>
         <div style="float: right">
@@ -38,11 +38,17 @@
                 <tr style="border: 1px solid black; font-size: smaller">
                     <td style="padding: 5px;">{{ $key + 1 }}</td>
                     <td style="border: 1px solid black; padding: 5px;">{{ $user->name }}</td>
-                    <td style="border: 1px solid black; padding: 5px;">{{ $user->gender }}</td>
+                    @if(!is_null($user->email))
+                        <td style="border: 1px solid black; padding: 5px;">{{ $user->gender }}</td>
+                    @endif
                     <td style="border: 1px solid black; padding: 5px;">{{ $user->email }}</td>
                     <td style="border: 1px solid black; padding: 5px;">{{ $user->telephone }}</td>
-                    <td style="border: 1px solid black; padding: 5px;">{{ $user->address }}</td>
-                    <td style="border: 1px solid black; padding: 5px;">{{ $user->occupation }}</td>
+                    @if(!is_null($user->address))
+                        <td style="border: 1px solid black; padding: 5px;">{{ $user->address }}</td>
+                    @endif
+                    @if(!is_null($user->occupation))
+                        <td style="border: 1px solid black; padding: 5px;">{{ $user->occupation }}</td>
+                    @endif
                 </tr>
             @endforeach
         </table>
@@ -51,20 +57,26 @@
         <div style="float: left;">
             <label for="organisation"style="font-weight: bold; text-transform: uppercase; font-size: small;">Financial
                 Secretary <br />
-                {{ $fin_secretary->name }}
+                @if(!is_null($fin_secretary))
+                    {{ $fin_secretary->name }}
+                @endif
             </label><br /><br />
         </div>
         <div style="float: right">
             <label for="organisation"style="font-weight: bold; text-transform: uppercase; font-size: small;">Treasurer
                 <br />
+                @if(!is_null($treasurer))
                 {{ $treasurer->name }}
+                @endif
             </label><br /><br />
 
         </div>
     </div>
     <div style="text-align:center; margin-top:80px">
         <label for="organisation"style="font-weight: bold; text-transform: uppercase; font-size: small;">President <br />
+            @if(!is_null($president))
             {{ $president->name }}
+            @endif
         </label><br />
     </div>
 @endsection
