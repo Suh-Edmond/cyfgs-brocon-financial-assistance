@@ -108,7 +108,7 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
 
-    Route::prefix('protected')->middleware('isPresident')->group(function () {
+    Route::prefix('protected')->middleware('isTreasurerOrIsFinancialSecretaryOrIsPresident')->group(function () {
         Route::delete('/payment-categories/{payment_category_id}/payment-items/{id}', [PaymentItemController::class, 'deletePaymentItem']);
     });
 

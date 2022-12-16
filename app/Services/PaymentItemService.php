@@ -13,12 +13,12 @@ class PaymentItemService implements PaymentItemInterface {
 
     public function createPaymentItem($request, $paymant_category_id)
     {
-        $paymant_category = PaymentCategory::findOrFail($paymant_category_id);
+        $payment_category = PaymentCategory::findOrFail($paymant_category_id);
         PaymentItem::create([
             'name'                => $request->name,
             'amount'              => $request->amount,
             'complusory'          => $request->complusory,
-            'payment_category_id' => $paymant_category->id,
+            'payment_category_id' => $payment_category->id,
             'description'         => $request->description
         ]);
     }
@@ -41,6 +41,7 @@ class PaymentItemService implements PaymentItemInterface {
         $payment_items = PaymentItem::select('payment_items.*')
                                 ->join('payment_categories', ['payment_categories.id'  => 'payment_items.payment_category_id'])
                                 ->where('payment_items.payment_category_id', $payment_category_id)
+                                ->orderBy('payment_items.name', 'ASC')
                                 ->get();
         foreach($payment_items as $payment_item){
             $total += $payment_item->amount;
