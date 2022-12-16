@@ -3,17 +3,16 @@
 @section('section')
     <div style="margin-bottom: 220px;">
         <div style="float: left;">
-            <img src="{{ public_path('/images/eu_money.png') }}" alt="organisation logo" width="100px;" height="100px;"
+            <img src="{{ $organisation->logo }}" alt="organisation logo" width="100px;" height="100px;"
                 style="border-radius: 2px">
         </div>
         <div style="float: right">
             <label for="organisation"style="font-weight: bold; text-transform: uppercase; font-size: small;">
                 {{ $organisation->name }}</label><br />
             <label style="font-size: small;">{{ $organisation->salutation }}</label><br />
-            <label style="font-size: small;">P.O Box {{ $organisation->box_number }}</label><br />
-            <label style="font-size: small;">{{ $organisation->address }}</label><br />
+            <label style="font-size: small;">{{ $organisation->region }}, {{ $organisation->address }}, {{ $organisation->box_number }}</label><br />
             <label style="font-size: small;">Phone_No:</label><br />
-            <label style="font-size: small;">{{ $organisation->telephone }}</label><br />
+            <label style="font-size: small;">{{ $organisation_telephone }}</label><br />
             <label style="font-size: small;">Email: {{ $organisation->email }}</label><br /><br />
             <label style="font-size: small;">Printed date: {{ $date }}</label>
         </div>
@@ -38,21 +37,27 @@
     </div>
     <div style="margin-top: 100px;">
         <div style="float: left;">
-            <label for="organisation"style="font-weight: bold; text-transform: uppercase; font-size: small;">Financial
+            <label for="organisation"style="font-weight: 400; text-transform: uppercase; font-size: smaller;">Financial
                 Secretary <br />
-                {{ $fin_secretary->name }}
+                @if(!is_null($fin_secretary))
+                    {{ $fin_secretary->name }}
+                @endif
             </label><br /><br />
         </div>
         <div style="float: right">
-            <label for="organisation"style="font-weight: bold; text-transform: uppercase; font-size: small;">Treasurer
+            <label for="organisation"style="font-weight: 400; text-transform: uppercase; font-size: smaller;">Treasurer
                 <br />
-                {{ $treasurer->name }}
+                @if(!is_null($treasurer))
+                    {{ $treasurer->name }}
+                @endif
             </label><br /><br />
         </div>
     </div>
     <div style="text-align:center; margin-top:80px">
-        <label for="organisation"style="font-weight: bold; text-transform: uppercase; font-size: small;">President <br />
-            {{ $president->name }}
+        <label for="organisation"style="font-weight: 400; text-transform: uppercase; font-size: smaller;" >President <br />
+            @if(!is_null($president))
+                {{ $president->name }}
+            @endif
         </label><br />
     </div>
 @endsection

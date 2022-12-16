@@ -28,7 +28,7 @@
                 <th style="border: 1px solid black;">S/N</th>
                 <th style="padding: 12px; border: 1px solid black;">Name</th>
                 <th style="padding: 12px; border: 1px solid black;">Telephone</th>
-                <th style="padding: 12px; border: 1px solid black;">Amount (FCFA)</th>
+                <th style="padding: 12px; border: 1px solid black;">Amount (F CFA)</th>
             </tr>
             @foreach ($user_savings as $key => $user_saving)
                 <tr style="border: 1px solid black; font-size: smaller">
