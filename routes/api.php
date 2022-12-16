@@ -105,10 +105,11 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/payment-categories/{payment_category_id}/payment-items', [PaymentItemController::class, 'getPaymentItemsByCategory']);
         Route::get('/payment-categories/{payment_category_id}/payment-items/{id}', [PaymentItemController::class, 'getPaymentItem']);
         Route::get('download-payment-items', [PaymentItemController::class, 'downloadPaymentItem']);
+        Route::get('filter-payment-items', [PaymentItemController::class, 'filterPaymentItems']);
     });
 
 
-    Route::prefix('protected')->middleware('isPresident')->group(function () {
+    Route::prefix('protected')->middleware('isTreasurerOrIsFinancialSecretaryOrIsPresident')->group(function () {
         Route::delete('/payment-categories/{payment_category_id}/payment-items/{id}', [PaymentItemController::class, 'deletePaymentItem']);
     });
 

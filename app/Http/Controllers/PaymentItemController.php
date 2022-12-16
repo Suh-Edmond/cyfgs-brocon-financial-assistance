@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Constants\Roles;
 use App\Http\Requests\PaymentItemRequest;
 use App\Http\Resources\PaymentItemResource;
-use App\Models\PaymentCategory;
 use App\Models\User;
 use App\Services\PaymentItemService;
 use App\Traits\HelpTrait;
 use App\Traits\ResponseTrait;
 use Illuminate\Http\Request;
-use PDF;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class PaymentItemController extends Controller
 {
@@ -65,15 +65,22 @@ class PaymentItemController extends Controller
         return $this->sendResponse('success', 'Payment Item deleted successfully');
     }
 
+    public function filterPaymentItems(Request $request)
+    {
+        $data = $this->payment_item_service->filterPaymentItems($request->payment_category_id, $request->complusory);
+
+        return $this->sendResponse($data, 200);
+    }
+
     public function downloadPaymentItem(Request $request)
     {
         $auth_user         = auth()->user();
         $organisation      = User::find($auth_user['id'])->organisation;
         $items             = $this->payment_item_service->getPaymentItemsByCategory($request->payment_category_id);
-        $administrators    = $this->getOrganisationAdministrators($organisation->users);
-        $president         = $administrators[0];
-        $treasurer         = $administrators[1];
-        $fin_sec           = $administrators[2];
+
+        $president         = $this->getOrganisationAdministrators(Roles::PRESIDENT);
+        $treasurer         = $this->getOrganisationAdministrators(Roles::TREASURER);
+        $fin_sec           = $this->getOrganisationAdministrators(Roles::FINANCIAL_SECRETARY);
 
 
         $data = [

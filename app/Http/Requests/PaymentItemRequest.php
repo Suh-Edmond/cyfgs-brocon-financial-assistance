@@ -24,10 +24,10 @@ class PaymentItemRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'          => 'required|max:255|unique:payment_items,name',
+            'name'          => 'required|max:255',
             'amount'        => 'required',
             'complusory'    => 'required|boolean',
-            'description'   => 'string|max:4000'
+            'description'   => 'required|string|max:4000'
         ];
     }
 }
