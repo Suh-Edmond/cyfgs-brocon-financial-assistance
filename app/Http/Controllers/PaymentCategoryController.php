@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Constants\Roles;
 use App\Http\Requests\PaymentCategoryRequest;
 use App\Http\Resources\PaymentCategoryResource;
 use App\Models\User;
@@ -9,7 +10,7 @@ use App\Services\PaymentCategoryService;
 use App\Traits\HelpTrait;
 use App\Traits\ResponseTrait;
 use Illuminate\Http\Request;
-use PDF;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 
 
@@ -69,20 +70,28 @@ class PaymentCategoryController extends Controller
        return $this->sendResponse('success', 'Payment Category deleted successfully');
     }
 
+
+    public  function filterPaymentCategory(Request $request){
+        $categories = $this->payment_category_service->filterPaymentCategory($request);
+        return $this->sendResponse($categories, 200);
+    }
+
+
     public function downloadPaymentCategory(Request $request)
     {
         $auth_user         = auth()->user();
         $organisation      = User::find($auth_user['id'])->organisation;
-        $administrators    = $this->getOrganisationAdministrators($organisation->users);
-        $president = $administrators[0];
-        $treasurer = $administrators[1];
-        $fin_sec   = $administrators[2];
+
+        $president         = $this->getOrganisationAdministrators(Roles::PRESIDENT);
+        $treasurer         = $this->getOrganisationAdministrators(Roles::TREASURER);
+        $fin_sec           = $this->getOrganisationAdministrators(Roles::FINANCIAL_SECRETARY);
 
         $data = [
             'title'             =>'Payment Categories',
             'date'              => date('m/d/Y'),
             'organisation'      => $organisation,
-            'categories'        => $this->payment_category_service->getPaymentCategories($organisation->id),
+            'organisation_telephone' => $this->setOrganisationTelephone($organisation->telephone),
+            'categories'        => $this->payment_category_service->getPaymentCategories($request['organisation_id'], $request),
             'president'         => $president,
             'treasurer'         => $treasurer,
             'fin_secretary'     => $fin_sec

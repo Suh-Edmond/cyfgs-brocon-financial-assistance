@@ -66,8 +66,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('protected')->middleware('isPresident')->group(function () {
         Route::post('/organisations', [OrganisationController::class, 'createOrganisation']);
         Route::get('/organisations/{id}', [OrganisationController::class, 'getOrganisation']);
-        Route::get('/organisation-info', [OrganisationController::class, 'getOrganisationInfo']);
         Route::put('/organisations/{id}', [OrganisationController::class, 'updateOrganisation']);
+    });
+
+    Route::prefix('protected')->group(function () {
+        Route::get('/organisation-info', [OrganisationController::class, 'getOrganisationInfo']);
     });
 
 
@@ -84,9 +87,10 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/organisations/{organisation_id}/payment-categories', [PaymentCategoryController::class, 'getPaymentCategories']);
         Route::get('/organisations/{organisation_id}/payment-categories/{id}', [PaymentCategoryController::class, 'getPaymentCategory']);
         Route::get('/download-payment-categories', [PaymentCategoryController::class, 'downloadPaymentCategory']);
+        Route::get('/filter-payment-categories', [PaymentCategoryController::class, 'filterPaymentCategory']);
     });
 
-    Route::prefix('protected')->middleware('isPresident')->group(function () {
+    Route::prefix('protected')->middleware('isPresidentOrIsFinancialSecretary')->group(function () {
         Route::delete('/organisations/{organisation_id}/payment-categories/{id}', [PaymentCategoryController::class, 'deletePaymentCategory']);
     });
 
