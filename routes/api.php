@@ -116,7 +116,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('protected')->middleware(['isTreasurerOrIsFinancialSecretaryOrIsPresident'])->group(function () {
         Route::get('/organisations/{organisation_id}/expenditure-categories', [ExpenditureCategoryController::class, 'getExpenditureCategories']);
         Route::get('/organisations/{organisation_id}/expenditure-categories/{id}', [ExpenditureCategoryController::class, 'getExpenditureCategory']);
-        Route::get('download-expenditure-categories', [ExpenditureCategoryController::class, 'downloadExpenditureCategory']);
+        Route::get('expenditure-categories/download', [ExpenditureCategoryController::class, 'downloadExpenditureCategory']);
+        Route::get('expenditure-categories/filter', [ExpenditureCategoryController::class, 'filterExpenditureCategories']);
     });
 
     Route::prefix('protected')->middleware(['isPresidentOrIsFinancialSecretary'])->group(function () {
@@ -124,7 +125,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('/organisations/{organisation_id}/expenditure-categories/{id}', [ExpenditureCategoryController::class, 'updateExpenditureCategory']);
     });
 
-    Route::prefix('protected')->middleware('isPresident')->group(function () {
+    Route::prefix('protected')->middleware('isTreasurerOrIsFinancialSecretaryOrIsPresident')->group(function () {
         Route::delete('/organisations/{organisation_id}/expenditure-categories/{id}', [ExpenditureCategoryController::class, 'deleteExpenditureCategory']);
     });
 
