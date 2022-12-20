@@ -25,7 +25,8 @@ class ExpenditureCategoryRequest extends FormRequest
     {
         return [
             'name'          => 'required|max:255',
-            'description'   => 'required|max:5000'
+            'description'   => 'required|max:5000',
+            'id'            => ''
         ];
     }
 }

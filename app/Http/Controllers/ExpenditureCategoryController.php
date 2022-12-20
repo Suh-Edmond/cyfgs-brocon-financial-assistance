@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Constants\Roles;
 use App\Http\Requests\ExpenditureCategoryRequest;
 use App\Http\Resources\ExpenditureCategoryResource;
 use App\Models\User;
@@ -9,7 +10,8 @@ use App\Services\ExpenditureCategoryService;
 use App\Traits\HelpTrait;
 use App\Traits\ResponseTrait;
 use Illuminate\Http\Request;
-use PDF;
+use Barryvdh\DomPDF\Facade\Pdf;
+
 class ExpenditureCategoryController extends Controller
 {
 
@@ -66,23 +68,29 @@ class ExpenditureCategoryController extends Controller
         return $this->sendResponse('success', 'Expenditure Category deleted successfully');
     }
 
+    public function filterExpenditureCategories(Request $request)
+    {
+        $data = $this->expenditure_category_service->filterExpenditureCategory($request);
+
+        return $this->sendResponse($data,'success');
+    }
+
     public function downloadExpenditureCategory(Request $request)
     {
         $auth_user         = auth()->user();
         $organisation      = User::find($auth_user['id'])->organisation;
         $expenditure_categories = $this->expenditure_category_service->getExpenditureCategories($request->organisation_id);
 
-        $administrators    = $this->getOrganisationAdministrators($organisation->users);
-        $president         = $administrators[0];
-        $treasurer         = $administrators[1];
-        $fin_sec           = $administrators[2];
-
+        $president         = $this->getOrganisationAdministrators(Roles::PRESIDENT);
+        $treasurer         = $this->getOrganisationAdministrators(Roles::TREASURER);
+        $fin_sec           = $this->getOrganisationAdministrators(Roles::FINANCIAL_SECRETARY);
 
         $data = [
             'title'                    => 'Expenditure Categories',
             'date'                     => date('m/d/Y'),
             'organisation'             => $organisation,
             'expenditure_categories'   => $expenditure_categories,
+            'organisation_telephone'   => $this->setOrganisationTelephone($organisation->telephone),
             'president'                => $president,
             'treasurer'                => $treasurer,
             'fin_secretary'            => $fin_sec
@@ -90,6 +98,6 @@ class ExpenditureCategoryController extends Controller
 
         $pdf = PDF::loadView('ExpenditureCategory.ExpenditureCategories', $data);
 
-        return $pdf->download('Payment_items.pdf');
+        return $pdf->download('Expenditure_Categories.pdf');
     }
 }

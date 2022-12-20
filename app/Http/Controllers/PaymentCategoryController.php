@@ -13,8 +13,6 @@ use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 
-
-
 class PaymentCategoryController extends Controller
 {
 
@@ -91,7 +89,7 @@ class PaymentCategoryController extends Controller
             'date'              => date('m/d/Y'),
             'organisation'      => $organisation,
             'organisation_telephone' => $this->setOrganisationTelephone($organisation->telephone),
-            'categories'        => $this->payment_category_service->getPaymentCategories($request['organisation_id'], $request),
+            'categories'        => $this->payment_category_service->getPaymentCategories($request['organisation_id']),
             'president'         => $president,
             'treasurer'         => $treasurer,
             'fin_secretary'     => $fin_sec
