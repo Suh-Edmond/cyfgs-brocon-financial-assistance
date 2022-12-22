@@ -23,7 +23,8 @@ class ExpenditureDetailService implements ExpenditureDetailInterface {
             'amount_given'          => $request->amount_given,
             'comment'               => $request->comment,
             'expenditure_item_id'   => $item->id,
-            'scan_picture'          => $request->scan_picture
+            'scan_picture'          => $request->scan_picture,
+            'updated_by'            => $request->user()->name
         ]);
 
     }
@@ -47,7 +48,7 @@ class ExpenditureDetailService implements ExpenditureDetailInterface {
         $details            = $this->findExpenditureDetails($expenditure_item_id);
 
         $response           = $this->generateResponseForExpenditureDetails($details);
-        $item_amount        = $details[0]->expenditure_item_amount;
+        $item_amount        = $this->setExpenditureItemAmount($details);
         $total_amount_given = $this->calculateTotalAmountGiven($details);
         $total_amount_spent = $this->calculateTotalAmountSpent($details);
         $balance            = $this->calculateExpenditureBalanceByExpenditureItem($details, $item_amount);
@@ -76,16 +77,17 @@ class ExpenditureDetailService implements ExpenditureDetailInterface {
         $detail->save();
     }
 
-    public function filterExpenditureDetail($item, $status)
+    public function filterExpenditureDetail($id, $status)
     {
         $details = ExpenditureDetail::select('expenditure_details.*', 'expenditure_items.amount as expenditure_item_amount')
                                     ->join('expenditure_items', ['expenditure_items.id' => 'expenditure_details.expenditure_item_id'])
-                                    ->where('expenditure_items.id', $item)
+                                    ->where('expenditure_items.id', $id)
                                     ->Where('expenditure_details.approve', $status)
+                                    ->orderBy('expenditure_details.name', 'ASC')
                                     ->get();
 
         $response           = $this->generateResponseForExpenditureDetails($details);
-        $item_amount        = $details[0]->expenditure_item_amount;
+        $item_amount        = $this->setExpenditureItemAmount($details);
         $total_amount_given = $this->calculateTotalAmountGiven($details);
         $total_amount_spent = $this->calculateTotalAmountSpent($details);
         $balance            = $this->calculateExpenditureBalanceByExpenditureItem($details, $item_amount);
@@ -105,5 +107,21 @@ class ExpenditureDetailService implements ExpenditureDetailInterface {
                                 ->orderBy('expenditure_details.name', 'ASC')
                                 ->get();
     }
+
+    private function setExpenditureItemAmount($data) {
+        return count($data->toArray()) == 0 ? 0: $data[0]->expenditure_item_amount;
+    }
+
+    public function setDataForDownload($request) {
+        if(is_null($request->status)) {
+            return $this->getExpenditureDetails($request->expenditure_item_id);
+        }elseif (! is_null($request->status) && $request->status == 2){ //the number 2 is a hardcoded number to represent ALL
+            return $this->getExpenditureDetails($request->expenditure_item_id);
+        }
+        else {
+            return $this->filterExpenditureDetail($request->expenditure_item_id, $request->status);
+        }
+    }
+
 
 }
