@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Constants\Roles;
 use App\Http\Requests\ExpenditureItemRequest;
 use App\Models\User;
 use App\Services\ExpenditureItemService;
 use App\Traits\HelpTrait;
 use App\Traits\ResponseTrait;
 use Illuminate\Http\Request;
-use PDF;
+use Barryvdh\DomPDF\Facade\Pdf;
+
 class ExpenditureItemController extends Controller
 {
 
@@ -74,10 +76,10 @@ class ExpenditureItemController extends Controller
         $auth_user         = auth()->user();
         $organisation      = User::find($auth_user['id'])->organisation;
         $expenditure_items = $this->expenditure_item_service->getExpenditureItems($request->expenditure_category_id, $request->status);
-        $administrators    = $this->getOrganisationAdministrators($organisation->users);
-        $president         = $administrators[0];
-        $treasurer         = $administrators[1];
-        $fin_sec           = $administrators[2];
+
+        $president         = $this->getOrganisationAdministrators(Roles::PRESIDENT);
+        $treasurer         = $this->getOrganisationAdministrators(Roles::TREASURER);
+        $fin_sec           = $this->getOrganisationAdministrators(Roles::FINANCIAL_SECRETARY);
 
 
         $data = [
@@ -86,6 +88,7 @@ class ExpenditureItemController extends Controller
             'organisation'        => $organisation,
             'expenditure_items'   => $expenditure_items,
             'president'           => $president,
+            'organisation_telephone'   => $this->setOrganisationTelephone($organisation->telephone),
             'treasurer'           => $treasurer,
             'fin_secretary'       => $fin_sec,
             'total'               => $this->expenditure_item_service->calculateTotal($expenditure_items)

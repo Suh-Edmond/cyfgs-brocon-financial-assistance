@@ -138,10 +138,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('protected')->middleware(['isTreasurerOrIsFinancialSecretary'])->group(function () {
         Route::get('/expenditure-categories/{expenditure_category_id}/expenditure-items', [ExpenditureItemController::class, 'getExpenditureItems']);
         Route::get('/expenditure-categories/{expenditure_category_id}/expenditure-items/{id}', [ExpenditureItemController::class, 'getExpenditureItem']);
-        Route::get('download-expenditure-items', [ExpenditureItemController::class, 'downloadExpenditureItems']);
+        Route::get('expenditure-items/download', [ExpenditureItemController::class, 'downloadExpenditureItems']);
     });
 
-    Route::prefix('protected')->middleware('isPresident')->group(function () {
+    Route::prefix('protected')->middleware('isTreasurerOrIsFinancialSecretaryOrIsPresident')->group(function () {
         Route::delete('/expenditure-categories/{expenditure_category_id}/expenditure-items/{id}', [ExpenditureItemController::class, 'deleteExpenditureItem']);
     });
 
@@ -206,11 +206,11 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('expenditure-items/{id}/details', [ExpenditureDetailController::class, 'getExpenditureDetails']);
         Route::get('expenditure-details/{id}', [ExpenditureDetailController::class, 'getExpenditureDetail']);
         Route::get('expenditure-details', [ExpenditureDetailController::class, 'filterExpenditureDetails']);
-        Route::get('download-expenditure-details', [ExpenditureDetailController::class, 'downloadExpenditureDetail']);
+        Route::get('expenditure-item-details/download', [ExpenditureDetailController::class, 'downloadExpenditureDetail']);
     });
 
-    Route::prefix('protected')->middleware('isPresident')->group(function () {
-        Route::delete('expenditure-details/{id}', [ExpenditureDetailController::class, 'deleteExpenditureDetail']);
+    Route::prefix('protected')->middleware('isTreasurerOrIsFinancialSecretaryOrIsPresident')->group(function () {
+        Route::delete('expenditure-item-details/{id}', [ExpenditureDetailController::class, 'deleteExpenditureDetail']);
     });
 
     Route::prefix('protected')->middleware('isTreasurer')->group(function () {

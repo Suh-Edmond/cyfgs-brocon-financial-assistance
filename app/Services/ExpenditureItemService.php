@@ -23,7 +23,8 @@ class ExpenditureItemService implements ExpenditureItemInterface {
             'comment'                   => $request->comment,
             'date'                      => $request->date,
             'expenditure_category_id'   => $expenditure_category->id,
-            'scan_picture'              => $request->scan_picture
+            'scan_picture'              => $request->scan_picture,
+            'updated_by'                => $request->user()->name
         ]);
     }
 
@@ -44,7 +45,6 @@ class ExpenditureItemService implements ExpenditureItemInterface {
     public function getExpenditureItems($expenditure_category_id, $status)
     {
         $items = $this->findExpenditureItems($expenditure_category_id, $status);
-
 
         return $this->generateExpenditureItemResponse($items);
     }
@@ -81,24 +81,21 @@ class ExpenditureItemService implements ExpenditureItemInterface {
 
     private function findExpenditureItem($id, $expenditure_category_id)
     {
-        $expenditure_items = ExpenditureItem::select('expenditure_items.*')
+        return ExpenditureItem::select('expenditure_items.*')
                                         ->join('expenditure_categories', ['expenditure_categories.id' => 'expenditure_items.expenditure_category_id'])
                                         ->where('expenditure_items.id', $id)
                                         ->where('expenditure_items.expenditure_category_id', $expenditure_category_id)
                                         ->firstOrFail();
-        return $expenditure_items;
     }
 
     private function findExpenditureItems($expenditure_category_id, $status)//1 means true
     {
-        $expenditure_item = ExpenditureItem::select('expenditure_items.*')
+        return ExpenditureItem::select('expenditure_items.*')
                             ->join('expenditure_categories', ['expenditure_categories.id' => 'expenditure_items.expenditure_category_id'])
                             ->where('expenditure_items.expenditure_category_id', $expenditure_category_id)
                             ->where('expenditure_items.approve', $status)
                             ->orderBy('expenditure_items.name', 'ASC')
                             ->get();
-
-        return $expenditure_item;
     }
 
     private function generateExpenditureItemResponse($items)

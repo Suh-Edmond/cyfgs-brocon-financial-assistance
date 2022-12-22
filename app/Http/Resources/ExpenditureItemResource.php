@@ -2,13 +2,12 @@
 
 namespace App\Http\Resources;
 
-use App\Traits\ResponseTrait;
+use App\Traits\HelpTrait;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Ramsey\Uuid\Uuid;
 
 class ExpenditureItemResource extends JsonResource
 {
-    use ResponseTrait;
+    use HelpTrait;
 
     private $total_amount_given;
     private $total_amount_spent;
@@ -36,10 +35,11 @@ class ExpenditureItemResource extends JsonResource
             'expenditure_category_id'       => $this->expenditureCategory->id,
             'created_at'                    => $this->created_at,
             'updated_at'                    => $this->updated_at,
-            'expendiure_details'            => $this->generateResponseForExpenditureDetails($this->expendiureDetails),
+            'expenditure_details'            => $this->generateResponseForExpenditureDetails($this->expendiureDetails),
             'total_amount_given'            => $this->total_amount_given,
             'total_amount_spent'            => $this->total_amount_spent,
-            'total_balance'                 => $this->balance
+            'total_balance'                 => $this->balance,
+            'updated_by'                    => $this->updated_by
         ];
     }
 }

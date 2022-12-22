@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Constants\Roles;
 use App\Http\Requests\ExpenditureDetailRequest;
 use App\Models\ExpenditureItem;
 use App\Models\User;
@@ -9,7 +10,7 @@ use App\Services\ExpenditureDetailService;
 use App\Traits\HelpTrait;
 use App\Traits\ResponseTrait;
 use Illuminate\Http\Request;
-use PDF;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ExpenditureDetailController extends Controller
 {
@@ -83,13 +84,19 @@ class ExpenditureDetailController extends Controller
     {
         $auth_user         = auth()->user();
         $organisation      = User::find($auth_user['id'])->organisation;
-        $expenditure_details = $this->expenditure_detail_service->getExpenditureDetails($request->expenditure_item_id);
-        $administrators      = $this->getOrganisationAdministrators($organisation->users);
-        $president           = $administrators[0];
-        $treasurer           = $administrators[1];
-        $fin_sec             = $administrators[2];
+
+        $expenditure_details = $this->expenditure_detail_service->setDataForDownload($request);
+
+        $president         = $this->getOrganisationAdministrators(Roles::PRESIDENT);
+
+        $treasurer         = $this->getOrganisationAdministrators(Roles::TREASURER);
+
+        $fin_sec           = $this->getOrganisationAdministrators(Roles::FINANCIAL_SECRETARY);
+
         $total_amount_given = $this->calculateTotalAmountGiven($expenditure_details);
+
         $total_amount_spent = $this->calculateTotalAmountSpent($expenditure_details);
+
         $balance            = $this->calculateExpenditureBalanceByExpenditureItem($expenditure_details, $expenditure_details[0]->expenditureItem->amount);
 
         $data = [
@@ -100,6 +107,7 @@ class ExpenditureDetailController extends Controller
             'president'             => $president,
             'treasurer'             => $treasurer,
             'fin_secretary'         => $fin_sec,
+            'organisation_telephone'   => $this->setOrganisationTelephone($organisation->telephone),
             'total_amount_given'    => $total_amount_given,
             'total_amount_spent'    => $total_amount_spent,
             'balance'               => $balance,
