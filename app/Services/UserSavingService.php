@@ -2,13 +2,18 @@
 
 namespace App\Services;
 
+use App\Http\Resources\OrganisationSavingResource;
 use App\Http\Resources\UserSavingCollection;
+use App\Http\Resources\UserSavingResource;
 use App\Interfaces\UserSavingInterface;
 use App\Models\User;
 use App\Models\UserSaving;
+use App\Traits\HelpTrait;
+use Illuminate\Support\Facades\DB;
 
 class UsersavingService implements UserSavingInterface
 {
+    use HelpTrait;
 
     public function createUserSaving($request)
     {
@@ -39,12 +44,14 @@ class UsersavingService implements UserSavingInterface
         return new UserSavingCollection($savings, $total);
     }
 
+
     public function getUserSaving($id, $user_id)
     {
         $user_saving = $this->findUserSaving($id, $user_id);
 
         return $user_saving;
     }
+
 
     public function deleteUserSaving($id, $user_id)
     {
@@ -53,6 +60,7 @@ class UsersavingService implements UserSavingInterface
         $user_saving->delete();
     }
 
+
     public function approveUserSaving($id)
     {
         $user_saving = UserSaving::findOrFail($id);
@@ -60,14 +68,16 @@ class UsersavingService implements UserSavingInterface
         $user_saving->save();
     }
 
+
     public function getAllUserSavingsByOrganisation($id)
     {
         $savings = $this->findOrganisationUserSavings($id);
 
-        $total = $this->calculateTotalSaving($savings);
+        $total_amount_deposited = $this->calculateOrganisationTotalSavings($savings);
 
-        return new UserSavingCollection($savings, $total);
+        return new UserSavingCollection($savings, $total_amount_deposited);
     }
+
 
     public function findUserSavingByStatus($status, $id)
     {
@@ -83,6 +93,7 @@ class UsersavingService implements UserSavingInterface
 
         return new UserSavingCollection($savings, $total);
     }
+
 
     private function findUserSaving($id, $user_id)
     {
@@ -105,15 +116,30 @@ class UsersavingService implements UserSavingInterface
         return $total;
     }
 
+
     public function findOrganisationUserSavings($organisation_id)
     {
-        $savings = UserSaving::select('user_savings.*')
-            ->join('users', ['users.id' => 'user_savings.user_id'])
-            ->join('organisations', ['users.organisation_id' => 'organisations.id'])
+        return DB::table('user_savings')
+            ->leftJoin('users', 'users.id', '=', 'user_savings.user_id')
+            ->leftJoin('organisations', 'users.organisation_id', '=', 'organisations.id')
             ->where('organisations.id', $organisation_id)
+            ->selectRaw('SUM(user_savings.amount_deposited) as total_amount_deposited, user_savings.*')
+            ->groupBy('user_savings.user_id')
             ->orderBy('users.name', 'ASC')
             ->get();
+    }
 
-        return $savings;
+
+    public function getUserSavingsForDownload($request) {
+        $savings = UserSaving::where('user_id', $request->user_id);
+        if($request->status != "null"){
+            $savings = $savings->where('approve', $this->convertStatusToNumber($request->status));
+        }
+        return $savings->get();
+    }
+
+    public function getOrganisationSavingsForDownload($id)
+    {
+        return $this->findOrganisationUserSavings($id);
     }
 }
