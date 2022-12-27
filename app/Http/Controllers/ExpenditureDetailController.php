@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Constants\Roles;
 use App\Http\Requests\ExpenditureDetailRequest;
-use App\Models\ExpenditureItem;
 use App\Models\User;
 use App\Services\ExpenditureDetailService;
 use App\Traits\HelpTrait;

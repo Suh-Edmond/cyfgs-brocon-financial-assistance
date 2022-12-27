@@ -7,12 +7,12 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 class UserSavingCollection extends ResourceCollection
 {
 
-    private $total;
+    private float $total_amount_deposited;
 
-    public function __construct($collection, $total)
+    public function __construct($collection, $total_amount_deposited)
     {
       parent::__construct($collection);
-      $this->total = $total;
+      $this->total_amount_deposited = $total_amount_deposited;
     }
 
 
@@ -20,7 +20,7 @@ class UserSavingCollection extends ResourceCollection
     {
         return [
             "data"          => $this->collection,
-            'total_amount'  => $this->total
+            'total_savings'  => $this->total_amount_deposited
         ];
     }
 }

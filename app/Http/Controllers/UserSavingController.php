@@ -5,12 +5,15 @@ namespace App\Http\Controllers;
 use App\Constants\Roles;
 use App\Http\Requests\UserSavingRequest;
 use App\Http\Requests\UpdateUserSavingRequest;
+use App\Http\Resources\UserSavingCollection;
 use App\Http\Resources\UserSavingResource;
+use App\Models\User;
 use App\Services\UsersavingService;
 use App\Traits\HelpTrait;
 use App\Traits\ResponseTrait;
 use Illuminate\Http\Request;
-use PDF;
+use Barryvdh\DomPDF\Facade\Pdf;
+
 class UserSavingController extends Controller
 {
 
@@ -89,30 +92,75 @@ class UserSavingController extends Controller
         return $this->sendResponse($savings, 200);
     }
 
-    public function downloadUserSaving(Request $request)
+
+    public function download(Request $request)
     {
 
-        $organisation      = auth()->user()->organisation;
-        $savings           = $this->user_saving_service->findOrganisationUserSavings($request->organisation_id);
+        $auth_user         = auth()->user();
+
+        $organisation      = User::find($auth_user['id'])->organisation;
+
+        //user whose savings are been downloaded
+        $user              = User::find($request->user_id);
+
+        $savings           = $this->user_saving_service->getUserSavingsForDownload($request);
+
         $total             = $this->user_saving_service->calculateTotalSaving($savings);
-        $president         = HelpTrait::getOrganisationAdministrators(Roles::PRESIDENT);
-        $treasurer         = HelpTrait::getOrganisationAdministrators(Roles::TREASURER);
-        $fin_sec           = HelpTrait::getOrganisationAdministrators(Roles::FINANCIAL_SECRETARY);
+
+        $president         = $this->getOrganisationAdministrators(Roles::PRESIDENT);
+
+        $treasurer         = $this->getOrganisationAdministrators(Roles::TREASURER);
+
+        $fin_sec           = $this->getOrganisationAdministrators(Roles::FINANCIAL_SECRETARY);
 
 
         $data = [
-            'title'               => 'User Savings for 2022',
+            'title'               => $user->name.' Savings',
             'date'                => date('m/d/Y'),
             'organisation'        => $organisation,
             'user_savings'        => $savings,
             'total'               => $total,
             'president'           => $president,
+            'organisation_telephone'   => $this->setOrganisationTelephone($organisation->telephone),
             'treasurer'           => $treasurer,
             'fin_secretary'       => $fin_sec
         ];
-        // return ($user_savings);
         $pdf = PDF::loadView('UserSaving.Usersaving', $data);
 
         return $pdf->download('User_Saving.pdf');
+    }
+
+    public function downloadOrganisationSavings(Request  $request)
+    {
+
+        $auth_user         = auth()->user();
+
+        $organisation      = User::find($auth_user['id'])->organisation;
+
+        $savings = $this->user_saving_service->getOrganisationSavingsForDownload($request->organisation_id);
+
+        $total = $this->user_saving_service->calculateOrganisationTotalSavings($savings);
+
+        $president         = $this->getOrganisationAdministrators(Roles::PRESIDENT);
+
+        $treasurer         = $this->getOrganisationAdministrators(Roles::TREASURER);
+
+        $fin_sec           = $this->getOrganisationAdministrators(Roles::FINANCIAL_SECRETARY);
+
+
+        $data = [
+            'title'               => 'Organisation Savings',
+            'date'                => date('m/d/Y'),
+            'organisation'        => $organisation,
+            'user_savings'        => $savings,
+            'total'               => $total,
+            'president'           => $president,
+            'organisation_telephone'   => $this->setOrganisationTelephone($organisation->telephone),
+            'treasurer'           => $treasurer,
+            'fin_secretary'       => $fin_sec
+        ];
+        $pdf = PDF::loadView('UserSaving.OrganisationSavings', $data);
+
+        return $pdf->download('Organisation_Saving.pdf');
     }
 }

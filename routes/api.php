@@ -157,7 +157,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('protected')->middleware(['isTreasurerOrIsFinancialSecretary'])->group(function () {
         Route::get('/user-savings/{user_id}', [UserSavingController::class, 'getUserSavings']);
         Route::get('/user-savings/{user_id}/{id}', [UserSavingController::class, 'getUserSaving']);
-        Route::get('download-user-savings', [UserSavingController::class, 'downloadUserSaving']);
+        Route::get('savings/download', [UserSavingController::class, 'download']);
+        Route::get('organisation-savings/download', [UserSavingController::class, 'downloadOrganisationSavings']);
     });
 
     Route::prefix('protected')->middleware('isPresident')->group(function () {

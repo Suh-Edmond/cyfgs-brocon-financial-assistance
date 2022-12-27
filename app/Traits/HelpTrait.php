@@ -127,4 +127,25 @@ trait HelpTrait {
 
         return $telephone;
     }
+
+    public function  convertStatusToNumber($status): int
+    {
+        $statuses = $this->getStatuses();
+
+        return $statuses[$status];
+    }
+
+    private function getStatuses(): array
+    {
+        return ['APPROVED' => 1, 'UNAPPROVED' => 0, 'ALL' => 2];
+    }
+
+    public function  calculateOrganisationTotalSavings($savings) {
+        $total = 0;
+        foreach ($savings as $saving) {
+            $total += $saving->total_amount_deposited;
+        }
+
+        return $total;
+    }
 }
