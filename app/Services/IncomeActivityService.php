@@ -5,11 +5,12 @@ use App\Http\Resources\IncomeActivityCollection;
 use App\Interfaces\IncomeActivityInterface;
 use App\Models\IncomeActivity;
 use App\Models\Organisation;
-use PDF;
+use App\Traits\HelpTrait;
+
 
 class IncomeActivityService implements IncomeActivityInterface {
 
-
+    use HelpTrait;
 
     public function createIncomeActivity($request, $id)
     {
@@ -22,6 +23,7 @@ class IncomeActivityService implements IncomeActivityInterface {
             'amount'            => $request->amount,
             'venue'             => $request->venue,
             'organisation_id'   => $organisation->id,
+            'updated_by'        =>$request->user()->name,
             'scan_picture'      => $request->scan_picture
         ]);
     }
@@ -52,9 +54,7 @@ class IncomeActivityService implements IncomeActivityInterface {
 
     public function getIncomeActivity($id)
     {
-        $activity = $this->findIncomeActivity($id);
-
-        return $activity;
+        return $this->findIncomeActivity($id);
     }
 
     public function deleteIncomeActivity($id)
@@ -73,12 +73,19 @@ class IncomeActivityService implements IncomeActivityInterface {
 
     public function filterIncomeActivity($organisation_id, $month, $year, $status)
     {
-        $activities = $this->findIncomeActivities($organisation_id)
-                            ->where('income_activities.approve', $status)
-                            ->WhereMonth('income_activities.date', $month)
-                            ->WhereYear('income_activities.date', $year)
-                            ->orderBy('income_activities.name', 'ASC')
-                            ->get();
+        $activities = $this->findIncomeActivities($organisation_id);
+        if($status != "null") {
+            if($status != "ALL"){
+                $activities = $activities->where('income_activities.approve', $this->convertStatusToNumber($status));
+            }
+        }
+        if($month != "null") {
+            $activities = $activities ->WhereMonth('income_activities.date', $this->convertMonthNameToNumber($month));
+        }
+        if($year != "null") {
+            $activities = $activities->WhereYear('income_activities.date', $year);
+        }
+        $activities = $activities->orderBy('income_activities.name', 'ASC')->get();
 
         $total = $this->calculateTotal($activities);
 
@@ -98,11 +105,9 @@ class IncomeActivityService implements IncomeActivityInterface {
 
     private function findIncomeActivities($organisation_id)
     {
-        $income_activities = IncomeActivity::select('income_activities.*')
+        return IncomeActivity::select('income_activities.*')
                             ->join('organisations', ['organisations.id' => 'income_activities.organisation_id'])
                             ->where('income_activities.organisation_id', $organisation_id);
-
-        return $income_activities;
     }
 
     public function calculateTotal($activities)
