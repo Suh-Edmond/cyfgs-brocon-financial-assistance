@@ -183,10 +183,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('protected')->middleware(['isTreasurerOrIsFinancialSecretary'])->group(function () {
         Route::get('organisations/{id}/income-activities', [IncomeActivityController::class, 'getIncomeActivitiesByOrganisation']);
         Route::get('income-activities/{id}', [IncomeActivityController::class, 'getIncomeActivity']);
-        Route::get('income-activities', [IncomeActivityController::class, 'filterIncomeActivity']);
+        Route::get('organisations/income-activities/search', [IncomeActivityController::class, 'filterIncomeActivity']);
     });
     Route::prefix('protected')->middleware(['isTreasurerOrIsFinancialSecretary'])->group(function () {
-        Route::get('income-activity/generate-pdf', [IncomeActivityController::class, 'generateIncomeActivityPDF']);
+        Route::get('organisations/income-activities/generate-pdf', [IncomeActivityController::class, 'generateIncomeActivityPDF']);
     });
 
     Route::prefix('protected')->middleware('isTreasurer')->group(function () {

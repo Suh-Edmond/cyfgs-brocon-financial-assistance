@@ -3,7 +3,7 @@
 @section('section')
     <div style="margin-bottom: 220px;">
         <div style="float: left;">
-            <img src="{{ public_path('/images/eu_money.png') }}" alt="organisation logo" width="100px;" height="100px;"
+            <img src="{{ $organisation->logo }}" alt="organisation logo" width="100px;" height="100px;"
                 style="border-radius: 2px">
         </div>
         <div style="float: right">
@@ -13,7 +13,7 @@
             <label style="font-size: small;">P.O Box {{ $organisation->box_number }}</label><br />
             <label style="font-size: small;">{{ $organisation->address }}</label><br />
             <label style="font-size: small;">Phone_No:</label><br />
-            <label style="font-size: small;">{{ $organisation->telephone }}</label><br />
+            <label style="font-size: small;">{{ $organisation_telephone }}</label><br />
             <label style="font-size: small;">Email: {{ $organisation->email }}</label><br /><br />
             <label style="font-size: small;">Printed date: {{ $date }}</label>
         </div>

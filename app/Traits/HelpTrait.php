@@ -148,4 +148,30 @@ trait HelpTrait {
 
         return $total;
     }
+
+
+    private  function  months(): array
+    {
+        return [
+        "January" => 01,
+        "February" => 02,
+        "March" => 03,
+        "April" => 04,
+        "May" => 05,
+        "June" => 06,
+        "July" => 07,
+        "August" => 8,
+        "September" => 9,
+        "October" => 10,
+        "November" => 11,
+        "December" => 12,
+
+        ];
+    }
+
+    public function convertMonthNameToNumber($month): int
+    {
+        return $this->months()[$month];
+    }
+
 }

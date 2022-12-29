@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 
+use App\Constants\Roles;
 use App\Http\Resources\IncomeActivityResource;
 use App\Http\Requests\IncomeActivityRequest;
 use App\Models\User;
@@ -10,7 +11,7 @@ use App\Services\IncomeActivityService;
 use App\Traits\HelpTrait;
 use App\Traits\ResponseTrait;
 use Illuminate\Http\Request;
-use PDF;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class IncomeActivityController extends Controller
 {
@@ -85,11 +86,14 @@ class IncomeActivityController extends Controller
         $organisation      = User::find($auth_user['id'])->organisation;
 
         $income_activities = $this->income_activity_service->getIncomeActivities($organisation->id);
+
         $total             = $this->income_activity_service->calculateTotal($income_activities);
-        $administrators    = $this->getOrganisationAdministrators($organisation->users);
-        $president         = $administrators[0];
-        $treasurer         = $administrators[1];
-        $fin_sec           = $administrators[2];
+
+        $president         = $this->getOrganisationAdministrators(Roles::PRESIDENT);
+
+        $treasurer         = $this->getOrganisationAdministrators(Roles::TREASURER);
+
+        $fin_sec           = $this->getOrganisationAdministrators(Roles::FINANCIAL_SECRETARY);
 
 
         $data = [
@@ -98,9 +102,10 @@ class IncomeActivityController extends Controller
             'organisation'        => $organisation,
             'income_activities'   => $income_activities,
             'total'               => $total,
-            'president'         => $president,
-            'treasurer'         => $treasurer,
-            'fin_secretary'     => $fin_sec
+            'president'           => $president,
+            'treasurer'           => $treasurer,
+            'fin_secretary'       => $fin_sec,
+            'organisation_telephone'   => $this->setOrganisationTelephone($organisation->telephone),
         ];
 
         $pdf = PDF::loadView('IncomeActivities.IncomeActivities', $data);
