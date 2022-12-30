@@ -84,26 +84,11 @@ class UserContributionController extends Controller
 
     public function filterContribution(Request $request)
     {
-
-        $contributions = $this->user_contribution_interface->filterContribution($request->status, $request->payment_item_id);
-
-        return $this->sendResponse(UserContributionResource::collection($contributions), 200);
-    }
-
-    public function filterContributionByMonth(Request $request)
-    {
-        $contributions = $this->user_contribution_interface->filterContributionByMonth($request->payment_item_id, $request->month);
+        $contributions = $this->user_contribution_interface->filterContribution($request->status, $request->payment_item_id, $request->year, $request->month);
 
         return $this->sendResponse($contributions, 200);
     }
 
-    public function filterContributionByYear(Request $request)
-    {
-
-        $contributions = $this->user_contribution_interface->filterContributionByYear($request->payment_item_id, $request->year);
-
-        return $this->sendResponse($contributions, 200);
-    }
 
     public function getContribution($id)
     {

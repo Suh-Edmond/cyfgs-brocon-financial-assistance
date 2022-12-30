@@ -17,13 +17,11 @@ interface UserContributionInterface {
 
     public function approveUserContribution($id);
 
-    public function filterContribution($status, $payment_item);
+    public function filterContribution($status, $payment_item, $year, $month);
 
     public function getContribution($id);
 
     public function getTotalAmountPaidByUserAndItem($user_id, $payment_item_id);
-
-    public function filterContributionByMonth($payment_item_id, $month);
 
     public function filterContributionByYear($payment_item_id, $year);
 }

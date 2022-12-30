@@ -2,11 +2,13 @@
 
 namespace App\Services;
 
+use App\Http\Resources\UserContributionResource;
 use App\Interfaces\UserContributionInterface;
 use App\Models\PaymentItem;
 use App\Models\User;
 use App\Models\UserContribution;
 use App\Traits\HelpTrait;
+use Illuminate\Support\Facades\DB;
 use Ramsey\Uuid\Uuid;
 use App\Constants\PaymentStatus;
 use App\Http\Resources\UserContributionCollection;
@@ -33,7 +35,7 @@ class UserContributionService implements UserContributionInterface {
 
         if(!$hasCompleted){
             UserContribution::create([
-                'code'              => Uuid::uuid4(),
+                'code'              => $this->generateCode(10),
                 'amount_deposited'  => $request->amount_deposited,
                 'comment'           => $request->comment,
                 'user_id'           => $user->id,
@@ -117,13 +119,33 @@ class UserContributionService implements UserContributionInterface {
     }
 
 
-    public function filterContribution($status, $payment_item)
+    public function filterContribution($status, $payment_item, $year, $month)
     {
-        return UserContribution::select('user_contributions.*')
-                                                ->join('payment_items', ['payment_items.id' => 'user_contributions.payment_item_id'])
+        $contributions =  DB::table('user_contributions')
+                                                ->join('payment_items', 'payment_items.id' ,'=', 'user_contributions.payment_item_id')
                                                 ->where('user_contributions.payment_item_id', $payment_item)
-                                                ->where('user_contributions.status', $status)
-                                                ->get();
+                                                ->select('user_contributions.*');
+        if($status != "null" && $status != "ALL"){
+            if($status == "APPROVED" || $status == "UNAPPROVED"){
+                $contributions = $contributions->where('user_contributions.approve', $this->convertStatusToNumber($status));
+            }else {
+                $contributions = $contributions->where('user_contributions.status', $status);
+            }
+        }
+
+        if($year != "null") {
+            $contributions = $contributions->whereYear('user_contributions.created_at', $year);
+        }
+
+        if($month != "null"){
+            $contributions = $contributions->whereMonth('user_contributions.created_at', $this->convertMonthNameToNumber($month));
+        }
+
+        $contributions = $contributions->orderBy('payment_items.name', 'ASC')->get();
+
+        $total_contribution = $this->calculateTotalContributions($contributions);
+
+        return new UserContributionCollection($contributions, $total_contribution);
     }
 
     public function getContribution($id)
@@ -147,21 +169,16 @@ class UserContributionService implements UserContributionInterface {
     }
 
 
-    public function filterContributionByMonth($payment_item_id, $month)
+    public function calculateTotalContributions($user_contributions)
     {
         $total = 0;
-        $user_contributions = UserContribution::join('payment_items', ['payment_items.id' => 'user_contributions.payment_item_id'])
-                              ->where('payment_items.id', $payment_item_id)
-                              ->whereMonth('user_contributions.created_at', $month)
-                              ->orderBy('payment_items.name', 'ASC')
-                              ->get();
         if(isset($user_contributions)){
             foreach($user_contributions as $user_contribution){
                 $total += $user_contribution->amount_deposited;
             }
         }
 
-        return new UserContributionCollection($user_contributions, $total);
+        return $total;
     }
 
     public function filterContributionByYear($payment_item_id, $year)
