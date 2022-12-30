@@ -39,7 +39,8 @@ class UserContributionService implements UserContributionInterface {
                 'user_id'           => $user->id,
                 'payment_item_id'   => $payment_item->id,
                 'status'            => $status,
-                'scan_picture'      => $request->scan_picture
+                'scan_picture'      => $request->scan_picture,
+                'updated_by'        => $request->user()->name
             ]);
         }
 

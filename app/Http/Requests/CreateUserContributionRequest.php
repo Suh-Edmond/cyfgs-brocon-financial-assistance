@@ -25,9 +25,9 @@ class CreateUserContributionRequest extends FormRequest
     {
         return [
             'amount_deposited'          => 'required|numeric',
-            'comment'                   => 'string|max:5000',
-            'user_id'                   => 'required|numeric',
-            'payment_item_id'           => 'required|numeric',
+            'comment'                   => 'max:5000',
+            'user_id'                   => 'required|string',
+            'payment_item_id'           => 'required|string',
         ];
     }
 }

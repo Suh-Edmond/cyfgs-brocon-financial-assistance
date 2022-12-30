@@ -225,7 +225,7 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::prefix('protected')->middleware(['isTreasurerOrIsFinancialSecretary'])->group(function () {
-        Route::get('contributions/payment-items/{id}', [UserContributionController::class, 'getUserContributionsByItem']);
+        Route::get('contributions/payment-items/{id}', [UserContributionController::class, 'getUsersContributionsByItem']);
         Route::get('contributions/users/{id}', [UserContributionController::class, 'getContributionByUser']);
         Route::get('contributions/users/{user_id}/items/{id}', [UserContributionController::class, 'getContributionByUserAndItem']);
         Route::get('contributions/{id}', [UserContributionController::class, 'getContribution']);

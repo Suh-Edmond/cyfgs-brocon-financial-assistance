@@ -2,13 +2,14 @@
 
 namespace App\Http\Resources;
 
+use App\Traits\HelpTrait;
 use App\Traits\ResponseTrait;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Ramsey\Uuid\Uuid;
 
 class UserContributionResource extends JsonResource
 {
-    use ResponseTrait;
+    use HelpTrait;
 
     public function toArray($request)
     {
@@ -19,7 +20,7 @@ class UserContributionResource extends JsonResource
             'comment'                  => $this->comment,
             'status'                   => $this->status,
             'approve'                  => $this->convertBooleanValue($this->approve),
-            'user_id'                  =>  $this->user->id,
+            'user_id'                  => $this->user->id,
             'user_name'                => $this->user->name,
             'user_telephone'           => $this->user->telephone,
             'payment_item_id'          => $this->paymentItem->id,

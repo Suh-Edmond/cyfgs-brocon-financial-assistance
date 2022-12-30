@@ -42,7 +42,7 @@ class UserContributionController extends Controller
     }
 
 
-    public function getUserContributionsByItem($id)
+    public function getUsersContributionsByItem($id)
     {
         $contributions = $this->user_contribution_interface->getContributionsByItem($id);
 
