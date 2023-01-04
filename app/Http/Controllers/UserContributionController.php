@@ -58,9 +58,9 @@ class UserContributionController extends Controller
     }
 
 
-    public function getContributionByUserAndItem($user_id, $id)
+    public function getTotalAmountPaidByUserForTheItem($user_id, $id)
     {
-        $contributions = $this->user_contribution_interface->getContributionByUserAndItem($id, $user_id);
+        $contributions = $this->user_contribution_interface->getTotalAmountPaidByUserForTheItem($user_id, $id);
 
         return $this->sendResponse($contributions, 200);
     }

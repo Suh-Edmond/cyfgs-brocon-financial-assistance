@@ -29,7 +29,9 @@ class UserContributionResource extends JsonResource
             'payment_item_name'        => PaymentItem::find($this->payment_item_id)->name,
             'payment_item_amount'      => PaymentItem::find($this->payment_item_id)->amount,
             'payment_item_complusory'  => $this->convertBooleanValue(PaymentItem::find($this->payment_item_id)->complusory),
-            'balance'                  => (PaymentItem::find($this->payment_item_id)->amount - $this->amount_deposited)
+            'balance'                  => (PaymentItem::find($this->payment_item_id)->amount - $this->amount_deposited),
+            'updated_by'               => $this->updated_by,
+            'created_at'               => $this->created_at
         ];
     }
 }

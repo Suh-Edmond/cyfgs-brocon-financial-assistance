@@ -5,6 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\GenerateUuid;
 
+/**
+ * @method static create(array $array)
+ */
 class UserContribution extends Model
 {
     use GenerateUuid;

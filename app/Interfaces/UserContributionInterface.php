@@ -21,7 +21,7 @@ interface UserContributionInterface {
 
     public function getContribution($id);
 
-    public function getTotalAmountPaidByUserAndItem($user_id, $payment_item_id);
+    public function getTotalAmountPaidByUserForTheItem($user_id, $payment_item_id);
 
     public function filterContributionByYear($payment_item_id, $year);
 }

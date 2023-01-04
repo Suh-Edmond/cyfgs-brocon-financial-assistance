@@ -11,7 +11,7 @@ use App\Http\Controllers\PaymentItemController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserContributionController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\UserSavingController;;
+use App\Http\Controllers\UserSavingController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -227,7 +227,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('protected')->middleware(['isTreasurerOrIsFinancialSecretary'])->group(function () {
         Route::get('contributions/payment-items/{id}', [UserContributionController::class, 'getUsersContributionsByItem']);
         Route::get('contributions/users/{id}', [UserContributionController::class, 'getContributionByUser']);
-        Route::get('contributions/users/{user_id}/items/{id}', [UserContributionController::class, 'getContributionByUserAndItem']);
+        Route::get('contributions/users/{user_id}/items/{id}', [UserContributionController::class, 'getTotalAmountPaidByUserForTheItem']);
         Route::get('contributions/{id}', [UserContributionController::class, 'getContribution']);
         Route::get('organisation/contributions/search', [UserContributionController::class, 'filterContribution']);
         Route::get('download-contributions', [UserContributionController::class, 'downloadContrition']);
