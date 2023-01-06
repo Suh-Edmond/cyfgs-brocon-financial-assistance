@@ -8,8 +8,20 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 trait HelpTrait {
+    public static function generateCode($size): string
+    {
+        $code  = "";
+        $current_year = date("Y");
+        for($i = 0; $i < $size; $i++){
+            $code = $code.rand(0, 9);
+        }
+        $code = $code.$current_year;
 
-    public static function convertBooleanValue($value)
+        return $code;
+    }
+
+
+    public static function convertBooleanValue($value): bool
     {
         if ($value == 0) {
             $response = false;
@@ -21,7 +33,7 @@ trait HelpTrait {
     }
 
 
-    public static function generateResponseForExpenditureDetails($details)
+    public static function generateResponseForExpenditureDetails($details): array
     {
         $response = array();
 
@@ -40,7 +52,7 @@ trait HelpTrait {
         return $expenditure_detail->amount_given - $expenditure_detail->amount_spent;
     }
 
-    private function calculateExpenditureBalanceByExpenditureItem($expenditure_details, $total_item_amount)
+    private function calculateExpenditureBalanceByExpenditureItem($expenditure_details, $total_item_amount): int
     {
         $balance = $total_item_amount - $this->calculateTotalAmountGiven($expenditure_details);
         $balance += $this->calculateTotalAmountGiven($expenditure_details) - $this->calculateTotalAmountSpent($expenditure_details);
@@ -48,7 +60,7 @@ trait HelpTrait {
         return $balance;
     }
 
-    private function calculateTotalAmountGiven($expenditure_details)
+    private function calculateTotalAmountGiven($expenditure_details): int
     {
         $total = 0;
         foreach ($expenditure_details as $expenditure_detail) {
@@ -58,7 +70,7 @@ trait HelpTrait {
         return $total;
     }
 
-    private function calculateTotalAmountSpent($expenditure_details)
+    private function calculateTotalAmountSpent($expenditure_details): int
     {
         $total = 0;
         foreach ($expenditure_details as $expenditure_detail) {
@@ -140,7 +152,8 @@ trait HelpTrait {
         return ['APPROVED' => 1, 'UNAPPROVED' => 0, 'ALL' => 2];
     }
 
-    public function  calculateOrganisationTotalSavings($savings) {
+    public function  calculateOrganisationTotalSavings($savings): int
+    {
         $total = 0;
         foreach ($savings as $saving) {
             $total += $saving->total_amount_deposited;

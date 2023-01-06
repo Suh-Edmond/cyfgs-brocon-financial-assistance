@@ -2,13 +2,16 @@
 
 namespace App\Http\Resources;
 
+use App\Models\PaymentItem;
+use App\Models\User;
+use App\Traits\HelpTrait;
 use App\Traits\ResponseTrait;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Ramsey\Uuid\Uuid;
 
 class UserContributionResource extends JsonResource
 {
-    use ResponseTrait;
+    use HelpTrait;
 
     public function toArray($request)
     {
@@ -19,14 +22,16 @@ class UserContributionResource extends JsonResource
             'comment'                  => $this->comment,
             'status'                   => $this->status,
             'approve'                  => $this->convertBooleanValue($this->approve),
-            'user_id'                  =>  $this->user->id,
-            'user_name'                => $this->user->name,
-            'user_telephone'           => $this->user->telephone,
-            'payment_item_id'          => $this->paymentItem->id,
-            'payment_item_name'        => $this->paymentItem->name,
-            'payment_item_amount'      => $this->paymentItem->amount,
-            'payment_item_complusory'  => $this->convertBooleanValue($this->paymentItem->complusory),
-            'balance'                  => ($this->paymentItem->amount - $this->amount_deposited)
+            'user_id'                  => $this->user_id,
+            'user_name'                => User::find($this->user_id)->name,
+            'user_telephone'           => User::find($this->user_id)->telephone,
+            'payment_item_id'          => $this->payment_item_id,
+            'payment_item_name'        => PaymentItem::find($this->payment_item_id)->name,
+            'payment_item_amount'      => PaymentItem::find($this->payment_item_id)->amount,
+            'payment_item_complusory'  => $this->convertBooleanValue(PaymentItem::find($this->payment_item_id)->complusory),
+            'balance'                  => (PaymentItem::find($this->payment_item_id)->amount - $this->amount_deposited),
+            'updated_by'               => $this->updated_by,
+            'created_at'               => $this->created_at
         ];
     }
 }

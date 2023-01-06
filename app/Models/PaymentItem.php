@@ -5,6 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\GenerateUuid;
 
+/**
+ * @method static find(mixed $payment_item_id)
+ */
 class PaymentItem extends Model
 {
     use GenerateUuid;

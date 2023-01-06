@@ -2,15 +2,15 @@
 
 namespace App\Services;
 
+use App\Exceptions\BusinessValidationException;
 use App\Interfaces\UserContributionInterface;
 use App\Models\PaymentItem;
 use App\Models\User;
 use App\Models\UserContribution;
 use App\Traits\HelpTrait;
-use Ramsey\Uuid\Uuid;
+use Illuminate\Support\Facades\DB;
 use App\Constants\PaymentStatus;
 use App\Http\Resources\UserContributionCollection;
-use App\Traits\ResponseTrait;
 
 
 class UserContributionService implements UserContributionInterface {
@@ -25,7 +25,9 @@ class UserContributionService implements UserContributionInterface {
 
         $payment_item_amount = $payment_item->amount;
 
-        $total_amount_contributed = $this->getTotalAmountPaidByUserAndItem($request->user_id, $request->payment_item_id);
+        $total_amount_contributed = $this->getTotalAmountPaidByUserForTheItem($request->user_id, $request->payment_item_id);
+
+        $this->validateAmountDeposited($payment_item_amount, ($total_amount_contributed + $request->amount_deposited));
 
         $status = $this->getUserContributionStatus($payment_item_amount, ($total_amount_contributed + $request->amount_deposited));
 
@@ -33,13 +35,14 @@ class UserContributionService implements UserContributionInterface {
 
         if(!$hasCompleted){
             UserContribution::create([
-                'code'              => Uuid::uuid4(),
+                'code'              => $this->generateCode(10),
                 'amount_deposited'  => $request->amount_deposited,
                 'comment'           => $request->comment,
                 'user_id'           => $user->id,
                 'payment_item_id'   => $payment_item->id,
                 'status'            => $status,
-                'scan_picture'      => $request->scan_picture
+                'scan_picture'      => $request->scan_picture,
+                'updated_by'        => $request->user()->name
             ]);
         }
 
@@ -49,7 +52,7 @@ class UserContributionService implements UserContributionInterface {
     {
         $user_contribution = $this->findUserContributionById($id);
 
-        $total_amount_contributed = $this->getTotalAmountPaidByUserAndItem($user_contribution->user_id, $user_contribution->payment_item_id);
+        $total_amount_contributed = $this->getTotalAmountPaidByUserForTheItem($user_contribution->user_id, $user_contribution->payment_item_id);
 
         $hasCompleted = $this->verifyExcessUserContribution($total_amount_contributed, $user_contribution->paymentItem->amount);
 
@@ -116,13 +119,33 @@ class UserContributionService implements UserContributionInterface {
     }
 
 
-    public function filterContribution($status, $payment_item)
+    public function filterContribution($status, $payment_item, $year, $month)
     {
-        return UserContribution::select('user_contributions.*')
-                                                ->join('payment_items', ['payment_items.id' => 'user_contributions.payment_item_id'])
+        $contributions =  DB::table('user_contributions')
+                                                ->join('payment_items', 'payment_items.id' ,'=', 'user_contributions.payment_item_id')
                                                 ->where('user_contributions.payment_item_id', $payment_item)
-                                                ->where('user_contributions.status', $status)
-                                                ->get();
+                                                ->select('user_contributions.*');
+        if($status != "null" && $status != "ALL"){
+            if($status == "APPROVED" || $status == "UNAPPROVED"){
+                $contributions = $contributions->where('user_contributions.approve', $this->convertStatusToNumber($status));
+            }else {
+                $contributions = $contributions->where('user_contributions.status', $status);
+            }
+        }
+
+        if($year != "null") {
+            $contributions = $contributions->whereYear('user_contributions.created_at', $year);
+        }
+
+        if($month != "null"){
+            $contributions = $contributions->whereMonth('user_contributions.created_at', $this->convertMonthNameToNumber($month));
+        }
+
+        $contributions = $contributions->orderBy('payment_items.name', 'ASC')->get();
+
+        $total_contribution = $this->calculateTotalContributions($contributions);
+
+        return new UserContributionCollection($contributions, $total_contribution);
     }
 
     public function getContribution($id)
@@ -136,7 +159,7 @@ class UserContributionService implements UserContributionInterface {
         return ($payment_item_amount - $total);
     }
 
-    public function getTotalAmountPaidByUserAndItem($user_id, $payment_item_id)
+    public function getTotalAmountPaidByUserForTheItem($user_id, $payment_item_id)
     {
         return UserContribution::join('users', ['users.id' => 'user_contributions.user_id'])
                                 ->join('payment_items', ['payment_items.id' => 'user_contributions.payment_item_id'])
@@ -146,21 +169,16 @@ class UserContributionService implements UserContributionInterface {
     }
 
 
-    public function filterContributionByMonth($payment_item_id, $month)
+    public function calculateTotalContributions($user_contributions)
     {
         $total = 0;
-        $user_contributions = UserContribution::join('payment_items', ['payment_items.id' => 'user_contributions.payment_item_id'])
-                              ->where('payment_items.id', $payment_item_id)
-                              ->whereMonth('user_contributions.created_at', $month)
-                              ->orderBy('payment_items.name', 'ASC')
-                              ->get();
         if(isset($user_contributions)){
             foreach($user_contributions as $user_contribution){
                 $total += $user_contribution->amount_deposited;
             }
         }
 
-        return new UserContributionCollection($user_contributions, $total);
+        return $total;
     }
 
     public function filterContributionByYear($payment_item_id, $year)
@@ -180,7 +198,6 @@ class UserContributionService implements UserContributionInterface {
         return new UserContributionCollection($user_contributions, $total);
     }
 
-
     private function findUser($id)
     {
         return User::findOrFail($id);
@@ -193,7 +210,8 @@ class UserContributionService implements UserContributionInterface {
 
     private function getUserContributionStatus($payment_item_amount, $total_amount_contributed)
     {
-        if($payment_item_amount === $total_amount_contributed){
+        $status = null;
+        if($payment_item_amount == $total_amount_contributed){
             $status = PaymentStatus::COMPLETE;
         }else{
             $status = PaymentStatus::INCOMPLETE;
@@ -240,7 +258,7 @@ class UserContributionService implements UserContributionInterface {
     private function generateResponse($user_contributions, $user_id, $payment_item_id)
     {
         if(isset($user_contributions)){
-            $total     = $this->getTotalAmountPaidByUserAndItem($user_id, $payment_item_id);
+            $total     = $this->getTotalAmountPaidByUserForTheItem($user_id, $payment_item_id);
 
             $balance   = $this->getTotalBalanceByUserAndItem($user_contributions[0]->paymentItem->amount, $total);
 
@@ -251,6 +269,14 @@ class UserContributionService implements UserContributionInterface {
         }
 
         return $response;
+    }
+
+    private function validateAmountDeposited($payment_item_amount, $amount_deposited) {
+        if($amount_deposited > $payment_item_amount) {
+            throw new BusinessValidationException("Amount Deposited must not be more than the amount for the payment item");
+        }
+
+        return true;
     }
 }
 

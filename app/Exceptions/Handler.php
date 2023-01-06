@@ -54,6 +54,9 @@ class Handler extends ExceptionHandler
         if($exception instanceof ModelNotFoundException && $request->wantsJson()){
             return response()->json(['message' => "Resource not found", "status"=> "404"], 404);
         }
+        if ($exception instanceof  BusinessValidationException && $request->wantsJson()) {
+            return response()->json(['message' => $exception->getMessage(), "status"=> "400"], 400);
+        }
 
         return parent::render($request, $exception);
     }

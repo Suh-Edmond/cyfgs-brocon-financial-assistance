@@ -7,6 +7,9 @@ use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 use Laravel\Sanctum\HasApiTokens;
 
+/**
+ * @method static find(mixed $user_id)
+ */
 class User extends Authenticatable
 {
     use HasRoles, Notifiable, HasApiTokens;
