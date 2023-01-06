@@ -5,6 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\GenerateUuid;
 
+/**
+ * @method static where(string $string, $user_id)
+ */
 class UserSaving extends Model
 {
     use GenerateUuid;

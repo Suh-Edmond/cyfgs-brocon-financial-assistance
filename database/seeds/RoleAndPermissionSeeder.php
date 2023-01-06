@@ -340,7 +340,7 @@ class RoleAndPermissionSeeder extends Seeder
         ]);
 
         $user = Role::create([
-            'name'       => Roles::USER,
+            'name'       => Roles::MEMBER,
             'guard_name' => 'api',
             'id'         => Str::uuid()->toString()
         ]);
