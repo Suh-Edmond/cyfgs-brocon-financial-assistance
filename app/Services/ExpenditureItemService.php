@@ -123,4 +123,21 @@ class ExpenditureItemService implements ExpenditureItemInterface {
 
         return $total;
     }
+
+    public function getItem($id)
+    {
+        return ExpenditureItem::findOrFail($id);
+    }
+
+    public function getExpenditureByCategory($expenditure_category_id)
+    {
+        $items = ExpenditureItem::select('expenditure_items.*')
+            ->join('expenditure_categories', ['expenditure_categories.id' => 'expenditure_items.expenditure_category_id'])
+            ->where('expenditure_items.expenditure_category_id', $expenditure_category_id)
+            ->orderBy('expenditure_items.name', 'ASC')
+            ->get();
+
+        return $this->generateExpenditureItemResponse($items);
+    }
+
 }

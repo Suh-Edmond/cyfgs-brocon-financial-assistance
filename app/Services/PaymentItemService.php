@@ -19,7 +19,8 @@ class PaymentItemService implements PaymentItemInterface {
             'amount'              => $request->amount,
             'complusory'          => $request->complusory,
             'payment_category_id' => $payment_category->id,
-            'description'         => $request->description
+            'description'         => $request->description,
+            'updated_by'          => $request->user()->name
         ]);
     }
 

@@ -5,6 +5,9 @@ namespace App\Models;
 use App\Traits\GenerateUuid;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @method static findOrFail($expenditure_category_id)
+ */
 class ExpenditureCategory extends Model
 {
     use GenerateUuid;

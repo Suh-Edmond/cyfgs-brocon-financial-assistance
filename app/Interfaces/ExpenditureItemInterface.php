@@ -16,4 +16,8 @@ interface ExpenditureItemInterface {
     public function approveExpenditureItem($id);
 
     public function getExpenditureItemByStatus($status);
+
+    public function getItem($id);
+
+    public function getExpenditureByCategory($expenditure_category_id);
 }

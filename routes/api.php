@@ -137,7 +137,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::prefix('protected')->middleware(['isTreasurerOrIsFinancialSecretary'])->group(function () {
         Route::get('/expenditure-categories/{expenditure_category_id}/expenditure-items', [ExpenditureItemController::class, 'getExpenditureItems']);
+        Route::get('/expenditure-categories/{expenditure_category_id}/expenditures', [ExpenditureItemController::class, 'getExpenditureByCategory']);
         Route::get('/expenditure-categories/{expenditure_category_id}/expenditure-items/{id}', [ExpenditureItemController::class, 'getExpenditureItem']);
+        Route::get('/expenditure-items/{id}', [ExpenditureItemController::class, 'getItem']);
         Route::get('expenditure-items/download', [ExpenditureItemController::class, 'downloadExpenditureItems']);
     });
 
