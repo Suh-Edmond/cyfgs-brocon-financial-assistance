@@ -39,7 +39,7 @@ class PaymentCategoryService implements PaymentCategoryInterface {
                             ->where('payment_categories.id', $id)
                             ->get();
 
-            $updated[0]->name       = $request->name;
+            $updated[0]->name          = $request->name;
             $updated[0]->description   = $request->description;
             $updated[0]->save();
     }

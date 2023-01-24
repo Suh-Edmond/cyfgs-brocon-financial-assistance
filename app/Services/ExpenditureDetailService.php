@@ -70,10 +70,10 @@ class ExpenditureDetailService implements ExpenditureDetailInterface {
         $detail->delete();
     }
 
-    public function approveExpenditureDetail($id)
+    public function approveExpenditureDetail($id, $type)
     {
         $detail = $this->findExpenditureDetail($id);
-        $detail->approve = 1;
+        $detail->approve = $type;
         $detail->save();
     }
 

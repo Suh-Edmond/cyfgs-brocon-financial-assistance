@@ -27,10 +27,11 @@ class UserContributionSeeder extends Seeder
                 'code'                  => Uuid::uuid4(),
                 'comment'               => $faker->sentence,
                 'amount_deposited'      => $faker->randomElement([500, 30000]),
-                'approve'               => $faker->randomElement([true, false]),
+                'approve'               => $faker->randomElement(['PENDING', 'APPROVED', 'DECLINED']),
                 'user_id'               => $faker->randomElement($this->users),
                 'payment_item_id'       => $faker->randomElement($this->payment_items),
-                'status'                => $faker->randomElement(['COMPLETE', 'INCOMEPLETE'])
+                'status'                => $faker->randomElement(['COMPLETE', 'INCOMPLETE']),
+                'updated_by'            => $faker->name
             ]);
         }
     }

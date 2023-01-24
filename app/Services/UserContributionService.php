@@ -111,10 +111,10 @@ class UserContributionService implements UserContributionInterface {
         $user_contribution->delete();
     }
 
-    public function approveUserContribution($id)
+    public function approveUserContribution($id, $type)
     {
         $user_contribution =  $this->findUserContributionById($id);
-        $user_contribution->approve = 1;
+        $user_contribution->approve = $type;
         $user_contribution->save();
     }
 
@@ -122,9 +122,10 @@ class UserContributionService implements UserContributionInterface {
     public function filterContribution($status, $payment_item, $year, $month)
     {
         $contributions =  DB::table('user_contributions')
-                                                ->join('payment_items', 'payment_items.id' ,'=', 'user_contributions.payment_item_id')
-                                                ->where('user_contributions.payment_item_id', $payment_item)
-                                                ->select('user_contributions.*');
+                            ->join('payment_items', 'payment_items.id' ,'=', 'user_contributions.payment_item_id')
+                            ->where('user_contributions.payment_item_id', $payment_item)
+                            ->where('user_contributions.approve', $status)
+                            ->select('user_contributions.*');
         if($status != "null" && $status != "ALL"){
             if($status == "APPROVED" || $status == "UNAPPROVED"){
                 $contributions = $contributions->where('user_contributions.approve', $this->convertStatusToNumber($status));

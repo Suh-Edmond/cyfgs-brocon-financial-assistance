@@ -142,4 +142,20 @@ class UsersavingService implements UserSavingInterface
     {
         return $this->findOrganisationUserSavings($id);
     }
+
+    public function  getMembersSavingsByName($request)
+    {
+        $data = DB::table('user_savings')
+            ->leftJoin('users', 'users.id', '=', 'user_savings.user_id')
+            ->leftJoin('organisations', 'users.organisation_id', '=', 'organisations.id')
+            ->where('organisations.id', $request->organisation_id)
+            ->where('users.name', 'LIKE', '%'.$request->param.'%')
+            ->orWhere('users.telephone', '=', $request->param)
+            ->selectRaw('SUM(user_savings.amount_deposited) as total_amount_deposited, user_savings.*')
+            ->orderBy('user_savings.created_at', 'ASC')
+            ->get();
+
+        return new UserSavingCollection($data, 0.0);
+    }
+
 }

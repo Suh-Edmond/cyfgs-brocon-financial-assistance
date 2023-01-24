@@ -64,10 +64,10 @@ class IncomeActivityService implements IncomeActivityInterface {
         $activity->delete();
     }
 
-    public function approveIncomeActivity($id)
+    public function approveIncomeActivity($id, $type)
     {
         $activity = $this->findIncomeActivity($id);
-        $activity->approve = 1;
+        $activity->approve = $type;
         $activity->save();
     }
 

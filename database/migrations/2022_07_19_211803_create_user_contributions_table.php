@@ -20,7 +20,7 @@ class CreateUserContributionsTable extends Migration
             $table->longText('comment')->nullable(true);
             $table->double('amount_deposited');
             $table->string('status');
-            $table->boolean('approve')->default(false);
+            $table->enum('approve', ['PENDING', 'APPROVED', 'DECLINED'])->default('PENDING');
             $table->timestamps();
             $table->uuid('user_id');
             $table->uuid('payment_item_id');

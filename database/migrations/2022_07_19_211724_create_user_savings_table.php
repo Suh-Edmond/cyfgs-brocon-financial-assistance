@@ -18,7 +18,7 @@ class CreateUserSavingsTable extends Migration
             $table->double('amount_deposited');
             $table->text('comment');
             $table->uuid('user_id');
-            $table->boolean('approve')->default(false);
+            $table->enum('approve', ['PENDING', 'APPROVED', 'DECLINED'])->default('PENDING');
             $table->timestamps();
             $table->string('updated_by');
 

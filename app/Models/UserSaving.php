@@ -7,6 +7,7 @@ use App\Traits\GenerateUuid;
 
 /**
  * @method static where(string $string, $user_id)
+ * @method static select(string $string)
  */
 class UserSaving extends Model
 {
@@ -24,7 +25,11 @@ class UserSaving extends Model
         'updated_by'
     ];
 
-   public function user() {
+    public static function create(array $array)
+    {
+    }
+
+    public function user() {
     return $this->belongsTo(User::class);
    }
 

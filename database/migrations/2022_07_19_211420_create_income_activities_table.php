@@ -19,7 +19,7 @@ class CreateIncomeActivitiesTable extends Migration
             $table->mediumText('description');
             $table->double('amount');
             $table->date('date');
-            $table->boolean('approve')->default(false);
+            $table->enum('approve', ['PENDING', 'APPROVED', 'DECLINED'])->default('PENDING');
             $table->string('venue');
             $table->string('scan_picture')->nullable(true);
             $table->timestamps();

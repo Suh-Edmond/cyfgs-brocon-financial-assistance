@@ -8,7 +8,7 @@ use Faker\Generator as Faker;
 class ExpenditureCategorySeeder extends Seeder
 {
 
-    private \Illuminate\Support\Collection $organisations;
+    private $organisations;
 
     public function __construct()
     {
@@ -24,9 +24,10 @@ class ExpenditureCategorySeeder extends Seeder
         for($i = 0; $i < 20; $i++)
         {
             ExpenditureCategory::create([
-                'name'             => $faker->colorName,
+                'name'              => $faker->colorName,
                 'description'       => $faker->sentence,
-                'organisation_id'   => $this->organisations[0]
+                'organisation_id'   => $this->organisations[0],
+                'updated_by'        => $faker->name
             ]);
         }
     }

@@ -18,7 +18,7 @@ class CreateExpenditureItemsTable extends Migration
             $table->string('name');
             $table->double('amount');
             $table->string('scan_picture')->nullable(true);//receipt
-            $table->boolean('approve')->default(false);
+            $table->enum('approve', ['PENDING', 'APPROVED', 'DECLINED'])->default('PENDING');
             $table->text('comment')->nullable(true);
             $table->string('venue');
             $table->date('date');

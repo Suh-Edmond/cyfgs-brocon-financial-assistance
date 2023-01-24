@@ -24,6 +24,7 @@ class ExpenditureCategory extends Model
         'updated_by'
     ];
 
+
     public function expenditureItem(){
         return $this->hasMany(ExpenditureItem::class);
     }

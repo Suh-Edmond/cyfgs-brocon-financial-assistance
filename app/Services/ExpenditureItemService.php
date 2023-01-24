@@ -66,10 +66,10 @@ class ExpenditureItemService implements ExpenditureItemInterface {
         $expenditure_item->delete();
     }
 
-    public function approveExpenditureItem($id)
+    public function approveExpenditureItem($id, $type)
     {
         $expenditure_item = ExpenditureItem::findOrFail($id);
-        $expenditure_item->approve = 1;
+        $expenditure_item->approve = $type;
 
         $expenditure_item->save();
     }

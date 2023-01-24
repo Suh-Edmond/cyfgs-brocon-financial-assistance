@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Constants\Roles;
 use App\Http\Requests\UserSavingRequest;
 use App\Http\Requests\UpdateUserSavingRequest;
-use App\Http\Resources\UserSavingCollection;
 use App\Http\Resources\UserSavingResource;
 use App\Models\User;
 use App\Services\UsersavingService;
@@ -88,6 +87,12 @@ class UserSavingController extends Controller
     {
 
         $savings = $this->user_saving_service->findUserSavingByStatus($request->status, $id);
+
+        return $this->sendResponse($savings, 200);
+    }
+
+    public function getMembersSavingsByName(Request $request){
+        $savings = $this->user_saving_service->getMembersSavingsByName($request);
 
         return $this->sendResponse($savings, 200);
     }
