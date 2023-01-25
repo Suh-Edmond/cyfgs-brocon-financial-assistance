@@ -2,14 +2,13 @@
 
 namespace App\Services;
 
-use App\Http\Resources\OrganisationSavingResource;
 use App\Http\Resources\UserSavingCollection;
-use App\Http\Resources\UserSavingResource;
 use App\Interfaces\UserSavingInterface;
 use App\Models\User;
 use App\Models\UserSaving;
 use App\Traits\HelpTrait;
 use Illuminate\Support\Facades\DB;
+use function PHPUnit\Framework\isEmpty;
 
 class UsersavingService implements UserSavingInterface
 {
@@ -22,6 +21,7 @@ class UsersavingService implements UserSavingInterface
             'amount_deposited'      => $request->amount_deposited,
             'comment'               => $request->comment,
             'user_id'               => $user->id,
+            'updated_by'            => $request->user()->name
         ]);
     }
 
@@ -61,10 +61,10 @@ class UsersavingService implements UserSavingInterface
     }
 
 
-    public function approveUserSaving($id)
+    public function approveUserSaving($id, $type)
     {
         $user_saving = UserSaving::findOrFail($id);
-        $user_saving->approve = 1;
+        $user_saving->approve = $type;
         $user_saving->save();
     }
 
@@ -145,17 +145,38 @@ class UsersavingService implements UserSavingInterface
 
     public function  getMembersSavingsByName($request)
     {
-        $data = DB::table('user_savings')
-            ->leftJoin('users', 'users.id', '=', 'user_savings.user_id')
-            ->leftJoin('organisations', 'users.organisation_id', '=', 'organisations.id')
-            ->where('organisations.id', $request->organisation_id)
-            ->where('users.name', 'LIKE', '%'.$request->param.'%')
-            ->orWhere('users.telephone', '=', $request->param)
-            ->selectRaw('SUM(user_savings.amount_deposited) as total_amount_deposited, user_savings.*')
-            ->orderBy('user_savings.created_at', 'ASC')
-            ->get();
+        return  DB::table('user_savings')
+                ->leftJoin('users', 'users.id', '=', 'user_savings.user_id')
+                ->leftJoin('organisations', 'users.organisation_id', '=', 'organisations.id')
+                ->where('organisations.id', $request->organisation_id);
+        //add filter for the current year
+    }
 
-        return new UserSavingCollection($data, 0.0);
+    public function filterSavings($request)
+    {
+        $data = $this->getMembersSavingsByName($request);
+        if(!isEmpty($request->user_detail)){
+            $data = $data->where('users.name', 'LIKE', '%'.$request->user_detail.'%')
+                         ->orWhere('users.telephone', '=', $request->user_detail);
+        }
+        if(!isEmpty($request->date)){
+            $data = $data->whereDate('user_savings.created_at', $request->date);
+        }
+        if($request->amount_deposited > 0) {
+            $data = $data->where('amount_deposited', $request->amount_deposited);
+        }
+        if(!isEmpty($request->status)) {
+            $data = $data->where('approve', $request->status);
+        }
+        if (!isEmpty($request->month)) {
+            $data = $data->whereMonth('created_at', $request->month);
+        }
+
+        $data = $data->selectRaw('SUM(user_savings.amount_deposited) as total_amount_deposited, user_savings.*')
+                ->orderBy('user_savings.created_at', 'ASC')
+                ->get();
+
+        return new UserSavingCollection($data, $data->total_amount_deposited);
     }
 
 }

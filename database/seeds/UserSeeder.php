@@ -45,7 +45,7 @@ class UserSeeder extends Seeder
         $system_user = User::create([
             'name'              => "Suh Edmond",
             'email'             => 'email@gmail.com',
-            'telephone'         => '671809232',
+            'telephone'         => '237671809232',
             'password'          => Hash::make('password'),
             'address'           => $faker->address(),
             'occupation'        => $faker->sentence(5),

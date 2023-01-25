@@ -25,13 +25,10 @@ class UserSaving extends Model
         'updated_by'
     ];
 
-    public static function create(array $array)
-    {
-    }
 
     public function user() {
-    return $this->belongsTo(User::class);
-   }
+        return $this->belongsTo(User::class);
+    }
 
 
 

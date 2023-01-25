@@ -7,6 +7,7 @@ use App\Models\CustomRole;
 use App\Traits\ResponseTrait;
 use Closure;
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Role;
 
 class IsPresidentOrIsFinancialSecretary
 {
@@ -23,12 +24,9 @@ class IsPresidentOrIsFinancialSecretary
         if($request->user()->hasRole(CustomRole::findByName(Roles::PRESIDENT, 'api'))){
             return $next($request);
         }
-        else if($request->user()->hasRole(CustomRole::findByName(Roles::FINANCIAL_SECRETARY, 'api'))){
+        if($request->user()->hasRole(CustomRole::findByName(Roles::FINANCIAL_SECRETARY, 'api'))){
             return $next($request);
         }
-        else{
-            return ResponseTrait::sendError('Access denied', 'You dont have the role to access this route', 403);
-        }
-
+        return ResponseTrait::sendError('Access denied', 'You dont have the role to access this route', 403);
     }
 }
