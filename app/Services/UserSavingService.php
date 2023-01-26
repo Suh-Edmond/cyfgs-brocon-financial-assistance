@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Http\Resources\UserSavingCollection;
+use App\Http\Resources\UserSavingResource;
 use App\Interfaces\UserSavingInterface;
 use App\Models\User;
 use App\Models\UserSaving;
@@ -154,29 +155,32 @@ class UsersavingService implements UserSavingInterface
 
     public function filterSavings($request)
     {
+
         $data = $this->getMembersSavingsByName($request);
-        if(!isEmpty($request->user_detail)){
-            $data = $data->where('users.name', 'LIKE', '%'.$request->user_detail.'%')
-                         ->orWhere('users.telephone', '=', $request->user_detail);
+        if(!is_null($request->name)){
+            $data = $data->where('users.name', 'LIKE', '%'.$request->name.'%');
         }
-        if(!isEmpty($request->date)){
+        if(!is_null($request->date)){
             $data = $data->whereDate('user_savings.created_at', $request->date);
         }
         if($request->amount_deposited > 0) {
-            $data = $data->where('amount_deposited', $request->amount_deposited);
+            $data = $data->where('user_savings.amount_deposited', $request->amount_deposited);
         }
-        if(!isEmpty($request->status)) {
-            $data = $data->where('approve', $request->status);
+        if(!is_null($request->status)) {
+            $data = $data->where('user_savings.approve', $request->status);
         }
-        if (!isEmpty($request->month)) {
-            $data = $data->whereMonth('created_at', $request->month);
+        if(!is_null($request->year)) {
+            $data = $data->whereYear('user_savings.created_at', $request->year);
+        }
+        if (!is_null($request->month)) {
+            $data = $data->whereMonth('user_savings.created_at', $this->convertMonthNameToNumber($request->month));
         }
 
-        $data = $data->selectRaw('SUM(user_savings.amount_deposited) as total_amount_deposited, user_savings.*')
+        $data = $data->select('user_savings.*')
                 ->orderBy('user_savings.created_at', 'ASC')
                 ->get();
 
-        return new UserSavingCollection($data, $data->total_amount_deposited);
+        return $data;
     }
 
 }

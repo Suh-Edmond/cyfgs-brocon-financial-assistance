@@ -74,9 +74,9 @@ class UserContributionController extends Controller
     }
 
 
-    public function approveUserContribution($id)
+    public function approveUserContribution($id, Request $request)
     {
-        $this->user_contribution_interface->approveUserContribution($id);
+        $this->user_contribution_interface->approveUserContribution($id, $request->type);
 
         return $this->sendResponse('success', 'Contribution approve successfully');
     }

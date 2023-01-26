@@ -21,7 +21,7 @@ class UserContributionResource extends JsonResource
             'amount_deposited'         => $this->amount_deposited,
             'comment'                  => $this->comment,
             'status'                   => $this->status,
-            'approve'                  => $this->convertBooleanValue($this->approve),
+            'approve'                  => $this->approve,
             'user_id'                  => $this->user_id,
             'user_name'                => User::find($this->user_id)->name,
             'user_telephone'           => User::find($this->user_id)->telephone,

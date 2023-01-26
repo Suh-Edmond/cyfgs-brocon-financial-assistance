@@ -77,9 +77,9 @@ class ExpenditureItemController extends Controller
         return $this->sendResponse('success', 'Expenditure Item deleted successfully');
     }
 
-    public function approveExpenditureItem($id)
+    public function approveExpenditureItem($id, Request $request)
     {
-        $this->expenditure_item_service->approveExpenditureItem($id);
+        $this->expenditure_item_service->approveExpenditureItem($id, $request->type);
 
         return $this->sendResponse('success', 'Expenditure Item approved successfully');
     }

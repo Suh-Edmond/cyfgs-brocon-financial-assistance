@@ -88,14 +88,17 @@ class ExpenditureItemService implements ExpenditureItemInterface {
                                         ->firstOrFail();
     }
 
-    private function findExpenditureItems($expenditure_category_id, $status)//1 means true
+    private function findExpenditureItems($expenditure_category_id, $status)
     {
-        return ExpenditureItem::select('expenditure_items.*')
+        $data = ExpenditureItem::select('expenditure_items.*')
                             ->join('expenditure_categories', ['expenditure_categories.id' => 'expenditure_items.expenditure_category_id'])
-                            ->where('expenditure_items.expenditure_category_id', $expenditure_category_id)
-                            ->where('expenditure_items.approve', $status)
-                            ->orderBy('expenditure_items.name', 'ASC')
-                            ->get();
+                            ->where('expenditure_items.expenditure_category_id', $expenditure_category_id);
+        if($status != "ALL"){
+            $data = $data->where('expenditure_items.approve', $status);
+        }
+        $data = $data->orderBy('expenditure_items.name', 'ASC')->get();
+
+        return $data;
     }
 
     private function generateExpenditureItemResponse($items)

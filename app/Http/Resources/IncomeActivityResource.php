@@ -25,7 +25,7 @@ class IncomeActivityResource extends JsonResource
             'venue'                 => $this->venue,
             'date'                  => $this->date,
             'amount'                => $this->amount,
-            'approve'               => $this->convertBooleanValue($this->approve),
+            'approve'               => $this->approve,
             'organisation_id'       => $this->organisation->id,
             'created_at'            => $this->created_at,
             'updated_at'            => $this->updated_at,

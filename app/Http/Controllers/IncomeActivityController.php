@@ -64,9 +64,9 @@ class IncomeActivityController extends Controller
         return $this->sendResponse('success', 'Income activity deleted successfully');
     }
 
-    public function approveIncomeActivity($id)
+    public function approveIncomeActivity($id, Request $request)
     {
-        $this->income_activity_service->approveIncomeActivity($id);
+        $this->income_activity_service->approveIncomeActivity($id, $request->type);
 
         return $this->sendResponse('success', 'Income Activity approved successfully');
     }

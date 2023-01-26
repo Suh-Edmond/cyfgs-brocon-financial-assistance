@@ -175,6 +175,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('protected')->group(function () {
         Route::get('/organisations/{id}/user-savings', [UserSavingController::class, 'getAllUserSavingsByOrganisation']);
         Route::get('/organisations/{id}/user-savings/approve', [UserSavingController::class, 'getUserSavingsByStatusAndOrganisation']);
+        Route::get('/user-savings', [UserSavingController::class, 'filterSavings']);
     });
 
 
@@ -218,7 +219,7 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::prefix('protected')->group(function () {
-        Route::put('expenditure-details/{id}', [ExpenditureDetailController::class, 'approveExpenditureDetail']);
+        Route::put('expenditure-details/{id}/approve', [ExpenditureDetailController::class, 'approveExpenditureDetail']);
     });
 
 
@@ -237,7 +238,7 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::prefix('protected')->group(function () {
-        Route::put('contributions/{id}', [UserContributionController::class, 'approveUserContribution']);
+        Route::put('contributions/{id}/approve', [UserContributionController::class, 'approveUserContribution']);
     });
 
     Route::prefix('protected')->group(function () {
