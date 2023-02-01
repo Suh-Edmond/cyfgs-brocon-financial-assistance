@@ -10,7 +10,7 @@ use App\Services\UserContributionService;
 use App\Traits\HelpTrait;
 use App\Traits\ResponseTrait;
 use Illuminate\Http\Request;
-use PDF;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class UserContributionController extends Controller
 {

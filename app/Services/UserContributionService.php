@@ -123,25 +123,24 @@ class UserContributionService implements UserContributionInterface {
     {
         $contributions =  DB::table('user_contributions')
                             ->join('payment_items', 'payment_items.id' ,'=', 'user_contributions.payment_item_id')
-                            ->where('user_contributions.payment_item_id', $payment_item)
-                            ->where('user_contributions.approve', $status)
-                            ->select('user_contributions.*');
-        if($status != "null" && $status != "ALL"){
-            if($status == "APPROVED" || $status == "UNAPPROVED"){
-                $contributions = $contributions->where('user_contributions.approve', $this->convertStatusToNumber($status));
+                            ->where('user_contributions.payment_item_id', $payment_item);
+        if(!is_null($status) && $status != "ALL"){
+            if($status == "PENDING" || "APPROVED" || "DECLINED"){
+                $contributions = $contributions->where('user_contributions.approve', $status);
             }else {
                 $contributions = $contributions->where('user_contributions.status', $status);
             }
         }
 
-        if($year != "null") {
+
+        if(!is_null($year)) {
             $contributions = $contributions->whereYear('user_contributions.created_at', $year);
         }
 
-        if($month != "null"){
+        if(!is_null($month)){
             $contributions = $contributions->whereMonth('user_contributions.created_at', $this->convertMonthNameToNumber($month));
         }
-
+        $contributions = $contributions->select('user_contributions.*');
         $contributions = $contributions->orderBy('payment_items.name', 'ASC')->get();
 
         $total_contribution = $this->calculateTotalContributions($contributions);

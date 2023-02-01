@@ -166,7 +166,7 @@ class UsersavingService implements UserSavingInterface
         if($request->amount_deposited > 0) {
             $data = $data->where('user_savings.amount_deposited', $request->amount_deposited);
         }
-        if(!is_null($request->status)) {
+        if(!is_null($request->status) && $request->status != "ALL") {
             $data = $data->where('user_savings.approve', $request->status);
         }
         if(!is_null($request->year)) {
