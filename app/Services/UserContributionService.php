@@ -67,19 +67,13 @@ class UserContributionService implements UserContributionInterface {
 
     public function getContributionsByItem($payment_item_id)
     {
-        $total = 0;
         $user_contributions = UserContribution::select('user_contributions.*')
                                                 ->join('payment_items', ['payment_items.id' => 'user_contributions.payment_item_id'])
                                                 ->where('user_contributions.payment_item_id', $payment_item_id)
+                                                ->orderBy('user_contributions.created_at', 'DESC')
                                                 ->get();
 
-        if(isset($user_contributions)){
-            foreach($user_contributions as $user_contribution){
-                $total += $user_contribution->amount_deposited;
-            }
-        }
-
-        return new UserContributionCollection($user_contributions, $total);
+        return new UserContributionCollection($user_contributions, 0);
     }
 
     public function getUserContributionsByUser($user_id)
@@ -119,33 +113,22 @@ class UserContributionService implements UserContributionInterface {
     }
 
 
-    public function filterContribution($status, $payment_item, $year, $month)
+    public function filterContributions($request)
     {
-        $contributions =  DB::table('user_contributions')
-                            ->join('payment_items', 'payment_items.id' ,'=', 'user_contributions.payment_item_id')
-                            ->where('user_contributions.payment_item_id', $payment_item);
-        if(!is_null($status) && $status != "ALL"){
-            if($status == "PENDING" || "APPROVED" || "DECLINED"){
-                $contributions = $contributions->where('user_contributions.approve', $status);
-            }else {
-                $contributions = $contributions->where('user_contributions.status', $status);
-            }
+        if($request->is_treasurer == "true") {
+            $contributions = $this->getUserContributions($request->status,$request->payment_item_id, $request->year, $request->month, $request->date);
+            $contributions = $contributions->selectRaw('SUM(user_contributions.amount_deposited) as total_amount_deposited, user_contributions.*');
+            $contributions = $contributions->orderBy('user_contributions.created_at', 'DESC')->get();
+            $total_contribution = $contributions->total_amount_deposited;
+        }else {
+            $contributions = $this->getUserContributions($request->status,$request->payment_item_id, $request->year, $request->month, $request->date);
+            $contributions = $contributions->groupBy('user_contributions.user_id');
+            $contributions = $contributions->selectRaw('SUM(user_contributions.amount_deposited) as total_amount_deposited, user_contributions.*');
+            $contributions = $contributions->orderBy('user_contributions.created_at', 'DESC')->get();
+            return $contributions;
         }
 
-
-        if(!is_null($year)) {
-            $contributions = $contributions->whereYear('user_contributions.created_at', $year);
-        }
-
-        if(!is_null($month)){
-            $contributions = $contributions->whereMonth('user_contributions.created_at', $this->convertMonthNameToNumber($month));
-        }
-        $contributions = $contributions->select('user_contributions.*');
-        $contributions = $contributions->orderBy('payment_items.name', 'ASC')->get();
-
-        $total_contribution = $this->calculateTotalContributions($contributions);
-
-        return new UserContributionCollection($contributions, $total_contribution);
+        return  $contributions;
     }
 
     public function getContribution($id)
@@ -158,6 +141,7 @@ class UserContributionService implements UserContributionInterface {
     {
         return ($payment_item_amount - $total);
     }
+
 
     public function getTotalAmountPaidByUserForTheItem($user_id, $payment_item_id)
     {
@@ -180,6 +164,7 @@ class UserContributionService implements UserContributionInterface {
 
         return $total;
     }
+
 
     public function filterContributionByYear($payment_item_id, $year)
     {
@@ -245,15 +230,18 @@ class UserContributionService implements UserContributionInterface {
         return $total_amount_contributed;
     }
 
+
     private function verifyExcessUserContribution($total_amount_contributed, $payment_item_amount)
     {
         return $total_amount_contributed == $payment_item_amount;
     }
 
+
     private function filterPaymentItem($item, $value)
     {
         return $item->payment_item_id === $value;
     }
+
 
     private function generateResponse($user_contributions, $user_id, $payment_item_id)
     {
@@ -277,6 +265,34 @@ class UserContributionService implements UserContributionInterface {
         }
 
         return true;
+    }
+
+
+    private function  getUserContributions($status, $payment_item, $year, $month, $date) {
+        $contributions =  DB::table('user_contributions')
+            ->join('payment_items', 'payment_items.id' ,'=', 'user_contributions.payment_item_id')
+            ->where('user_contributions.payment_item_id', $payment_item);
+
+        if(!is_null($status) && $status != "ALL"){
+            if($status == "PENDING" || "APPROVED" || "DECLINED"){
+                $contributions = $contributions->where('user_contributions.approve', $status);
+            }else {
+                $contributions = $contributions->where('user_contributions.status', $status);
+            }
+        }
+
+        if(!is_null($year)) {
+            $contributions = $contributions->whereYear('user_contributions.created_at', $year);
+        }
+
+        if(!is_null($month)){
+            $contributions = $contributions->whereMonth('user_contributions.created_at', $this->convertMonthNameToNumber($month));
+        }
+
+        if(!is_null($date)){
+            $contributions = $contributions->whereDate('user_contributions.created_at', $date);
+        }
+        return $contributions;
     }
 }
 

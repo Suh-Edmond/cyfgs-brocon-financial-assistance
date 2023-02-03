@@ -44,7 +44,7 @@ class UserManagementService implements UserManagementInterface
 
     public function getUsers($organisation_id)
     {
-        return User::where('organisation_id', $organisation_id)->orderBy('name', 'ASC')->get();
+        return User::where('organisation_id', $organisation_id)->orderBy('created_at', 'DESC')->get();
     }
 
     public function getUser($user_id)

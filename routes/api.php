@@ -39,7 +39,7 @@ Route::prefix('public/auth')->group(function () {
 
 Route::middleware('auth:sanctum')->group(function () {
 
-    Route::prefix('protected/roles')->middleware(['isPresident'])->group(function () {
+    Route::prefix('protected/roles')->group(function () {
         Route::post('', [RoleController::class, 'addUserRole']);
         Route::get('', [RoleController::class, 'getAllRoles']);
         Route::get('/users/{user_id}', [RoleController::class, 'getUserRoles']);
@@ -57,13 +57,13 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
 
-    Route::prefix('protected')->middleware(['isPresidentOrIsFinancialSecretary'])->group(function () {
+    Route::prefix('protected')->group(function () {
         Route::put('/users/{id}', [UserController::class, 'updateUser']);
         Route::delete('/users/{id}', [UserController::class, 'deleteUser']);
     });
 
 
-    Route::prefix('protected')->middleware(['isPresident'])->group(function () {
+    Route::prefix('protected')->group(function () {
         Route::post('/organisations', [OrganisationController::class, 'createOrganisation']);
         Route::get('/organisations/{id}', [OrganisationController::class, 'getOrganisation']);
         Route::put('/organisations/{id}', [OrganisationController::class, 'updateOrganisation']);
@@ -233,7 +233,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('contributions/users/{id}', [UserContributionController::class, 'getContributionByUser']);
         Route::get('contributions/users/{user_id}/items/{id}', [UserContributionController::class, 'getTotalAmountPaidByUserForTheItem']);
         Route::get('contributions/{id}', [UserContributionController::class, 'getContribution']);
-        Route::get('organisations/contributions/search', [UserContributionController::class, 'filterContribution']);
+        Route::get('organisations/contributions/search', [UserContributionController::class, 'filterContributions']);
         Route::get('download-contributions', [UserContributionController::class, 'downloadContrition']);
     });
 

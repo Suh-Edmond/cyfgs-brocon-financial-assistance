@@ -126,7 +126,7 @@ class UsersavingService implements UserSavingInterface
             ->where('organisations.id', $organisation_id)
             ->selectRaw('SUM(user_savings.amount_deposited) as total_amount_deposited, user_savings.*')
             ->groupBy('user_savings.user_id')
-            ->orderBy('users.name', 'ASC')
+//            ->orderBy('users.created_at', 'DESC')
             ->get();
     }
 

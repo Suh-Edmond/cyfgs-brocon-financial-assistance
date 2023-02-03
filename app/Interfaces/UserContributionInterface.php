@@ -17,7 +17,7 @@ interface UserContributionInterface {
 
     public function approveUserContribution($id, $type);
 
-    public function filterContribution($status, $payment_item, $year, $month);
+    public function filterContributions($request);
 
     public function getContribution($id);
 
