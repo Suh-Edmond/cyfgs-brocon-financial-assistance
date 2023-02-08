@@ -5,9 +5,7 @@ namespace App\Http\Resources;
 use App\Models\PaymentItem;
 use App\Models\User;
 use App\Traits\HelpTrait;
-use App\Traits\ResponseTrait;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Ramsey\Uuid\Uuid;
 
 class UserContributionResource extends JsonResource
 {
@@ -20,7 +18,7 @@ class UserContributionResource extends JsonResource
             'code'                     => $this->code,
             'amount_deposited'         => $this->amount_deposited,
             'comment'                  => $this->comment,
-            'status'                   => $this->status,
+            'status'                   => ((PaymentItem::find($this->payment_item_id)->amount) - ($this->total_amount_deposited)) == 0? 'COMPLETE' : 'INCOMPLETE',
             'approve'                  => $this->approve,
             'user_id'                  => $this->user_id,
             'user_name'                => User::find($this->user_id)->name,
@@ -29,9 +27,10 @@ class UserContributionResource extends JsonResource
             'payment_item_name'        => PaymentItem::find($this->payment_item_id)->name,
             'payment_item_amount'      => PaymentItem::find($this->payment_item_id)->amount,
             'payment_item_complusory'  => $this->convertBooleanValue(PaymentItem::find($this->payment_item_id)->complusory),
-            'balance'                  => (PaymentItem::find($this->payment_item_id)->amount - $this->amount_deposited),
+            'balance'                  => (PaymentItem::find($this->payment_item_id)->amount - $this->total_amount_deposited),
             'updated_by'               => $this->updated_by,
-            'created_at'               => $this->created_at
+            'created_at'               => $this->created_at,
+            'total_amount_deposited'   => $this->total_amount_deposited
         ];
     }
 }

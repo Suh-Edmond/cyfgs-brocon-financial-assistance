@@ -88,14 +88,14 @@ class UserContributionService implements UserContributionInterface {
 
     public function getContributionByUserAndItem($payment_item_id, $user_id)
     {
-        $user_contributions =  UserContribution::select('user_contributions.*')
-                                    ->join('users', ['users.id' => 'user_contributions.user_id'])
-                                    ->join('payment_items', ['payment_items.id' => 'user_contributions.payment_item_id'])
+        return DB::table('user_contributions')
+                                    ->join('users', 'users.id', '=', 'user_contributions.user_id')
+                                    ->join('payment_items', 'payment_items.id', '='  ,'user_contributions.payment_item_id')
+                                    ->selectRaw('SUM(user_contributions.amount_deposited) as total_amount_deposited, user_contributions.*')
                                     ->where('user_contributions.user_id', $user_id)
                                     ->where('user_contributions.payment_item_id', $payment_item_id)
+                                    ->orderBy('user_contributions.created_at', 'DESC')
                                     ->get();
-
-        return $this->generateResponse($user_contributions, $user_id, $payment_item_id);
     }
 
     public function deleteUserContribution($id)
@@ -115,19 +115,9 @@ class UserContributionService implements UserContributionInterface {
 
     public function filterContributions($request)
     {
-        if($request->is_treasurer == "true") {
-            $contributions = $this->getUserContributions($request->status,$request->payment_item_id, $request->year, $request->month, $request->date);
-            $contributions = $contributions->selectRaw('SUM(user_contributions.amount_deposited) as total_amount_deposited, user_contributions.*');
-            $contributions = $contributions->orderBy('user_contributions.created_at', 'DESC')->get();
-            $total_contribution = $contributions->total_amount_deposited;
-        }else {
-            $contributions = $this->getUserContributions($request->status,$request->payment_item_id, $request->year, $request->month, $request->date);
-            $contributions = $contributions->groupBy('user_contributions.user_id');
-            $contributions = $contributions->selectRaw('SUM(user_contributions.amount_deposited) as total_amount_deposited, user_contributions.*');
-            $contributions = $contributions->orderBy('user_contributions.created_at', 'DESC')->get();
-            return $contributions;
-        }
-
+        $contributions = $this->getUserContributions($request->status,$request->payment_item_id, $request->year, $request->month, $request->date);
+        $contributions = $contributions->selectRaw('SUM(user_contributions.amount_deposited) as total_amount_deposited, user_contributions.*')
+            ->groupBy('user_contributions.user_id')->orderBy('user_contributions.created_at', 'DESC')->get();
         return  $contributions;
     }
 
@@ -271,6 +261,7 @@ class UserContributionService implements UserContributionInterface {
     private function  getUserContributions($status, $payment_item, $year, $month, $date) {
         $contributions =  DB::table('user_contributions')
             ->join('payment_items', 'payment_items.id' ,'=', 'user_contributions.payment_item_id')
+            ->join('users', 'users.id', '=', 'user_contributions.user_id')
             ->where('user_contributions.payment_item_id', $payment_item);
 
         if(!is_null($status) && $status != "ALL"){

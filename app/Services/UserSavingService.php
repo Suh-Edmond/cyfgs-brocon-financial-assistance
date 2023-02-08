@@ -3,13 +3,11 @@
 namespace App\Services;
 
 use App\Http\Resources\UserSavingCollection;
-use App\Http\Resources\UserSavingResource;
 use App\Interfaces\UserSavingInterface;
 use App\Models\User;
 use App\Models\UserSaving;
 use App\Traits\HelpTrait;
 use Illuminate\Support\Facades\DB;
-use function PHPUnit\Framework\isEmpty;
 
 class UsersavingService implements UserSavingInterface
 {
@@ -48,9 +46,7 @@ class UsersavingService implements UserSavingInterface
 
     public function getUserSaving($id, $user_id)
     {
-        $user_saving = $this->findUserSaving($id, $user_id);
-
-        return $user_saving;
+        return $this->findUserSaving($id, $user_id);
     }
 
 
@@ -98,12 +94,11 @@ class UsersavingService implements UserSavingInterface
 
     private function findUserSaving($id, $user_id)
     {
-        $saving = UserSaving::select('user_savings.*')
+        return UserSaving::select('user_savings.*')
             ->join('users', ['users.id' => 'user_savings.user_id'])
             ->where('users.id', $user_id)
             ->where('user_savings.id', $id)
             ->firstOrFail();
-        return $saving;
     }
 
 
@@ -126,7 +121,7 @@ class UsersavingService implements UserSavingInterface
             ->where('organisations.id', $organisation_id)
             ->selectRaw('SUM(user_savings.amount_deposited) as total_amount_deposited, user_savings.*')
             ->groupBy('user_savings.user_id')
-//            ->orderBy('users.created_at', 'DESC')
+            ->orderBy('users.created_at', 'DESC')
             ->get();
     }
 
