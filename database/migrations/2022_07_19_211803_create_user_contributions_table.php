@@ -23,6 +23,7 @@ class CreateUserContributionsTable extends Migration
             $table->enum('approve', ['PENDING', 'APPROVED', 'DECLINED'])->default('PENDING');
             $table->timestamps();
             $table->uuid('user_id');
+            $table->decimal('balance', 10, 2);
             $table->uuid('payment_item_id');
             $table->string('updated_by');
 

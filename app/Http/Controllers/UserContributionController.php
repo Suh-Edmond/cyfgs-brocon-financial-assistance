@@ -99,6 +99,11 @@ class UserContributionController extends Controller
         return $this->sendResponse(new UserContributionResource($contribution), 200);
     }
 
+    public function getContributionsByPaymentItem($id) {
+        $contributions = $this->user_contribution_interface->getContributionsByItem($id);
+
+        return $this->sendResponse($contributions, 200);
+    }
     public function downloadContrition(Request $request)
     {
         $auth_user         = auth()->user();

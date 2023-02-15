@@ -13,24 +13,27 @@ class UserContributionResource extends JsonResource
 
     public function toArray($request)
     {
+        $payment_item = PaymentItem::find($this->payment_item_id);
+        $user = User::find($this->user_id);
         return [
             'id'                       => $this->id,
             'code'                     => $this->code,
             'amount_deposited'         => $this->amount_deposited,
             'comment'                  => $this->comment,
-            'status'                   => ((PaymentItem::find($this->payment_item_id)->amount) - ($this->total_amount_deposited)) == 0? 'COMPLETE' : 'INCOMPLETE',
+            'status'                   => $this->status,
             'approve'                  => $this->approve,
             'user_id'                  => $this->user_id,
-            'user_name'                => User::find($this->user_id)->name,
-            'user_telephone'           => User::find($this->user_id)->telephone,
-            'payment_item_id'          => $this->payment_item_id,
-            'payment_item_name'        => PaymentItem::find($this->payment_item_id)->name,
-            'payment_item_amount'      => PaymentItem::find($this->payment_item_id)->amount,
-            'payment_item_complusory'  => $this->convertBooleanValue(PaymentItem::find($this->payment_item_id)->complusory),
-            'balance'                  => (PaymentItem::find($this->payment_item_id)->amount - $this->total_amount_deposited),
+            'user_name'                => $user->name,
+            'user_telephone'           => $user->telephone,
+            'payment_item_id'          => $payment_item->id,
+            'payment_item_name'        => $payment_item->name,
+            'payment_item_amount'      => $payment_item->amount,
+            'payment_category'         => $payment_item->paymentCategory,
+            'payment_item_complusory'  => $payment_item->complusory == 0? false : true,
+            'balance'                  => $this->balance,
             'updated_by'               => $this->updated_by,
             'created_at'               => $this->created_at,
-            'total_amount_deposited'   => $this->total_amount_deposited
+            'total_amount_deposited'   => $this->total_amount_deposited == null ? 0: $this->total_amount_deposited
         ];
     }
 }

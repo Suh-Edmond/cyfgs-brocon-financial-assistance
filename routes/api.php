@@ -230,6 +230,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::prefix('protected')->group(function () {
         Route::get('contributions/payment-items/{id}/users/{user_id}', [UserContributionController::class, 'getUsersContributionsByItem']);
+        Route::get('contributions/payment-items/{id}', [UserContributionController::class, 'getContributionsByPaymentItem']);
         Route::get('contributions/users/{id}', [UserContributionController::class, 'getContributionByUser']);
         Route::get('contributions/users/{user_id}/items/{id}', [UserContributionController::class, 'getTotalAmountPaidByUserForTheItem']);
         Route::get('contributions/{id}', [UserContributionController::class, 'getContribution']);

@@ -33,6 +33,10 @@ class UserContributionService implements UserContributionInterface {
 
         $hasCompleted = $this->verifyExcessUserContribution($total_amount_contributed, $payment_item_amount);
 
+        $user_last_contribution = $this->getUserLastContributionByPaymentItem($request->user_id, $request->payment_item_id);
+
+        $balance_contribution = $user_last_contribution == null ? ($payment_item_amount- $request->amount_deposited) : ($user_last_contribution->balance - $request->amount_deposited);
+
         if(!$hasCompleted){
             UserContribution::create([
                 'code'              => $this->generateCode(10),
@@ -42,7 +46,8 @@ class UserContributionService implements UserContributionInterface {
                 'payment_item_id'   => $payment_item->id,
                 'status'            => $status,
                 'scan_picture'      => $request->scan_picture,
-                'updated_by'        => $request->user()->name
+                'updated_by'        => $request->user()->name,
+                'balance'           => $balance_contribution
             ]);
         }
 
@@ -56,11 +61,14 @@ class UserContributionService implements UserContributionInterface {
 
         $hasCompleted = $this->verifyExcessUserContribution($total_amount_contributed, $user_contribution->paymentItem->amount);
 
+        $balance = $user_contribution->balance - $request->amount_deposited;
+
         if(!$hasCompleted){
             $user_contribution->update([
                 'amount_deposited' => $request->amount_deposited,
                 'comment'          => $request->comment,
-                'scan_picture'     => $request->scan_picture
+                'scan_picture'     => $request->scan_picture,
+                'balance'          => $balance,
             ]);
         }
     }
@@ -88,12 +96,8 @@ class UserContributionService implements UserContributionInterface {
 
     public function getContributionByUserAndItem($payment_item_id, $user_id)
     {
-        return DB::table('user_contributions')
-                                    ->join('users', 'users.id', '=', 'user_contributions.user_id')
-                                    ->join('payment_items', 'payment_items.id', '='  ,'user_contributions.payment_item_id')
-                                    ->selectRaw('SUM(user_contributions.amount_deposited) as total_amount_deposited, user_contributions.*')
-                                    ->where('user_contributions.user_id', $user_id)
-                                    ->where('user_contributions.payment_item_id', $payment_item_id)
+        return $this->getContributionByUserAndPaymentItem($payment_item_id, $user_id)
+                                    ->select(  'user_contributions.*')
                                     ->orderBy('user_contributions.created_at', 'DESC')
                                     ->get();
     }
@@ -135,11 +139,7 @@ class UserContributionService implements UserContributionInterface {
 
     public function getTotalAmountPaidByUserForTheItem($user_id, $payment_item_id)
     {
-        return UserContribution::join('users', ['users.id' => 'user_contributions.user_id'])
-                                ->join('payment_items', ['payment_items.id' => 'user_contributions.payment_item_id'])
-                                ->where('users.id', $user_id)
-                                ->where('payment_items.id', $payment_item_id)
-                                ->sum('user_contributions.amount_deposited');
+        return $this->getContributionByUserAndPaymentItem($payment_item_id, $user_id)->sum('user_contributions.amount_deposited');
     }
 
 
@@ -199,16 +199,6 @@ class UserContributionService implements UserContributionInterface {
         return UserContribution::findOrFail($id);
     }
 
-    private function getLastContributionByUserPerItem($payment_item, $user)
-    {
-        return UserContribution::select('user_contributions.*')
-                                                ->join('payment_items', ['payment_items.id' => 'user_contributions.payment_item_id'])
-                                                ->join('users', ['users.id' => 'user_contributions.user_id'])
-                                                ->where('user_contributions.payment_item_id', $payment_item)
-                                                ->where('user_contributions.user_id', $user)
-                                                ->latest()->get();
-    }
-
     private function getTotalAmountContributed($amounts_contributed, $amount_to_be_deposited)
     {
         if(count($amounts_contributed) != 0){
@@ -224,12 +214,6 @@ class UserContributionService implements UserContributionInterface {
     private function verifyExcessUserContribution($total_amount_contributed, $payment_item_amount)
     {
         return $total_amount_contributed == $payment_item_amount;
-    }
-
-
-    private function filterPaymentItem($item, $value)
-    {
-        return $item->payment_item_id === $value;
     }
 
 
@@ -257,6 +241,9 @@ class UserContributionService implements UserContributionInterface {
         return true;
     }
 
+    private function getUserLastContributionByPaymentItem($user_id, $payment_item_id) {
+        return $this->getContributionByUserAndPaymentItem($payment_item_id, $user_id)->orderBy('user_contributions.created_at', 'DESC')->first();
+    }
 
     private function  getUserContributions($status, $payment_item, $year, $month, $date) {
         $contributions =  DB::table('user_contributions')
@@ -284,6 +271,13 @@ class UserContributionService implements UserContributionInterface {
             $contributions = $contributions->whereDate('user_contributions.created_at', $date);
         }
         return $contributions;
+    }
+
+    private function getContributionByUserAndPaymentItem($payment_item_id, $user_id) {
+        return UserContribution::join('users', ['users.id' => 'user_contributions.user_id'])
+            ->join('payment_items', ['payment_items.id' => 'user_contributions.payment_item_id'])
+            ->where('users.id', $user_id)
+            ->where('payment_items.id', $payment_item_id);
     }
 }
 
