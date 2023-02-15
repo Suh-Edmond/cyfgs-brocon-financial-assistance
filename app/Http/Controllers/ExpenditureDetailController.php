@@ -65,9 +65,9 @@ class ExpenditureDetailController extends Controller
         return $this->sendResponse('success', 'Expenditure detail deleted successfully');
     }
 
-    public function approveExpenditureDetail($id)
+    public function approveExpenditureDetail($id, Request $request)
     {
-        $this->expenditure_detail_service->approveExpenditureDetail($id);
+        $this->expenditure_detail_service->approveExpenditureDetail($id, $request->type);
 
         return $this->sendResponse('success', 'Expenditure detail approved successfully');
     }

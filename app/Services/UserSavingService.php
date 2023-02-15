@@ -2,9 +2,7 @@
 
 namespace App\Services;
 
-use App\Http\Resources\OrganisationSavingResource;
 use App\Http\Resources\UserSavingCollection;
-use App\Http\Resources\UserSavingResource;
 use App\Interfaces\UserSavingInterface;
 use App\Models\User;
 use App\Models\UserSaving;
@@ -22,6 +20,7 @@ class UsersavingService implements UserSavingInterface
             'amount_deposited'      => $request->amount_deposited,
             'comment'               => $request->comment,
             'user_id'               => $user->id,
+            'updated_by'            => $request->user()->name
         ]);
     }
 
@@ -47,9 +46,7 @@ class UsersavingService implements UserSavingInterface
 
     public function getUserSaving($id, $user_id)
     {
-        $user_saving = $this->findUserSaving($id, $user_id);
-
-        return $user_saving;
+        return $this->findUserSaving($id, $user_id);
     }
 
 
@@ -61,10 +58,10 @@ class UsersavingService implements UserSavingInterface
     }
 
 
-    public function approveUserSaving($id)
+    public function approveUserSaving($id, $type)
     {
         $user_saving = UserSaving::findOrFail($id);
-        $user_saving->approve = 1;
+        $user_saving->approve = $type;
         $user_saving->save();
     }
 
@@ -97,12 +94,11 @@ class UsersavingService implements UserSavingInterface
 
     private function findUserSaving($id, $user_id)
     {
-        $saving = UserSaving::select('user_savings.*')
+        return UserSaving::select('user_savings.*')
             ->join('users', ['users.id' => 'user_savings.user_id'])
             ->where('users.id', $user_id)
             ->where('user_savings.id', $id)
             ->firstOrFail();
-        return $saving;
     }
 
 
@@ -125,7 +121,7 @@ class UsersavingService implements UserSavingInterface
             ->where('organisations.id', $organisation_id)
             ->selectRaw('SUM(user_savings.amount_deposited) as total_amount_deposited, user_savings.*')
             ->groupBy('user_savings.user_id')
-            ->orderBy('users.name', 'ASC')
+            ->orderBy('users.created_at', 'DESC')
             ->get();
     }
 
@@ -142,4 +138,44 @@ class UsersavingService implements UserSavingInterface
     {
         return $this->findOrganisationUserSavings($id);
     }
+
+    public function  getMembersSavingsByName($request)
+    {
+        return  DB::table('user_savings')
+                ->leftJoin('users', 'users.id', '=', 'user_savings.user_id')
+                ->leftJoin('organisations', 'users.organisation_id', '=', 'organisations.id')
+                ->where('organisations.id', $request->organisation_id);
+        //add filter for the current year
+    }
+
+    public function filterSavings($request)
+    {
+
+        $data = $this->getMembersSavingsByName($request);
+        if(!is_null($request->name)){
+            $data = $data->where('users.name', 'LIKE', '%'.$request->name.'%');
+        }
+        if(!is_null($request->date)){
+            $data = $data->whereDate('user_savings.created_at', $request->date);
+        }
+        if($request->amount_deposited > 0) {
+            $data = $data->where('user_savings.amount_deposited', $request->amount_deposited);
+        }
+        if(!is_null($request->status) && $request->status != "ALL") {
+            $data = $data->where('user_savings.approve', $request->status);
+        }
+        if(!is_null($request->year)) {
+            $data = $data->whereYear('user_savings.created_at', $request->year);
+        }
+        if (!is_null($request->month)) {
+            $data = $data->whereMonth('user_savings.created_at', $this->convertMonthNameToNumber($request->month));
+        }
+
+        $data = $data->select('user_savings.*')
+                ->orderBy('user_savings.created_at', 'ASC')
+                ->get();
+
+        return $data;
+    }
+
 }

@@ -23,10 +23,11 @@ class ExpenditureItemSeeder extends Seeder
                 'name'                      => $faker->name,
                 'amount'                    => $faker->numberBetween(50000, 300000),
                 'comment'                   => $faker->sentence,
-                'approve'                   => $faker->randomElement([true, false]),
+                'approve'                   => $faker->randomElement(['PENDING', 'APPROVED', 'DECLINED']),
                 'venue'                     => $faker->country,
                 'expenditure_category_id'   => $faker->randomElement($this->expenditure_categories),
-                'date'                      => $faker->date()
+                'date'                      => $faker->date(),
+                'updated_by'                => $faker->name
             ]);
         }
     }

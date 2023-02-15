@@ -13,7 +13,7 @@ interface ExpenditureDetailInterface {
 
     public function deleteExpenditureDetail($id);
 
-    public function approveExpenditureDetail($id);
+    public function approveExpenditureDetail($id, $type);
 
     public function filterExpenditureDetail($item, $status);
 

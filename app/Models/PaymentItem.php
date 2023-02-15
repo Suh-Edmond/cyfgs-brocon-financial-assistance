@@ -7,6 +7,7 @@ use App\Traits\GenerateUuid;
 
 /**
  * @method static find(mixed $payment_item_id)
+ * @method static create(array $array)
  */
 class PaymentItem extends Model
 {

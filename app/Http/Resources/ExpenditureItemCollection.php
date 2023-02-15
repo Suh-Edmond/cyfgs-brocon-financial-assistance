@@ -7,6 +7,7 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 class ExpenditureItemCollection extends ResourceCollection
 {
     private $total;
+    private $balance;
 
     public function __construct($collection, $total, $balance)
     {

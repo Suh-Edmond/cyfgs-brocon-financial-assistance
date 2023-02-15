@@ -16,9 +16,9 @@ class UserSavingResource extends JsonResource
     {
         return [
             'id'                     => $this->id,
-            'amount_deposited'       => is_null($this->total_amount_deposited) ? $this->amount_deposited : $this->total_amount_deposited,
+            'amount_deposited'       => $this->amount_deposited,
             'comment'                => $this->comment,
-            'approve'                => HelpTrait::convertBooleanValue($this->approve),
+            'approve'                => $this->approve,
             'user_id'                => $this->user_id,
             'user_name'              => User::find($this->user_id)->name,
             'email'                  => User::find($this->user_id)->email,

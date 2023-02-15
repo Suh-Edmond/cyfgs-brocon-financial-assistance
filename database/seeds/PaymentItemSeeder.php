@@ -22,7 +22,8 @@ class PaymentItemSeeder extends Seeder
                 'name'                  => $faker->name,
                 'amount'                => $faker->numberBetween(5000, 100000),
                 'complusory'            => $faker->randomElement([true, false]),
-                'payment_category_id'   => $faker->randomElement($this->payment_categories)
+                'payment_category_id'   => $faker->randomElement($this->payment_categories),
+                'updated_by'            => $faker->name
             ]);
         }
     }

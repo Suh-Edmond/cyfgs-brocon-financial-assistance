@@ -31,7 +31,7 @@ class ExpenditureItemResource extends JsonResource
             'comment'                       => $this->comment,
             'venue'                         => $this->venue,
             'date'                          => $this->date,
-            'approve'                       => $this->convertBooleanValue($this->approve),
+            'approve'                       => $this->approve,
             'expenditure_category_id'       => $this->expenditureCategory->id,
             'created_at'                    => $this->created_at,
             'updated_at'                    => $this->updated_at,

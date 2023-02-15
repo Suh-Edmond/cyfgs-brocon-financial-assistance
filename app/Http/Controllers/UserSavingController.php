@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Constants\Roles;
 use App\Http\Requests\UserSavingRequest;
 use App\Http\Requests\UpdateUserSavingRequest;
-use App\Http\Resources\UserSavingCollection;
 use App\Http\Resources\UserSavingResource;
 use App\Models\User;
 use App\Services\UsersavingService;
@@ -13,6 +12,7 @@ use App\Traits\HelpTrait;
 use App\Traits\ResponseTrait;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
+use function PHPUnit\Framework\isEmpty;
 
 class UserSavingController extends Controller
 {
@@ -68,9 +68,9 @@ class UserSavingController extends Controller
     }
 
 
-    public function approveUserSaving($id)
+    public function approveUserSaving($id, Request $request)
     {
-        $this->user_saving_service->approveUserSaving($id);
+        $this->user_saving_service->approveUserSaving($id, $request->type);
 
         return $this->sendResponse('success', 'User saving approved sucessfully');
     }
@@ -92,6 +92,19 @@ class UserSavingController extends Controller
         return $this->sendResponse($savings, 200);
     }
 
+    public function getMembersSavingsByName(Request $request){
+        $savings = $this->user_saving_service->getMembersSavingsByName($request);
+
+        return $this->sendResponse($savings, 200);
+    }
+
+
+    public function filterSavings(Request $request)
+    {
+        $savings = $this->user_saving_service->filterSavings($request);
+
+        return $this->sendResponse(UserSavingResource::collection($savings), 200);
+    }
 
     public function download(Request $request)
     {

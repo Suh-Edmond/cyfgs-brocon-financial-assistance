@@ -5,6 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\GenerateUuid;
 
+/**
+ * @method static where(string $string, $user_id)
+ * @method static select(string $string)
+ */
 class UserSaving extends Model
 {
     use GenerateUuid;
@@ -21,9 +25,10 @@ class UserSaving extends Model
         'updated_by'
     ];
 
-   public function user() {
-    return $this->belongsTo(User::class);
-   }
+
+    public function user() {
+        return $this->belongsTo(User::class);
+    }
 
 
 

@@ -19,7 +19,8 @@ class PaymentItemService implements PaymentItemInterface {
             'amount'              => $request->amount,
             'complusory'          => $request->complusory,
             'payment_category_id' => $payment_category->id,
-            'description'         => $request->description
+            'description'         => $request->description,
+            'updated_by'          => $request->user()->name
         ]);
     }
 
@@ -49,15 +50,15 @@ class PaymentItemService implements PaymentItemInterface {
 
     }
 
-    public function getPaymentItem($id, $paymant_category_id)
+    public function getPaymentItem($id, $payment_category_id)
     {
-        return $this->findPaymentItem($id, $paymant_category_id);
+        return $this->findPaymentItem($id, $payment_category_id);
 
     }
 
-    public function deletePaymentItem($id, $paymant_category_id)
+    public function deletePaymentItem($id, $payment_category_id)
     {
-        $payment_item = $this->findPaymentItem($id, $paymant_category_id);
+        $payment_item = $this->findPaymentItem($id, $payment_category_id);
 
         $payment_item->delete();
     }

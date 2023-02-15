@@ -25,7 +25,8 @@ class UserContribution extends Model
         'payment_item_id',
         'code',
         'scan_picture',
-        'updated_by'
+        'updated_by',
+        'balance'
     ];
 
 

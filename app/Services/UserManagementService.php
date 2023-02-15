@@ -38,13 +38,13 @@ class UserManagementService implements UserManagementInterface
             'updated_by'      => $request->user()->name
         ]);
 
-        $role = CustomRole::findByName(Roles::USER, 'api');
+        $role = CustomRole::findByName(Roles::MEMBER, 'api');
         $this->saveUserRole($created, $role);
     }
 
     public function getUsers($organisation_id)
     {
-        return User::where('organisation_id', $organisation_id)->orderBy('name', 'ASC')->get();
+        return User::where('organisation_id', $organisation_id)->orderBy('created_at', 'DESC')->get();
     }
 
     public function getUser($user_id)

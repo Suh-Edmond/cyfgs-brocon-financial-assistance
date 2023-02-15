@@ -47,6 +47,19 @@ class ExpenditureItemController extends Controller
         return $this->sendResponse($item, 200);
     }
 
+    public function getItem($id)
+    {
+        $item = $this->expenditure_item_service->getItem($id);
+
+        return $this->sendResponse($item, 200);
+    }
+
+    public function getExpenditureByCategory($expenditure_category_id)
+    {
+        $data = $this->expenditure_item_service->getExpenditureByCategory($expenditure_category_id);
+
+        return $this->sendResponse($data, 200);
+    }
 
 
     public function updateExpenditureItem(ExpenditureItemRequest $request, $expenditure_category_id, $id)
@@ -64,9 +77,9 @@ class ExpenditureItemController extends Controller
         return $this->sendResponse('success', 'Expenditure Item deleted successfully');
     }
 
-    public function approveExpenditureItem($id)
+    public function approveExpenditureItem($id, Request $request)
     {
-        $this->expenditure_item_service->approveExpenditureItem($id);
+        $this->expenditure_item_service->approveExpenditureItem($id, $request->type);
 
         return $this->sendResponse('success', 'Expenditure Item approved successfully');
     }

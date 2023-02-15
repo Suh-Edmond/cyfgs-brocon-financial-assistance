@@ -5,6 +5,9 @@ namespace App\Models;
 use App\Traits\GenerateUuid;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @method static findOrFail($expenditure_category_id)
+ */
 class ExpenditureCategory extends Model
 {
     use GenerateUuid;
@@ -20,6 +23,7 @@ class ExpenditureCategory extends Model
         'organisation_id',
         'updated_by'
     ];
+
 
     public function expenditureItem(){
         return $this->hasMany(ExpenditureItem::class);

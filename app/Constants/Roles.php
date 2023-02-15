@@ -7,6 +7,6 @@ class Roles {
     public const FINANCIAL_SECRETARY = 'FINANCIAL_SECRETARY';
     public const TREASURER = 'TREASURER';
     public const AUDITOR = 'AUDITOR';
-    public const USER  = 'USER';
+    public const MEMBER  = 'MEMBER';
     public const ROLE_GUARD = 'api';
 }

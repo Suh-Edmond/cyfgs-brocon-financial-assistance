@@ -64,25 +64,25 @@ class IncomeActivityService implements IncomeActivityInterface {
         $activity->delete();
     }
 
-    public function approveIncomeActivity($id)
+    public function approveIncomeActivity($id, $type)
     {
         $activity = $this->findIncomeActivity($id);
-        $activity->approve = 1;
+        $activity->approve = $type;
         $activity->save();
     }
 
     public function filterIncomeActivity($organisation_id, $month, $year, $status)
     {
         $activities = $this->findIncomeActivities($organisation_id);
-        if($status != "null") {
+        if(!is_null($status)) {
             if($status != "ALL"){
-                $activities = $activities->where('income_activities.approve', $this->convertStatusToNumber($status));
+                $activities = $activities->where('income_activities.approve', $status);
             }
         }
-        if($month != "null") {
+        if(!is_null($month)) {
             $activities = $activities ->WhereMonth('income_activities.date', $this->convertMonthNameToNumber($month));
         }
-        if($year != "null") {
+        if(!is_null($year)) {
             $activities = $activities->WhereYear('income_activities.date', $year);
         }
         $activities = $activities->orderBy('income_activities.name', 'ASC')->get();

@@ -27,10 +27,11 @@ class ExpenditureDetailResource extends JsonResource
             'amount_given'                  => $this->amount_given,
             'amount_spent'                  => $this->amount_spent,
             'comment'                       => $this->comment,
-            'approve'                       => HelpTrait::convertBooleanValue($this->approve),
+            'approve'                       => $this->approve,
             'created_at'                    => $this->created_at,
             'updated_at'                    => $this->updated_at,
             'expenditure_item_id'           =>  $this->expenditureItem->id,
+            'expenditure_item_name'         => $this->expenditureItem->name,
             'balance'                       => $this->balance,
             'updated_by'                    => $this->updated_by
         ];

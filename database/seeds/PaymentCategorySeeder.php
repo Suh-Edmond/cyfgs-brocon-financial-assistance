@@ -22,7 +22,8 @@ class PaymentCategorySeeder extends Seeder
             PaymentCategory::create([
                 'name'              => $faker->name,
                 'description'       => $faker->sentence,
-                'organisation_id'   => $this->organisations[0]
+                'organisation_id'   => $this->organisations[0],
+                'updated_by'        => $faker->name
             ]);
        }
     }

@@ -2,7 +2,15 @@
 
 namespace App\Http;
 
-use App\Http\Middleware\isPresidentMiddleware;
+use App\Http\Middleware\IsAdminMiddleware;
+use App\Http\Middleware\IsAuditorMiddleware;
+use App\Http\Middleware\IsFinancialSecretaryMiddleware;
+use App\Http\Middleware\IsPresidentMiddleware;
+use App\Http\Middleware\IsPresidentOrIsFinancialSecretary;
+use App\Http\Middleware\IsTreasurerMiddleware;
+use App\Http\Middleware\IsTreasurerOrIsFinancialSecretary;
+use App\Http\Middleware\IsTreasurerOrIsFinancialSecretaryOrIsPresident;
+use App\Http\Middleware\IsUserMiddleware;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -70,15 +78,15 @@ class Kernel extends HttpKernel
         // 'permission'            => \Spatie\Permission\Middlewares\PermissionMiddleware::class,
         // 'role_or_permission'    => \Spatie\Permission\Middlewares\RoleOrPermissionMiddleware::class,
 
-        'isPresident'           => \App\Http\Middleware\IsPresidentMiddleware::class,
-        'isAdmin'               => \App\Http\Middleware\IsAdminMiddleware::class,
-        'isAuditor'             => \App\Http\Middleware\IsAuditorMiddleware::class,
-        'isFinancialSecretary'  => \App\Http\Middleware\IsFinancialSecretaryMiddleware::class,
-        'isTreasurer'           => \App\Http\Middleware\IsTreasurerMiddleware::class,
-        'isUser'                => \App\Http\Middleware\IsUserMiddleware::class,
-        'isPresidentOrIsFinancialSecretary' => \App\Http\Middleware\IsPresidentOrIsFinancialSecretary::class,
-        'isTreasurerOrIsFinancialSecretary' => \App\Http\Middleware\IsTreasurerOrIsFinancialSecretary::class,
-        'isTreasurerOrIsFinancialSecretaryOrIsPresident' => \App\Http\Middleware\IsTreasurerOrIsFinancialSecretaryOrIsPresident::class,
+        'isPresident'           => IsPresidentMiddleware::class,
+        'isAdmin'               => IsAdminMiddleware::class,
+        'isAuditor'             => IsAuditorMiddleware::class,
+        'isFinancialSecretary'  => IsFinancialSecretaryMiddleware::class,
+        'isTreasurer'           => IsTreasurerMiddleware::class,
+        'isUser'                => IsUserMiddleware::class,
+        'isPresidentOrIsFinancialSecretary' => IsPresidentOrIsFinancialSecretary::class,
+        'isTreasurerOrIsFinancialSecretary' => IsTreasurerOrIsFinancialSecretary::class,
+        'isTreasurerOrIsFinancialSecretaryOrIsPresident' => IsTreasurerOrIsFinancialSecretaryOrIsPresident::class,
 
     ];
 }

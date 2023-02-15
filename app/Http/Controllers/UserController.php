@@ -33,7 +33,7 @@ class UserController extends Controller
     public function createAccount(CreateAccountRequest $request)
     {
         $new_user = $this->user_management_service->createAccount($request);
-        $this->role_service->addUserRole($new_user->id, Roles::USER);
+        $this->role_service->addUserRole($new_user->id, Roles::MEMBER);
         $this->role_service->addUserRole($new_user->id, Roles::PRESIDENT);
 
         return $this->sendResponse("success", "Account created successfully");

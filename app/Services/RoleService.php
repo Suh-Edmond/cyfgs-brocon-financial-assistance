@@ -73,6 +73,6 @@ class RoleService implements RoleInterface {
             ->where('roles.name', $role)
             ->count();
 
-        return $users <= $max_num_users_with_same_role;
+        return $max_num_users_with_same_role > $users;
     }
 }

@@ -70,10 +70,10 @@ class ExpenditureDetailService implements ExpenditureDetailInterface {
         $detail->delete();
     }
 
-    public function approveExpenditureDetail($id)
+    public function approveExpenditureDetail($id, $type)
     {
         $detail = $this->findExpenditureDetail($id);
-        $detail->approve = 1;
+        $detail->approve = $type;
         $detail->save();
     }
 
@@ -81,10 +81,11 @@ class ExpenditureDetailService implements ExpenditureDetailInterface {
     {
         $details = ExpenditureDetail::select('expenditure_details.*', 'expenditure_items.amount as expenditure_item_amount')
                                     ->join('expenditure_items', ['expenditure_items.id' => 'expenditure_details.expenditure_item_id'])
-                                    ->where('expenditure_items.id', $id)
-                                    ->Where('expenditure_details.approve', $status)
-                                    ->orderBy('expenditure_details.name', 'ASC')
-                                    ->get();
+                                    ->where('expenditure_items.id', $id);
+        if($status != "ALL"){
+            $details = $details->Where('expenditure_details.approve', $status);
+        }
+        $details = $details ->orderBy('expenditure_details.name', 'ASC')->get();
 
         $response           = $this->generateResponseForExpenditureDetails($details);
         $item_amount        = $this->setExpenditureItemAmount($details);
@@ -114,8 +115,6 @@ class ExpenditureDetailService implements ExpenditureDetailInterface {
 
     public function setDataForDownload($request) {
         if(is_null($request->status)) {
-            return $this->getExpenditureDetails($request->expenditure_item_id);
-        }elseif (! is_null($request->status) && $request->status == 2){ //the number 2 is a hardcoded number to represent ALL
             return $this->getExpenditureDetails($request->expenditure_item_id);
         }
         else {

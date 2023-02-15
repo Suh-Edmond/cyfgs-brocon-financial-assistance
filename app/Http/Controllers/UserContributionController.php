@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Constants\Roles;
 use App\Http\Requests\CreateUserContributionRequest;
 use App\Http\Requests\UpdateUserContributionRequest;
 use App\Http\Resources\UserContributionResource;
@@ -10,7 +11,7 @@ use App\Services\UserContributionService;
 use App\Traits\HelpTrait;
 use App\Traits\ResponseTrait;
 use Illuminate\Http\Request;
-use PDF;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class UserContributionController extends Controller
 {
@@ -42,11 +43,11 @@ class UserContributionController extends Controller
     }
 
 
-    public function getUsersContributionsByItem($id)
+    public function getUsersContributionsByItem($id, $user_id)
     {
-        $contributions = $this->user_contribution_interface->getContributionsByItem($id);
+        $contributions = $this->user_contribution_interface->getContributionByUserAndItem($id, $user_id);
 
-        return $this->sendResponse($contributions, 200);
+        return $this->sendResponse(UserContributionResource::collection($contributions), 200);
     }
 
 
@@ -74,20 +75,22 @@ class UserContributionController extends Controller
     }
 
 
-    public function approveUserContribution($id)
+    public function approveUserContribution($id, Request $request)
     {
-        $this->user_contribution_interface->approveUserContribution($id);
+        $this->user_contribution_interface->approveUserContribution($id, $request->type);
 
         return $this->sendResponse('success', 'Contribution approve successfully');
     }
 
 
-    public function filterContribution(Request $request)
+    public function filterContributions(Request $request)
     {
-        $contributions = $this->user_contribution_interface->filterContribution($request->status, $request->payment_item_id, $request->year, $request->month);
+        $contributions = $this->user_contribution_interface->filterContributions($request);
 
-        return $this->sendResponse($contributions, 200);
+        return $this->sendResponse(UserContributionResource::collection($contributions), 200);
     }
+
+
 
 
     public function getContribution($id)
@@ -97,22 +100,43 @@ class UserContributionController extends Controller
         return $this->sendResponse(new UserContributionResource($contribution), 200);
     }
 
-    public function downloadContrition(Request $request)
+    public function getContributionsByPaymentItem($id) {
+        $contributions = $this->user_contribution_interface->getContributionsByItem($id);
+
+        return $this->sendResponse($contributions, 200);
+    }
+
+    public function downloadFilteredContributions(Request $request) {
+        $contributions     = $this->filterContributions($request);
+        $contributions     = json_decode(json_encode($contributions))->original->data;
+        $this->downloadContribution($contributions);
+    }
+
+
+    public function downloadUserContributions(Request $request) {
+        $contributions      = $this->getUsersContributionsByItem($request->payment_item_id, $request->user_id);
+        $contributions      = json_decode(json_encode($contributions))->original->data;
+        $this->downloadContribution($contributions);
+    }
+
+
+    public function downloadContribution($contributions)
     {
+
         $auth_user         = auth()->user();
         $organisation      = User::find($auth_user['id'])->organisation;
-        $contributions  = $this->user_contribution_interface->getContributionsByItem($request->payment_item_id);
-        $administrators = $this->getOrganisationAdministrators($organisation->users);
-        $president      = $administrators[0];
-        $treasurer      = $administrators[1];
-        $fin_sec        = $administrators[2];
-        $total          = $this->computeTotalContribution($contributions);
+
+        $president         = $this->getOrganisationAdministrators(Roles::PRESIDENT);
+        $treasurer         = $this->getOrganisationAdministrators(Roles::TREASURER);
+        $fin_sec           = $this->getOrganisationAdministrators(Roles::FINANCIAL_SECRETARY);
+        $total             = $this->computeTotalContribution($contributions);
 
         $data = [
-            'title'             => 'User Contribution for '.$contributions[0]->paymentItem->name,
+            'title'             => 'User Contribution for '.$contributions[0]->payment_item_name,
             'date'              => date('m/d/Y'),
             'organisation'      => $organisation,
             'contributions'     => $contributions,
+            'organisation_telephone'   => $this->setOrganisationTelephone($organisation->telephone),
             'president'         => $president,
             'treasurer'         => $treasurer,
             'fin_secretary'     => $fin_sec,

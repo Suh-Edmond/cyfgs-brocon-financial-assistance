@@ -11,14 +11,13 @@ use Illuminate\Support\Facades\Hash;
 class UserSeeder extends Seeder
 {
 
-    private $organisations;
+    private $organisation;
     private $role_user;
 
     public function __construct()
     {
-        $this->organisations = Organisation::all()->pluck('id');
-        $this->role_user     = CustomRole::findByName(Roles::USER, 'api');
-
+        $this->organisation  = Organisation::all()->pluck('id');
+        $this->role_user     = CustomRole::findByName(Roles::MEMBER, 'api');
     }
 
     /**
@@ -32,12 +31,13 @@ class UserSeeder extends Seeder
             $saved = User::create([
                     'name'            => $faker->name,
                     'email'           => $faker->email(),
-                    'telephone'       => $faker->phoneNumber(9),
+                    'telephone'       => $faker->phoneNumber,
                     'password'        => $faker->password(6),
                     'address'         => $faker->address(),
                     'occupation'      => $faker->sentence(5),
                     'gender'          => $faker->randomElement(['MALE', 'FEMALE']),
-                    'organisation_id' => $this->organisations[0]
+                    'organisation_id' => $this->organisation[0],
+                    'updated_by'      => $faker->name
                 ]);
             $saved->assignRole($this->role_user);
         }
@@ -45,12 +45,13 @@ class UserSeeder extends Seeder
         $system_user = User::create([
             'name'              => "Suh Edmond",
             'email'             => 'email@gmail.com',
-            'telephone'         => '671809232',
+            'telephone'         => '237671809232',
             'password'          => Hash::make('password'),
             'address'           => $faker->address(),
             'occupation'        => $faker->sentence(5),
             'gender'            => $faker->randomElement(['MALE', 'FEMALE']),
-            'organisation_id'   => $this->organisations[0]
+            'organisation_id'   => $this->organisation[0],
+            'updated_by'        => $faker->name
         ]);
 
         $role_admin     = CustomRole::findByName(Roles::ADMIN, 'api');

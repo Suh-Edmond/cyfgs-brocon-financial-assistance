@@ -5,6 +5,11 @@ namespace App\Models;
 use App\Traits\GenerateUuid;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @method static create(array $array)
+ * @method static findOrFail($id)
+ * @method static select(string $string)
+ */
 class ExpenditureItem extends Model
 {
     use GenerateUuid;
