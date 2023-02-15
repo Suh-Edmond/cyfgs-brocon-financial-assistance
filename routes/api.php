@@ -235,7 +235,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('contributions/users/{user_id}/items/{id}', [UserContributionController::class, 'getTotalAmountPaidByUserForTheItem']);
         Route::get('contributions/{id}', [UserContributionController::class, 'getContribution']);
         Route::get('organisations/contributions/search', [UserContributionController::class, 'filterContributions']);
-        Route::get('download-contributions', [UserContributionController::class, 'downloadContrition']);
+        Route::get('download-contributions', [UserContributionController::class, 'downloadFilteredContributions']);
+        Route::get('download-user-contributions', [UserContributionController::class, 'downloadUserContributions']);
     });
 
     Route::prefix('protected')->group(function () {

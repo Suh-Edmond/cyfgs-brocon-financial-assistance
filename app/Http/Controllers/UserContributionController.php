@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Constants\Roles;
 use App\Http\Requests\CreateUserContributionRequest;
 use App\Http\Requests\UpdateUserContributionRequest;
 use App\Http\Resources\UserContributionResource;
@@ -104,22 +105,38 @@ class UserContributionController extends Controller
 
         return $this->sendResponse($contributions, 200);
     }
-    public function downloadContrition(Request $request)
+
+    public function downloadFilteredContributions(Request $request) {
+        $contributions     = $this->filterContributions($request);
+        $contributions     = json_decode(json_encode($contributions))->original->data;
+        $this->downloadContribution($contributions);
+    }
+
+
+    public function downloadUserContributions(Request $request) {
+        $contributions      = $this->getUsersContributionsByItem($request->payment_item_id, $request->user_id);
+        $contributions      = json_decode(json_encode($contributions))->original->data;
+        $this->downloadContribution($contributions);
+    }
+
+
+    public function downloadContribution($contributions)
     {
+
         $auth_user         = auth()->user();
         $organisation      = User::find($auth_user['id'])->organisation;
-        $contributions  = $this->user_contribution_interface->getContributionsByItem($request->payment_item_id);
-        $administrators = $this->getOrganisationAdministrators($organisation->users);
-        $president      = $administrators[0];
-        $treasurer      = $administrators[1];
-        $fin_sec        = $administrators[2];
-        $total          = $this->computeTotalContribution($contributions);
+
+        $president         = $this->getOrganisationAdministrators(Roles::PRESIDENT);
+        $treasurer         = $this->getOrganisationAdministrators(Roles::TREASURER);
+        $fin_sec           = $this->getOrganisationAdministrators(Roles::FINANCIAL_SECRETARY);
+        $total             = $this->computeTotalContribution($contributions);
 
         $data = [
-            'title'             => 'User Contribution for '.$contributions[0]->paymentItem->name,
+            'title'             => 'User Contribution for '.$contributions[0]->payment_item_name,
             'date'              => date('m/d/Y'),
             'organisation'      => $organisation,
             'contributions'     => $contributions,
+            'organisation_telephone'   => $this->setOrganisationTelephone($organisation->telephone),
             'president'         => $president,
             'treasurer'         => $treasurer,
             'fin_secretary'     => $fin_sec,

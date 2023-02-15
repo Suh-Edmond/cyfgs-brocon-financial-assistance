@@ -13,7 +13,7 @@
             <label style="font-size: small;">P.O Box {{ $organisation->box_number }}</label><br />
             <label style="font-size: small;">{{ $organisation->address }}</label><br />
             <label style="font-size: small;">Phone_No:</label><br />
-            <label style="font-size: small;">{{ $organisation->telephone }}</label><br />
+            <label style="font-size: small;">{{ $organisation_telephone }}</label><br />
             <label style="font-size: small;">Email: {{ $organisation->email }}</label><br /><br />
             <label style="font-size: small;">Printed date: {{ $date }}</label>
         </div>
@@ -27,16 +27,16 @@
             <tr style="padding: 13px;border: 1px solid black; font-size: smaller;">
                 <th style="padding: 1px; border: 1px solid black;">S/N</th>
                 <th style="padding: 12px; border: 1px solid black;">User Name</th>
-                <th style="padding: 12px; border: 1px solid black;">Amount (FCFA)</th>
+                <th style="padding: 12px; border: 1px solid black;">Total Amount Deposited (FCFA)</th>
                 <th style="padding: 12px; border: 1px solid black;">Telephone</th>
             </tr>
             @foreach ($contributions as $key => $contribution)
                 <tr style="border: 1px solid black; font-size: smaller">
                     <td style="padding: 5px;">{{ $key + 1 }}</td>
-                    <td style="border: 1px solid black; padding: 11px;">{{ $contribution->user->name }}</td>
+                    <td style="border: 1px solid black; padding: 11px;">{{ $contribution->user_name }}</td>
                     <td style="border: 1px solid black; padding: 11px;">
                         {{ number_format($contribution->amount_deposited) }}</td>
-                    <td style="border: 1px solid black; padding: 11px;">{{ $contribution->user->telephone }}</td>
+                    <td style="border: 1px solid black; padding: 11px;">{{ $contribution->user_telephone }}</td>
                 </tr>
             @endforeach
         </table>
