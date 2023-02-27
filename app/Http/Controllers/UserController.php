@@ -7,7 +7,9 @@ use App\Http\Requests\CheckUserRequest;
 use App\Http\Requests\CreateAccountRequest;
 use App\Http\Requests\CreateUserRequest;
 use App\Http\Requests\LoginRequest;
+use App\Http\Requests\SetPasswordRequest;
 use App\Http\Requests\UpdatePasswordRequest;
+use App\Http\Requests\UpdateProfileRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
@@ -53,11 +55,18 @@ class UserController extends Controller
     }
 
 
-    public function updatePassword(UpdatePasswordRequest $request)
+    public function setPassword(SetPasswordRequest $request)
     {
         $data = $this->user_management_service->setPassword($request);
 
         return $this->sendResponse($data, 'success');
+    }
+
+    public function updatePassword(UpdatePasswordRequest $request)
+    {
+        $this->user_management_service->updatePassword($request);
+
+        return $this->sendResponse(200, 'success');;
     }
 
 
@@ -140,5 +149,11 @@ class UserController extends Controller
         $users = $this->user_management_service->filterUsers($request);
 
         return $this->sendResponse($users, 'success');
+    }
+
+    public function updateProfile(UpdateProfileRequest $request){
+        $user = $this->user_management_service->updateProfile($request);
+
+        return $this->sendResponse($user, 'success');
     }
 }
