@@ -23,6 +23,7 @@ class Users extends Migration
             $table->string('gender')->nullable(true);
             $table->string('address')->nullable(true);
             $table->string('occupation')->nullable(true);
+            $table->string('picture')->nullable(true);
             $table->rememberToken();
             $table->timestamps();
             $table->uuid('organisation_id')->nullable(true);

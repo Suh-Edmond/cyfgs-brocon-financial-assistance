@@ -62,7 +62,8 @@ class UserManagementService implements UserManagementInterface
             'address'         => $request->address,
             'occupation'      => $request->occupation,
             'gender'          => $request->gender,
-            'updated_by'      => $request->user()->name
+            'updated_by'      => $request->user()->name,
+            'picture'         => $request->picture
         ]);
     }
 
