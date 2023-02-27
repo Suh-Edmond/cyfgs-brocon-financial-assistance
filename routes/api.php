@@ -33,7 +33,7 @@ Route::prefix('public/auth')->group(function () {
 });
 
 Route::prefix('public/auth')->group(function () {
-    Route::post('/set-password', [UserController::class, 'updatePassword']);
+    Route::post('/set-password', [UserController::class, 'setPassword']);
     Route::post('/check-user', [UserController::class, 'checkUserExist']);
 });
 
@@ -60,6 +60,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('protected')->group(function () {
         Route::put('/users/{id}', [UserController::class, 'updateUser']);
         Route::delete('/users/{id}', [UserController::class, 'deleteUser']);
+        Route::put('/user/profile/update', [UserController::class, 'updateProfile']);
+        Route::put('/user/profile/password/update', [UserController::class, 'updatePassword']);
     });
 
 

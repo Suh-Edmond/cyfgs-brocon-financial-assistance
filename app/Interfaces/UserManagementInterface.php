@@ -25,4 +25,9 @@ interface UserManagementInterface {
     public function importUsers($organisation_id, $request);
 
     public function filterUsers($request);
+
+    public function updateProfile($request);
+
+    public function updatePassword($request);
+
 }

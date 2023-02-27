@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Constants\Roles;
+use App\Exceptions\BusinessValidationException;
 use App\Http\Resources\UserResource;
 use App\Imports\UsersImport;
 use App\Interfaces\UserManagementInterface;
@@ -61,9 +62,24 @@ class UserManagementService implements UserManagementInterface
             'address'         => $request->address,
             'occupation'      => $request->occupation,
             'gender'          => $request->gender,
-            'updated_by'      => $request->user()->name
+            'updated_by'      => $request->user()->name,
+            'picture'         => $request->picture
         ]);
     }
+
+    public function updateProfile($request) {
+        $user = User::findOrFail($request->user_id);
+        $user->update([
+            'name'          => $request->name,
+            'email'         => $request->email,
+            'address'       => $request->address,
+            'occupation'    => $request->occupation
+        ]);
+        $updated = $user->refresh();
+        $token = $this->generateToken($updated);
+        return new UserResource($updated,$token, true);
+    }
+
 
     public function deleteUser($user_id)
     {
@@ -105,6 +121,16 @@ class UserManagementService implements UserManagementInterface
         $hasLoginBefore = $this->checkIfUserHasLogin($user);
 
         return new UserResource($user, $token, $hasLoginBefore);
+    }
+
+    public function updatePassword($request)
+    {
+        $user = User::findOrFail($request->user_id);
+        if(!Hash::check($request->old_password, $user->password)){
+            throw new BusinessValidationException("Old Password not match");
+        }
+        $user->password = Hash::make($request->password);
+        $user->save();
     }
 
 

@@ -35,6 +35,7 @@ class UserResource extends JsonResource
             'gender'         => $this->gender,
             'created_at'     => $this->created_at,
             'updated_at'     => $this->updated_at,
+            'picture'        => $this->picture,
             'roles'          => $this->roles,
             'token'          => $this->token,
             'hasLoginBefore' => $this->hasLoginBefore
