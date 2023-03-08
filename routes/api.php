@@ -104,6 +104,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
     Route::prefix('protected')->group(function () {
+        Route::get('/payment-items', [PaymentItemController::class, 'getAllPaymentItems']);
         Route::get('/payment-categories/{payment_category_id}/payment-items', [PaymentItemController::class, 'getPaymentItemsByCategory']);
         Route::get('/payment-categories/{payment_category_id}/payment-items/{id}', [PaymentItemController::class, 'getPaymentItem']);
         Route::get('download-payment-items', [PaymentItemController::class, 'downloadPaymentItem']);

@@ -29,6 +29,7 @@ class UpdateProfileRequest extends FormRequest
             'address' => 'required',
             'occupation' => 'required',
             'user_id'    => 'required',
+            'gender'     => ''
         ];
     }
 }
