@@ -29,6 +29,7 @@ class IncomeActivityRequest extends FormRequest
             'venue'                 => 'required|string',
             'date'                  => 'required|date',
             'amount'                => 'required|numeric|min:1',
+            'payment_item_id'       => 'string',
         ];
     }
 }

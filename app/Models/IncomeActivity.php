@@ -21,11 +21,16 @@ class IncomeActivity extends Model
         'venue',
         'organisation_id',
         'scan_picture',
-        'updated_by'
+        'updated_by',
+        'payment_item_id'
     ];
 
     public function organisation() {
         return $this->belongsTo(Organisation::class);
+    }
+
+    public function paymentItem() {
+        return $this->belongsTo(PaymentItem::class);
     }
 
 }

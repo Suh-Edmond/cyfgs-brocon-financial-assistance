@@ -45,7 +45,7 @@ class IncomeActivityController extends Controller
     {
         $income_activities = $this->income_activity_service->getIncomeActivities($id);
 
-        return $this->sendResponse($income_activities, 200);
+        return $this->sendResponse(IncomeActivityResource::collection($income_activities), 200);
     }
 
 
@@ -74,18 +74,25 @@ class IncomeActivityController extends Controller
 
     public function filterIncomeActivity(Request $request)
     {
-        $income_activities = $this->income_activity_service->filterIncomeActivity($request->organisation_id, $request->month, $request->year, $request->status);
+        $income_activities = $this->income_activity_service->filterIncomeActivity($request);
 
-        return $this->sendResponse($income_activities, 200);
+        return $this->sendResponse(IncomeActivityResource::collection($income_activities), 200);
+    }
+
+    public function prepareData(Request $request) {
+        $activities      = $this->filterIncomeActivity($request);
+        $activities      = json_decode(json_encode($activities))->original->data;
+
+        return $activities;
     }
 
     //I will have to pass the parameters in the request and run the query to download the data
-    public function generateIncomeActivityPDF()
+    public function generateIncomeActivityPDF(Request $request)
     {
         $auth_user         = auth()->user();
         $organisation      = User::find($auth_user['id'])->organisation;
 
-        $income_activities = $this->income_activity_service->getIncomeActivities($organisation->id);
+        $income_activities = $this->prepareData($request);
 
         $total             = $this->income_activity_service->calculateTotal($income_activities);
 

@@ -6,12 +6,10 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class IncomeActivityCollection extends ResourceCollection
 {
-    private $total;
 
-    public function __construct($collection, $total)
+    public function __construct($collection)
     {
       parent::__construct($collection);
-      $this->total = $total;
     }
 
 
@@ -20,7 +18,6 @@ class IncomeActivityCollection extends ResourceCollection
     {
         return [
             'data'  =>$this->collection,
-            'total_amount' => $this->total
         ];
     }
 }

@@ -5,6 +5,7 @@ use App\Http\Resources\IncomeActivityCollection;
 use App\Interfaces\IncomeActivityInterface;
 use App\Models\IncomeActivity;
 use App\Models\Organisation;
+use App\Models\PaymentItem;
 use App\Traits\HelpTrait;
 
 
@@ -15,6 +16,7 @@ class IncomeActivityService implements IncomeActivityInterface {
     public function createIncomeActivity($request, $id)
     {
         $organisation = Organisation::findOrFail($id);
+        $payment_item = PaymentItem::findOrFail($request->payment_item_id);
 
         IncomeActivity::create([
             'name'              => $request->name,
@@ -23,6 +25,7 @@ class IncomeActivityService implements IncomeActivityInterface {
             'amount'            => $request->amount,
             'venue'             => $request->venue,
             'organisation_id'   => $organisation->id,
+            'payment_item_id'   => $payment_item->id,
             'updated_by'        =>$request->user()->name,
             'scan_picture'      => $request->scan_picture
         ]);
@@ -43,13 +46,9 @@ class IncomeActivityService implements IncomeActivityInterface {
 
     public function getIncomeActivities($organisation_id)
     {
-        $activities = $this->findIncomeActivities($organisation_id)
+        return $this->findIncomeActivities($organisation_id)
                             ->orderBy('income_activities.name', 'ASC')
                             ->get();
-
-        $total = $this->calculateTotal($activities);
-
-        return new IncomeActivityCollection($activities, $total);
     }
 
     public function getIncomeActivity($id)
@@ -71,25 +70,23 @@ class IncomeActivityService implements IncomeActivityInterface {
         $activity->save();
     }
 
-    public function filterIncomeActivity($organisation_id, $month, $year, $status)
+    public function filterIncomeActivity($request)
     {
-        $activities = $this->findIncomeActivities($organisation_id);
-        if(!is_null($status)) {
-            if($status != "ALL"){
-                $activities = $activities->where('income_activities.approve', $status);
+        $activities = $this->findIncomeActivities($request->organisation_id);
+        if(!is_null($request->payment_item_id)){
+            $activities = $activities->where('income_activities.payment_item_id', $request->payment_item_id);
+        }
+        if(!is_null($request->status)) {
+            if($request->status != "ALL"){
+                $activities = $activities->where('income_activities.approve', $request->status);
             }
         }
-        if(!is_null($month)) {
-            $activities = $activities ->WhereMonth('income_activities.date', $this->convertMonthNameToNumber($month));
-        }
-        if(!is_null($year)) {
-            $activities = $activities->WhereYear('income_activities.date', $year);
+        if(!is_null($request->month)) {
+            $activities = $activities ->WhereMonth('income_activities.date', $this->convertMonthNameToNumber($request->month));
         }
         $activities = $activities->orderBy('income_activities.name', 'ASC')->get();
 
-        $total = $this->calculateTotal($activities);
-
-        return new IncomeActivityCollection($activities, $total);
+        return $activities;
     }
 
 
