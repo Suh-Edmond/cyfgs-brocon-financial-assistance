@@ -35,4 +35,8 @@ class PaymentItem extends Model
         return $this->hasMany(UserPayment::class);
     }
 
+    public function activitySupports() {
+        return $this->hasMany(ActivitySupport::class);
+    }
+
 }

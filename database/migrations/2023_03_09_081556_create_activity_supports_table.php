@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateUserContributionsTable extends Migration
+class CreateActivitySupportsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,21 +13,18 @@ class CreateUserContributionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('user_contributions', function (Blueprint $table) {
+        Schema::create('activity_supports', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('code')->unique();
             $table->string('scan_picture')->nullable(true);
             $table->longText('comment')->nullable(true);
-            $table->double('amount_deposited');
-            $table->string('status');
+            $table->decimal('amount_deposited', 10, 2);
             $table->enum('approve', ['PENDING', 'APPROVED', 'DECLINED'])->default('PENDING');
-            $table->timestamps();
-            $table->uuid('user_id');
-            $table->decimal('balance', 10, 2);
+            $table->string('supporter');
             $table->uuid('payment_item_id');
             $table->string('updated_by');
+            $table->timestamps();
 
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->cascadeOnDelete();
             $table->foreign('payment_item_id')->references('id')->on('payment_items')->onDelete('cascade')->cascadeOnDelete();
 
         });
@@ -40,6 +37,6 @@ class CreateUserContributionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user_contributions');
+        Schema::dropIfExists('activity_supports');
     }
 }
