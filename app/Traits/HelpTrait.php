@@ -89,7 +89,7 @@ trait HelpTrait {
     public static function getOrganisationAdministrators($role)
     {
         return DB::table('users')
-            ->join('model_has_roles', 'model_has_roles.model_id', '=', 'userS.id')
+            ->join('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
             ->join('roles', 'roles.id', '=', 'model_has_roles.role_id')
             ->select('users.*')
             ->where('roles.name', $role)

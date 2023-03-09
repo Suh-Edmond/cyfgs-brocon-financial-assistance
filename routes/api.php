@@ -264,7 +264,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/activity-supports/{id}', [ActivitySupportController::class, 'fetchActivitySupport']);
         Route::get('/activity-supports/payment-items/{id}', [ActivitySupportController::class, 'getActivitySupportsByPaymentItem']);
         Route::delete('/activity-supports/{id}', [ActivitySupportController::class, 'deleteActivitySupport']);
-        Route::get('/activity-supports/download', [ActivitySupportController::class, 'downloadActivitySupport']);
+        Route::get('sponsorships/download', [ActivitySupportController::class, 'downloadActivitySupport']);
         Route::get('sponsorships/search', [ActivitySupportController::class, 'filterActivitySupport']);
     });
     Route::prefix('protected')->group(function() {
