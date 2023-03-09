@@ -73,7 +73,8 @@ class UserManagementService implements UserManagementInterface
             'name'          => $request->name,
             'email'         => $request->email,
             'address'       => $request->address,
-            'occupation'    => $request->occupation
+            'occupation'    => $request->occupation,
+            'gender'        => $request->gender,
         ]);
         $updated = $user->refresh();
         $token = $this->generateToken($updated);

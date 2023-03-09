@@ -1,9 +1,11 @@
 <?php
 
+use App\Http\Controllers\ActivitySupportController;
 use App\Http\Controllers\ExpenditureCategoryController;
 use App\Http\Controllers\ExpenditureDetailController;
 use App\Http\Controllers\ExpenditureItemController;
 use App\Http\Controllers\FileUploadController;
+use App\Http\Controllers\GenerateReportController;
 use App\Http\Controllers\IncomeActivityController;
 use App\Http\Controllers\OrganisationController;
 use App\Http\Controllers\PaymentCategoryController;
@@ -104,6 +106,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
     Route::prefix('protected')->group(function () {
+        Route::get('/payment-items', [PaymentItemController::class, 'getAllPaymentItems']);
         Route::get('/payment-categories/{payment_category_id}/payment-items', [PaymentItemController::class, 'getPaymentItemsByCategory']);
         Route::get('/payment-categories/{payment_category_id}/payment-items/{id}', [PaymentItemController::class, 'getPaymentItem']);
         Route::get('download-payment-items', [PaymentItemController::class, 'downloadPaymentItem']);
@@ -253,6 +256,19 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('protected')->middleware(['isUser'])->group(function () {
         Route::post('upload-file', [FileUploadController::class, 'uploadFile']);
         Route::get('fetch-file', [FileUploadController::class, 'getUploadFile']);
+    });
+
+    Route::prefix('protected')->group(function () {
+        Route::post('/activity-supports', [ActivitySupportController::class, 'createActivitySupport']);
+        Route::put('activity-supports/{id}', [ActivitySupportController::class, 'updateActivitySupport']);
+        Route::get('/activity-supports/{id}', [ActivitySupportController::class, 'fetchActivitySupport']);
+        Route::get('/activity-supports/payment-items/{id}', [ActivitySupportController::class, 'getActivitySupportsByPaymentItem']);
+        Route::delete('/activity-supports/{id}', [ActivitySupportController::class, 'deleteActivitySupport']);
+        Route::get('/activity-supports/download', [ActivitySupportController::class, 'downloadActivitySupport']);
+        Route::get('sponsorships/search', [ActivitySupportController::class, 'filterActivitySupport']);
+    });
+    Route::prefix('protected')->group(function() {
+        Route::get('/activity/{id}/generate-report', [GenerateReportController::class, 'generateReportByActivity']);
     });
 });
 

@@ -4,12 +4,10 @@ namespace App\Http\Resources;
 
 use App\Models\PaymentItem;
 use App\Models\User;
-use App\Traits\HelpTrait;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class UserContributionResource extends JsonResource
 {
-    use HelpTrait;
 
 
     public function toArray($request)

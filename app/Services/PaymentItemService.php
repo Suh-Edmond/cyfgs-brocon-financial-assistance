@@ -88,4 +88,8 @@ class PaymentItemService implements PaymentItemInterface {
 
         return new PaymentItemCollection($payment_items, $total);
     }
+
+    public function getPaymentItems() {
+        return PaymentItem::all();
+    }
 }
