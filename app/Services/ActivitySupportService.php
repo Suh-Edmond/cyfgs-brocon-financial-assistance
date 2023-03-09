@@ -61,7 +61,7 @@ class ActivitySupportService implements ActivitySupportInterface
     public function filterActivitySupport($request)
     {
         $supports = ActivitySupport::where('payment_item_id', $request->payment_item_id);
-        if(!is_null($request->status)){
+        if(!is_null($request->status) && $request->status != "ALL"){
             $supports = $supports->where('approve', $request->status);
         }
         return $supports->orderBy('created_at', 'DESC')->get();

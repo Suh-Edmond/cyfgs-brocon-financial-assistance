@@ -14,7 +14,7 @@ class UpdateIncomeActivities extends Migration
     public function up()
     {
         Schema::table('income_activities', function (Blueprint $table) {
-            $table->uuid('payment_item_id');
+            $table->uuid('payment_item_id')->nullable(true);
 
             $table->foreign('payment_item_id')->references('id')->on('payment_items')->onDelete('cascade')->cascadeOnDelete();
 

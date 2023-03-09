@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Services\ReportGenerationService;
 use App\Traits\HelpTrait;
 use App\Traits\ResponseTrait;
-use Illuminate\Http\Request;
 
 class GenerateReportController extends Controller
 {
