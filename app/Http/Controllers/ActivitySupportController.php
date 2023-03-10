@@ -23,6 +23,12 @@ class ActivitySupportController extends Controller
         $this->activity_support_service = $activity_support_service;
     }
 
+    public function fetchAll()
+    {
+        $data = $this->activity_support_service->fetchAllActivitySupport();
+
+        return $this->sendResponse(ActivitySupportResource::collection($data), 200);
+    }
 
     public function createActivitySupport(CreateUpdateActivitySupportRequest $request)
     {
@@ -68,6 +74,13 @@ class ActivitySupportController extends Controller
         $data = $this->activity_support_service->getActivitySupportsByPaymentItem($id);
 
         return $this->sendResponse(ActivitySupportResource::collection($data), 200);
+    }
+
+    public function changeActivityState($id, Request $request)
+    {
+        $this->activity_support_service->changeActivityState($id, $request);
+
+        return $this->sendResponse('success', 204);
     }
 
     private function prepareData(Request $request) {

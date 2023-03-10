@@ -67,6 +67,20 @@ class ActivitySupportService implements ActivitySupportInterface
         return $supports->orderBy('created_at', 'DESC')->get();
     }
 
+    public function fetchAllActivitySupport()
+    {
+        return ActivitySupport::all()->sortByDesc();
+    }
+
+    public function changeActivityState($id, $request)
+    {
+        $sponsorship = ActivitySupport::findOrFail($id);
+
+        $sponsorship->approve = $request->type;
+
+        $sponsorship->save();
+    }
+
     private function findPaymentItem($payment_item)
     {
         return PaymentItem::findOrFail($payment_item);

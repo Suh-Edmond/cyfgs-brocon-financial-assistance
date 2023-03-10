@@ -259,13 +259,15 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::prefix('protected')->group(function () {
+        Route::get('sponsorships', [ActivitySupportController::class, 'fetchAll']);
         Route::post('/activity-supports', [ActivitySupportController::class, 'createActivitySupport']);
         Route::put('activity-supports/{id}', [ActivitySupportController::class, 'updateActivitySupport']);
         Route::get('/activity-supports/{id}', [ActivitySupportController::class, 'fetchActivitySupport']);
         Route::get('/activity-supports/payment-items/{id}', [ActivitySupportController::class, 'getActivitySupportsByPaymentItem']);
-        Route::delete('/activity-supports/{id}', [ActivitySupportController::class, 'deleteActivitySupport']);
+        Route::delete('sponsorships/{id}', [ActivitySupportController::class, 'deleteActivitySupport']);
         Route::get('sponsorships/download', [ActivitySupportController::class, 'downloadActivitySupport']);
         Route::get('sponsorships/search', [ActivitySupportController::class, 'filterActivitySupport']);
+        Route::put('sponsorships/{id}/approve', [ActivitySupportController::class, 'changeActivityState']);
     });
     Route::prefix('protected')->group(function() {
         Route::get('/activity/{id}/generate-report', [GenerateReportController::class, 'generateReportByActivity']);

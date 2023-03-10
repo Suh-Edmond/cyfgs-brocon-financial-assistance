@@ -16,7 +16,7 @@ class IncomeActivityService implements IncomeActivityInterface {
     public function createIncomeActivity($request, $id)
     {
         $organisation = Organisation::findOrFail($id);
-        $payment_item = PaymentItem::findOrFail($request->payment_item_id);
+        $payment_item_id = $this->getPaymentItemId($request->payment_item_id);
 
         IncomeActivity::create([
             'name'              => $request->name,
@@ -25,7 +25,7 @@ class IncomeActivityService implements IncomeActivityInterface {
             'amount'            => $request->amount,
             'venue'             => $request->venue,
             'organisation_id'   => $organisation->id,
-            'payment_item_id'   => $payment_item->id,
+            'payment_item_id'   => $payment_item_id,
             'updated_by'        =>$request->user()->name,
             'scan_picture'      => $request->scan_picture
         ]);
@@ -34,6 +34,7 @@ class IncomeActivityService implements IncomeActivityInterface {
     public function updateIncomeActivity($request, $id)
     {
         $activity = $this->findIncomeActivity($id);
+        $payment_item_id = $this->getPaymentItemId($request->payment_item_id);
 
         $activity->update([
             'name'              => $request->name,
@@ -41,6 +42,7 @@ class IncomeActivityService implements IncomeActivityInterface {
             'date'              => $request->date,
             'amount'            => $request->amount,
             'venue'             => $request->venue,
+            'payment_item_id'   => $payment_item_id
         ]);
     }
 
@@ -115,6 +117,14 @@ class IncomeActivityService implements IncomeActivityInterface {
         }
 
         return $total;
+    }
+
+    private function getPaymentItemId($id){
+        $item_id = null;
+        if(!is_null($id)){
+            $item = PaymentItem::findOrFail($id);
+        }
+        return $item->id;
     }
 }
 
