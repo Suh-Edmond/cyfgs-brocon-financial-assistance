@@ -84,11 +84,24 @@ class ExpenditureItemController extends Controller
         return $this->sendResponse('success', 'Expenditure Item approved successfully');
     }
 
+    public function getExpenditureItemByPaymentItem($payment_item_id, Request $request)
+    {
+        $data = $this->expenditure_item_service->getExpenditureItemsByPaymentItem($payment_item_id, $request);
+
+        return $this->sendResponse($data, 200);
+    }
+
+    public function prepareDataForDownload(Request $request){
+        $data = $this->expenditure_item_service->downloadExpenditureItems($request);
+        $data      = json_decode(json_encode($data));
+        return $data;
+    }
+
     public function downloadExpenditureItems(Request $request)
     {
         $auth_user         = auth()->user();
         $organisation      = User::find($auth_user['id'])->organisation;
-        $expenditure_items = $this->expenditure_item_service->getExpenditureItems($request->expenditure_category_id, $request->status);
+        $expenditure_items = $this->prepareDataForDownload($request);
 
         $president         = $this->getOrganisationAdministrators(Roles::PRESIDENT);
         $treasurer         = $this->getOrganisationAdministrators(Roles::TREASURER);
@@ -96,7 +109,7 @@ class ExpenditureItemController extends Controller
 
 
         $data = [
-            'title'               => 'Expenditure Items',
+            'title'               => 'Expenditure Activities',
             'date'                => date('m/d/Y'),
             'organisation'        => $organisation,
             'expenditure_items'   => $expenditure_items,

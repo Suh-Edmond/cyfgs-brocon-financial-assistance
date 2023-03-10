@@ -26,15 +26,21 @@ class ExpenditureItem extends Model
         'date',
         'expenditure_category_id',
         'scan_picture',
-        'updated_by'
+        'updated_by',
+        'payment_item_id'
     ];
 
-    public function expendiureDetails() {
+    public function expenditureDetails() {
         return $this->hasMany(ExpenditureDetail::class);
     }
 
     public function expenditureCategory()
     {
         return $this->belongsTo(ExpenditureCategory::class);
+    }
+
+    public function paymentItem()
+    {
+        return $this->belongsTo(PaymentItem::class);
     }
 }

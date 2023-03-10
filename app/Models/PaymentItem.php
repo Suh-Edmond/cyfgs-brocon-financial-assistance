@@ -43,4 +43,8 @@ class PaymentItem extends Model
         return $this->hasMany(IncomeActivity::class);
     }
 
+    public function expenditureItems()
+    {
+        return $this->hasMany(ExpenditureItem::class);
+    }
 }

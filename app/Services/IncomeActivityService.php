@@ -1,7 +1,8 @@
 <?php
 namespace App\Services;
 
-use App\Http\Resources\IncomeActivityCollection;
+use App\Constants\PaymentStatus;
+use App\Exceptions\BusinessValidationException;
 use App\Interfaces\IncomeActivityInterface;
 use App\Models\IncomeActivity;
 use App\Models\Organisation;
@@ -34,16 +35,18 @@ class IncomeActivityService implements IncomeActivityInterface {
     public function updateIncomeActivity($request, $id)
     {
         $activity = $this->findIncomeActivity($id);
-        $payment_item_id = $this->getPaymentItemId($request->payment_item_id);
 
-        $activity->update([
-            'name'              => $request->name,
-            'description'       => $request->description,
-            'date'              => $request->date,
-            'amount'            => $request->amount,
-            'venue'             => $request->venue,
-            'payment_item_id'   => $payment_item_id
-        ]);
+        if($activity->approve == PaymentStatus::PENDING){
+            $activity->update([
+                'name'              => $request->name,
+                'description'       => $request->description,
+                'date'              => $request->date,
+                'amount'            => $request->amount,
+                'venue'             => $request->venue,
+            ]);
+        }else {
+            throw new BusinessValidationException("Income activity cannot be updated after been approved or declined");
+        }
     }
 
     public function getIncomeActivities($organisation_id)
@@ -120,10 +123,7 @@ class IncomeActivityService implements IncomeActivityInterface {
     }
 
     private function getPaymentItemId($id){
-        $item_id = null;
-        if(!is_null($id)){
-            $item = PaymentItem::findOrFail($id);
-        }
+        $item = PaymentItem::findOrFail($id);
         return $item->id;
     }
 }
