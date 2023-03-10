@@ -22,7 +22,7 @@ class CreateUserSavingsTable extends Migration
             $table->timestamps();
             $table->string('updated_by');
 
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->cascadeOnDelete();
+            $table->foreign('user_id')->references('id')->on('users')->cascadeOnDelete();
 
         });
     }

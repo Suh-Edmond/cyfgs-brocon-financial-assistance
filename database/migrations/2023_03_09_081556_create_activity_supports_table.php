@@ -25,7 +25,7 @@ class CreateActivitySupportsTable extends Migration
             $table->string('updated_by');
             $table->timestamps();
 
-            $table->foreign('payment_item_id')->references('id')->on('payment_items')->onDelete('cascade')->cascadeOnDelete();
+            $table->foreign('payment_item_id')->references('id')->on('payment_items')->cascadeOnDelete();
 
         });
     }

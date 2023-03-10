@@ -27,8 +27,8 @@ class CreateUserContributionsTable extends Migration
             $table->uuid('payment_item_id');
             $table->string('updated_by');
 
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->cascadeOnDelete();
-            $table->foreign('payment_item_id')->references('id')->on('payment_items')->onDelete('cascade')->cascadeOnDelete();
+            $table->foreign('user_id')->references('id')->on('users')->cascadeOnDelete();
+            $table->foreign('payment_item_id')->references('id')->on('payment_items')->cascadeOnDelete();
 
         });
     }
