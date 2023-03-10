@@ -69,7 +69,7 @@ class ActivitySupportService implements ActivitySupportInterface
 
     public function fetchAllActivitySupport()
     {
-        return ActivitySupport::all()->sortByDesc();
+        return ActivitySupport::all();
     }
 
     public function changeActivityState($id, $request)
