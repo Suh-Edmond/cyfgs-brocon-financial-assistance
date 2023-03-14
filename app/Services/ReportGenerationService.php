@@ -2,99 +2,92 @@
 
 namespace App\Services;
 
+use App\Constants\PaymentStatus;
+use App\Http\Resources\ActivityReportResource;
+use App\Http\Resources\DetailResource;
+use App\Http\Resources\PaymentActivityData;
 use App\Interfaces\ReportGenerationInterface;
 use App\Models\IncomeActivity;
-use App\Models\PaymentItem;
-use App\Models\UserContribution;
-use App\Models\UserSaving;
-use PaymentItems;
+use Illuminate\Support\Facades\DB;
 
 class ReportGenerationService implements ReportGenerationInterface
 {
 
-    public function calculateIncomesForEachMonth($month, $organisation_id)
+    public function generateReportPerActivity($id)
     {
-    }
-
-    public function calculateIncomesForThreeMonths($month_range, $organisation_id)
-    {
-    }
-
-    public function calculateIncomesForSixMonths($month_range, $organisation_id)
-    {
-    }
-
-    public function calculateIncomesForYear($year, $organisation_id)
-    {
-    }
-
-    public function getIncomeActivitiesForThreeMonths($month_range, $organisation_id)
-    {
-    }
-
-    public function getUserContributionsForThreeMonths($month_range, $organisation_id)
-    {
-    }
-
-    public function getUserSavingsForThreeMonths($month_range, $organisation_id)
-    {
-    }
-
-    public function getIncomeActivitiesForEachMonth($month, $organisation_id)
-    {
-        $income_activities = IncomeActivity::select('income_activities.*')
-            ->join('organisations', ['organisations.id' => 'income_activities.organisation_id'])
-            ->where('income_activities.organisation_id', $organisation_id)
-            ->whereMonth('income_activities.created_at', $month)
-            ->where('income_activities.approve', 1)
-            ->get();
-
-        return $income_activities;
-    }
-
-    public function getUserContributionsForEachMonth($month, $organisation_id)
-    {
-        $contributions = UserContribution::select('user_contributions.*')
-            ->join('users', ['users.id'  => 'user_contributions.user_id'])
-            ->join('payment_items', ['payment_items.id' => 'user_contributions.payment_item_id'])
-            ->join('organisations', ['organisations.id' => 'users.organisation_id'])
-            ->where('organisations.id', $organisation_id)
-            ->whereMonth('user_contributions.created_at', $month)
-            ->get();
-
-        return $contributions;
-    }
-
-    public function getUserSavingsForEachMonth($month, $organisation_id)
-    {
-        $income_activities = UserSaving::select('user_savings.*')
-            ->join('users',         ['users.id'          => 'user_savings.user_id'])
-            ->join('organisations', ['organisations.id'  => 'users.organisation_id'])
-            ->where('organisations.id', $organisation_id)
-            ->whereMonth('user_savings.created_at', $month)
-            ->get();
-
-        return $income_activities;
-    }
-
-    public function groupUserContributionsByPaymentItem($contributions, $month)
-    {
-        $user_contributions = [];
-        $payment_items       = $this->getPaymentItemsByMonth($month);
-        foreach ($payment_items as $payment_item) {
-        $user_contributions = array_filter($contributions->toArray(), function ($item) use ($payment_item) {
-                                return $item->payment_item_id === $payment_item->id ? true : false;
-                            });
+        $total = 0;
+        $data = [];
+        $expenditures = [];
+        $members_contributions = $this->getApproveMembersContributionPerActivity($id)->toArray();
+        $total_members_contributions = count($members_contributions) > 0  ? $members_contributions[0]->amount: 0;
+        $incomes = $this->getIncomePerActivity($id)->toArray();
+        $sponsorship = $this->getSponsorshipPerActivity($id)->toArray();
+        array_push($data, new ActivityReportResource("Members Contributions", $total_members_contributions));
+        $result = array_merge($incomes, $sponsorship);
+        foreach ($result as $contribution){
+            $total += $contribution->amount;
+            array_push($data, new ActivityReportResource($contribution->name, $contribution->amount));
         }
+
+        $expenses = $this->getExpenditureActivities($id);
+        foreach ($expenses as $expense){
+            array_push($expenditures, new DetailResource($expense->name, $expense->amount_given, $expense->amount_spent, ($expense->amount_given- $expense->amount_spent)));
+        }
+        return [$data, $expenditures];
     }
 
-
-    public function getPaymentItemsByMonth($month)
+    private function getApproveMembersContributionPerActivity($id)
     {
-        $items = PaymentItem::select('*')
-            ->where('payment_items.created_at', $month)
+        return DB::table('user_contributions')
+            ->join('users', 'users.id', '=' ,'user_contributions.user_id')
+            ->join('payment_items', 'payment_items.id', '=', 'user_contributions.payment_item_id')
+            ->where('user_contributions.payment_item_id', $id)
+            ->where('user_contributions.approve', PaymentStatus::APPROVED)
+            ->selectRaw('SUM(user_contributions.amount_deposited) as amount, payment_items.name')
+            ->groupBy('user_contributions.payment_item_id')
             ->get();
+    }
 
-        return $items;
+    private function getSponsorshipPerActivity($id)
+    {
+        return DB::table('activity_supports')
+            ->join('payment_items', 'payment_items.id', '=', 'activity_supports.payment_item_id')
+            ->where('activity_supports.payment_item_id', $id)
+            ->where('activity_supports.approve', PaymentStatus::APPROVED)
+            ->select('activity_supports.supporter as name', 'activity_supports.amount_deposited as amount')
+            ->orderBy('activity_supports.supporter', 'DESC')
+            ->get();
+    }
+
+    private function getIncomePerActivity($id)
+    {
+        return DB::table('income_activities')
+            ->join('payment_items', 'payment_items.id', '=', 'income_activities.payment_item_id')
+            ->where('income_activities.payment_item_id', $id)
+            ->where('income_activities.approve', PaymentStatus::APPROVED)
+            ->select('income_activities.name', 'income_activities.amount')
+            ->orderBy('income_activities.name', 'DESC')
+            ->get();
+    }
+
+    private function getExpenditureActivities($payment_activity)
+    {
+        return DB::table('expenditure_details')
+            ->join('expenditure_items', 'expenditure_items.id', '=', 'expenditure_details.expenditure_item_id')
+            ->join('payment_items', 'payment_items.id', '=', 'expenditure_items.payment_item_id')
+            ->where('payment_items.id', $payment_activity)
+            ->where('expenditure_details.approve', PaymentStatus::APPROVED)
+            ->select('expenditure_details.name', 'expenditure_details.amount_given', 'expenditure_details.amount_spent')
+            ->orderBy('expenditure_details.name', 'DESC')->get();
+    }
+
+    private function getEstimatedAmountByActivity($payment_activity)
+    {
+        return DB::table('expenditure_items')
+            ->join('payment_items', 'payment_items.id', '=', 'expenditure_items.payment_item_id')
+            ->where('payment_items.id', $payment_activity)
+            ->where('expenditure_items.approve', PaymentStatus::APPROVED)
+            ->selectRaw('SUM(expenditure_items.amount) as total_estimated_amount')
+            ->get();
     }
 }

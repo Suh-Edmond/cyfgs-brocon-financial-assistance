@@ -187,4 +187,24 @@ trait HelpTrait {
         return $this->months()[$month];
     }
 
+    public function  calculateTotal($data): int
+    {
+        $total = 0;
+        foreach ($data as $income) {
+            $total += $income->amount;
+        }
+
+        return $total;
+    }
+
+    public function  calculateBalance($data): int
+    {
+        $total = 0;
+        foreach ($data as $income) {
+            $total += $income->balance;
+        }
+
+        return $total;
+    }
+
 }

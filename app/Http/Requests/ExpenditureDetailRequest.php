@@ -27,7 +27,7 @@ class ExpenditureDetailRequest extends FormRequest
             'name'              => 'required|string|max:255',
             'amount_given'      => 'required|numeric|min:1',
             'amount_spent'      => 'required|numeric|min:1',
-            'comment'           => 'string|max:5000'
+            'comment'           => 'max:5000'
         ];
     }
 }
