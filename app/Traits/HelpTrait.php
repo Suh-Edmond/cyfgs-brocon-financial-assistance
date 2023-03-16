@@ -89,7 +89,7 @@ trait HelpTrait {
     public static function getOrganisationAdministrators($role)
     {
         return DB::table('users')
-            ->join('model_has_roles', 'model_has_roles.model_id', '=', 'userS.id')
+            ->join('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
             ->join('roles', 'roles.id', '=', 'model_has_roles.role_id')
             ->select('users.*')
             ->where('roles.name', $role)
@@ -185,6 +185,26 @@ trait HelpTrait {
     public function convertMonthNameToNumber($month): int
     {
         return $this->months()[$month];
+    }
+
+    public function  calculateTotal($data): int
+    {
+        $total = 0;
+        foreach ($data as $income) {
+            $total += $income->amount;
+        }
+
+        return $total;
+    }
+
+    public function  calculateBalance($data): int
+    {
+        $total = 0;
+        foreach ($data as $income) {
+            $total += $income->balance;
+        }
+
+        return $total;
     }
 
 }

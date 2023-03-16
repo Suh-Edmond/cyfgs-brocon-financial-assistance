@@ -145,7 +145,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/expenditure-categories/{expenditure_category_id}/expenditures', [ExpenditureItemController::class, 'getExpenditureByCategory']);
         Route::get('/expenditure-categories/{expenditure_category_id}/expenditure-items/{id}', [ExpenditureItemController::class, 'getExpenditureItem']);
         Route::get('/expenditure-items/{id}', [ExpenditureItemController::class, 'getItem']);
-        Route::get('expenditure-items/download', [ExpenditureItemController::class, 'downloadExpenditureItems']);
+        Route::get('expenditure-categories/expenditure-items/download', [ExpenditureItemController::class, 'downloadExpenditureItems']);
+        Route::get('/expenditure-items/payment-items/{payment_item_id}', [ExpenditureItemController::class, 'getExpenditureItemByPaymentItem']);
     });
 
     Route::prefix('protected')->group(function () {
@@ -259,16 +260,20 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::prefix('protected')->group(function () {
+        Route::get('sponsorships', [ActivitySupportController::class, 'fetchAll']);
         Route::post('/activity-supports', [ActivitySupportController::class, 'createActivitySupport']);
         Route::put('activity-supports/{id}', [ActivitySupportController::class, 'updateActivitySupport']);
         Route::get('/activity-supports/{id}', [ActivitySupportController::class, 'fetchActivitySupport']);
         Route::get('/activity-supports/payment-items/{id}', [ActivitySupportController::class, 'getActivitySupportsByPaymentItem']);
-        Route::delete('/activity-supports/{id}', [ActivitySupportController::class, 'deleteActivitySupport']);
-        Route::get('/activity-supports/download', [ActivitySupportController::class, 'downloadActivitySupport']);
+        Route::delete('sponsorships/{id}', [ActivitySupportController::class, 'deleteActivitySupport']);
+        Route::get('sponsorships/download', [ActivitySupportController::class, 'downloadActivitySupport']);
         Route::get('sponsorships/search', [ActivitySupportController::class, 'filterActivitySupport']);
+        Route::put('sponsorships/{id}/approve', [ActivitySupportController::class, 'changeActivityState']);
     });
     Route::prefix('protected')->group(function() {
         Route::get('/activity/{id}/generate-report', [GenerateReportController::class, 'generateReportByActivity']);
+        Route::get('/activity/{id}/report/download', [GenerateReportController::class, 'downloadReportByActivity']);
+        Route::get('/generate-quarterly-report', [GenerateReportController::class, 'generateQuarterlyReport']);
     });
 });
 

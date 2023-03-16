@@ -64,12 +64,16 @@ class UserContributionService implements UserContributionInterface {
         $balance = $user_contribution->balance - $request->amount_deposited;
 
         if(!$hasCompleted){
-            $user_contribution->update([
-                'amount_deposited' => $request->amount_deposited,
-                'comment'          => $request->comment,
-                'scan_picture'     => $request->scan_picture,
-                'balance'          => $balance,
-            ]);
+            if($user_contribution->approve == PaymentStatus::PENDING){
+                $user_contribution->update([
+                    'amount_deposited' => $request->amount_deposited,
+                    'comment'          => $request->comment,
+                    'scan_picture'     => $request->scan_picture,
+                    'balance'          => $balance,
+                ]);
+            }else {
+                throw new BusinessValidationException("Income activity cannot be updated after been approved or declined");
+            }
         }
     }
 

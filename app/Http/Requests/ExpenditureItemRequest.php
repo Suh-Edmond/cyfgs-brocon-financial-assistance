@@ -27,8 +27,9 @@ class ExpenditureItemRequest extends FormRequest
             'name'                  => 'required|max:255',
             'amount'                => 'required|numeric',
             'comment'               => 'string|max:5000',
-            'venue'                 => 'required|max:5000',
-            'date'                  =>'required|date'
+            'venue'                 => 'required|max:255',
+            'date'                  => 'required|date',
+            'payment_item_id'       => 'required|string'
         ];
     }
 }

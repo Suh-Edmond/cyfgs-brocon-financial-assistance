@@ -25,10 +25,11 @@ class IncomeActivityRequest extends FormRequest
     {
         return [
             'name'                  => 'required|max:255',
-            'description'           => 'string|max:5000',
+            'description'           => 'max:5000',
             'venue'                 => 'required|string',
             'date'                  => 'required|date',
             'amount'                => 'required|numeric|min:1',
+            'payment_item_id'       => 'required|string',
         ];
     }
 }

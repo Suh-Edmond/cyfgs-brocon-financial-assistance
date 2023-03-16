@@ -1,10 +1,13 @@
 <?php
 namespace App\Services;
 
+use App\Constants\PaymentStatus;
+use App\Exceptions\BusinessValidationException;
 use App\Http\Resources\ExpenditureItemResource;
 use App\Interfaces\ExpenditureItemInterface;
 use App\Models\ExpenditureCategory;
 use App\Models\ExpenditureItem;
+use App\Models\PaymentItem;
 use App\Traits\HelpTrait;
 
 class ExpenditureItemService implements ExpenditureItemInterface {
@@ -15,6 +18,7 @@ class ExpenditureItemService implements ExpenditureItemInterface {
     public function createExpenditureItem($request, $expenditure_category_id)
     {
         $expenditure_category = ExpenditureCategory::findOrFail($expenditure_category_id);
+        $payment_item = PaymentItem::findOrFail($request->payment_item_id);
 
         ExpenditureItem::create([
             'name'                      => $request->name,
@@ -24,7 +28,8 @@ class ExpenditureItemService implements ExpenditureItemInterface {
             'date'                      => $request->date,
             'expenditure_category_id'   => $expenditure_category->id,
             'scan_picture'              => $request->scan_picture,
-            'updated_by'                => $request->user()->name
+            'updated_by'                => $request->user()->name,
+            'payment_item_id'           => $payment_item->id,
         ]);
     }
 
@@ -32,14 +37,18 @@ class ExpenditureItemService implements ExpenditureItemInterface {
     {
         $expenditure_item = $this->findExpenditureItem($id, $expenditure_category_id);
 
-        $expenditure_item->update([
-            'name'                      => $request->name,
-            'amount'                    => $request->amount,
-            'venue'                     => $request->venue,
-            'comment'                   => $request->comment,
-            'date'                      => $request->date,
-            'scan_picture'              => $request->scan_picture
-        ]);
+        if($expenditure_item->approve == PaymentStatus::PENDING){
+            $expenditure_item->update([
+                'name'                      => $request->name,
+                'amount'                    => $request->amount,
+                'venue'                     => $request->venue,
+                'comment'                   => $request->comment,
+                'date'                      => $request->date,
+                'scan_picture'              => $request->scan_picture
+            ]);
+        }else {
+            throw new BusinessValidationException("Expenditure Item cannot be updated after been approved or declined");
+        }
     }
 
     public function getExpenditureItems($expenditure_category_id, $status)
@@ -69,14 +78,10 @@ class ExpenditureItemService implements ExpenditureItemInterface {
     public function approveExpenditureItem($id, $type)
     {
         $expenditure_item = ExpenditureItem::findOrFail($id);
-        $expenditure_item->approve = $type;
-
-        $expenditure_item->save();
-    }
-
-    public function getExpenditureItemByStatus($status)
-    {
-
+        if($expenditure_item->approve == PaymentStatus::PENDING){
+            $expenditure_item->approve = $type;
+            $expenditure_item->save();
+        }
     }
 
     private function findExpenditureItem($id, $expenditure_category_id)
@@ -106,9 +111,9 @@ class ExpenditureItemService implements ExpenditureItemInterface {
         $response = array();
         foreach($items as $item)
         {
-            array_push($response, new ExpenditureItemResource($item, $this->calculateTotalAmountGiven($item->expendiureDetails),
-                                                                    $this->calculateTotalAmountSpent($item->expendiureDetails),
-                                                                    $this->calculateExpenditureBalanceByExpenditureItem($item->expendiureDetails,
+            array_push($response, new ExpenditureItemResource($item, $this->calculateTotalAmountGiven($item->expenditureDetails),
+                                                                    $this->calculateTotalAmountSpent($item->expenditureDetails),
+                                                                    $this->calculateExpenditureBalanceByExpenditureItem($item->expenditureDetails,
                                                                     $item->amount)));
         }
 
@@ -141,6 +146,36 @@ class ExpenditureItemService implements ExpenditureItemInterface {
             ->get();
 
         return $this->generateExpenditureItemResponse($items);
+    }
+
+    public function getExpenditureItemsByPaymentItem($item, $request)
+    {
+        $items = ExpenditureItem::select('expenditure_items.*')
+            ->join('payment_items', ['payment_items.id' => 'expenditure_items.payment_item_id'])
+            ->where('expenditure_items.payment_item_id', $item);
+        if(!is_null($request->status) && $request->status != "ALL"){
+            $items = $items->where('expenditure_items.approve', $request->status);
+        }
+        $items = $items->orderBy('expenditure_items.name', 'ASC')->get();
+        return $this->generateExpenditureItemResponse($items);
+    }
+
+    public function downloadExpenditureItems($request)
+    {
+        $data = ExpenditureItem::select('expenditure_items.*')
+                ->join('expenditure_categories', ['expenditure_categories.id' => 'expenditure_items.expenditure_category_id'])
+                ->join('payment_items', ['payment_items.id' => 'expenditure_items.payment_item_id'])
+                ->where('expenditure_items.expenditure_category_id', $request->expenditure_category_id);
+        if(!is_null($request->payment_item_id)){
+            $data = $data->where('expenditure_items.payment_item_id', $request->payment_item_id);
+        }
+        if(!is_null($request->status)  && $request->status != "ALL") {
+            $data = $data->where('expenditure_items.approve', $request->status);
+        }
+
+        $data = $data->orderBy('expenditure_items.name', 'ASC')->get();
+
+        return $this->generateExpenditureItemResponse($data);
     }
 
 }

@@ -1,6 +1,8 @@
 <?php
 namespace App\Services;
 
+use App\Constants\PaymentStatus;
+use App\Exceptions\BusinessValidationException;
 use App\Http\Resources\ExpenditureDetailCollection;
 use App\Http\Resources\ExpenditureDetailResource;
 use App\Interfaces\ExpenditureDetailInterface;
@@ -33,14 +35,17 @@ class ExpenditureDetailService implements ExpenditureDetailInterface {
     {
 
         $detail = $this->findExpenditureDetail($id);
-
-        $detail->update([
-            'name'                  => $request->name,
-            'amount_spent'          => $request->amount_spent,
-            'amount_given'          => $request->amount_given,
-            'comment'               => $request->comment,
-            'scan_picture'          => $request->scan_picture
-        ]);
+        if($detail->approve == PaymentStatus::PENDING){
+            $detail->update([
+                'name'                  => $request->name,
+                'amount_spent'          => $request->amount_spent,
+                'amount_given'          => $request->amount_given,
+                'comment'               => $request->comment,
+                'scan_picture'          => $request->scan_picture
+            ]);
+        }else {
+            throw new BusinessValidationException("Expenditure Item cannot be updated after been approved or declined");
+        }
     }
 
     public function getExpenditureDetails($expenditure_item_id)

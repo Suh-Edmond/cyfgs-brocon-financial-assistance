@@ -38,8 +38,8 @@
                 </tr>
             @endforeach
         </table>
-        <p> <label style="font-size: 15px; font-weight: bold">Total Organisation Savings:
-                <span style="padding-left: 5px;">{{ 100000 }} </span><span
+        <p> <label style="font-size: 15px; font-weight: bold">Total:
+                <span style="padding-left: 5px;">{{ number_format($total) }} </span><span
                     style="padding-left: 5px;">F CFA</span> </label></p>
     </div>
     <div style="margin-top: 100px;">

@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Constants\PaymentStatus;
+use App\Exceptions\BusinessValidationException;
 use App\Http\Resources\UserSavingCollection;
 use App\Interfaces\UserSavingInterface;
 use App\Models\User;
@@ -27,10 +29,14 @@ class UsersavingService implements UserSavingInterface
     public function updateUserSaving($request, $id, $user_id)
     {
         $user = $this->findUserSaving($id, $user_id);
-        $user->update([
-            'amount_deposited'      => $request->amount_deposited,
-            'comment'               => $request->comment,
-        ]);
+        if($user->approve == PaymentStatus::PENDING){
+            $user->update([
+                'amount_deposited'      => $request->amount_deposited,
+                'comment'               => $request->comment,
+            ]);
+        }else {
+            throw new BusinessValidationException("Income activity cannot be updated after been approved or declined");
+        }
     }
 
     public function getUserSavings($user_id)
