@@ -68,4 +68,10 @@ class GenerateReportController extends Controller
 
         return $pdf->download('Financial_Report.pdf');
     }
+
+    public function generateQuarterlyReport(Request $request)
+    {
+        $data = $this->report_generation_service->generateQuarterlyReport();
+//        dd($data->toDateTimeString());
+    }
 }

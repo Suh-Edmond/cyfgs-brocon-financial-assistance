@@ -5,10 +5,9 @@ namespace App\Services;
 use App\Constants\PaymentStatus;
 use App\Http\Resources\ActivityReportResource;
 use App\Http\Resources\DetailResource;
-use App\Http\Resources\PaymentActivityData;
 use App\Interfaces\ReportGenerationInterface;
-use App\Models\IncomeActivity;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class ReportGenerationService implements ReportGenerationInterface
 {
@@ -34,6 +33,13 @@ class ReportGenerationService implements ReportGenerationInterface
             array_push($expenditures, new DetailResource($expense->name, $expense->amount_given, $expense->amount_spent, ($expense->amount_given- $expense->amount_spent)));
         }
         return [$data, $expenditures];
+    }
+
+    public function generateQuarterlyReport()
+    {
+        $data = $this->getSponsorshipPerQuarterly();
+
+        dd($data->toArray());
     }
 
     private function getApproveMembersContributionPerActivity($id)
@@ -81,13 +87,27 @@ class ReportGenerationService implements ReportGenerationInterface
             ->orderBy('expenditure_details.name', 'DESC')->get();
     }
 
-    private function getEstimatedAmountByActivity($payment_activity)
+    private function getStartOfQuarterly()
     {
-        return DB::table('expenditure_items')
-            ->join('payment_items', 'payment_items.id', '=', 'expenditure_items.payment_item_id')
-            ->where('payment_items.id', $payment_activity)
-            ->where('expenditure_items.approve', PaymentStatus::APPROVED)
-            ->selectRaw('SUM(expenditure_items.amount) as total_estimated_amount')
+        return Carbon::now()->startOfQuarter()->toDateTimeString();
+    }
+
+    private function getEndOfQuarterly()
+    {
+        return Carbon::now()->endOfQuarter()->toDateTimeString();
+    }
+
+    private function getSponsorshipPerQuarterly()
+    {
+        $start_of_quarterly = $this->getStartOfQuarterly();
+        $end_of_quarterly   = $this->getEndOfQuarterly();
+
+        return DB::table('activity_supports')
+            ->join('payment_items', 'payment_items.id', '=', 'activity_supports.payment_item_id')
+            ->where('activity_supports.approve', PaymentStatus::APPROVED)
+            ->whereBetween('activity_supports.created_at', [$start_of_quarterly, $end_of_quarterly])
+//            ->select('activity_supports.supporter as name', 'activity_supports.amount_deposited as amount')
+            ->groupBy('activity_supports.payment_item_id')
             ->get();
     }
 }
