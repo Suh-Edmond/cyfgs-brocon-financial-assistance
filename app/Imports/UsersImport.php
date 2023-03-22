@@ -39,11 +39,13 @@ class UsersImport implements ToModel
     /**
     * @param array $row
     *
-    * @return \Illuminate\Database\Eloquent\Model|null
-    */
+    * @return void
+     */
     public function model(array $row)
     {
-        $created =  User::create([
+        $update_by = User::find(auth()->user()['id'])->name;
+        $assignRole = CustomRole::findByName(Roles::MEMBER, 'api');
+        $created =User::create([
             'name'            => $row[0],
             'email'           => $row[1],
             'telephone'       => $row[2],
@@ -51,9 +53,8 @@ class UsersImport implements ToModel
             'address'         => $row[4],
             'occupation'      => $row[5],
             'organisation_id' => $this->organisation_id,
-            'updated_by'      => User::find(auth()->user()['id'])->name
+            'updated_by'      => $update_by
         ]);
-        $assignRole = CustomRole::findByName(Roles::MEMBER, 'api');
         $this->saveUserRole($created, $assignRole);
     }
 }

@@ -255,7 +255,7 @@ class UserContributionService implements UserContributionInterface {
             ->join('users', 'users.id', '=', 'user_contributions.user_id')
             ->where('user_contributions.payment_item_id', $payment_item);
 
-        if($status != "null" && $status != "ALL"){
+        if(!is_null($status) && $status != "ALL"){
             if($status == "PENDING" || "APPROVED" || "DECLINED"){
                 $contributions = $contributions->where('user_contributions.approve', $status);
             }else {
@@ -263,15 +263,15 @@ class UserContributionService implements UserContributionInterface {
             }
         }
 
-        if($year != "null") {
+        if(!is_null($year)) {
             $contributions = $contributions->whereYear('user_contributions.created_at', $year);
         }
 
-        if($month != "null"){
+        if(!is_null($month)){
             $contributions = $contributions->whereMonth('user_contributions.created_at', $this->convertMonthNameToNumber($month));
         }
 
-        if($date != "null"){
+        if(!is_null($date)){
             $contributions = $contributions->whereDate('user_contributions.created_at', $date);
         }
         return $contributions;
