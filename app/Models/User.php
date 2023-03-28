@@ -73,6 +73,8 @@ class User extends Authenticatable
     }
 
 
-
+    public function registrations() {
+        return $this->hasMany(MemberRegistration::class);
+    }
 
 }

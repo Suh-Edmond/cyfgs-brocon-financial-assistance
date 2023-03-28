@@ -7,6 +7,7 @@ use App\Http\Controllers\ExpenditureItemController;
 use App\Http\Controllers\FileUploadController;
 use App\Http\Controllers\GenerateReportController;
 use App\Http\Controllers\IncomeActivityController;
+use App\Http\Controllers\MemberRegistrationController;
 use App\Http\Controllers\OrganisationController;
 use App\Http\Controllers\PaymentCategoryController;
 use App\Http\Controllers\PaymentItemController;
@@ -274,6 +275,15 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/activity/{id}/generate-report', [GenerateReportController::class, 'generateReportByActivity']);
         Route::get('/activity/{id}/report/download', [GenerateReportController::class, 'downloadReportByActivity']);
         Route::get('/generate-quarterly-report', [GenerateReportController::class, 'generateQuarterlyReport']);
+    });
+
+    Route::prefix('protected')->group(function() {
+        Route::post('/members-registration', [MemberRegistrationController::class, 'addRegistration']);
+        Route::put('/members-registration/update', [MemberRegistrationController::class, 'updateRegistration']);
+        Route::get('/registered-members', [MemberRegistrationController::class, 'getRegistrations']);
+        Route::delete('/registered-members/{id}', [MemberRegistrationController::class, 'deleteRegistration']);
+        Route::put('/members-registration/approve', [MemberRegistrationController::class, 'approveRegisteredMember']);
+        Route::get('/registered-members/download', [MemberRegistrationController::class, 'downloadRegisteredMembers']);
     });
 });
 
