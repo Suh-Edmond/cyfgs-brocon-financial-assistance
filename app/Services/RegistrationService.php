@@ -34,14 +34,14 @@ class RegistrationService implements RegistrationInterface
 
     public function getRegistrations($request)
     {
-        $registrations = DB::table('member_registrations')
-                        ->join('users', 'users.id', '=', 'member_registrations.user_id')
-                        ->where('member_registrations.year', $request->year);
-        if(!is_null($request->status)){
+        $registrations = MemberRegistration::join('users', ['users.id' => 'member_registrations.user_id'])
+                            ->where('member_registrations.year', $request->year);
+        if(!is_null($request->status) && $request->status != "ALL"){
             $registrations = $registrations->where('member_registrations.approve', $request->status);
         }
+        $registrations = $registrations->orderBy('users.name', 'DESC')->get();
 
-        return $registrations->orderBy('users.name', 'DESC')->get();
+        return $registrations;
     }
 
     public function deleteRegistration($id)

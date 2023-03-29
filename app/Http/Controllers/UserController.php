@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Constants\RegistrationStatus;
 use App\Constants\Roles;
 use App\Http\Requests\CheckUserRequest;
 use App\Http\Requests\CreateAccountRequest;
@@ -81,7 +82,7 @@ class UserController extends Controller
     {
         $users = $this->user_management_service->getUsers($id);
 
-        return $this->sendResponse($users, 'success');
+        return $this->sendResponse(UserResource::collection($users), 'success');
     }
 
 
@@ -128,7 +129,7 @@ class UserController extends Controller
         $fin_sec           = $this->getOrganisationAdministrators(Roles::FINANCIAL_SECRETARY);
 
         $data = [
-        'title'                      => 'Organisation Members',
+        'title'                      => $request->has_register == RegistrationStatus::REGISTERED ? 'Registered Organisation Members':'Non Registered Organisation Members',
             'date'                   => date('m/d/Y'),
             'organisation'           => $organisation,
             'organisation_telephone' => $this->setOrganisationTelephone($organisation->telephone),
@@ -148,7 +149,7 @@ class UserController extends Controller
     {
         $users = $this->user_management_service->filterUsers($request);
 
-        return $this->sendResponse($users, 'success');
+        return $this->sendResponse(UserResource::collection($users), 'success');
     }
 
     public function updateProfile(UpdateProfileRequest $request){

@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Constants\PaymentStatus;
+use App\Constants\RegistrationStatus;
 use App\Constants\Roles;
 use App\Exceptions\BusinessValidationException;
 use App\Http\Resources\UserResource;
@@ -45,12 +47,20 @@ class UserManagementService implements UserManagementInterface
 
     public function getUsers($organisation_id)
     {
-        return User::where('organisation_id', $organisation_id)->orderBy('created_at', 'DESC')->get();
+
+        return User::join('organisations', 'organisations.id', '=', 'users.organisation_id')
+                 ->leftJoin('member_registrations', 'users.id', '=', 'member_registrations.user_id')
+                 ->where('organisations.id', $organisation_id)
+                 ->select('users.*', 'member_registrations.approve')
+                 ->orderBy('created_at', 'DESC')->get();
     }
 
     public function getUser($user_id)
     {
-        return User::findOrFail($user_id);
+        return User::leftJoin('member_registrations', 'users.id', '=', 'member_registrations.user_id')
+                   ->where('users.id', $user_id)
+                   ->select('users.*', 'member_registrations.approve')
+                   ->get();
     }
 
     public function updateUser($user_id, $request)
@@ -147,25 +157,20 @@ class UserManagementService implements UserManagementInterface
 
     public function filterUsers($request)
     {
-        $users = [];
-        $filter_users = DB::table('users')->where('organisation_id', $request->organisation_id)->orderBy('name', 'ASC')->get()->toArray();
-        if($request->gender != "null"){
-          if($request->gender !== "ALL"){
-              $filter_users =  array_filter($filter_users, function($user) use ($request) {
-                  return $user->gender == $request->gender;
-              });
-          }
+        $filter_users = User::leftJoin('member_registrations', 'member_registrations.user_id', '=', 'users.id');
+        if($request->has_register == RegistrationStatus::REGISTERED){
+            $filter_users = $filter_users->where('member_registrations.approve', PaymentStatus::APPROVED);
         }
-        if($request->year != "null") {
-            $filter_users = array_filter($filter_users, function($user) use ($request) {
-                                $year = substr($user->created_at, 0, 4);
-                                return $year == $request->year;
-                            });
+        if(!is_null($request->gender) && $request->gender != "ALL"){
+           $filter_users = $filter_users->where('users.gender', $request->gender);
         }
-        foreach ($filter_users as $user){
-           array_push($users, $user);
+        if(!is_null($request->year)) {
+            $filter_users = $filter_users->where('member_registrations.year', $request->year);
         }
-        return $users;
+        $filter_users = $filter_users->select('users.*','member_registrations.approve');
+        $filter_users = $filter_users->orderBy('users.name', 'DESC')->get();
+
+        return $filter_users;
     }
 
 

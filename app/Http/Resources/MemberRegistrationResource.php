@@ -19,7 +19,7 @@ class MemberRegistrationResource extends JsonResource
             'year'      => $this->year,
             'approve'   => $this->approve,
             'amount'    => $this->amount,
-            'user'      => $this->user,
+            'user'           => $this->user,
             'created_at'      => $this->created_at,
             'updated_at'      => $this->updated_at,
             'updated_by'      => $this->updated_by
