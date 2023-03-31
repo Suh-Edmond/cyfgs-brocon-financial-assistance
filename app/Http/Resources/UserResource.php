@@ -2,6 +2,8 @@
 
 namespace App\Http\Resources;
 
+use App\Constants\PaymentStatus;
+use App\Constants\RegistrationStatus;
 use App\Traits\ResponseTrait;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -38,7 +40,11 @@ class UserResource extends JsonResource
             'picture'        => $this->picture,
             'roles'          => $this->roles,
             'token'          => $this->token,
-            'hasLoginBefore' => $this->hasLoginBefore
+            'has_register'   => !is_null($this->approve) && $this->approve == PaymentStatus::APPROVED ? RegistrationStatus::REGISTERED : RegistrationStatus::NOT_REGISTERED,
+            'hasLoginBefore' => $this->hasLoginBefore,
+            'has_paid'       => !is_null($this->approve),
+            'approve'        => !is_null($this->approve)? $this->approve : '',
+            'year'           => !is_null($this->year) ? $this->year : ''
         ];
     }
 }
