@@ -55,4 +55,5 @@ class RegistrationService implements RegistrationInterface
         $reg->approve = $request->status;
         $reg->save();
     }
+
 }

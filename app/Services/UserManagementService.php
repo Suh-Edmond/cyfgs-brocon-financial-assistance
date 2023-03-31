@@ -51,16 +51,17 @@ class UserManagementService implements UserManagementInterface
         return User::join('organisations', 'organisations.id', '=', 'users.organisation_id')
                  ->leftJoin('member_registrations', 'users.id', '=', 'member_registrations.user_id')
                  ->where('organisations.id', $organisation_id)
-                 ->select('users.*', 'member_registrations.approve')
+                 ->select('users.*', 'member_registrations.approve', 'member_registrations.year')
                  ->orderBy('created_at', 'DESC')->get();
     }
 
     public function getUser($user_id)
     {
-        return User::leftJoin('member_registrations', 'users.id', '=', 'member_registrations.user_id')
+        $user = User::leftJoin('member_registrations', 'users.id', '=', 'member_registrations.user_id')
                    ->where('users.id', $user_id)
-                   ->select('users.*', 'member_registrations.approve')
+                   ->select('users.*', 'member_registrations.approve', 'member_registrations.year')
                    ->get();
+        return ($user[0]);
     }
 
     public function updateUser($user_id, $request)
@@ -167,7 +168,7 @@ class UserManagementService implements UserManagementInterface
         if(!is_null($request->year)) {
             $filter_users = $filter_users->where('member_registrations.year', $request->year);
         }
-        $filter_users = $filter_users->select('users.*','member_registrations.approve');
+        $filter_users = $filter_users->select('users.*','member_registrations.approve', 'member_registrations.year');
         $filter_users = $filter_users->orderBy('users.name', 'DESC')->get();
 
         return $filter_users;

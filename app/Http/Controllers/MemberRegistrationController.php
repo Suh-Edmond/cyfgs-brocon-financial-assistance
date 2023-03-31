@@ -12,6 +12,7 @@ use App\Services\RegistrationService;
 use App\Traits\HelpTrait;
 use App\Traits\ResponseTrait;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Http\Request;
 
 class MemberRegistrationController extends Controller
 {
@@ -53,7 +54,7 @@ class MemberRegistrationController extends Controller
         return $this->sendResponse("success", "Member deleted successfully");
     }
 
-    public function approveRegisteredMember(ChangeRegistrationStateRequest $request)
+    public function approveRegisteredMember(Request $request)
     {
         $this->registrationService->approveRegisteredMember($request);
         return $this->sendResponse("success", "Member approved successfully");

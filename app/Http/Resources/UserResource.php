@@ -40,8 +40,11 @@ class UserResource extends JsonResource
             'picture'        => $this->picture,
             'roles'          => $this->roles,
             'token'          => $this->token,
-            'has_register'   => !is_null($this->approve) && PaymentStatus::APPROVED ? RegistrationStatus::REGISTERED : RegistrationStatus::NOT_REGISTERED,
-            'hasLoginBefore' => $this->hasLoginBefore
+            'has_register'   => !is_null($this->approve) && $this->approve == PaymentStatus::APPROVED ? RegistrationStatus::REGISTERED : RegistrationStatus::NOT_REGISTERED,
+            'hasLoginBefore' => $this->hasLoginBefore,
+            'has_paid'       => !is_null($this->approve),
+            'approve'        => !is_null($this->approve)? $this->approve : '',
+            'year'           => !is_null($this->year) ? $this->year : ''
         ];
     }
 }
