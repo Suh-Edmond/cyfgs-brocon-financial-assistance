@@ -197,7 +197,7 @@ class UserContributionService implements UserContributionInterface {
 
     public function getMemberDebt($user_id, $year)
     {
-        $debts = $this->getMemberOwingItems($year);
+        $debts = $this->getMemberOwingItems($year, $user_id);
         $reg_debts = $this->checkIfMemberIsRegistered($user_id, $year);
         return array_merge($debts, $reg_debts);
     }
@@ -360,16 +360,18 @@ class UserContributionService implements UserContributionInterface {
         return $owing_items;
     }
 
-    private function getMemberOwingItems($year)
+    private function getMemberOwingItems($year, $user_id)
     {
         $debts = [];
         $payments = DB::table('payment_items')
             ->leftJoin('user_contributions', 'user_contributions.payment_item_id', '=', 'payment_items.id')
-            ->select('payment_items.*')
+            ->select('payment_items.*', 'user_contributions.user_id as user_id')
             ->where('payment_items.complusory', true)
             ->whereYear('payment_items.created_at', $year)
-            ->whereNull('user_contributions.user_id')
             ->orderBy('payment_items.created_at', 'DESC')->get();
+        $payments = array_filter($payments->toArray(), function ($item) use ($user_id) {
+            return $item->user_id != $user_id;
+        });
         foreach ($payments as $value) {
             array_push($debts, new MemberPaymentItemResource($value->id, 'CONTRIBUTION', $value->amount, $value->name, false, 'YES'));
         }
