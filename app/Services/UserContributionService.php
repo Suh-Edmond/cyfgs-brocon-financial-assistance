@@ -365,14 +365,15 @@ class UserContributionService implements UserContributionInterface {
         $debts = [];
         $payments = DB::table('payment_items')
             ->leftJoin('user_contributions', 'user_contributions.payment_item_id', '=', 'payment_items.id')
-            ->leftJoin('users', 'users.id', '=', 'user_contributions.user_id')
+            ->select('payment_items.*')
             ->where('payment_items.complusory', true)
             ->whereYear('payment_items.created_at', $year)
             ->whereNull('user_contributions.user_id')
-            ->select('payment_items.*')->orderBy('payment_items.created_at', 'DESC')->get();
+            ->orderBy('payment_items.created_at', 'DESC')->get();
         foreach ($payments as $value) {
             array_push($debts, new MemberPaymentItemResource($value->id, 'CONTRIBUTION', $value->amount, $value->name, false, 'YES'));
         }
+
 
         return $debts;
     }

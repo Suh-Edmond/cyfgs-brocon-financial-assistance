@@ -31,8 +31,8 @@ class PaymentItem extends Model
         return $this->belongsTo(PaymentCategory::class);
     }
 
-    public function userPayment() {
-        return $this->hasMany(UserPayment::class);
+    public function userContribution() {
+        return $this->hasMany(UserContribution::class);
     }
 
     public function activitySupports() {
