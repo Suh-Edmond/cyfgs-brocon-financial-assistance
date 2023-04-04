@@ -24,4 +24,10 @@ interface UserContributionInterface {
     public function getTotalAmountPaidByUserForTheItem($user_id, $payment_item_id);
 
     public function filterContributionByYear($payment_item_id, $year);
+
+    public function bulkPayment($request);
+
+    public function getMemberDebt($user_id, $year);
+
+    public function getMemberContributedItems($user_id, $year);
 }

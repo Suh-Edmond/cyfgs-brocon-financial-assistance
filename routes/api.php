@@ -244,6 +244,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('organisations/contributions/search', [UserContributionController::class, 'filterContributions']);
         Route::get('download-contributions', [UserContributionController::class, 'downloadFilteredContributions']);
         Route::get('download-user-contributions', [UserContributionController::class, 'downloadUserContributions']);
+        Route::post('contributions/bulk-payments', [UserContributionController::class, 'bulkPayment']);
+        Route::get('contributions/members/debts', [UserContributionController::class, 'getMemberOweContributions']);
+        Route::get('contributions/members/paid', [UserContributionController::class, 'getAllMemberContributions']);
     });
 
     Route::prefix('protected')->group(function () {
