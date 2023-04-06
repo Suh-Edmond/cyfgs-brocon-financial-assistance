@@ -24,9 +24,11 @@ class PaymentItemResource extends JsonResource
             'name'                  => $this->name,
             'amount'                => $this->amount,
             'description'           => $this->description,
-            'complusory'            => HelpTrait::convertBooleanValue($this->complusory),
+            'complusory'            => $this->complusory,
             'payment_category_id'   => $this->paymentCategory->id,
             'payment_category_name' => $this->paymentCategory->name,
+            'type'                  => $this->type,
+            'frequency'             => $this->frequency,
             'created_at'            => $this->created_at,
             'updated_at'            => $this->updated_at,
         ];

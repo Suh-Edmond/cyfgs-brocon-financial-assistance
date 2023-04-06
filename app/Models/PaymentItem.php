@@ -24,7 +24,9 @@ class PaymentItem extends Model
         'complusory',
         'payment_category_id',
         'description',
-        'updated_by'
+        'updated_by',
+        'type',
+        'frequency'
     ];
 
     public function paymentCategory(){

@@ -61,6 +61,7 @@ class UserManagementService implements UserManagementInterface
                    ->where('users.id', $user_id)
                    ->select('users.*', 'member_registrations.approve', 'member_registrations.year')
                    ->get();
+//        dd($user[0]->roles);
         return ($user[0]);
     }
 
@@ -166,7 +167,7 @@ class UserManagementService implements UserManagementInterface
            $filter_users = $filter_users->where('users.gender', $request->gender);
         }
         if(!is_null($request->year)) {
-            $filter_users = $filter_users->where('member_registrations.year', $request->year);
+            $filter_users = $filter_users->where('member_registrations.year', $request->year)->orWhereYear('users.created_at', $request->year);
         }
         $filter_users = $filter_users->select('users.*','member_registrations.approve', 'member_registrations.year');
         $filter_users = $filter_users->orderBy('users.name', 'DESC')->get();

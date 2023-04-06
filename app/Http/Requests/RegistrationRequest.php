@@ -24,9 +24,9 @@ class RegistrationRequest extends FormRequest
     public function rules()
     {
         return [
-            'user_id'       => 'required|string',
-            'amount'        => 'required|numeric',
-            'year'          => 'required|string'
+            'user_id'         => 'required|string',
+            'payment_item_id' => 'required|string',
+            'year'            => 'required|string'
         ];
     }
 }

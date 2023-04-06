@@ -5,6 +5,7 @@ namespace App\Services;
 
 
 use App\Interfaces\RegistrationInterface;
+use App\Models\PaymentItem;
 use App\Models\User;
 use App\Models\MemberRegistration;
 use Illuminate\Support\Facades\DB;
@@ -15,11 +16,12 @@ class RegistrationService implements RegistrationInterface
     public function addRegistration($request)
     {
         $user = User::findOrFail($request->user_id);
+        $payment_item = PaymentItem::findOrFail($request->payment_item_id);
         MemberRegistration::create([
-            'user_id'     => $user->id,
-            'year'        => $request->year,
-            'amount'      => $request->amount,
-            'updated_by'  => $request->user()->name
+            'user_id'           => $user->id,
+            'year'              => $request->year,
+            'payment_item_id'   => $payment_item->id,
+            'updated_by'        => $request->user()->name
         ]);
     }
 
@@ -28,7 +30,6 @@ class RegistrationService implements RegistrationInterface
         $savedReg = MemberRegistration::findOrFail($request->user_id);
         $savedReg->update([
             'year'   => $request->year,
-            'amount' => $request->amount
         ]);
     }
 

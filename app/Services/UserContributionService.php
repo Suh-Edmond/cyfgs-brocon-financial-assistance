@@ -46,7 +46,7 @@ class UserContributionService implements UserContributionInterface {
                 'code'              => $this->generateCode(10),
                 'amount_deposited'  => $request->amount_deposited,
                 'comment'           => $request->comment,
-                'user_id'           => $user->id,
+                'user_id'           => $request->user_id,
                 'payment_item_id'   => $payment_item->id,
                 'status'            => $status,
                 'scan_picture'      => $request->scan_picture,
@@ -252,31 +252,23 @@ class UserContributionService implements UserContributionInterface {
     {
         $payment_item = PaymentItem::findOrFail($request->payment_item_id);
 
-        $total_amount_contributed = $this->getTotalAmountPaidByUserForTheItem($user_id, $request->payment_item_id);
+        $this->validateAmountDeposited($payment_item->amount, ($request->amount_deposited));
 
-        $this->validateAmountDeposited($payment_item->amount, ($total_amount_contributed + $request->amount_deposited));
+        $status = $this->getUserContributionStatus($payment_item->amount, ($request->amount_deposited));
 
-        $status = $this->getUserContributionStatus($payment_item->amount, ($total_amount_contributed + $request->amount_deposited));
+        $balance_contribution = ($payment_item->amount - $request->amount_deposited);
 
-        $hasCompleted = $this->verifyExcessUserContribution($total_amount_contributed, $payment_item->amount);
-
-        $user_last_contribution = $this->getUserLastContributionByPaymentItem($user_id, $request->payment_item_id);
-
-        $balance_contribution = $user_last_contribution == null ? ($payment_item->amount - $request->amount_deposited) : ($user_last_contribution->balance - $request->amount_deposited);
-
-        if(!$hasCompleted){
-            UserContribution::create([
-                'code'              => $this->generateCode(10),
-                'amount_deposited'  => $request->amount_deposited,
-                'comment'           => $request->comment,
-                'user_id'           => $user_id,
-                'payment_item_id'   => $payment_item->id,
-                'status'            => $status,
-                'scan_picture'      => null,
-                'updated_by'        => $auth_user->name,
-                'balance'           => $balance_contribution
-            ]);
-        }
+        UserContribution::create([
+            'code'              => $this->generateCode(10),
+            'amount_deposited'  => $request->amount_deposited,
+            'comment'           => $request->comment,
+            'user_id'           => $user_id,
+            'payment_item_id'   => $payment_item->id,
+            'status'            => $status,
+            'scan_picture'      => null,
+            'updated_by'        => $auth_user->name,
+            'balance'           => $balance_contribution
+        ]);
 
     }
 
@@ -354,7 +346,12 @@ class UserContributionService implements UserContributionInterface {
         $exist = $this->getMemberRegistration($user_id, $year)
                  ->whereIn('member_registrations.approve', [PaymentStatus::APPROVED, PaymentStatus::PENDING])->count();
         if($exist != 1){
-            array_push($owing_items, new MemberPaymentItemResource(null, 'REGISTRATION', '500', 'Registration', false, "YES"));
+            $payment_item = new PaymentItem();
+            $payment_item->id = null;
+            $payment_item->name = "Registration";
+            $payment_item->amount = 500.0;
+            $payment_item->complusory = 'YES';
+            array_push($owing_items, new MemberPaymentItemResource($payment_item));
         }
 
         return $owing_items;
@@ -363,20 +360,21 @@ class UserContributionService implements UserContributionInterface {
     private function getMemberOwingItems($year, $user_id)
     {
         $debts = [];
-        $payments = DB::table('payment_items')
-            ->leftJoin('user_contributions', 'user_contributions.payment_item_id', '=', 'payment_items.id')
-            ->select('payment_items.*', 'user_contributions.user_id as user_id')
-            ->where('payment_items.complusory', true)
-            ->whereYear('payment_items.created_at', $year)
-            ->orderBy('payment_items.created_at', 'DESC')->get();
-        $payments = array_filter($payments->toArray(), function ($item) use ($user_id) {
-            return $item->user_id != $user_id;
-        });
-        foreach ($payments as $value) {
-            array_push($debts, new MemberPaymentItemResource($value->id, 'CONTRIBUTION', $value->amount, $value->name, false, 'YES'));
+        $contributions = $this->getAllMemberContribution($user_id, $year);
+        $items = DB::table('payment_items')->where('complusory', true)->whereYear('created_at', $year)->select('payment_items.*')->get()->toArray();
+        if(count($contributions) == 0) {
+           foreach ($items as $item){
+               array_push($debts, new MemberPaymentItemResource($item));
+           }
+        }else {
+            foreach ($items as $item){
+                $debts = array_filter($contributions, function ($con) use ($item){
+                            return $item->id != $con->id;
+                        });
+            }
         }
 
-
+//        dd($debts);
         return $debts;
     }
 
