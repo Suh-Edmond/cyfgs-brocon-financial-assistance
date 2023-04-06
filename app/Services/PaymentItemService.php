@@ -66,13 +66,20 @@ class PaymentItemService implements PaymentItemInterface {
         $payment_item->delete();
     }
 
-    public function filterPaymentItems($category_id, $is_compulsory) {
+    public function filterPaymentItems($request) {
         $total = 0.0;
-        $payment_items = $this->gePaymentItems($category_id)->where('complusory', $is_compulsory)->orderBy('payment_items.name', 'ASC')->get();
-
-        foreach($payment_items as $payment_item){
-            $total += $payment_item->amount;
+        $payment_items = $this->gePaymentItems($request->payment_category_id);
+        $compulsory = json_decode($request->is_complusory);
+        if(!is_null($compulsory)){
+            $payment_items = $payment_items->where('complusory', $compulsory);
         }
+        if(!is_null($request->type)){
+            $payment_items = $payment_items->where('type', $request->type);
+        }
+        if(!is_null($request->frequency)){
+            $payment_items = $payment_items->where('frequency', $request->frequency);
+        }
+        $payment_items = $payment_items->orderBy('payment_items.name', 'DESC')->get();
 
         return new PaymentItemCollection($payment_items, $total);
     }
