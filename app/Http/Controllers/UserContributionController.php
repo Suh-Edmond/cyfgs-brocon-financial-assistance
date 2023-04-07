@@ -114,7 +114,7 @@ class UserContributionController extends Controller
     }
 
 
-    public function bulkPayment(BulkPaymentRequest $request){
+    public function bulkPayment(Request $request){
         $this->validate($request, [
             'row.*.user_id'         => 'required|string',
             'row.*.payment_item_id' => 'required|string',
@@ -124,7 +124,7 @@ class UserContributionController extends Controller
             'row.*.code'            => 'required|string',
             'row.*.is_compulsory'   => 'required|string'
         ]);
-        $this->user_contribution_interface->bulkPayment($request->all());
+        $this->user_contribution_interface->bulkPayment($request);
         return $this->sendResponse("success", 200);
     }
 

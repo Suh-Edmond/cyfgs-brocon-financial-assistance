@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use App\Constants\PaymentStatus;
 use App\Constants\RegistrationStatus;
+use App\Traits\HelpTrait;
 use App\Traits\ResponseTrait;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -12,6 +13,7 @@ class UserResource extends JsonResource
     private $token;
     private $hasLoginBefore;
     use ResponseTrait;
+    use HelpTrait;
 
     public function __construct($resource, $token = null, $hasLoginBefore = null)
     {

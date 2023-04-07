@@ -4,6 +4,7 @@
 namespace App\Services;
 
 
+use App\Constants\PaymentStatus;
 use App\Interfaces\RegistrationInterface;
 use App\Models\PaymentItem;
 use App\Models\User;
@@ -16,12 +17,18 @@ class RegistrationService implements RegistrationInterface
     {
         $user = User::findOrFail($request->user_id);
         $payment_item = PaymentItem::findOrFail($request->payment_item_id);
-        MemberRegistration::create([
-            'user_id'           => $user->id,
-            'year'              => $request->year,
-            'payment_item_id'   => $payment_item->id,
-            'updated_by'        => $request->user()->name
-        ]);
+        $exist_user = MemberRegistration::where('user_id', $user->id)->where('year', $request->year)->get();
+        if(is_null($exist_user[0])){
+            MemberRegistration::create([
+                'user_id'           => $user->id,
+                'year'              => $request->year,
+                'payment_item_id'   => $payment_item->id,
+                'updated_by'        => $request->user()->name
+            ]);
+        }else {
+            $exist_user[0]->approve = PaymentStatus::PENDING;
+            $exist_user[0]->save();
+        }
     }
 
     public function updatedRegistration($request)

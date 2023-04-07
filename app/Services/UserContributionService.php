@@ -12,7 +12,6 @@ use App\Models\PaymentItem;
 use App\Models\User;
 use App\Models\UserContribution;
 use App\Traits\HelpTrait;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Constants\PaymentStatus;
 use App\Http\Resources\UserContributionCollection;
@@ -24,37 +23,7 @@ class UserContributionService implements UserContributionInterface {
 
     public function createUserContribution($request)
     {
-        $user = $this->findUser($request->user_id);
-
-        $payment_item = $this->findPaymentItem($request->payment_item_id);
-
-        $payment_item_amount = $payment_item->amount;
-
-        $total_amount_contributed = $this->getTotalAmountPaidByUserForTheItem($request->user_id, $request->payment_item_id);
-
-        $this->validateAmountDeposited($payment_item_amount, ($total_amount_contributed + $request->amount_deposited));
-
-        $status = $this->getUserContributionStatus($payment_item_amount, ($total_amount_contributed + $request->amount_deposited));
-
-        $hasCompleted = $this->verifyExcessUserContribution($total_amount_contributed, $payment_item_amount);
-
-        $user_last_contribution = $this->getUserLastContributionByPaymentItem($request->user_id, $request->payment_item_id);
-
-        $balance_contribution = $user_last_contribution == null ? ($payment_item_amount- $request->amount_deposited) : ($user_last_contribution->balance - $request->amount_deposited);
-
-        if(!$hasCompleted){
-            UserContribution::create([
-                'code'              => $this->generateCode(10),
-                'amount_deposited'  => $request->amount_deposited,
-                'comment'           => $request->comment,
-                'user_id'           => $request->user_id,
-                'payment_item_id'   => $payment_item->id,
-                'status'            => $status,
-                'scan_picture'      => $request->scan_picture,
-                'updated_by'        => $request->user()->name,
-                'balance'           => $balance_contribution
-            ]);
-        }
+        $this->saveContribution($request, $request->user_id, $request->user()->name);
 
     }
 
@@ -181,12 +150,12 @@ class UserContributionService implements UserContributionInterface {
 
         return new UserContributionCollection($user_contributions, $total);
     }
-
     public function bulkPayment($request)
     {
-        $auth_user = User::find(Auth::id());
-        $user = User::findOrFail(json_decode(json_encode($request[0]))->user_id);
-       foreach ($request as $value){
+        $auth_user = $request->user()->name;
+        $payload = $request->all();
+        $user = User::findOrFail(json_decode(json_encode($payload[0]))->user_id);
+       foreach ($payload as $value){
            $json_data = json_decode(json_encode($value));
             if($json_data->code == 'REGISTRATION'){
                 $this->saveRegistration($json_data, $user, $auth_user);
@@ -261,47 +230,42 @@ class UserContributionService implements UserContributionInterface {
 
     private function saveContribution($request, $user_id, $auth_user)
     {
-        $payment_item = PaymentItem::findOrFail($request->payment_item_id);
 
-        $this->validateAmountDeposited($payment_item->amount, ($request->amount_deposited));
+        $payment_item = $this->findPaymentItem($request->payment_item_id);
 
-        $status = $this->getUserContributionStatus($payment_item->amount, ($request->amount_deposited));
+        $payment_item_amount = $payment_item->amount;
 
-        $balance_contribution = ($payment_item->amount - $request->amount_deposited);
+        $total_amount_contributed = $this->getTotalAmountPaidByUserForTheItem($user_id, $request->payment_item_id);
 
-        UserContribution::create([
-            'code'              => $this->generateCode(10),
-            'amount_deposited'  => $request->amount_deposited,
-            'comment'           => $request->comment,
-            'user_id'           => $user_id,
-            'payment_item_id'   => $payment_item->id,
-            'status'            => $status,
-            'scan_picture'      => null,
-            'updated_by'        => $auth_user->name,
-            'balance'           => $balance_contribution
-        ]);
+        $this->validateAmountDeposited($payment_item_amount, ($total_amount_contributed + $request->amount_deposited));
+
+        $status = $this->getUserContributionStatus($payment_item_amount, ($total_amount_contributed + $request->amount_deposited));
+
+        $hasCompleted = $this->verifyExcessUserContribution($total_amount_contributed, $payment_item_amount);
+
+        $user_last_contribution = $this->getUserLastContributionByPaymentItem($user_id, $request->payment_item_id);
+
+        $balance_contribution = $user_last_contribution == null ? ($payment_item_amount- $request->amount_deposited) : ($user_last_contribution->balance - $request->amount_deposited);
+
+        if(!$hasCompleted){
+            UserContribution::create([
+                'code'              => $this->generateCode(10),
+                'amount_deposited'  => $request->amount_deposited,
+                'comment'           => $request->comment,
+                'user_id'           => $request->user_id,
+                'payment_item_id'   => $payment_item->id,
+                'status'            => $status,
+                'scan_picture'      => null,
+                'updated_by'        => $auth_user,
+                'balance'           => $balance_contribution
+            ]);
+        }
 
     }
 
     private function verifyExcessUserContribution($total_amount_contributed, $payment_item_amount)
     {
         return $total_amount_contributed == $payment_item_amount;
-    }
-
-    private function generateResponse($user_contributions, $user_id, $payment_item_id)
-    {
-        if(isset($user_contributions)){
-            $total     = $this->getTotalAmountPaidByUserForTheItem($user_id, $payment_item_id);
-
-            $balance   = $this->getTotalBalanceByUserAndItem($user_contributions[0]->paymentItem->amount, $total);
-
-            $response  = new UserContributionCollection($user_contributions, $total, $balance);
-
-        }else{
-            $response = [];
-        }
-
-        return $response;
     }
 
     private function validateAmountDeposited($payment_item_amount, $amount_deposited) {
@@ -373,30 +337,46 @@ class UserContributionService implements UserContributionInterface {
                 array_push($debts, new MemberPaymentItemResource($item->id, $item->name, $item->amount, $item->complusory, $item->type, $item->frequency, 'CONTRIBUTION'));
             }
         }else {
+
             foreach ($contributions as $contribution){
-                 foreach ($items as $item){
-                     if($item->id != $contribution->payment_item_id){
-                         array_push($debts, new MemberPaymentItemResource($item->id, $item->name, $item->amount, $item->complusory, $item->type, $item->frequency, 'CONTRIBUTION'));
-                     }
-                     if($item->id == $contribution->payment_item_id && $contribution->balance != 0){
-                         $balance_payment = $contribution->payment_item_amount - $contribution->amount_deposited;
-                         array_push($debts, new MemberPaymentItemResource($item->id, $item->name, $balance_payment, $item->complusory, $item->type, $item->frequency, 'CONTRIBUTION'));
-                     }
-                 }
+                $payment_item_ids = $items->map(function ($item) {
+                    return $item->id;
+                });
+                $total_amount_contributed = $this->getTotalAmountPaidByUserForTheItem($user_id, $contribution->payment_item_id);
+                if(!in_array($contribution->payment_item_id, $payment_item_ids->toArray())){
+                    array_push($debts, new MemberPaymentItemResource($contribution->payment_item_id, $contribution->name,
+                        $contribution->payment_item_amount, $contribution->complusory, $contribution->type, $contribution->frequency, 'CONTRIBUTION'));
+                }
+                if(in_array($contribution->payment_item_id, $payment_item_ids->toArray()) && $contribution->payment_item_amount != $total_amount_contributed){
+                    $balance_payment = $contribution->payment_item_amount - $contribution->amount_deposited;
+                    array_push($debts, new MemberPaymentItemResource($contribution->payment_item_id, $contribution->name,
+                        $balance_payment, $contribution->complusory, $contribution->type, $contribution->frequency, 'CONTRIBUTION'));
+
+                }
             }
         }
         return $debts;
     }
 
+    function mapPaymentItemId($items){
+        return $items->id;
+    }
+
     private function saveRegistration($request, $user, $auth_user)
     {
         $payment_item = PaymentItem::findOrFail($request->payment_item_id);
-        MemberRegistration::create([
-            'user_id'           => $user->id,
-            'year'              => $request->year,
-            'payment_item_id'   => $payment_item->id,
-            'updated_by'        => $auth_user->name
-        ]);
+        $exist_user = MemberRegistration::where('user_id', $user->id)->where('year', $request->year)->get();
+        if(is_null($exist_user[0])){
+            MemberRegistration::create([
+                'user_id'           => $user->id,
+                'year'              => $request->year,
+                'payment_item_id'   => $payment_item->id,
+                'updated_by'        => $auth_user
+            ]);
+        }else {
+            $exist_user[0]->approve = PaymentStatus::PENDING;
+            $exist_user[0]->save();
+        }
     }
 
     private function getAllMemberContribution($user_id, $year) {

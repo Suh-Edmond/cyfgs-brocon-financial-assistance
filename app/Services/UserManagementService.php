@@ -48,11 +48,12 @@ class UserManagementService implements UserManagementInterface
     public function getUsers($organisation_id)
     {
 
-        return User::join('organisations', 'organisations.id', '=', 'users.organisation_id')
+          return User::join('organisations', 'organisations.id', '=', 'users.organisation_id')
                  ->leftJoin('member_registrations', 'users.id', '=', 'member_registrations.user_id')
                  ->where('organisations.id', $organisation_id)
-                 ->select('users.*', 'member_registrations.approve', 'member_registrations.year')
+                 ->select('users.*', 'member_registrations.approve', 'member_registrations.year')->distinct()
                  ->orderBy('created_at', 'DESC')->get();
+
     }
 
     public function getUser($user_id)
@@ -61,7 +62,6 @@ class UserManagementService implements UserManagementInterface
                    ->where('users.id', $user_id)
                    ->select('users.*', 'member_registrations.approve', 'member_registrations.year')
                    ->get();
-//        dd($user[0]->roles);
         return ($user[0]);
     }
 
@@ -96,7 +96,7 @@ class UserManagementService implements UserManagementInterface
 
     public function deleteUser($user_id)
     {
-        User::findOrFail($user_id)->delete();
+        return User::findOrFail($user_id)->delete();
     }
 
     public function loginUser($request)
