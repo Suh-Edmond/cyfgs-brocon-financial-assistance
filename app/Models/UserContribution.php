@@ -26,7 +26,8 @@ class UserContribution extends Model
         'code',
         'scan_picture',
         'updated_by',
-        'balance'
+        'balance',
+        'year'
     ];
 
 

@@ -20,6 +20,7 @@ class UserContributionResource extends JsonResource
             'amount_deposited'         => $this->amount_deposited,
             'comment'                  => $this->comment,
             'status'                   => $this->status,
+            'year'                     => $this->year,
             'approve'                  => $this->approve,
             'user_id'                  => $this->user_id,
             'user_name'                => $user->name,

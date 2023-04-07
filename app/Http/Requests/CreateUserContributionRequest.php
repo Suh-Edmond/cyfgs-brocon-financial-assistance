@@ -28,6 +28,7 @@ class CreateUserContributionRequest extends FormRequest
             'comment'                   => 'max:5000',
             'user_id'                   => 'required|string',
             'payment_item_id'           => 'required|string',
+            'year'                      => 'required|string'
         ];
     }
 }

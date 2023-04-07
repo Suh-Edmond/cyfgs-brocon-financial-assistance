@@ -257,7 +257,8 @@ class UserContributionService implements UserContributionInterface {
                 'status'            => $status,
                 'scan_picture'      => null,
                 'updated_by'        => $auth_user,
-                'balance'           => $balance_contribution
+                'balance'           => $balance_contribution,
+                'year'              => $request->year
             ]);
         }
 
@@ -332,6 +333,7 @@ class UserContributionService implements UserContributionInterface {
         $debts = [];
         $contributions = $this->getAllMemberContribution($user_id, $year);
         $items =  DB::table('payment_items')->where('complusory', true)->where('type', PaymentItemType::NORMAL)->select('*')->get()->collect();
+
         if(count($contributions) == 0) {
             foreach ($items as $item){
                 array_push($debts, new MemberPaymentItemResource($item->id, $item->name, $item->amount, $item->complusory, $item->type, $item->frequency, 'CONTRIBUTION'));
@@ -383,7 +385,7 @@ class UserContributionService implements UserContributionInterface {
             ->join('payment_items', 'payment_items.id', '=', 'user_contributions.payment_item_id')
             ->join('users', 'users.id', '=', 'user_contributions.user_id')
             ->where('user_contributions.user_id', $user_id)
-            ->whereYear('user_contributions.created_at', $year)
+            ->where('user_contributions.year', $year)
             ->select('payment_items.id as payment_item_id', 'payment_items.name','payment_items.complusory','payment_items.amount as payment_item_amount',
                 'payment_items.description','payment_items.type','payment_items.frequency','payment_items.payment_category_id',
                 'payment_items.created_at','payment_items.updated_at','payment_items.updated_by', 'user_contributions.*')
