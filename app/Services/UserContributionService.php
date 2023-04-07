@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Constants\PaymentItemType;
 use App\Exceptions\BusinessValidationException;
 use App\Http\Resources\MemberContributedItemResource;
 use App\Http\Resources\MemberPaymentItemResource;
@@ -187,9 +188,9 @@ class UserContributionService implements UserContributionInterface {
         $user = User::findOrFail(json_decode(json_encode($request[0]))->user_id);
        foreach ($request as $value){
            $json_data = json_decode(json_encode($value));
-            if($json_data->type == 'REGISTRATION'){
+            if($json_data->code == 'REGISTRATION'){
                 $this->saveRegistration($json_data, $user, $auth_user);
-            } elseif ($json_data->type == 'CONTRIBUTION'){
+            } elseif ($json_data->code == 'CONTRIBUTION'){
                 $this->saveContribution($json_data, $user->id, $auth_user);
             }
         }
@@ -197,27 +198,37 @@ class UserContributionService implements UserContributionInterface {
 
     public function getMemberDebt($user_id, $year)
     {
-        $debts = $this->getMemberOwingItems($year, $user_id);
         $reg_debts = $this->checkIfMemberIsRegistered($user_id, $year);
-        return array_merge($debts, $reg_debts);
+        $debts = $this->getMemberOwingItems($year, $user_id);
+        if(!is_null($reg_debts)){
+            array_push($debts, $reg_debts);
+        }
+        return $debts;
     }
 
 
     public function getMemberContributedItems($user_id, $year)
     {
+        $paid_debts = [];
          $reg = $this->getRegistration($user_id, $year);
          $contributions = $this->getAllMemberContribution($user_id, $year);
-         if(!is_null($reg)){
-             array_push( $contributions, $reg);
+         foreach ($contributions as $contribution){
+             $contributedItem = new MemberContributedItemResource($contribution->id, $contribution->payment_item_id, $contribution->name,
+                 $contribution->amount_deposited, $contribution->balance, $contribution->status, $contribution->approve, $contribution->created_at, $year);
+             array_push($paid_debts, $contributedItem);
          }
-         return $contributions;
+         if(!is_null($reg)){
+             array_push( $paid_debts, $reg);
+         }
+         return $paid_debts;
 
     }
 
     private function getMemberRegistration($user_id, $year)
     {
-        return DB::table('users')
-            ->leftJoin('member_registrations', 'member_registrations.user_id', '=', 'users.id')
+        return DB::table('payment_items')
+            ->leftJoin('member_registrations', 'member_registrations.payment_item_id', '=', 'payment_items.id')
+            ->leftJoin('users', 'users.id', '=', 'member_registrations.user_id')
             ->where('member_registrations.user_id', $user_id)
             ->where('member_registrations.year', $year);
     }
@@ -342,77 +353,74 @@ class UserContributionService implements UserContributionInterface {
 
     private function checkIfMemberIsRegistered($user_id, $year)
     {
-        $owing_items = [];
+        $payment_item = null;
         $exist = $this->getMemberRegistration($user_id, $year)
-                 ->whereIn('member_registrations.approve', [PaymentStatus::APPROVED, PaymentStatus::PENDING])->count();
-        if($exist != 1){
-            $payment_item = new PaymentItem();
-            $payment_item->id = null;
-            $payment_item->name = "Registration";
-            $payment_item->amount = 500.0;
-            $payment_item->complusory = 'YES';
-            array_push($owing_items, new MemberPaymentItemResource($payment_item));
+                 ->whereIn('member_registrations.approve', [PaymentStatus::APPROVED, PaymentStatus::PENDING])->select('payment_items.*', 'member_registrations.user_id')->get()->toArray();
+        if(count($exist) == 0){
+            $payment_item = DB::table('payment_items')->where('type', PaymentItemType::REGISTRATION)->select('*')->get()->toArray();
+            $payment_item =  new MemberPaymentItemResource($payment_item[0]->id, $payment_item[0]->name, $payment_item[0]->amount, $payment_item[0]->complusory, $payment_item[0]->type, $payment_item[0]->frequency, 'REGISTRATION');
         }
-
-        return $owing_items;
+        return $payment_item;
     }
 
     private function getMemberOwingItems($year, $user_id)
     {
         $debts = [];
         $contributions = $this->getAllMemberContribution($user_id, $year);
-        $items = DB::table('payment_items')->where('complusory', true)->whereYear('created_at', $year)->select('payment_items.*')->get()->toArray();
+        $items =  DB::table('payment_items')->where('complusory', true)->where('type', PaymentItemType::NORMAL)->select('*')->get()->collect();
         if(count($contributions) == 0) {
-           foreach ($items as $item){
-               array_push($debts, new MemberPaymentItemResource($item));
-           }
-        }else {
             foreach ($items as $item){
-                $debts = array_filter($contributions, function ($con) use ($item){
-                            return $item->id != $con->id;
-                        });
+                array_push($debts, new MemberPaymentItemResource($item->id, $item->name, $item->amount, $item->complusory, $item->type, $item->frequency, 'CONTRIBUTION'));
+            }
+        }else {
+            foreach ($contributions as $contribution){
+                 foreach ($items as $item){
+                     if($item->id != $contribution->payment_item_id){
+                         array_push($debts, new MemberPaymentItemResource($item->id, $item->name, $item->amount, $item->complusory, $item->type, $item->frequency, 'CONTRIBUTION'));
+                     }
+                     if($item->id == $contribution->payment_item_id && $contribution->balance != 0){
+                         $balance_payment = $contribution->payment_item_amount - $contribution->amount_deposited;
+                         array_push($debts, new MemberPaymentItemResource($item->id, $item->name, $balance_payment, $item->complusory, $item->type, $item->frequency, 'CONTRIBUTION'));
+                     }
+                 }
             }
         }
-
-//        dd($debts);
         return $debts;
     }
 
     private function saveRegistration($request, $user, $auth_user)
     {
+        $payment_item = PaymentItem::findOrFail($request->payment_item_id);
         MemberRegistration::create([
-            'user_id'     => $user->id,
-            'year'        => $request->year,
-            'amount'      => $request->amount_deposited,
-            'updated_by'  => $auth_user->name
+            'user_id'           => $user->id,
+            'year'              => $request->year,
+            'payment_item_id'   => $payment_item->id,
+            'updated_by'        => $auth_user->name
         ]);
     }
 
     private function getAllMemberContribution($user_id, $year) {
-        $paid_items = [];
-        $data = DB::table('user_contributions')
+        return DB::table('user_contributions')
             ->join('payment_items', 'payment_items.id', '=', 'user_contributions.payment_item_id')
             ->join('users', 'users.id', '=', 'user_contributions.user_id')
             ->where('user_contributions.user_id', $user_id)
             ->whereYear('user_contributions.created_at', $year)
-            ->select('payment_items.id as payment_item_id', 'payment_items.name', 'user_contributions.*')
-            ->orderBy('user_contributions.created_at', 'DESC')->get();
-        foreach ($data as $key => $value ){
-            array_push($paid_items, new MemberContributedItemResource(null, $value->id, $value->payment_item_id, $value->name, $value->amount_deposited, $value->balance, $value->status, $value->approve, $value->created_at));
-        }
-        return $paid_items;
+            ->select('payment_items.id as payment_item_id', 'payment_items.name','payment_items.complusory','payment_items.amount as payment_item_amount',
+                'payment_items.description','payment_items.type','payment_items.frequency','payment_items.payment_category_id',
+                'payment_items.created_at','payment_items.updated_at','payment_items.updated_by', 'user_contributions.*')
+            ->orderBy('user_contributions.created_at', 'DESC')->get()->toArray();
     }
 
     private function getRegistration($user_id, $year) {
-        $paid_items = null;
+        $registration = null;
         $data = $this->getMemberRegistration($user_id, $year)
             ->whereIn('member_registrations.approve', [PaymentStatus::APPROVED, PaymentStatus::PENDING])
-            ->select('users.id as user_id', 'member_registrations.*')->first();
+            ->select('payment_items.id as payment_item_id', 'payment_items.name', 'payment_items.amount', 'member_registrations.*')->first();
         if(!is_null($data)){
-            $paid_items = new MemberContributedItemResource(null, $data->user_id, $data->id, 'Registration', $data->amount, 0.0, PaymentStatus::COMPLETE, $data->approve, $data->created_at);
+            $registration = new MemberContributedItemResource($data->id, $data->payment_item_id, $data->name,  $data->amount, 0.0, PaymentStatus::COMPLETE, $data->approve, $data->created_at, $data->year);
         }
 
-        return $paid_items;
+        return $registration;
     }
 
 

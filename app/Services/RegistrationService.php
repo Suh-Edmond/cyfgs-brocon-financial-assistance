@@ -8,7 +8,6 @@ use App\Interfaces\RegistrationInterface;
 use App\Models\PaymentItem;
 use App\Models\User;
 use App\Models\MemberRegistration;
-use Illuminate\Support\Facades\DB;
 
 class RegistrationService implements RegistrationInterface
 {

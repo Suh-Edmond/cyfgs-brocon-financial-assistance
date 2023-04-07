@@ -14,7 +14,8 @@ class MemberContributedItemResource extends JsonResource
     private $status;
     private $approve;
     private $created_at;
-    public function __construct($resource, $id, $payment_item_id, $name, $amount_deposited, $balance, $status, $approve, $created_at)
+    private $year;
+    public function __construct($id, $payment_item_id, $name, $amount_deposited, $balance, $status, $approve, $created_at, $year)
     {
         parent::__construct(null);
         $this->id = $id;
@@ -24,6 +25,7 @@ class MemberContributedItemResource extends JsonResource
         $this->balance = $balance;
         $this->status = $status;
         $this->approve = $approve;
+        $this->year = $year;
         $this->created_at = $created_at;
     }
 
@@ -37,6 +39,7 @@ class MemberContributedItemResource extends JsonResource
             'balance'         => $this->balance,
             'payment_status'  => $this->status,
             'approve'         => $this->approve,
+            'year'             => $this->year,
             'created_at'       => $this->created_at,
         ];
     }

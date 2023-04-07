@@ -120,8 +120,8 @@ class UserContributionController extends Controller
             'row.*.payment_item_id' => 'required|string',
             'row.*.comment'         => 'string|required',
             'row.*.year'            => 'required|string',
-            'row.*.amount_deposited'  => 'required|numeric',
-            'row.*.type'            => 'required|string',
+            'row.*.amount_deposited'=> 'required|numeric',
+            'row.*.code'            => 'required|string',
             'row.*.is_compulsory'   => 'required|string'
         ]);
         $this->user_contribution_interface->bulkPayment($request->all());

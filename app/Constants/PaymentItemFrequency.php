@@ -7,5 +7,6 @@ namespace App\Constants;
 class PaymentItemFrequency
 {
     public const YEARLY = 'YEARLY';
-    public const NORMAL = 'NORMAL';
+    public const  MONTHLY = 'MONTHLY';
+    public const NONE = 'NONE';
 }
