@@ -2,6 +2,8 @@
 
 namespace App\Traits;
 
+use App\Constants\PaymentStatus;
+use App\Constants\RegistrationStatus;
 use App\Http\Resources\ExpenditureDetailResource;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -206,5 +208,7 @@ trait HelpTrait {
 
         return $total;
     }
+
+
 
 }

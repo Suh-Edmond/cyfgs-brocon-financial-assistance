@@ -71,9 +71,15 @@ class PaymentItemController extends Controller
 
     public function filterPaymentItems(Request $request)
     {
-        $data = $this->payment_item_service->filterPaymentItems($request->payment_category_id, $request->complusory);
+        $data = $this->payment_item_service->filterPaymentItems($request);
 
         return $this->sendResponse($data, 200);
+    }
+
+    public function getPaymentItemByType()
+    {
+        $data = $this->payment_item_service->getPaymentItemByType();
+        return $this->sendResponse(PaymentItemResource::collection($data), 200);
     }
 
     public function downloadPaymentItem(Request $request)

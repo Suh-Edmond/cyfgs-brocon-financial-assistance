@@ -10,9 +10,11 @@ interface PaymentItemInterface
 
     public function getPaymentItemsByCategory($payment_category_id);
 
-    public function getPaymentItem($id, $paymant_category_id);
+    public function getPaymentItem($id, $payment_category_id);
 
-    public function deletePaymentItem($id, $paymant_category_id);
+    public function deletePaymentItem($id, $payment_category_id);
 
     public function getPaymentItems();
+
+    public function getPaymentItemByType();
 }

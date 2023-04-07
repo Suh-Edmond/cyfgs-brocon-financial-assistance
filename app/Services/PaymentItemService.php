@@ -1,38 +1,41 @@
 <?php
 namespace App\Services;
 
+use App\Constants\PaymentItemType;
 use App\Http\Resources\PaymentItemCollection;
-use App\Http\Resources\PaymentItemResource;
 use App\Interfaces\PaymentItemInterface;
 use App\Models\PaymentCategory;
 use App\Models\PaymentItem;
-use Illuminate\Support\Facades\DB;
 
 class PaymentItemService implements PaymentItemInterface {
 
 
-    public function createPaymentItem($request, $paymant_category_id)
+    public function createPaymentItem($request, $payment_category_id)
     {
-        $payment_category = PaymentCategory::findOrFail($paymant_category_id);
+        $payment_category = PaymentCategory::findOrFail($payment_category_id);
         PaymentItem::create([
             'name'                => $request->name,
             'amount'              => $request->amount,
             'complusory'          => $request->complusory,
             'payment_category_id' => $payment_category->id,
             'description'         => $request->description,
-            'updated_by'          => $request->user()->name
+            'updated_by'          => $request->user()->name,
+            'type'                => $request->type,
+            'frequency'           => $request->frequency
         ]);
     }
 
-    public function updatePaymentItem($request, $payment_item_id, $paymant_category_id)
+    public function updatePaymentItem($request, $payment_item_id, $payment_category_id)
     {
-        $updated =  $this->findPaymentItem($payment_item_id, $paymant_category_id);
+        $updated =  $this->findPaymentItem($payment_item_id, $payment_category_id);
 
         $updated->update([
             'name'          => $request->name,
             'amount'        => $request->amount,
             'complusory'    => $request->complusory,
-            'description'   => $request->description
+            'description'   => $request->description,
+            'type'          => $request->type,
+            'frequency'     => $request->frequency
         ]);
     }
 
@@ -63,12 +66,40 @@ class PaymentItemService implements PaymentItemInterface {
         $payment_item->delete();
     }
 
+    public function filterPaymentItems($request) {
+        $total = 0.0;
+        $payment_items = $this->gePaymentItems($request->payment_category_id);
+        $compulsory = json_decode($request->is_complusory);
+        if(!is_null($compulsory)){
+            $payment_items = $payment_items->where('complusory', $compulsory);
+        }
+        if(!is_null($request->type)){
+            $payment_items = $payment_items->where('type', $request->type);
+        }
+        if(!is_null($request->frequency)){
+            $payment_items = $payment_items->where('frequency', $request->frequency);
+        }
+        $payment_items = $payment_items->orderBy('payment_items.name', 'DESC')->get();
+
+        return new PaymentItemCollection($payment_items, $total);
+    }
+
+    public function getPaymentItems() {
+        return PaymentItem::all();
+    }
+
+
+    public function getPaymentItemByType()
+    {
+        return PaymentItem::where('type', PaymentItemType::REGISTRATION)->get();
+    }
+
     private function findPaymentItem($id, $payment_category_id)
     {
         return PaymentItem::select('payment_items.*')->join('payment_categories', ['payment_categories.id' => 'payment_items.payment_category_id'])
-                    ->where('payment_items.id', $id)
-                    ->where('payment_items.payment_category_id', $payment_category_id)
-                    ->firstOrFail();
+            ->where('payment_items.id', $id)
+            ->where('payment_items.payment_category_id', $payment_category_id)
+            ->firstOrFail();
     }
 
     private  function gePaymentItems($payment_category_id) {
@@ -78,18 +109,4 @@ class PaymentItemService implements PaymentItemInterface {
 
     }
 
-    public function filterPaymentItems($category_id, $is_compulsory) {
-        $total = 0.0;
-        $payment_items = $this->gePaymentItems($category_id)->where('complusory', $is_compulsory)->orderBy('payment_items.name', 'ASC')->get();
-
-        foreach($payment_items as $payment_item){
-            $total += $payment_item->amount;
-        }
-
-        return new PaymentItemCollection($payment_items, $total);
-    }
-
-    public function getPaymentItems() {
-        return PaymentItem::all();
-    }
 }

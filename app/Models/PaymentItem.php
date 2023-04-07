@@ -24,15 +24,17 @@ class PaymentItem extends Model
         'complusory',
         'payment_category_id',
         'description',
-        'updated_by'
+        'updated_by',
+        'type',
+        'frequency'
     ];
 
     public function paymentCategory(){
         return $this->belongsTo(PaymentCategory::class);
     }
 
-    public function userPayment() {
-        return $this->hasMany(UserPayment::class);
+    public function userContribution() {
+        return $this->hasMany(UserContribution::class);
     }
 
     public function activitySupports() {

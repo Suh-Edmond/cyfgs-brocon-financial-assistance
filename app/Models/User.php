@@ -64,8 +64,8 @@ class User extends Authenticatable
         return $this->hasMany(UserSaving::class);
     }
 
-    public function userPayment() {
-        return $this->hasMany(UserPayment::class);
+    public function userContributions() {
+        return $this->hasMany(UserContribution::class);
     }
 
     public function organisation() {
