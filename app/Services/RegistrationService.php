@@ -17,8 +17,8 @@ class RegistrationService implements RegistrationInterface
     {
         $user = User::findOrFail($request->user_id);
         $payment_item = PaymentItem::findOrFail($request->payment_item_id);
-        $exist_user = MemberRegistration::where('user_id', $user->id)->where('year', $request->year)->get();
-        if(is_null($exist_user[0])){
+        $exist_user = MemberRegistration::where('user_id', $user->id)->where('year', $request->year)->get()->toArray();
+        if(count($exist_user)){
             MemberRegistration::create([
                 'user_id'           => $user->id,
                 'year'              => $request->year,

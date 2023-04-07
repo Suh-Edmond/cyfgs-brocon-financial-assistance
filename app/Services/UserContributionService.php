@@ -337,18 +337,17 @@ class UserContributionService implements UserContributionInterface {
                 array_push($debts, new MemberPaymentItemResource($item->id, $item->name, $item->amount, $item->complusory, $item->type, $item->frequency, 'CONTRIBUTION'));
             }
         }else {
-
+            $payment_item_ids = $items->map(function ($item) {
+                return $item->id;
+            });
             foreach ($contributions as $contribution){
-                $payment_item_ids = $items->map(function ($item) {
-                    return $item->id;
-                });
                 $total_amount_contributed = $this->getTotalAmountPaidByUserForTheItem($user_id, $contribution->payment_item_id);
                 if(!in_array($contribution->payment_item_id, $payment_item_ids->toArray())){
                     array_push($debts, new MemberPaymentItemResource($contribution->payment_item_id, $contribution->name,
                         $contribution->payment_item_amount, $contribution->complusory, $contribution->type, $contribution->frequency, 'CONTRIBUTION'));
                 }
                 if(in_array($contribution->payment_item_id, $payment_item_ids->toArray()) && $contribution->payment_item_amount != $total_amount_contributed){
-                    $balance_payment = $contribution->payment_item_amount - $contribution->amount_deposited;
+                    $balance_payment = $contribution->payment_item_amount - $total_amount_contributed;
                     array_push($debts, new MemberPaymentItemResource($contribution->payment_item_id, $contribution->name,
                         $balance_payment, $contribution->complusory, $contribution->type, $contribution->frequency, 'CONTRIBUTION'));
 
@@ -365,8 +364,8 @@ class UserContributionService implements UserContributionInterface {
     private function saveRegistration($request, $user, $auth_user)
     {
         $payment_item = PaymentItem::findOrFail($request->payment_item_id);
-        $exist_user = MemberRegistration::where('user_id', $user->id)->where('year', $request->year)->get();
-        if(is_null($exist_user[0])){
+        $exist_user = MemberRegistration::where('user_id', $user->id)->where('year', $request->year)->get()->toArray();
+        if(count($exist_user) == 0){
             MemberRegistration::create([
                 'user_id'           => $user->id,
                 'year'              => $request->year,
