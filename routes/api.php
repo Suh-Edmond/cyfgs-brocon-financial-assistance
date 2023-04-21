@@ -12,6 +12,7 @@ use App\Http\Controllers\OrganisationController;
 use App\Http\Controllers\PaymentCategoryController;
 use App\Http\Controllers\PaymentItemController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\SessionController;
 use App\Http\Controllers\UserContributionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserSavingController;
@@ -288,6 +289,13 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/registered-members/{id}', [MemberRegistrationController::class, 'deleteRegistration']);
         Route::put('/members-registration/approve', [MemberRegistrationController::class, 'approveRegisteredMember']);
         Route::get('/registered-members/download', [MemberRegistrationController::class, 'downloadRegisteredMembers']);
+    });
+
+    Route::prefix('protected')->group(function (){
+        Route::post('sessions', [SessionController::class, 'createSession']);
+        Route::get('sessions/current', [SessionController::class, 'getCurrentSession']);
+        Route::put('sessions/update', [SessionController::class, 'updateSession']);
+        Route::delete('sessions/{id}', [SessionController::class, 'deleteSession']);
     });
 });
 
