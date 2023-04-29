@@ -24,7 +24,7 @@ class SessionRequest extends FormRequest
     public function rules()
     {
         return [
-            'year' => 'required|string'
+            'year' => 'required|string|unique:year'
         ];
     }
 }

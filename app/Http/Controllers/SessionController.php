@@ -16,6 +16,11 @@ class SessionController extends Controller
     {
         $this->sessionService = $sessionService;
     }
+    public function getAllSessions()
+    {
+        $data = $this->sessionService->getAllSessions();
+        return $this->sendResponse($data, 200);
+    }
 
     public function getCurrentSession()
     {

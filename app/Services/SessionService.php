@@ -11,7 +11,10 @@ use App\Models\Session;
 
 class SessionService implements SessionInterface
 {
-
+    public function getAllSessions()
+    {
+        return SessionResource::collection(Session::all());
+    }
     public function getCurrentSession()
     {
         $session = Session::where('status', SessionStatus::ACTIVE);
@@ -20,16 +23,17 @@ class SessionService implements SessionInterface
 
     public function createSession($request)
     {
-        $previousSession = Session::where('status', SessionStatus::ACTIVE);
+        $previousSession = Session::where('status', SessionStatus::ACTIVE)->get();
         if(is_null($previousSession)){
             Session::create([
-                'year' => $request->year,
+                'year'          => $request->year,
                 'status'        => SessionStatus::ACTIVE,
                 'updated_by'    => $request->user()->name
             ]);
         }else{
-            $previousSession->status = SessionStatus::IN_ACTIVE;
-            $previousSession->save();
+            $previousSession->update([
+                'status'    => SessionStatus::IN_ACTIVE
+            ]);
         }
     }
 
