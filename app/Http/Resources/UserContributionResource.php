@@ -29,11 +29,12 @@ class UserContributionResource extends JsonResource
             'payment_item_name'        => $payment_item->name,
             'payment_item_amount'      => $payment_item->amount,
             'payment_category'         => $payment_item->paymentCategory,
-            'payment_item_complusory'  => $payment_item->complusory == 0? false : true,
+            'payment_item_compulsory'  => $payment_item->compulsory == 0? false : true,
             'balance'                  => $this->total_amount_deposited == null ? $this->balance :($payment_item->amount - $this->total_amount_deposited),
             'updated_by'               => $this->updated_by,
             'created_at'               => $this->created_at,
-            'total_amount_deposited'   => $this->total_amount_deposited == null ? 0: $this->total_amount_deposited
+            'total_amount_deposited'   => $this->total_amount_deposited == null ? 0: $this->total_amount_deposited,
+            'session'                  => $this->session
         ];
     }
 }

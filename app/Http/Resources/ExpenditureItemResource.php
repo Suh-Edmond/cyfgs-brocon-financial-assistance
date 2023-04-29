@@ -40,7 +40,8 @@ class ExpenditureItemResource extends JsonResource
             'total_amount_spent'            => $this->total_amount_spent,
             'total_balance'                 => $this->balance,
             'updated_by'                    => $this->updated_by,
-            'payment_item'                  => $this->paymentItem
+            'payment_item'                  => $this->paymentItem,
+            'session'                       => $this->session
         ];
     }
 }

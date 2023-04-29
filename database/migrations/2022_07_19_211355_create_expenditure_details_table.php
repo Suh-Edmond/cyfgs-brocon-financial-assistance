@@ -18,7 +18,7 @@ class CreateExpenditureDetailsTable extends Migration
             $table->double('amount_given');
             $table->double('amount_spent');
             $table->string('name');
-            $table->longText('comment');
+            $table->longText('comment')->nullable(true);
             $table->enum('approve', ['PENDING', 'APPROVED', 'DECLINED'])->default('PENDING');
             $table->string('scan_picture')->nullable(true);
             $table->timestamps();

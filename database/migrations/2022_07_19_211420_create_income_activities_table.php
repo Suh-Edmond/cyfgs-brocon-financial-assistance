@@ -16,7 +16,7 @@ class CreateIncomeActivitiesTable extends Migration
         Schema::create('income_activities', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('name');
-            $table->mediumText('description');
+            $table->mediumText('description')->nullable(true);
             $table->double('amount');
             $table->date('date');
             $table->enum('approve', ['PENDING', 'APPROVED', 'DECLINED'])->default('PENDING');

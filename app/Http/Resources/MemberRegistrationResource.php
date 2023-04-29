@@ -16,7 +16,7 @@ class MemberRegistrationResource extends JsonResource
     {
         return [
             'id'        => $this->id,
-            'year'      => $this->year,
+            'session'      => $this->session,
             'approve'   => $this->approve,
             'amount'    => $this->amount,
             'user'           => $this->user,
