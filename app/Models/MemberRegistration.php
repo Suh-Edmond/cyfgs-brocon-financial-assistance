@@ -21,7 +21,6 @@ class MemberRegistration extends Model
         'year',
         'user_id',
         'updated_by',
-        'payment_item_id'
     ];
 
     public function user()

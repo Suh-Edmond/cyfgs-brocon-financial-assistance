@@ -15,7 +15,6 @@ class CreateMemberRegistrationsTable extends Migration
     {
         Schema::create('member_registrations', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('year');
             $table->decimal('amount', 10);
             $table->enum('approve', ['PENDING', 'APPROVED', 'DECLINED'])->default('PENDING');
             $table->uuid('user_id');
