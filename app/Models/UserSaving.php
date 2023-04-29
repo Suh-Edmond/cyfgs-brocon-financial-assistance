@@ -22,7 +22,8 @@ class UserSaving extends Model
         'amount_deposited',
         'comment',
         'user_id',
-        'updated_by'
+        'updated_by',
+        'session_id'
     ];
 
 
@@ -30,6 +31,8 @@ class UserSaving extends Model
         return $this->belongsTo(User::class);
     }
 
-
+    public function session() {
+        return $this->hasMany(Session::class);
+    }
 
 }

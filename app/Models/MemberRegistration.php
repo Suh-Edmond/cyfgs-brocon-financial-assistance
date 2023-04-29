@@ -21,10 +21,15 @@ class MemberRegistration extends Model
         'year',
         'user_id',
         'updated_by',
+        'session_id'
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function session() {
+        return $this->belongsTo(Session::class);
     }
 }

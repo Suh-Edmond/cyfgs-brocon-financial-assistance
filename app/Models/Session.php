@@ -16,4 +16,39 @@ class Session extends Model
     protected $fillable = [
         'year',
     ];
+
+    public function activitySupports()
+    {
+        return $this->hasMany(ActivitySupport::class);
+    }
+
+    public function expenditureItems()
+    {
+        return $this->hasMany(ExpenditureItem::class);
+    }
+
+    public function incomeActivities()
+    {
+        return $this->hasMany(IncomeActivity::class);
+    }
+
+    public function memberRegistrations()
+    {
+        return $this->hasMany(MemberRegistration::class);
+    }
+
+    public function paymentItems()
+    {
+        return $this->hasMany(PaymentItem::class);
+    }
+
+    public function userContributions()
+    {
+        return $this->hasMany(UserContribution::class);
+    }
+
+    public function userSavings()
+    {
+        return $this->hasMany(UserSaving::class);
+    }
 }

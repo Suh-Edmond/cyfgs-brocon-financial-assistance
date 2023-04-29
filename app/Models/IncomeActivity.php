@@ -22,7 +22,8 @@ class IncomeActivity extends Model
         'organisation_id',
         'scan_picture',
         'updated_by',
-        'payment_item_id'
+        'payment_item_id',
+        'session_id'
     ];
 
     public function organisation() {
@@ -33,4 +34,7 @@ class IncomeActivity extends Model
         return $this->belongsTo(PaymentItem::class);
     }
 
+    public function session() {
+        return $this->belongsTo(Session::class);
+    }
 }

@@ -27,7 +27,7 @@ class UserContribution extends Model
         'scan_picture',
         'updated_by',
         'balance',
-        'year'
+        'session_id'
     ];
 
 
@@ -41,6 +41,9 @@ class UserContribution extends Model
         return $this->belongsTo(PaymentItem::class);
     }
 
-
+    public function session()
+    {
+        return $this->belongsTo(Session::class);
+    }
 
 }
