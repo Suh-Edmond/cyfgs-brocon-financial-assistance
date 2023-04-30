@@ -11,13 +11,15 @@ use App\Models\Session;
 
 class SessionService implements SessionInterface
 {
+
+
     public function getAllSessions()
     {
         return SessionResource::collection(Session::all());
     }
     public function getCurrentSession()
     {
-        $session = Session::where('status', SessionStatus::ACTIVE);
+        $session = Session::where('status', SessionStatus::ACTIVE)->get()[0];
         return new  SessionResource($session);
     }
 

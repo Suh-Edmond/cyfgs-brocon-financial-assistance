@@ -11,6 +11,7 @@ use App\Http\Controllers\MemberRegistrationController;
 use App\Http\Controllers\OrganisationController;
 use App\Http\Controllers\PaymentCategoryController;
 use App\Http\Controllers\PaymentItemController;
+use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\UserContributionController;
@@ -297,6 +298,15 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('sessions/current', [SessionController::class, 'getCurrentSession']);
         Route::put('sessions/update', [SessionController::class, 'updateSession']);
         Route::delete('sessions/{id}', [SessionController::class, 'deleteSession']);
+    });
+
+    Route::prefix('protected')->group(function() {
+        Route::post('/registration_fees', [RegistrationController::class, 'createRegFee']);
+        Route::put('/registration_fees/{id}', [RegistrationController::class, 'updateRegFee']);
+        Route::get('/registration_fees', [RegistrationController::class, 'getAllRegistrationFee']);
+        Route::get('/registration_fees/current', [RegistrationController::class, 'getCurrentRegistrationFee']);
+        Route::delete('/registration_fees/{id}', [RegistrationController::class, 'deleteRegistrationFee']);
+        Route::put('/registration_fees/{id}/set', [RegistrationController::class, 'setNewFee']);
     });
 });
 

@@ -3,8 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Constants\Roles;
-use App\Http\Requests\ChangeRegistrationStateRequest;
-use App\Http\Requests\RegistrationRequest;
+use App\Http\Requests\MemberRegRequest;
 use App\Http\Requests\SearchRegistrationRequest;
 use App\Http\Resources\MemberRegistrationResource;
 use App\Models\User;
@@ -33,7 +32,7 @@ class MemberRegistrationController extends Controller
     }
 
 
-    public function addRegistration(RegistrationRequest $request)
+    public function addRegistration(MemberRegRequest $request)
     {
         $this->registrationService->addRegistration($request);
 
@@ -41,7 +40,7 @@ class MemberRegistrationController extends Controller
     }
 
 
-    public function updateRegistration(RegistrationRequest $request)
+    public function updateRegistration(MemberRegRequest $request)
     {
         $this->registrationService->updatedRegistration($request);
         return $this->sendResponse("success", "Member updated successfully");
