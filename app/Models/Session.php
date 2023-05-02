@@ -5,6 +5,9 @@ namespace App\Models;
 use App\Traits\GenerateUuid;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @method static where(string $string, string $ACTIVE)
+ */
 class Session extends Model
 {
     use GenerateUuid;
