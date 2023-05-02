@@ -2,84 +2,68 @@
 
 namespace App\Http\Controllers;
 
-use App\Organisation;
-use Illuminate\Http\Request;
+use App\Http\Requests\CreateOrganisationRequest;
+use App\Http\Requests\UpdateOrganisationRequest;
+use App\Http\Resources\OrganisationResource;
+use App\Services\OrganisationService;
 
 class OrganisationController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    private OrganisationService $organisation_service;
+
+    public function __construct(OrganisationService $organisation_service)
     {
-        //
+        $this->organisation_service = $organisation_service;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+
+
+    public function createOrganisation(CreateOrganisationRequest $request)
     {
-        //
+        $this->organisation_service->createOrganisation($request);
+
+        return $this->sendResponse('success', 'Organisation created successfully' );
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+
+    public function getOrganisation($id)
     {
-        //
+        $organisation = $this->organisation_service->getOrganisation($id);
+
+        return $this->sendResponse(new OrganisationResource($organisation), 'success');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Organisation  $organisation
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Organisation $organisation)
+
+
+
+    public function getOrganisationInfo()
     {
-        //
+        $organisation = $this->organisation_service->getOrganisationInfo();
+
+        return $this->sendResponse(new OrganisationResource($organisation), 'success');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Organisation  $organisation
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Organisation $organisation)
+
+    public function getOrganisations()
     {
-        //
+        $organisations = $this->organisation_service->getOrganisations();
+
+        return $this->sendResponse(OrganisationResource::collection($organisations), 'success');
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Organisation  $organisation
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Organisation $organisation)
+
+    public function updateOrganisation(UpdateOrganisationRequest $request, $id)
     {
-        //
+        $this->organisation_service->updatedOrganisation($request, $id);
+
+        return $this->sendResponse( 'success', 'successfully updated organisation');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Organisation  $organisation
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Organisation $organisation)
+
+    public function deleteOrganisation($id)
     {
-        //
+        $this->organisation_service->deleteOgranisation($id);
+
+        return $this->sendResponse('success','successfully deleted organisation');
     }
 }

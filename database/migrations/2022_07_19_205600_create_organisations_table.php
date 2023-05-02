@@ -22,10 +22,11 @@ class CreateOrganisationsTable extends Migration
             $table->string('address');
             $table->string('logo')->nullable(true);
             $table->string('salutation')->nullable(true);
-            //data for to produce the report header
+            $table->string('box_number')->nullable(true);
+            $table->string('region')->nullable(true);
+            //data to produce the report header
             $table->timestamps();
-            $table->mediumText('created_by')->nullable(true);
-            $table->mediumText('updated_by')->nullable(true);
+            $table->string('updated_by');
         });
     }
 

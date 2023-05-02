@@ -8,21 +8,25 @@ use Illuminate\Database\Eloquent\Model;
 class ExpenditureDetail extends Model
 {
     use GenerateUuid;
+
+    protected $primaryKey = 'id';
+    public $incrementing  = false;
+    protected $keyType    = 'string';
+
+
     protected $fillable = [
         'amount_given',
         'amount_spent',
-        'scan_picture',
         'name',
         'comment',
-        'expenditure_item_id'
+        'expenditure_item_id',
+        'scan_picture',
+        'updated_by'
     ];
-
-    public $incrementing = false;
-    public $keyType = 'string';
-    public $primaryKey = 'uuid';
-
 
     public function expenditureItem() {
         return $this->belongsTo(ExpenditureItem::class);
     }
+
+
 }

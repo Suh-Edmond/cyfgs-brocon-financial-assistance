@@ -2,84 +2,110 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\PaymentItem;
+use App\Constants\Roles;
+use App\Http\Requests\PaymentItemRequest;
+use App\Http\Resources\PaymentItemResource;
+use App\Models\User;
+use App\Services\PaymentItemService;
+use App\Traits\HelpTrait;
+use App\Traits\ResponseTrait;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class PaymentItemController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+
+    use ResponseTrait, HelpTrait;
+    private PaymentItemService $payment_item_service;
+
+
+    public function __construct(PaymentItemService $payment_item_service)
     {
-        //
+        $this->payment_item_service = $payment_item_service;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+    public function getAllPaymentItems() {
+        $data = $this->payment_item_service->getPaymentItems();
+
+        return $this->sendResponse(PaymentItemResource::collection($data), 200);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function getPaymentItemsByCategory($payment_category_id)
     {
-        //
+        $items = $this->payment_item_service->getPaymentItemsByCategory($payment_category_id);
+
+        return $this->sendResponse($items, 200);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\PaymentItem  $paymentItem
-     * @return \Illuminate\Http\Response
-     */
-    public function show(PaymentItem $paymentItem)
+
+    public function createPaymentItem(PaymentItemRequest $request, $payment_category_id)
     {
-        //
+        $this->payment_item_service->createPaymentItem($request, $payment_category_id);
+
+        return $this->sendResponse('success', 'Payment Item created Successfully');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\PaymentItem  $paymentItem
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(PaymentItem $paymentItem)
+
+    public function getPaymentItem($payment_category_id, $id)
     {
-        //
+        $payment_item = $this->payment_item_service->getPaymentItem($id, $payment_category_id);
+
+        return $this->sendResponse(new PaymentItemResource($payment_item), 200);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\PaymentItem  $paymentItem
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, PaymentItem $paymentItem)
+
+    public function updatePaymentItem(PaymentItemRequest $request, $payment_category_id, $id)
     {
-        //
+       $this->payment_item_service->updatePaymentItem($request, $id, $payment_category_id);
+
+       return $this->sendResponse('success', 'Payment Item created Successfully');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\PaymentItem  $paymentItem
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(PaymentItem $paymentItem)
+
+    public function deletePaymentItem($payment_category_id, $id)
     {
-        //
+        $this->payment_item_service->deletePaymentItem($id, $payment_category_id);
+
+        return $this->sendResponse('success', 'Payment Item deleted successfully');
+    }
+
+    public function filterPaymentItems(Request $request)
+    {
+        $data = $this->payment_item_service->filterPaymentItems($request);
+
+        return $this->sendResponse($data, 200);
+    }
+
+    public function getPaymentItemByType()
+    {
+        $data = $this->payment_item_service->getPaymentItemByType();
+        return $this->sendResponse(PaymentItemResource::collection($data), 200);
+    }
+
+    public function downloadPaymentItem(Request $request)
+    {
+        $auth_user         = auth()->user();
+        $organisation      = User::find($auth_user['id'])->organisation;
+        $items             = $this->payment_item_service->getPaymentItemsByCategory($request->payment_category_id);
+
+        $president         = $this->getOrganisationAdministrators(Roles::PRESIDENT);
+        $treasurer         = $this->getOrganisationAdministrators(Roles::TREASURER);
+        $fin_sec           = $this->getOrganisationAdministrators(Roles::FINANCIAL_SECRETARY);
+
+
+        $data = [
+            'title'               => 'Payment Items for '.$items[0]->paymentCategory->name,
+            'date'                => date('m/d/Y'),
+            'organisation'        => $organisation,
+            'payment_items'       => $items,
+            'president'           => $president,
+            'treasurer'           => $treasurer,
+            'fin_secretary'       => $fin_sec,
+            'total'               => $this->computeTotalAmountByPaymentCategory($items)
+        ];
+
+        $pdf = PDF::loadView('PaymentItem.PaymentItems', $data);
+
+        return $pdf->download('Payment_items.pdf');
     }
 }

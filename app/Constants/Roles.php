@@ -2,10 +2,11 @@
 namespace App\Constants;
 
 class Roles {
-    public const ADMIN = 'ADMIN_ROLE';
-    public const PRESIDENT = 'PRESIDENT_ROLE';
-    public const FINANCIAL_SECRETARY = 'FINANCIAL-SECRETARY_ROLE';
-    public const TREASURER = 'TREASURER_ROLE';
-    public const AUDITOR = 'AUDITOR_ROLE';
-    public const USER_ROLE  = 'USER_ROLE';
+    public const ADMIN = 'ADMIN';
+    public const PRESIDENT = 'PRESIDENT';
+    public const FINANCIAL_SECRETARY = 'FINANCIAL_SECRETARY';
+    public const TREASURER = 'TREASURER';
+    public const AUDITOR = 'AUDITOR';
+    public const MEMBER  = 'MEMBER';
+    public const ROLE_GUARD = 'api';
 }

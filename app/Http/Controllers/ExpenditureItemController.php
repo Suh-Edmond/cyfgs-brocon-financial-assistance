@@ -2,84 +2,126 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ExpenditureItem;
+use App\Constants\Roles;
+use App\Http\Requests\ExpenditureItemRequest;
+use App\Models\User;
+use App\Services\ExpenditureItemService;
+use App\Traits\HelpTrait;
+use App\Traits\ResponseTrait;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ExpenditureItemController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+
+    use ResponseTrait, HelpTrait;
+
+    private ExpenditureItemService $expenditure_item_service;
+
+
+    public function __construct(ExpenditureItemService $expenditure_item_service)
     {
-        //
+        $this->expenditure_item_service = $expenditure_item_service;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function createExpenditureItem(ExpenditureItemRequest $request, $id)
     {
-        //
+        $this->expenditure_item_service->createExpenditureItem($request, $id);
+
+        return $this->sendResponse('success', 'Expenditure Item created successfully');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+
+    public function getExpenditureItems($expenditure_category_id, Request $request)
     {
-        //
+        $items = $this->expenditure_item_service->getExpenditureItems($expenditure_category_id, $request->status);
+
+        return $this->sendResponse($items, 200);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\ExpenditureItem  $expenditureItem
-     * @return \Illuminate\Http\Response
-     */
-    public function show(ExpenditureItem $expenditureItem)
+
+    public function getExpenditureItem($expenditure_category_id, $id)
     {
-        //
+        $item = $this->expenditure_item_service->getExpenditureItem($id, $expenditure_category_id);
+
+        return $this->sendResponse($item, 200);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\ExpenditureItem  $expenditureItem
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(ExpenditureItem $expenditureItem)
+    public function getItem($id)
     {
-        //
+        $item = $this->expenditure_item_service->getItem($id);
+
+        return $this->sendResponse($item, 200);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\ExpenditureItem  $expenditureItem
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, ExpenditureItem $expenditureItem)
+    public function getExpenditureByCategory($expenditure_category_id)
     {
-        //
+        $data = $this->expenditure_item_service->getExpenditureByCategory($expenditure_category_id);
+
+        return $this->sendResponse($data, 200);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\ExpenditureItem  $expenditureItem
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(ExpenditureItem $expenditureItem)
+
+    public function updateExpenditureItem(ExpenditureItemRequest $request, $expenditure_category_id, $id)
     {
-        //
+        $this->expenditure_item_service->updateExpenditureItem($request, $id, $expenditure_category_id);
+
+        return $this->sendResponse('success', 'Expenditure Item updated successfully');
+    }
+
+
+    public function deleteExpenditureItem($expenditure_category_id, $id)
+    {
+        $this->expenditure_item_service->deleteExpenditureItem($id, $expenditure_category_id);
+
+        return $this->sendResponse('success', 'Expenditure Item deleted successfully');
+    }
+
+    public function approveExpenditureItem($id, Request $request)
+    {
+        $this->expenditure_item_service->approveExpenditureItem($id, $request->type);
+
+        return $this->sendResponse('success', 'Expenditure Item approved successfully');
+    }
+
+    public function getExpenditureItemByPaymentItem($payment_item_id, Request $request)
+    {
+        $data = $this->expenditure_item_service->getExpenditureItemsByPaymentItem($payment_item_id, $request);
+
+        return $this->sendResponse($data, 200);
+    }
+
+    public function prepareDataForDownload(Request $request){
+        $data = $this->expenditure_item_service->downloadExpenditureItems($request);
+        $data      = json_decode(json_encode($data));
+        return $data;
+    }
+
+    public function downloadExpenditureItems(Request $request)
+    {
+        $auth_user         = auth()->user();
+        $organisation      = User::find($auth_user['id'])->organisation;
+        $expenditure_items = $this->prepareDataForDownload($request);
+
+        $president         = $this->getOrganisationAdministrators(Roles::PRESIDENT);
+        $treasurer         = $this->getOrganisationAdministrators(Roles::TREASURER);
+        $fin_sec           = $this->getOrganisationAdministrators(Roles::FINANCIAL_SECRETARY);
+
+
+        $data = [
+            'title'               => 'Expenditure Activities',
+            'date'                => date('m/d/Y'),
+            'organisation'        => $organisation,
+            'expenditure_items'   => $expenditure_items,
+            'president'           => $president,
+            'organisation_telephone'   => $this->setOrganisationTelephone($organisation->telephone),
+            'treasurer'           => $treasurer,
+            'fin_secretary'       => $fin_sec,
+            'total'               => $this->expenditure_item_service->calculateTotal($expenditure_items)
+        ];
+
+        $pdf = PDF::loadView('ExpenditureItem.ExpenditureItems', $data);
+
+        return $pdf->download('Expenditure_items.pdf');
     }
 }

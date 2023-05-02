@@ -2,84 +2,101 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\PaymentCategory;
+use App\Constants\Roles;
+use App\Http\Requests\PaymentCategoryRequest;
+use App\Http\Resources\PaymentCategoryResource;
+use App\Models\User;
+use App\Services\PaymentCategoryService;
+use App\Traits\HelpTrait;
+use App\Traits\ResponseTrait;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
+
 
 class PaymentCategoryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+
+    use ResponseTrait, HelpTrait;
+
+
+    private PaymentCategoryService $payment_category_service;
+
+    public function __construct(PaymentCategoryService $payment_category_service)
     {
-        //
+        $this->payment_category_service = $payment_category_service;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+
+
+    public function createPaymentCategory(PaymentCategoryRequest $request, $organisation_id)
     {
-        //
+        $this->payment_category_service->createPaymentCategory($request, $organisation_id);
+
+        return $this->sendResponse('success', 'Payment Category created successfully');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+
+    public function getPaymentCategories($organisation_id)
     {
-        //
+        $payment_categories = $this->payment_category_service->getPaymentCategories($organisation_id);
+
+        return $this->sendResponse($payment_categories, 200);
+
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\PaymentCategory  $paymentCategory
-     * @return \Illuminate\Http\Response
-     */
-    public function show(PaymentCategory $paymentCategory)
+
+    public function getPaymentCategory($organisation_id, $id)
     {
-        //
+        $payment_category = $this->payment_category_service->getPaymentCategory($id, $organisation_id);
+
+        return $this->sendResponse(new PaymentCategoryResource($payment_category), 'success');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\PaymentCategory  $paymentCategory
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(PaymentCategory $paymentCategory)
+
+    public function updatePaymentCategory(PaymentCategoryRequest $request, $organisation_id, $id)
     {
-        //
+        $this->payment_category_service->updatePaymentCategory($request, $id,  $organisation_id);
+
+        return $this->sendResponse('success', 'Payment Category updated successfully');
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\PaymentCategory  $paymentCategory
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, PaymentCategory $paymentCategory)
+
+    public function deletePaymentCategory($organisation_id, $id)
     {
-        //
+       $this->payment_category_service->deletePaymentCategory($id, $organisation_id);
+
+       return $this->sendResponse('success', 'Payment Category deleted successfully');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\PaymentCategory  $paymentCategory
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(PaymentCategory $paymentCategory)
+
+    public  function filterPaymentCategory(Request $request){
+        $categories = $this->payment_category_service->filterPaymentCategory($request);
+        return $this->sendResponse($categories, 200);
+    }
+
+
+    public function downloadPaymentCategory(Request $request)
     {
-        //
+        $auth_user         = auth()->user();
+        $organisation      = User::find($auth_user['id'])->organisation;
+
+        $president         = $this->getOrganisationAdministrators(Roles::PRESIDENT);
+        $treasurer         = $this->getOrganisationAdministrators(Roles::TREASURER);
+        $fin_sec           = $this->getOrganisationAdministrators(Roles::FINANCIAL_SECRETARY);
+
+        $data = [
+            'title'             =>'Payment Categories',
+            'date'              => date('m/d/Y'),
+            'organisation'      => $organisation,
+            'organisation_telephone' => $this->setOrganisationTelephone($organisation->telephone),
+            'categories'        => $this->payment_category_service->getPaymentCategories($request['organisation_id']),
+            'president'         => $president,
+            'treasurer'         => $treasurer,
+            'fin_secretary'     => $fin_sec
+        ];
+
+        $pdf = PDF::loadView('PaymentCategory.PaymentCategories', $data);
+
+        return $pdf->download('Payment_Categories.pdf');
     }
 }

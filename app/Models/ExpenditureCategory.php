@@ -5,19 +5,25 @@ namespace App\Models;
 use App\Traits\GenerateUuid;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @method static findOrFail($expenditure_category_id)
+ */
 class ExpenditureCategory extends Model
 {
     use GenerateUuid;
 
+    protected $primaryKey = 'id';
+    public $incrementing  = false;
+    protected $keyType    = 'string';
+
+
     protected $fillable = [
         'name',
         'description',
-        'organisation_id'
+        'organisation_id',
+        'updated_by'
     ];
 
-    public $incrementing = false;
-    public $keyType = 'string';
-    public $primaryKey = 'uuid';
 
     public function expenditureItem(){
         return $this->hasMany(ExpenditureItem::class);
@@ -26,4 +32,7 @@ class ExpenditureCategory extends Model
     public function organisation() {
         return $this->belongsTo(Organisation::class);
     }
+
+
+
 }

@@ -17,19 +17,19 @@ class Users extends Migration
             $table->uuid('id')->primary();
             $table->string('name');
             $table->string('email')->unique()->nullable(true);
-            $table->string('telephone')->nullable(true);
+            $table->string('telephone')->unique(true);
             $table->timestamp('email_verified_at')->nullable(true);
-            $table->string('password');
-            $table->string('gender');
-            $table->string('address');
-            $table->string('occupation');
+            $table->string('password')->nullable(true);
+            $table->string('gender')->nullable(true);
+            $table->string('address')->nullable(true);
+            $table->string('occupation')->nullable(true);
+            $table->string('picture')->nullable(true);
             $table->rememberToken();
             $table->timestamps();
-            $table->mediumText('created_by')->nullable(true);
-            $table->mediumText('updated_by')->nullable(true);
-            $table->string('organisation_id');
+            $table->uuid('organisation_id')->nullable(true);
+            $table->string('updated_by');
 
-            $table->foreign('organisation_id')->references('id')->on('organisations');
+            $table->foreign('organisation_id')->references('id')->on('organisations')->cascadeOnDelete();
         });
     }
 
