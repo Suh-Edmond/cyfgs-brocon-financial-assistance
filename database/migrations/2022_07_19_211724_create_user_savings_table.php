@@ -16,7 +16,7 @@ class CreateUserSavingsTable extends Migration
         Schema::create('user_savings', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->double('amount_deposited');
-            $table->text('comment');
+            $table->text('comment')->nullable(true);
             $table->uuid('user_id');
             $table->enum('approve', ['PENDING', 'APPROVED', 'DECLINED'])->default('PENDING');
             $table->timestamps();

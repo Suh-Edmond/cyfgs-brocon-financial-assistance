@@ -13,7 +13,6 @@ use App\Models\CustomRole;
 use App\Models\User;
 use App\Traits\HelpTrait;
 use App\Traits\ResponseTrait;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -51,7 +50,7 @@ class UserManagementService implements UserManagementInterface
           return User::join('organisations', 'organisations.id', '=', 'users.organisation_id')
                  ->leftJoin('member_registrations', 'users.id', '=', 'member_registrations.user_id')
                  ->where('organisations.id', $organisation_id)
-                 ->select('users.*', 'member_registrations.approve', 'member_registrations.year')->distinct()
+                 ->select('users.*', 'member_registrations.approve')->distinct()
                  ->orderBy('created_at', 'DESC')->get();
 
     }
@@ -60,7 +59,7 @@ class UserManagementService implements UserManagementInterface
     {
         $user = User::leftJoin('member_registrations', 'users.id', '=', 'member_registrations.user_id')
                    ->where('users.id', $user_id)
-                   ->select('users.*', 'member_registrations.approve', 'member_registrations.year')
+                   ->select('users.*', 'member_registrations.approve')
                    ->get();
         return ($user[0]);
     }
@@ -166,10 +165,10 @@ class UserManagementService implements UserManagementInterface
         if(!is_null($request->gender) && $request->gender != "ALL"){
            $filter_users = $filter_users->where('users.gender', $request->gender);
         }
-        if(!is_null($request->year)) {
-            $filter_users = $filter_users->where('member_registrations.year', $request->year)->orWhereYear('users.created_at', $request->year);
+        if(!is_null($request->session_id)) {
+            $filter_users = $filter_users->where('member_registrations.session_id', $request->session_id);
         }
-        $filter_users = $filter_users->select('users.*','member_registrations.approve', 'member_registrations.year');
+        $filter_users = $filter_users->select('users.*','member_registrations.approve');
         $filter_users = $filter_users->orderBy('users.name', 'DESC')->get();
 
         return $filter_users;

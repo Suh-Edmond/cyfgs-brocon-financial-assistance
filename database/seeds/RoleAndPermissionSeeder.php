@@ -2,8 +2,10 @@
 
 use App\Constants\Permissions;
 use App\Constants\Roles;
+use App\Constants\SessionStatus;
 use App\Models\CustomPermission;
 use App\Models\CustomRole;
+use App\Models\Session;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Illuminate\Database\Seeder;
@@ -522,6 +524,30 @@ class RoleAndPermissionSeeder extends Seeder
            CustomPermission::findByName(Permissions::CAN_GET_USER_PAYMENTS,'api'),
            CustomPermission::findByName(Permissions::CAN_GET_USER_SAVINGS,'api'),
            CustomPermission::findByName(Permissions::CAN_GET_INCOME_ACTIVITIES,'api'),
+        ]);
+
+        Session::create([
+            'year' =>  "2020",
+            'status' => SessionStatus::IN_ACTIVE,
+            'updated_by' => "Edmond"
+        ]);
+
+        Session::create([
+            'year' =>  "2021",
+            'status' => SessionStatus::IN_ACTIVE,
+            'updated_by' => "Edmond"
+        ]);
+
+        Session::create([
+            'year' =>  "2022",
+            'status' => SessionStatus::IN_ACTIVE,
+            'updated_by' => "Edmond"
+        ]);
+
+        Session::create([
+            'year' =>  "2023",
+            'status' => SessionStatus::ACTIVE,
+            'updated_by' => "Edmond"
         ]);
     }
 }

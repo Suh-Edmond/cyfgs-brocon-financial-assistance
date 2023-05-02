@@ -14,8 +14,9 @@ class UpdatePaymentItem extends Migration
     public function up()
     {
         Schema::table('payment_items', function (Blueprint $table){
-           $table->enum('type', ['REGISTRATION', 'NORMAL']);
-           $table->enum('frequency', ['YEARLY', 'NONE']);
+           $table->enum('type', ['ALL_MEMBERS', 'MEMBER_WITH_ROLES', 'MEMBERS_WITHOUT_ROLES', 'A_MEMBER', 'GROUPED_MEMBERS']);
+           $table->enum('frequency', ['YEARLY', 'ONE_TIME', 'MONTHLY', 'QUARTERLY']);
+           $table->longText('reference')->nullable(true);//a particular member or a list of members
         });
     }
 

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class UpdateMemberRegistration extends Migration
+class CreateSessionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,12 @@ class UpdateMemberRegistration extends Migration
      */
     public function up()
     {
-        Schema::table('member_registrations', function (Blueprint $table){
-            $table->dropColumn('amount');
-            $table->uuid('payment_item_id');
-            $table->foreign('payment_item_id')->references('id')->on('payment_items')->cascadeOnDelete();
-
+        Schema::create('sessions', function (Blueprint $table) {
+            $table->uuid('id')->primary();
+            $table->string('year');
+            $table->enum('status', ['ACTIVE', 'IN_ACTIVE']);
+            $table->timestamps();
+            $table->string('updated_by');
         });
     }
 
@@ -28,6 +29,6 @@ class UpdateMemberRegistration extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('sessions');
     }
 }

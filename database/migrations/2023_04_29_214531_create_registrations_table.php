@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class PaymentItems extends Migration
+class CreateRegistrationsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,17 +13,14 @@ class PaymentItems extends Migration
      */
     public function up()
     {
-        Schema::create('payment_items', function (Blueprint $table) {
+        Schema::create('registrations', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('name');
             $table->double('amount');
-            $table->boolean('compulsory')->default(true);
-            $table->mediumText('description')->nullable(true);
+            $table->string('motive');
+            $table->enum('status', ['ACTIVE', 'IN_ACTIVE']);
+            $table->boolean('is_compulsory');
             $table->timestamps();
-            $table->uuid('payment_category_id');
             $table->string('updated_by');
-
-            $table->foreign('payment_category_id')->references('id')->on('payment_categories')->cascadeOnDelete();
         });
     }
 
@@ -34,6 +31,6 @@ class PaymentItems extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('payment_items');
+        Schema::dropIfExists('registrations');
     }
 }

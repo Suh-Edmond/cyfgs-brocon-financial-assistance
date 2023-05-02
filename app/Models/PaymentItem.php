@@ -21,12 +21,14 @@ class PaymentItem extends Model
     protected $fillable = [
         'name',
         'amount',
-        'complusory',
+        'compulsory',
         'payment_category_id',
         'description',
         'updated_by',
         'type',
-        'frequency'
+        'frequency',
+        'session_id',
+        'reference'
     ];
 
     public function paymentCategory(){
@@ -48,5 +50,9 @@ class PaymentItem extends Model
     public function expenditureItems()
     {
         return $this->hasMany(ExpenditureItem::class);
+    }
+
+    public function session() {
+        return $this->belongsTo(Session::class);
     }
 }

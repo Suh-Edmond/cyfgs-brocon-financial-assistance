@@ -46,7 +46,7 @@ class UserResource extends JsonResource
             'hasLoginBefore' => $this->hasLoginBefore,
             'has_paid'       => !is_null($this->approve),
             'approve'        => !is_null($this->approve)? $this->approve : '',
-            'year'           => !is_null($this->year) ? $this->year : ''
+            'session'        => $this->session
         ];
     }
 }

@@ -24,10 +24,16 @@ class ActivitySupport extends Model
         'code',
         'scan_picture',
         'updated_by',
+        'session_id'
     ];
 
     public function paymentItem()
     {
         return $this->belongsTo(PaymentItem::class);
+    }
+
+    public function session()
+    {
+        return $this->belongsTo(Session::class);
     }
 }

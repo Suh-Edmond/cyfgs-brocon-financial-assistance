@@ -257,7 +257,8 @@ class UserContributionService implements UserContributionInterface {
                 'status'            => $status,
                 'scan_picture'      => null,
                 'updated_by'        => $auth_user,
-                'balance'           => $balance_contribution
+                'balance'           => $balance_contribution,
+                'year'              => $request->year
             ]);
         }
 
@@ -332,23 +333,23 @@ class UserContributionService implements UserContributionInterface {
         $debts = [];
         $contributions = $this->getAllMemberContribution($user_id, $year);
         $items =  DB::table('payment_items')->where('complusory', true)->where('type', PaymentItemType::NORMAL)->select('*')->get()->collect();
+
         if(count($contributions) == 0) {
             foreach ($items as $item){
                 array_push($debts, new MemberPaymentItemResource($item->id, $item->name, $item->amount, $item->complusory, $item->type, $item->frequency, 'CONTRIBUTION'));
             }
         }else {
-
+            $payment_item_ids = $items->map(function ($item) {
+                return $item->id;
+            });
             foreach ($contributions as $contribution){
-                $payment_item_ids = $items->map(function ($item) {
-                    return $item->id;
-                });
                 $total_amount_contributed = $this->getTotalAmountPaidByUserForTheItem($user_id, $contribution->payment_item_id);
                 if(!in_array($contribution->payment_item_id, $payment_item_ids->toArray())){
                     array_push($debts, new MemberPaymentItemResource($contribution->payment_item_id, $contribution->name,
                         $contribution->payment_item_amount, $contribution->complusory, $contribution->type, $contribution->frequency, 'CONTRIBUTION'));
                 }
                 if(in_array($contribution->payment_item_id, $payment_item_ids->toArray()) && $contribution->payment_item_amount != $total_amount_contributed){
-                    $balance_payment = $contribution->payment_item_amount - $contribution->amount_deposited;
+                    $balance_payment = $contribution->payment_item_amount - $total_amount_contributed;
                     array_push($debts, new MemberPaymentItemResource($contribution->payment_item_id, $contribution->name,
                         $balance_payment, $contribution->complusory, $contribution->type, $contribution->frequency, 'CONTRIBUTION'));
 
@@ -365,8 +366,8 @@ class UserContributionService implements UserContributionInterface {
     private function saveRegistration($request, $user, $auth_user)
     {
         $payment_item = PaymentItem::findOrFail($request->payment_item_id);
-        $exist_user = MemberRegistration::where('user_id', $user->id)->where('year', $request->year)->get();
-        if(is_null($exist_user[0])){
+        $exist_user = MemberRegistration::where('user_id', $user->id)->where('year', $request->year)->get()->toArray();
+        if(count($exist_user) == 0){
             MemberRegistration::create([
                 'user_id'           => $user->id,
                 'year'              => $request->year,
@@ -384,7 +385,7 @@ class UserContributionService implements UserContributionInterface {
             ->join('payment_items', 'payment_items.id', '=', 'user_contributions.payment_item_id')
             ->join('users', 'users.id', '=', 'user_contributions.user_id')
             ->where('user_contributions.user_id', $user_id)
-            ->whereYear('user_contributions.created_at', $year)
+            ->where('user_contributions.year', $year)
             ->select('payment_items.id as payment_item_id', 'payment_items.name','payment_items.complusory','payment_items.amount as payment_item_amount',
                 'payment_items.description','payment_items.type','payment_items.frequency','payment_items.payment_category_id',
                 'payment_items.created_at','payment_items.updated_at','payment_items.updated_by', 'user_contributions.*')

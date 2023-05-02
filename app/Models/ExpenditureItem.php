@@ -27,7 +27,8 @@ class ExpenditureItem extends Model
         'expenditure_category_id',
         'scan_picture',
         'updated_by',
-        'payment_item_id'
+        'payment_item_id',
+        'session_id'
     ];
 
     public function expenditureDetails() {
@@ -42,5 +43,10 @@ class ExpenditureItem extends Model
     public function paymentItem()
     {
         return $this->belongsTo(PaymentItem::class);
+    }
+
+    public function session()
+    {
+        return $this->belongsTo(Session::class);
     }
 }
