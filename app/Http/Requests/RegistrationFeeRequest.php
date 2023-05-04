@@ -2,9 +2,11 @@
 
 namespace App\Http\Requests;
 
+use App\Constants\RegistrationFrequency;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-class RegisterFeeRequest extends FormRequest
+class RegistrationFeeRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +26,9 @@ class RegisterFeeRequest extends FormRequest
     public function rules()
     {
         return [
-            'user_id'         => 'required|string',
+            'amount'         => 'required|numeric',
+            'is_compulsory'  => 'required',
+            'frequency'      => ['required', Rule::in([RegistrationFrequency::MONTHLY, RegistrationFrequency::YEARLY])]
         ];
     }
 }
