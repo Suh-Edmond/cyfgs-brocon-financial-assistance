@@ -18,7 +18,8 @@ class Session extends Model
 
     protected $fillable = [
         'year',
-        'updated_by'
+        'updated_by',
+        'status'
     ];
 
     public function activitySupports()
