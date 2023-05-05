@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Constants\PaymentItemType;
+use App\Constants\SessionStatus;
 use App\Exceptions\BusinessValidationException;
 use App\Http\Resources\MemberContributedItemResource;
 use App\Http\Resources\MemberPaymentItemResource;
@@ -320,10 +321,13 @@ class UserContributionService implements UserContributionInterface {
     {
         $payment_item = null;
         $exist = $this->getMemberRegistration($user_id, $year)
-                 ->whereIn('member_registrations.approve', [PaymentStatus::APPROVED, PaymentStatus::PENDING])->select('payment_items.*', 'member_registrations.user_id')->get()->toArray();
-        if(count($exist) == 0){
-            $payment_item = DB::table('payment_items')->where('type', PaymentItemType::REGISTRATION)->select('*')->get()->toArray();
-            $payment_item =  new MemberPaymentItemResource($payment_item[0]->id, $payment_item[0]->name, $payment_item[0]->amount, $payment_item[0]->complusory, $payment_item[0]->type, $payment_item[0]->frequency, 'REGISTRATION');
+                 ->whereIn('member_registrations.approve', [PaymentStatus::APPROVED, PaymentStatus::PENDING])
+                 ->first();
+        if(is_null($exist)){
+            $payment_item = DB::table('registrations')->where('status', SessionStatus::ACTIVE)->where('is_compulsory', true)->first();
+            //need to add check for freq
+            $payment_item =  new MemberPaymentItemResource($payment_item->id,
+                "Registration Fee", $payment_item->amount, $payment_item->compulsory, null, $payment_item->frequency, 'REGISTRATION');
         }
         return $payment_item;
     }
@@ -332,7 +336,7 @@ class UserContributionService implements UserContributionInterface {
     {
         $debts = [];
         $contributions = $this->getAllMemberContribution($user_id, $year);
-        $items =  DB::table('payment_items')->where('complusory', true)->where('type', PaymentItemType::NORMAL)->select('*')->get()->collect();
+        $items =  DB::table('payment_items')->where('compulsory', true)->where('type', PaymentItemType::NORMAL)->select('*')->get()->collect();
 
         if(count($contributions) == 0) {
             foreach ($items as $item){

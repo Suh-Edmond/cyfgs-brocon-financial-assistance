@@ -9,17 +9,17 @@ class MemberPaymentItemResource extends JsonResource
     private $id;
     private $name;
     private $amount;
-    private $complusory;
+    private $compulsory;
     private $type;
     private $frequency;
     private $code; //to tell if its REGISTRATION or CONTRIBUTION
-    public function __construct($id, $name, $amount, $complusory, $type, $frequency, $code = 'CONTRIBUTION')
+    public function __construct($id, $name, $amount, $compulsory, $type, $frequency, $code = 'CONTRIBUTION')
     {
         parent::__construct(null);
         $this->id = $id;
         $this->name = $name;
         $this->amount = $amount;
-        $this->complusory = $complusory;
+        $this->$compulsory = $compulsory;
         $this->type = $type;
         $this->frequency = $frequency;
         $this->code = $code;
@@ -32,7 +32,7 @@ class MemberPaymentItemResource extends JsonResource
             'name'          => $this->name,
             'amount'        => $this->amount,
             'type'          => $this->type,
-            'is_compulsory' => $this->complusory,
+            'is_compulsory' => $this->compulsory,
             'has_pay'       => false,
             'code'          => $this->code
         ];

@@ -37,11 +37,13 @@ class PaymentCategoryService implements PaymentCategoryInterface {
                             ->join('organisations', 'payment_categories.organisation_id' ,'=', 'organisations.id')
                             ->where('organisations.id', $organisation_id)
                             ->where('payment_categories.id', $id)
-                            ->get();
+                            ->first();
 
-            $updated[0]->name          = $request->name;
-            $updated[0]->description   = $request->description;
-            $updated[0]->save();
+        if(!is_null()){
+            $updated->name          = $request->name;
+            $updated->description   = $request->description;
+            $updated->save();
+        }
     }
 
     public function getPaymentCategories($organisation_id): array
