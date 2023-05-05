@@ -293,16 +293,16 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::prefix('protected')->group(function (){
-        Route::post('sessions', [SessionController::class, 'createSession']);
-        Route::get('sessions', [SessionController::class, 'getAllSessions']);
-        Route::get('sessions/current', [SessionController::class, 'getCurrentSession']);
-        Route::put('sessions/update', [SessionController::class, 'updateSession']);
+        Route::post('/sessions', [SessionController::class, 'createSession']);
+        Route::get('/sessions', [SessionController::class, 'getAllSessions']);
+        Route::get('/sessions/current', [SessionController::class, 'getCurrentSession']);
+        Route::put('/sessions/update', [SessionController::class, 'updateSession']);
         Route::delete('sessions/{id}', [SessionController::class, 'deleteSession']);
     });
 
     Route::prefix('protected')->group(function() {
         Route::post('/registration_fees', [RegistrationController::class, 'createRegFee']);
-        Route::put('/registration_fees/{id}', [RegistrationController::class, 'updateRegFee']);
+        Route::put('/registration_fees', [RegistrationController::class, 'updateRegFee']);
         Route::get('/registration_fees', [RegistrationController::class, 'getAllRegistrationFee']);
         Route::get('/registration_fees/current', [RegistrationController::class, 'getCurrentRegistrationFee']);
         Route::delete('/registration_fees/{id}', [RegistrationController::class, 'deleteRegistrationFee']);

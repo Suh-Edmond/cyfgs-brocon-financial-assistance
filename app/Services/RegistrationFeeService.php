@@ -5,8 +5,10 @@ namespace App\Services;
 
 
 use App\Constants\SessionStatus;
+use App\Http\Resources\RegisterFeeResource;
 use App\Interfaces\RegistrationFeeInterface;
 use App\Models\Registration;
+use Illuminate\Support\Facades\DB;
 
 class RegistrationFeeService implements RegistrationFeeInterface
 {
@@ -16,17 +18,17 @@ class RegistrationFeeService implements RegistrationFeeInterface
         $exist_fees = Registration::all()->toArray();
         if(count($exist_fees) == 0){
             Registration::create([
-                'motive'    => $request->motive,
                 'is_compulsory' => $request->is_compulsory,
                 'amount'        => $request->amount,
-                'status'        => SessionStatus::ACTIVE
+                'status'        => SessionStatus::ACTIVE,
+                'frequency'     => $request->frequency
             ]);
         }else {
             Registration::create([
-                'motive'    => $request->motive,
                 'is_compulsory' => $request->is_compulsory,
                 'amount'        => $request->amount,
-                'status'        => SessionStatus::IN_ACTIVE
+                'status'        => SessionStatus::IN_ACTIVE,
+                'frequency'     => $request->frequency
             ]);
         }
     }
@@ -35,20 +37,21 @@ class RegistrationFeeService implements RegistrationFeeInterface
     {
         $updated = Registration::findOrFail($id);
         $updated->update([
-            'motive'    => $request->motive,
             'is_compulsory' => $request->is_compulsory,
-            'amount'        => $request->amount
+            'amount'        => $request->amount,
+            'frequency'     => $request->frequency
         ]);
     }
 
     public function getAllRegistrationFee()
     {
-        return Registration::all();
+        $reg_fees = DB::table('registrations')->orderBy('created_at', 'ASC')->get();
+        return RegisterFeeResource::collection($reg_fees->toArray());
     }
 
     public function getCurrentRegistrationFee()
     {
-        return Registration::where('status', SessionStatus::ACTIVE)->get();
+        return Registration::where('status', SessionStatus::ACTIVE)->first();
     }
 
     public function deleteRegistrationFee($id)

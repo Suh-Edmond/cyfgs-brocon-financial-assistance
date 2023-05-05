@@ -27,16 +27,16 @@ class RegistrationService implements RegistrationInterface
             ->join('sessions', ['sessions.id' => 'member_registrations.session_id'])
             ->where('session_id', $current_session->id)
             ->where('member_registrations.user_id', $user->id)
-            ->get()->toArray();
-        if(count($exist_user) == 0){
+            ->first();
+        if(is_null($exist_user)){
             MemberRegistration::create([
                 'user_id'           => $user->id,
                 'session_id'        => $current_session->id,
                 'updated_by'        => $request->user()->name
             ]);
         }else {
-            $exist_user[0]->approve = PaymentStatus::PENDING;
-            $exist_user[0]->save();
+            $exist_user->approve = PaymentStatus::PENDING;
+            $exist_user->save();
         }
     }
 

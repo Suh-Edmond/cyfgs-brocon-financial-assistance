@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Constants\SessionStatus;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class SessionRequest extends FormRequest
 {
@@ -24,7 +26,8 @@ class SessionRequest extends FormRequest
     public function rules()
     {
         return [
-            'year' => 'required|string|unique:year'
+            'year' => 'required|string|unique:sessions,year',
+            'status' => 'required',Rule::in([SessionStatus::ACTIVE, SessionStatus::IN_ACTIVE])
         ];
     }
 }

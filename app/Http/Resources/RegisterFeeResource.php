@@ -14,6 +14,15 @@ class RegisterFeeResource extends JsonResource
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        return [
+            'id'        => $this->id,
+            'is_compulsory' => $this->is_compulsory,
+            'status'        => $this->status,
+            'frequency'     => $this->frequency,
+            'amount'        => $this->amount,
+            'created_at'    => $this->created_at,
+            'updated_at'    => $this->updated_at,
+            'updated_by'    => $this->updated_by
+        ];
     }
 }

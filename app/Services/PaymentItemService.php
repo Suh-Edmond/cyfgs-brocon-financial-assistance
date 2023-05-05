@@ -1,6 +1,7 @@
 <?php
 namespace App\Services;
 
+use App\Constants\PaymentItemFrequency;
 use App\Constants\PaymentItemType;
 use App\Http\Resources\PaymentItemCollection;
 use App\Interfaces\PaymentItemInterface;
@@ -9,19 +10,28 @@ use App\Models\PaymentItem;
 
 class PaymentItemService implements PaymentItemInterface {
 
+    private SessionService $session_service;
+
+    public function __construct(SessionService $sessionService)
+    {
+        $this->session_service = $sessionService;
+    }
 
     public function createPaymentItem($request, $payment_category_id)
     {
+        $current_session = $this->session_service->getCurrentSession();
         $payment_category = PaymentCategory::findOrFail($payment_category_id);
         PaymentItem::create([
             'name'                => $request->name,
             'amount'              => $request->amount,
-            'complusory'          => $request->complusory,
+            'compulsory'          => $request->compulsory,
             'payment_category_id' => $payment_category->id,
             'description'         => $request->description,
             'updated_by'          => $request->user()->name,
             'type'                => $request->type,
-            'frequency'           => $request->frequency
+            'frequency'           => $request->frequency,
+            'session_id'          => $current_session->id,
+            'reference'           => $request->reference
         ]);
     }
 
@@ -32,7 +42,7 @@ class PaymentItemService implements PaymentItemInterface {
         $updated->update([
             'name'          => $request->name,
             'amount'        => $request->amount,
-            'complusory'    => $request->complusory,
+            'compulsory'    => $request->compulsory,
             'description'   => $request->description,
             'type'          => $request->type,
             'frequency'     => $request->frequency
@@ -41,15 +51,14 @@ class PaymentItemService implements PaymentItemInterface {
 
     public function getPaymentItemsByCategory($payment_category_id)
     {
-        $total = 0.0;
-        $payment_items = $this->gePaymentItems($payment_category_id)
+        $payment_items = $this->fetchPaymentItems($payment_category_id)
+                                ->orWhere('frequency', PaymentItemFrequency::YEARLY)
+                                ->orWhere('frequency', PaymentItemFrequency::MONTHLY)
+                                ->orWhere('frequency',PaymentItemFrequency::ONE_TIME)
+                                ->orWhere('frequency',PaymentItemFrequency::QUARTERLY)
                                 ->orderBy('payment_items.name', 'ASC')
                                 ->get();
-        foreach($payment_items as $payment_item){
-            $total += $payment_item->amount;
-        }
-
-        return new PaymentItemCollection($payment_items, $total);
+        return new PaymentItemCollection($payment_items, 0);
 
     }
 
@@ -67,11 +76,10 @@ class PaymentItemService implements PaymentItemInterface {
     }
 
     public function filterPaymentItems($request) {
-        $total = 0.0;
-        $payment_items = $this->gePaymentItems($request->payment_category_id);
+        $payment_items = $this->fetchPaymentItems($request->payment_category_id);
         $compulsory = json_decode($request->is_complusory);
         if(!is_null($compulsory)){
-            $payment_items = $payment_items->where('complusory', $compulsory);
+            $payment_items = $payment_items->where('compulsory', $compulsory);
         }
         if(!is_null($request->type)){
             $payment_items = $payment_items->where('type', $request->type);
@@ -81,7 +89,7 @@ class PaymentItemService implements PaymentItemInterface {
         }
         $payment_items = $payment_items->orderBy('payment_items.name', 'DESC')->get();
 
-        return new PaymentItemCollection($payment_items, $total);
+        return new PaymentItemCollection($payment_items, 0);
     }
 
     public function getPaymentItems() {
@@ -89,9 +97,9 @@ class PaymentItemService implements PaymentItemInterface {
     }
 
 
-    public function getPaymentItemByType()
+    public function getPaymentItemByType($type)
     {
-        return PaymentItem::where('type', PaymentItemType::REGISTRATION)->get();
+        return PaymentItem::where('type', $type)->get();
     }
 
     private function findPaymentItem($id, $payment_category_id)
@@ -102,10 +110,12 @@ class PaymentItemService implements PaymentItemInterface {
             ->firstOrFail();
     }
 
-    private  function gePaymentItems($payment_category_id) {
+    private  function fetchPaymentItems($payment_category_id) {
+        $current_session = $this->session_service->getCurrentSession();
         return PaymentItem::select('payment_items.*')
             ->join('payment_categories', ['payment_categories.id'  => 'payment_items.payment_category_id'])
-            ->where('payment_items.payment_category_id', $payment_category_id);
+            ->where('payment_items.payment_category_id', $payment_category_id)
+            ->where('session_id', $current_session->id);
 
     }
 
