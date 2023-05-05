@@ -14,16 +14,16 @@ class PaymentItems extends Migration
     public function up()
     {
         Schema::create('payment_items', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->string('name');
             $table->double('amount');
-            $table->boolean('complusory')->default(true);
+            $table->boolean('compulsory')->default(true);
+            $table->mediumText('description')->nullable(true);
             $table->timestamps();
-            $table->mediumText('created_by')->nullable(true);
-            $table->mediumText('updated_by')->nullable(true);
-            $table->unsignedBigInteger('payment_category_id');
+            $table->uuid('payment_category_id');
+            $table->string('updated_by');
 
-            $table->foreign('payment_category_id')->references('id')->on('payment_categories');
+            $table->foreign('payment_category_id')->references('id')->on('payment_categories')->cascadeOnDelete();
         });
     }
 

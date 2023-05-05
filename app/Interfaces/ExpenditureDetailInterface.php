@@ -13,9 +13,7 @@ interface ExpenditureDetailInterface {
 
     public function deleteExpenditureDetail($id);
 
-    public function approveExpenditureDetail($id);
-
-    public function calculateExpenditureBalance($id, $expenditure_item_id);
+    public function approveExpenditureDetail($id, $type);
 
     public function filterExpenditureDetail($item, $status);
 

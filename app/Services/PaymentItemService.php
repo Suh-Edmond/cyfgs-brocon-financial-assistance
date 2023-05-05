@@ -1,72 +1,122 @@
 <?php
 namespace App\Services;
 
+use App\Constants\PaymentItemFrequency;
+use App\Constants\PaymentItemType;
+use App\Http\Resources\PaymentItemCollection;
 use App\Interfaces\PaymentItemInterface;
 use App\Models\PaymentCategory;
 use App\Models\PaymentItem;
-use Illuminate\Support\Facades\DB;
 
 class PaymentItemService implements PaymentItemInterface {
 
+    private SessionService $session_service;
 
-    public function createPaymentItem($request, $paymant_category_id)
+    public function __construct(SessionService $sessionService)
     {
-        $paymant_category = PaymentCategory::findOrFail($paymant_category_id);
+        $this->session_service = $sessionService;
+    }
+
+    public function createPaymentItem($request, $payment_category_id)
+    {
+        $current_session = $this->session_service->getCurrentSession();
+        $payment_category = PaymentCategory::findOrFail($payment_category_id);
         PaymentItem::create([
             'name'                => $request->name,
             'amount'              => $request->amount,
-            'complusory'          => $request->complusory,
-            'payment_category_id' => $paymant_category->id,
+            'compulsory'          => $request->compulsory,
+            'payment_category_id' => $payment_category->id,
+            'description'         => $request->description,
+            'updated_by'          => $request->user()->name,
+            'type'                => $request->type,
+            'frequency'           => $request->frequency,
+            'session_id'          => $current_session->id,
+            'reference'           => $request->reference
         ]);
     }
 
-    public function updatePaymentItem($request, $payment_item_id, $paymant_category_id)
+    public function updatePaymentItem($request, $payment_item_id, $payment_category_id)
     {
-        $updated =  $this->findPaymentItem($payment_item_id, $paymant_category_id);
-        if(! $updated){
-            return response()->json(['message' => 'PaymentItem not found', 'status'=> '404'], 404);
-        }
+        $updated =  $this->findPaymentItem($payment_item_id, $payment_category_id);
+
         $updated->update([
             'name'          => $request->name,
             'amount'        => $request->amount,
-            'complusory'    => $request->complusory
+            'compulsory'    => $request->compulsory,
+            'description'   => $request->description,
+            'type'          => $request->type,
+            'frequency'     => $request->frequency
         ]);
     }
 
     public function getPaymentItemsByCategory($payment_category_id)
     {
-        $payment_items = PaymentItem::where('payment_category_id', $payment_category_id);
-
-        return $payment_items->toArray();
-    }
-
-    public function getPaymentItem($id, $paymant_category_id)
-    {
-        $payment_item = $this->findPaymentItem($id, $paymant_category_id);
-        if(! $payment_item){
-            return response()->json(['message' => 'PaymentItem not found', 'status'=> '404'], 404);
-        }
-
-        return $payment_item;
+        $payment_items = $this->fetchPaymentItems($payment_category_id)
+                                ->orWhere('frequency', PaymentItemFrequency::YEARLY)
+                                ->orWhere('frequency', PaymentItemFrequency::MONTHLY)
+                                ->orWhere('frequency',PaymentItemFrequency::ONE_TIME)
+                                ->orWhere('frequency',PaymentItemFrequency::QUARTERLY)
+                                ->orderBy('payment_items.name', 'ASC')
+                                ->get();
+        return new PaymentItemCollection($payment_items, 0);
 
     }
 
-    public function deletePaymentItem($id, $paymant_category_id)
+    public function getPaymentItem($id, $payment_category_id)
     {
-        $payment_item = $this->findPaymentItem($id, $paymant_category_id);
-        if(! $payment_item){
-            return response()->json(['message' => 'PaymentItem not found', 'status'=> '404'], 404);
-        }
+        return $this->findPaymentItem($id, $payment_category_id);
+
+    }
+
+    public function deletePaymentItem($id, $payment_category_id)
+    {
+        $payment_item = $this->findPaymentItem($id, $payment_category_id);
 
         $payment_item->delete();
     }
 
+    public function filterPaymentItems($request) {
+        $payment_items = $this->fetchPaymentItems($request->payment_category_id);
+        $compulsory = json_decode($request->is_complusory);
+        if(!is_null($compulsory)){
+            $payment_items = $payment_items->where('compulsory', $compulsory);
+        }
+        if(!is_null($request->type)){
+            $payment_items = $payment_items->where('type', $request->type);
+        }
+        if(!is_null($request->frequency)){
+            $payment_items = $payment_items->where('frequency', $request->frequency);
+        }
+        $payment_items = $payment_items->orderBy('payment_items.name', 'DESC')->get();
+
+        return new PaymentItemCollection($payment_items, 0);
+    }
+
+    public function getPaymentItems() {
+        return PaymentItem::all();
+    }
+
+
+    public function getPaymentItemByType($type)
+    {
+        return PaymentItem::where('type', $type)->get();
+    }
+
     private function findPaymentItem($id, $payment_category_id)
     {
-        $updated =  PaymentItem::select('payment_items.*')->join('payment_categories', ['payment_categories.id' => 'payment_items.category_id'])
-                    ->where('payment_items.id', $id)
-                    ->where('payment_items.payment_category_id', $payment_category_id)
-                    ->first();
-        return $updated;
+        return PaymentItem::select('payment_items.*')->join('payment_categories', ['payment_categories.id' => 'payment_items.payment_category_id'])
+            ->where('payment_items.id', $id)
+            ->where('payment_items.payment_category_id', $payment_category_id)
+            ->firstOrFail();
     }
+
+    private  function fetchPaymentItems($payment_category_id) {
+        $current_session = $this->session_service->getCurrentSession();
+        return PaymentItem::select('payment_items.*')
+            ->join('payment_categories', ['payment_categories.id'  => 'payment_items.payment_category_id'])
+            ->where('payment_items.payment_category_id', $payment_category_id)
+            ->where('session_id', $current_session->id);
+
+    }
+
 }

@@ -24,8 +24,8 @@ class AddUserRoleRequest extends FormRequest
     public function rules()
     {
         return [
-            'user_id' => 'required',
-            'role_id' => 'required'
+            'user_id' => 'required|string',
+            'role' => 'required|string'
         ];
     }
 }

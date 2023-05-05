@@ -2,14 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Constants\Roles;
 use App\Http\Requests\PaymentCategoryRequest;
-use App\Services\PaymentCategoryService;
 use App\Http\Resources\PaymentCategoryResource;
+use App\Models\User;
+use App\Services\PaymentCategoryService;
+use App\Traits\HelpTrait;
+use App\Traits\ResponseTrait;
+use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
+
 
 class PaymentCategoryController extends Controller
 {
 
-    private $payment_category_service;
+    use ResponseTrait, HelpTrait;
+
+
+    private PaymentCategoryService $payment_category_service;
 
     public function __construct(PaymentCategoryService $payment_category_service)
     {
@@ -22,7 +32,7 @@ class PaymentCategoryController extends Controller
     {
         $this->payment_category_service->createPaymentCategory($request, $organisation_id);
 
-        return response()->json(['message' => 'success', 'status' =>'201'], 201);
+        return $this->sendResponse('success', 'Payment Category created successfully');
     }
 
 
@@ -30,7 +40,8 @@ class PaymentCategoryController extends Controller
     {
         $payment_categories = $this->payment_category_service->getPaymentCategories($organisation_id);
 
-        return response()->json(['data' => PaymentCategoryResource::collection($payment_categories)], 200);
+        return $this->sendResponse($payment_categories, 200);
+
     }
 
 
@@ -38,22 +49,54 @@ class PaymentCategoryController extends Controller
     {
         $payment_category = $this->payment_category_service->getPaymentCategory($id, $organisation_id);
 
-        return response()->json(['data' => new PaymentCategoryResource($payment_category)], 200);
+        return $this->sendResponse(new PaymentCategoryResource($payment_category), 'success');
     }
 
 
-    public function updatePaymentCategory(PaymentCategoryRequest $request, $id, $organisation_id)
+    public function updatePaymentCategory(PaymentCategoryRequest $request, $organisation_id, $id)
     {
         $this->payment_category_service->updatePaymentCategory($request, $id,  $organisation_id);
 
-        return response()->json(['message' => 'success', 'status' => '204'], 204);
+        return $this->sendResponse('success', 'Payment Category updated successfully');
     }
 
 
-    public function deletePaymentCategory($id, $organisation_id)
+    public function deletePaymentCategory($organisation_id, $id)
     {
        $this->payment_category_service->deletePaymentCategory($id, $organisation_id);
 
-       return response()->json(['message' => 'success', 'status' => '204'], 204);
+       return $this->sendResponse('success', 'Payment Category deleted successfully');
+    }
+
+
+    public  function filterPaymentCategory(Request $request){
+        $categories = $this->payment_category_service->filterPaymentCategory($request);
+        return $this->sendResponse($categories, 200);
+    }
+
+
+    public function downloadPaymentCategory(Request $request)
+    {
+        $auth_user         = auth()->user();
+        $organisation      = User::find($auth_user['id'])->organisation;
+
+        $president         = $this->getOrganisationAdministrators(Roles::PRESIDENT);
+        $treasurer         = $this->getOrganisationAdministrators(Roles::TREASURER);
+        $fin_sec           = $this->getOrganisationAdministrators(Roles::FINANCIAL_SECRETARY);
+
+        $data = [
+            'title'             =>'Payment Categories',
+            'date'              => date('m/d/Y'),
+            'organisation'      => $organisation,
+            'organisation_telephone' => $this->setOrganisationTelephone($organisation->telephone),
+            'categories'        => $this->payment_category_service->getPaymentCategories($request['organisation_id']),
+            'president'         => $president,
+            'treasurer'         => $treasurer,
+            'fin_secretary'     => $fin_sec
+        ];
+
+        $pdf = PDF::loadView('PaymentCategory.PaymentCategories', $data);
+
+        return $pdf->download('Payment_Categories.pdf');
     }
 }

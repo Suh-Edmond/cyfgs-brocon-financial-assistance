@@ -14,15 +14,14 @@ class CreateExpenditureCategoriesTable extends Migration
     public function up()
     {
         Schema::create('expenditure_categories', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->string('name');
             $table->longText('description');
             $table->timestamps();
-            $table->mediumText('created_by')->nullable(true);
-            $table->mediumText('updated_by')->nullable(true);
-            $table->unsignedBigInteger('organisation_id');
+            $table->uuid('organisation_id');
+            $table->string('updated_by');
 
-            $table->foreign('organisation_id')->references('id')->on('organisations');
+            $table->foreign('organisation_id')->references('id')->on('organisations')->cascadeOnDelete();
 
         });
     }

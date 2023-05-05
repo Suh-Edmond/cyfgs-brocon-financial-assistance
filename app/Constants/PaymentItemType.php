@@ -1,0 +1,14 @@
+<?php
+
+
+namespace App\Constants;
+
+
+class PaymentItemType
+{
+    public const ALL_MEMBERS = 'ALL_MEMBERS';
+    public const A_MEMBER = 'A_MEMBER';
+    public const MEMBER_WITH_ROLES = 'MEMBER_WITH_ROLES';
+    public const MEMBERS_WITHOUT_ROLES = 'MEMBERS_WITHOUT_ROLES';
+    public const GROUPED_MEMBERS = 'GROUPED_MEMBERS';
+}

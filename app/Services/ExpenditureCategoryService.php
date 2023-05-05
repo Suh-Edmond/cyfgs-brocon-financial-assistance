@@ -5,26 +5,32 @@ namespace App\Services;
 use App\Interfaces\ExpenditureCategoryInterface;
 use App\Models\ExpenditureCategory;
 use App\Models\Organisation;
-use Illuminate\Support\Facades\DB;
 
 class ExpenditureCategoryService implements ExpenditureCategoryInterface {
 
-    public function createExpenditureCategory($request, $id)
+    public function createExpenditureCategory($request, $organisation_id)
     {
-        $organisation = Organisation::findOrFail($id);
-        ExpenditureCategory::create([
-            'name'              => $request->name,
-            'description'       => $request->description,
-            'organisation_id'   => $organisation->id
-        ]);
+        $organisation = Organisation::findOrFail($organisation_id);
+        $expenditure_category = ExpenditureCategory::find($request->id);
+        if(is_null($expenditure_category)){
+            ExpenditureCategory::create([
+                'name'              => $request->name,
+                'description'       => $request->description,
+                'organisation_id'   => $organisation->id,
+                'updated_by'        => $request->user()->name,
+            ]);
+        }else {
+            $expenditure_category->update([
+                'name'        => $request->name,
+                'description' => $request->description,
+                'updated_by'  => $request->user()->name,
+            ]);
+        }
     }
 
     public function updateExpenditureCategory($request, $id, $organisation_id)
     {
         $update_expenditure_category = $this->findExpenditureCategory($id, $organisation_id);
-        if(! $update_expenditure_category){
-            return response()->json(['message'=> 'Expenditure Category not found', 'status' => '404'], 404);
-        }
         $update_expenditure_category->update([
             'name'              => $request->name,
             'description'       => $request->description,
@@ -33,39 +39,38 @@ class ExpenditureCategoryService implements ExpenditureCategoryInterface {
 
     public function getExpenditureCategories($organisation_id)
     {
-        $expendiure_categories = ExpenditureCategory::where('organisation_id', $organisation_id);
-
-        return $expendiure_categories->toArray();
+        return ExpenditureCategory::where('organisation_id', $organisation_id)->orderBy('name', 'ASC')->get();
     }
 
     public function getExpenditureCategory($id, $organisation_id)
     {
-        $expendiure_category = $this->findExpenditureCategory($id, $organisation_id);
-        if(! $expendiure_category){
-            return response()->json(['message'=> 'Expenditure Category not found', 'status' => '404'], 404);
-        }
-
-        return $expendiure_category;
+        return $this->findExpenditureCategory($id, $organisation_id);
     }
 
     public function deleteExpenditureCategory($id, $organisation_id)
     {
-        $expendiure_category = $this->findExpenditureCategory($id, $organisation_id);
-        if(! $expendiure_category){
-            return response()->json(['message'=> 'Expenditure Category not found', 'status' => '404'], 404);
-        }
+        $expenditure_category = $this->findExpenditureCategory($id, $organisation_id);
 
-        $expendiure_category->delete();
+        $expenditure_category->delete();
 
     }
 
     private function findExpenditureCategory($id, $organisation_id)
     {
-        $update_expenditure_category = ExpenditureCategory::select('expenditure_categories.*')
+        return ExpenditureCategory::select('expenditure_categories.*')
                                         ->join('organisations', ['organisations.id' => 'expenditure_categories.organisation_id'])
                                         ->where('expenditure_categories.id', $id)
                                         ->where('expenditure_categories.organisation_id', $organisation_id)
-                                        ->first();
-        return $update_expenditure_category;
+                                        ->firstOrFail();
+    }
+
+    public function filterExpenditureCategory($request)
+    {
+        return ExpenditureCategory::where('organisation_id', $request->organisation_id)->whereYear('created_at', $request->year)->orderBy('name', 'ASC')->get();
+    }
+
+    public  function setDataForDownload($request)
+    {
+        return is_null($request->year) ? $this->getExpenditureCategories($request->organisation_id): $this->filterExpenditureCategory($request);
     }
 }

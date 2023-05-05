@@ -26,7 +26,11 @@ class PaymentItemRequest extends FormRequest
         return [
             'name'          => 'required|max:255',
             'amount'        => 'required',
-            'complusory'    => 'required|boolean'
+            'compulsory'    => 'required|boolean',
+            'description'   => 'string|max:4000',
+            'type'          => 'required|string',
+            'frequency'     => 'required|string',
+            'reference'     => 'string'
         ];
     }
 }

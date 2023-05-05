@@ -2,15 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AddUserRoleRequest;
 use App\Services\RoleService;
 use Illuminate\Http\Request;
-use App\Http\Requests\AddUserRoleRequest;
-use App\Http\Resources\RoleResource;
-use Illuminate\Support\Str;
 
 class RoleController extends Controller
 {
-    private $roleService;
+    private RoleService $roleService;
 
     public function __construct(RoleService $roleService)
     {
@@ -19,10 +17,13 @@ class RoleController extends Controller
 
     public function addUserRole(AddUserRoleRequest $request)
     {
-        (int)Str::uuid($request->role_id)->toString();
-        $this->roleService->addUserRole($request->user_id, $request->role_id);
 
-        return response()->json(['message' => "success"], 201);
+        $exist = $this->roleService->addUserRole($request->user_id, $request->role);
+        if($exist){
+            return $this->sendResponse('success', 'Role added successfully');
+        }else {
+            return $this->sendError('Multiple Member with a single Role', 'Only one(01) member of your organisation are allowed to have this Role', 409);
+        }
     }
 
 
@@ -31,7 +32,7 @@ class RoleController extends Controller
 
         $roles = $this->roleService->getAllRoles();
 
-        return response()->json(["data" => RoleResource::collection($roles)], 200);
+        return $this->sendResponse($roles, 'success');
     }
 
 
@@ -40,14 +41,13 @@ class RoleController extends Controller
     {
         $user_roles = $this->roleService->getUserRoles($user_id);
 
-        return response()->json(["data" => RoleResource::collection($user_roles)], 200);
+        return $this->sendResponse($user_roles, 'success');
     }
 
 
-    public function removeUserRole($user_id, $role_id)
+    public function removeUserRole(Request $request, $user_id)
     {
-        $this->roleService->removeRole($user_id, $role_id);
-
-        return response()->json(['message' => 'success'], 204);
+        $this->roleService->removeRole($user_id, $request->role);
+        return $this->sendResponse('success', 'Role remove successfully');
     }
 }

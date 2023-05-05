@@ -13,6 +13,10 @@ interface IncomeActivityInterface {
 
     public function deleteIncomeActivity($id);
 
-    public function approveIncomeActivity($id);
+    public function approveIncomeActivity($id, $type);
+
+    public function filterIncomeActivity($request);
+
+    public function generateIncomeActivityPdf();
 
 }

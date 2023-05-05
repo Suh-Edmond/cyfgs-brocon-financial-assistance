@@ -14,19 +14,19 @@ class CreateIncomeActivitiesTable extends Migration
     public function up()
     {
         Schema::create('income_activities', function (Blueprint $table) {
-            $table->id();
-            $table->longText('description');
+            $table->uuid('id')->primary();
+            $table->string('name');
+            $table->mediumText('description')->nullable(true);
             $table->double('amount');
             $table->date('date');
-            $table->boolean('approve')->default(false);
+            $table->enum('approve', ['PENDING', 'APPROVED', 'DECLINED'])->default('PENDING');
             $table->string('venue');
+            $table->string('scan_picture')->nullable(true);
             $table->timestamps();
-            $table->mediumText('created_by')->nullable(true);
-            $table->mediumText('updated_by')->nullable(true);
+            $table->string('updated_by');
+            $table->uuid('organisation_id');
 
-            $table->unsignedBigInteger('organisation_id');
-
-            $table->foreign('organisation_id')->references('id')->on('organisations');
+            $table->foreign('organisation_id')->references('id')->on('organisations')->cascadeOnDelete();
 
         });
     }

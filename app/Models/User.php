@@ -1,19 +1,26 @@
 <?php
-
 namespace App\Models;
 
-
+use App\Traits\GenerateUuid;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use App\Traits\GenerateUuid;
 use Spatie\Permission\Traits\HasRoles;
 use Laravel\Sanctum\HasApiTokens;
 
+/**
+ * @method static find(mixed $user_id)
+ * @method static findOrFail($user_id)
+ * @method static where(string $string, $organisation_id)
+ * @method static create(array $array)
+ */
 class User extends Authenticatable
 {
     use HasRoles, Notifiable, HasApiTokens;
+    use GenerateUuid;
 
-
+    protected $primaryKey = 'id';
+    public $incrementing  = false;
+    protected $keyType    = 'string';
 
     /**
      * The attributes that are mass assignable.
@@ -28,7 +35,9 @@ class User extends Authenticatable
         'gender',
         'address',
         'occupation',
-        'organisation_id'
+        'organisation_id',
+        'updated_by',
+        'picture'
     ];
 
     /**
@@ -49,20 +58,23 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function guardName(){
-        return "api";
-    }
+    protected  $guard_name = "api";
 
     public function hasUserSaving(){
         return $this->hasMany(UserSaving::class);
     }
 
-    public function userPayment() {
-        return $this->hasMany(UserPayment::class);
+    public function userContributions() {
+        return $this->hasMany(UserContribution::class);
     }
 
     public function organisation() {
         return $this->belongsTo(Organisation::class);
+    }
+
+
+    public function registrations() {
+        return $this->hasMany(MemberRegistration::class);
     }
 
 }

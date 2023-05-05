@@ -14,16 +14,15 @@ class CreateUserSavingsTable extends Migration
     public function up()
     {
         Schema::create('user_savings', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->double('amount_deposited');
-            $table->text('comment');
-            $table->unsignedBigInteger('user_id');
-            $table->boolean('approve')->default(false);
+            $table->text('comment')->nullable(true);
+            $table->uuid('user_id');
+            $table->enum('approve', ['PENDING', 'APPROVED', 'DECLINED'])->default('PENDING');
             $table->timestamps();
-            $table->mediumText('created_by')->nullable(true);
-            $table->mediumText('updated_by')->nullable(true);
+            $table->string('updated_by');
 
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->cascadeOnDelete();
 
         });
     }

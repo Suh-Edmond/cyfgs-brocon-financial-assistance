@@ -4,7 +4,7 @@ namespace App\Interfaces;
 
 interface UserManagementInterface {
 
-    public function createUser($request);
+    public function AddUserUserToOrganisation($request, $id);
 
     public function getUsers($organisation_id);
 
@@ -16,5 +16,18 @@ interface UserManagementInterface {
 
     public function loginUser($request);
 
+    public function createAccount($request);
+
+    public function setPassword($request);
+
+    public function checkUserExist($request);
+
+    public function importUsers($organisation_id, $request);
+
+    public function filterUsers($request);
+
+    public function updateProfile($request);
+
+    public function updatePassword($request);
 
 }

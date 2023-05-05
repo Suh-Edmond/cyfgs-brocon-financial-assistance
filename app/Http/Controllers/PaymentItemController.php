@@ -2,16 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Constants\Roles;
 use App\Http\Requests\PaymentItemRequest;
 use App\Http\Resources\PaymentItemResource;
-use App\Models\PaymentItem;
+use App\Models\User;
 use App\Services\PaymentItemService;
+use App\Traits\HelpTrait;
+use App\Traits\ResponseTrait;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class PaymentItemController extends Controller
 {
 
-    private $payment_item_service;
+    use ResponseTrait, HelpTrait;
+    private PaymentItemService $payment_item_service;
 
 
     public function __construct(PaymentItemService $payment_item_service)
@@ -19,13 +24,17 @@ class PaymentItemController extends Controller
         $this->payment_item_service = $payment_item_service;
     }
 
+    public function getAllPaymentItems() {
+        $data = $this->payment_item_service->getPaymentItems();
 
+        return $this->sendResponse(PaymentItemResource::collection($data), 200);
+    }
 
     public function getPaymentItemsByCategory($payment_category_id)
     {
         $items = $this->payment_item_service->getPaymentItemsByCategory($payment_category_id);
 
-        return response()->json(['data' => PaymentItemResource::collection($items)], 200);
+        return $this->sendResponse($items, 200);
     }
 
 
@@ -33,7 +42,7 @@ class PaymentItemController extends Controller
     {
         $this->payment_item_service->createPaymentItem($request, $payment_category_id);
 
-        return response()->json(['message' => 'success', 'status' => "201"], 201);
+        return $this->sendResponse('success', 'Payment Item created Successfully');
     }
 
 
@@ -41,7 +50,7 @@ class PaymentItemController extends Controller
     {
         $payment_item = $this->payment_item_service->getPaymentItem($id, $payment_category_id);
 
-        return response()->json(['data'=>new PaymentItemResource($payment_item)], 200);
+        return $this->sendResponse(new PaymentItemResource($payment_item), 200);
     }
 
 
@@ -49,7 +58,7 @@ class PaymentItemController extends Controller
     {
        $this->payment_item_service->updatePaymentItem($request, $id, $payment_category_id);
 
-       return response()->json(['message' => 'success', 'status' => '204'], 204);
+       return $this->sendResponse('success', 'Payment Item created Successfully');
     }
 
 
@@ -57,6 +66,46 @@ class PaymentItemController extends Controller
     {
         $this->payment_item_service->deletePaymentItem($id, $payment_category_id);
 
-        return response()->json(['message' => 'success', 'status' => '204'], 204);
+        return $this->sendResponse('success', 'Payment Item deleted successfully');
+    }
+
+    public function filterPaymentItems(Request $request)
+    {
+        $data = $this->payment_item_service->filterPaymentItems($request);
+
+        return $this->sendResponse($data, 200);
+    }
+
+    public function getPaymentItemByType()
+    {
+        $data = $this->payment_item_service->getPaymentItemByType();
+        return $this->sendResponse(PaymentItemResource::collection($data), 200);
+    }
+
+    public function downloadPaymentItem(Request $request)
+    {
+        $auth_user         = auth()->user();
+        $organisation      = User::find($auth_user['id'])->organisation;
+        $items             = $this->payment_item_service->getPaymentItemsByCategory($request->payment_category_id);
+
+        $president         = $this->getOrganisationAdministrators(Roles::PRESIDENT);
+        $treasurer         = $this->getOrganisationAdministrators(Roles::TREASURER);
+        $fin_sec           = $this->getOrganisationAdministrators(Roles::FINANCIAL_SECRETARY);
+
+
+        $data = [
+            'title'               => 'Payment Items for '.$items[0]->paymentCategory->name,
+            'date'                => date('m/d/Y'),
+            'organisation'        => $organisation,
+            'payment_items'       => $items,
+            'president'           => $president,
+            'treasurer'           => $treasurer,
+            'fin_secretary'       => $fin_sec,
+            'total'               => $this->computeTotalAmountByPaymentCategory($items)
+        ];
+
+        $pdf = PDF::loadView('PaymentItem.PaymentItems', $data);
+
+        return $pdf->download('Payment_items.pdf');
     }
 }

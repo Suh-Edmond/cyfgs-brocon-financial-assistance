@@ -14,7 +14,7 @@ class CreateOrganisationsTable extends Migration
     public function up()
     {
         Schema::create('organisations', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->string('name');
             $table->longText('description');
             $table->string('telephone');
@@ -24,10 +24,9 @@ class CreateOrganisationsTable extends Migration
             $table->string('salutation')->nullable(true);
             $table->string('box_number')->nullable(true);
             $table->string('region')->nullable(true);
-            //data for to produce the report header
+            //data to produce the report header
             $table->timestamps();
-            $table->mediumText('created_by')->nullable(true);
-            $table->mediumText('updated_by')->nullable(true);
+            $table->string('updated_by');
         });
     }
 

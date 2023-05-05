@@ -69,4 +69,8 @@ class Permissions {
     public const CAN_APPROVE_INCOME_FOR_INCOME_ACTIVITY = 'approve-income-for-income-activity';
     public const CAN_APPROVE_INCOME_FOR_EXPENDITURE_ITEM = 'approve-income-for-expenditure-item';
     public const CAN_APPROVE_USER_PAYMENT = 'approve-user-payment';
+
+
+    public const CAN_GET_USER_CONTRIBUTIONS = 'get-user-contributions';
+    public const CAN_GET_USER_CONTRIBUTION =  'get-user-contribution';
 }

@@ -2,14 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Constants\Roles;
 use App\Http\Requests\ExpenditureCategoryRequest;
 use App\Http\Resources\ExpenditureCategoryResource;
+use App\Models\User;
 use App\Services\ExpenditureCategoryService;
+use App\Traits\HelpTrait;
+use App\Traits\ResponseTrait;
+use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ExpenditureCategoryController extends Controller
 {
 
-    private $expenditure_category_service;
+    use ResponseTrait,HelpTrait;
+
+    private ExpenditureCategoryService $expenditure_category_service;
 
     public function __construct(ExpenditureCategoryService $expenditure_category_service)
     {
@@ -22,7 +30,7 @@ class ExpenditureCategoryController extends Controller
     {
         $expenditure_categories = $this->expenditure_category_service->getExpenditureCategories($organisation_id);
 
-        return response()->json(['data', ExpenditureCategoryResource::collection($expenditure_categories)], 200);
+        return $this->sendResponse(ExpenditureCategoryResource::collection($expenditure_categories), 200);
     }
 
 
@@ -30,7 +38,7 @@ class ExpenditureCategoryController extends Controller
     {
         $this->expenditure_category_service->createExpenditureCategory($request, $organisation_id);
 
-        return response()->json(['message'=>'success', 'status'=>'201'], 201);
+        return $this->sendResponse('success', 'Expenditure Category created successfully');
     }
 
 
@@ -39,7 +47,7 @@ class ExpenditureCategoryController extends Controller
     {
         $expenditure_category = $this->expenditure_category_service->getExpenditureCategory($id, $organisation_id);
 
-        return response()->json(['data', new ExpenditureCategoryResource($expenditure_category)], 200);
+        return $this->sendResponse(new ExpenditureCategoryResource($expenditure_category), 200);
     }
 
 
@@ -48,7 +56,7 @@ class ExpenditureCategoryController extends Controller
     {
         $this->expenditure_category_service->updateExpenditureCategory($request, $id, $organisation_id);
 
-        return response()->json(['message'=>'success', 'status'=>'204'], 204);
+        return $this->sendResponse('success', 'Expenditure Category updated successfully');
     }
 
 
@@ -57,6 +65,39 @@ class ExpenditureCategoryController extends Controller
     {
         $this->expenditure_category_service->deleteExpenditureCategory($id, $organisation_id);
 
-        return response()->json(['message'=>'success', 'status'=>'204'], 204);
+        return $this->sendResponse('success', 'Expenditure Category deleted successfully');
+    }
+
+    public function filterExpenditureCategories(Request $request)
+    {
+        $data = $this->expenditure_category_service->filterExpenditureCategory($request);
+
+        return $this->sendResponse($data,'success');
+    }
+
+    public function downloadExpenditureCategory(Request $request)
+    {
+        $auth_user         = auth()->user();
+        $organisation      = User::find($auth_user['id'])->organisation;
+        $expenditure_categories = $this->expenditure_category_service->getExpenditureCategories($request->organisation_id);
+
+        $president         = $this->getOrganisationAdministrators(Roles::PRESIDENT);
+        $treasurer         = $this->getOrganisationAdministrators(Roles::TREASURER);
+        $fin_sec           = $this->getOrganisationAdministrators(Roles::FINANCIAL_SECRETARY);
+
+        $data = [
+            'title'                    => 'Expenditure Categories',
+            'date'                     => date('m/d/Y'),
+            'organisation'             => $organisation,
+            'expenditure_categories'   => $expenditure_categories,
+            'organisation_telephone'   => $this->setOrganisationTelephone($organisation->telephone),
+            'president'                => $president,
+            'treasurer'                => $treasurer,
+            'fin_secretary'            => $fin_sec
+        ];
+
+        $pdf = PDF::loadView('ExpenditureCategory.ExpenditureCategories', $data);
+
+        return $pdf->download('Expenditure_Categories.pdf');
     }
 }
