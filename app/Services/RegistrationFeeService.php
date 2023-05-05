@@ -51,7 +51,7 @@ class RegistrationFeeService implements RegistrationFeeInterface
 
     public function getCurrentRegistrationFee()
     {
-        return Registration::where('status', SessionStatus::ACTIVE)->get();
+        return Registration::where('status', SessionStatus::ACTIVE)->first();
     }
 
     public function deleteRegistrationFee($id)
