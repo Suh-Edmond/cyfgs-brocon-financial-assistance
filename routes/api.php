@@ -115,6 +115,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('download-payment-items', [PaymentItemController::class, 'downloadPaymentItem']);
         Route::get('filter-payment-items', [PaymentItemController::class, 'filterPaymentItems']);
         Route::get('/payment-items/type', [PaymentItemController::class, 'getPaymentItemByType']);
+        Route::put('/payment-items/update/reference', [PaymentItemController::class, 'updatePaymentItemReference']);
     });
 
 

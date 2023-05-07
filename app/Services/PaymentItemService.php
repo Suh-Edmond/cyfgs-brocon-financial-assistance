@@ -119,4 +119,23 @@ class PaymentItemService implements PaymentItemInterface {
 
     }
 
+    public function updatePaymentItemReference($request)
+    {
+        $payment_item = PaymentItem::findOrFail($request->id);
+        $updated_references = "";
+        if(!is_null($payment_item->reference)){
+            $references = explode("/", $payment_item->reference);
+            foreach ($references as $key => $reference){
+                if($reference == $request->reference_id){
+                    unset($references[$key]);
+                }else {
+                    $updated_references = trim($reference) . "/" . trim($updated_references);
+                }
+            }
+        }
+        $payment_item->update([
+            'reference' => trim($updated_references)
+        ]);
+    }
+
 }
