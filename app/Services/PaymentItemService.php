@@ -2,7 +2,6 @@
 namespace App\Services;
 
 use App\Constants\PaymentItemFrequency;
-use App\Constants\PaymentItemType;
 use App\Http\Resources\PaymentItemCollection;
 use App\Interfaces\PaymentItemInterface;
 use App\Models\PaymentCategory;
