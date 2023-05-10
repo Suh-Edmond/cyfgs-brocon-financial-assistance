@@ -19,4 +19,6 @@ interface PaymentItemInterface
     public function getPaymentItemByType($type);
 
     public function updatePaymentItemReference($request);
+
+    public function getPaymentItemReferences($id);
 }

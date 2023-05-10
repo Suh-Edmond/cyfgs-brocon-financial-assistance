@@ -116,4 +116,11 @@ class PaymentItemController extends Controller
 
         return $this->sendResponse('success', 'reference updated successfully');
     }
+
+    public function getPaymentItemReferences($id)
+    {
+        $data = $this->payment_item_service->getPaymentItemReferences($id);
+
+        return $this->sendResponse($data, 'success');
+    }
 }

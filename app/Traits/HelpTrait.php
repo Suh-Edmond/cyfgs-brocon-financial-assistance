@@ -214,10 +214,17 @@ trait HelpTrait {
     public function getReferenceResource($references)
     {
         $data = [];
-        $reference_array = explode("/", $references);
-        if(count($reference_array) > 0){
-           foreach ($reference_array as $reference){
-               $resource = User::find($reference);
+        if(str_contains($references, "/")){
+            $reference_array = explode("/", $references);
+            foreach ($reference_array as $reference){
+                if(!empty($reference)){
+                    $resource = User::find($reference);
+                    array_push($data, new UserResource($resource, null, null));
+                }
+            }
+        }else {
+           if(!empty($references)){
+               $resource = User::find($references);
                array_push($data, new UserResource($resource, null, null));
            }
         }

@@ -6,9 +6,11 @@ use App\Http\Resources\PaymentItemCollection;
 use App\Interfaces\PaymentItemInterface;
 use App\Models\PaymentCategory;
 use App\Models\PaymentItem;
+use App\Traits\HelpTrait;
 
 class PaymentItemService implements PaymentItemInterface {
 
+    use HelpTrait;
     private SessionService $session_service;
 
     public function __construct(SessionService $sessionService)
@@ -137,4 +139,8 @@ class PaymentItemService implements PaymentItemInterface {
         ]);
     }
 
+    public function getPaymentItemReferences($id) {
+        $payment_item = PaymentItem::findOrFail($id);
+        return $this->getReferenceResource($payment_item->reference);
+    }
 }
