@@ -13,12 +13,18 @@ use App\Traits\HelpTrait;
 class ExpenditureItemService implements ExpenditureItemInterface {
 
     use HelpTrait;
+    private SessionService $session_service;
 
+    public function __construct(SessionService $sessionService)
+    {
+        $this->session_service = $sessionService;
+    }
 
     public function createExpenditureItem($request, $expenditure_category_id)
     {
         $expenditure_category = ExpenditureCategory::findOrFail($expenditure_category_id);
         $payment_item = PaymentItem::findOrFail($request->payment_item_id);
+        $current_session = $this->session_service->getCurrentSession();
 
         ExpenditureItem::create([
             'name'                      => $request->name,
@@ -30,6 +36,7 @@ class ExpenditureItemService implements ExpenditureItemInterface {
             'scan_picture'              => $request->scan_picture,
             'updated_by'                => $request->user()->name,
             'payment_item_id'           => $payment_item->id,
+            'session_id'                => $current_session->id,
         ]);
     }
 
