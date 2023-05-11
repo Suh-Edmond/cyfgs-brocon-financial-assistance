@@ -34,7 +34,7 @@ class ExpenditureItemController extends Controller
 
     public function getExpenditureItems($expenditure_category_id, Request $request)
     {
-        $items = $this->expenditure_item_service->getExpenditureItems($expenditure_category_id, $request->status);
+        $items = $this->expenditure_item_service->getExpenditureItems($expenditure_category_id, $request);
 
         return $this->sendResponse($items, 200);
     }

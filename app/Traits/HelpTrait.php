@@ -58,10 +58,9 @@ trait HelpTrait {
 
     private function calculateExpenditureBalanceByExpenditureItem($expenditure_details, $total_item_amount): int
     {
-        $balance = $total_item_amount - $this->calculateTotalAmountGiven($expenditure_details);
-        $balance += $this->calculateTotalAmountGiven($expenditure_details) - $this->calculateTotalAmountSpent($expenditure_details);
-
-        return $balance;
+        $total_amount_given = $total_item_amount - $this->calculateTotalAmountGiven($expenditure_details);
+        $total_balance = $this->calculateTotalAmountGiven($expenditure_details) - $this->calculateTotalAmountSpent($expenditure_details);
+        return ($total_amount_given + $total_balance);
     }
 
     private function calculateTotalAmountGiven($expenditure_details): int

@@ -58,9 +58,9 @@ class ExpenditureItemService implements ExpenditureItemInterface {
         }
     }
 
-    public function getExpenditureItems($expenditure_category_id, $status)
+    public function getExpenditureItems($expenditure_category_id, $request)
     {
-        $items = $this->findExpenditureItems($expenditure_category_id, $status);
+        $items = $this->findExpenditureItems($expenditure_category_id, $request->status, $request->session_id);
 
         return $this->generateExpenditureItemResponse($items);
     }
@@ -100,13 +100,17 @@ class ExpenditureItemService implements ExpenditureItemInterface {
                                         ->firstOrFail();
     }
 
-    private function findExpenditureItems($expenditure_category_id, $status)
+    private function findExpenditureItems($expenditure_category_id, $status, $session_id)
     {
         $data = ExpenditureItem::select('expenditure_items.*')
                             ->join('expenditure_categories', ['expenditure_categories.id' => 'expenditure_items.expenditure_category_id'])
+                            ->join('sessions', ['sessions.id' => 'expenditure_items.session_id'])
                             ->where('expenditure_items.expenditure_category_id', $expenditure_category_id);
         if($status != "ALL"){
             $data = $data->where('expenditure_items.approve', $status);
+        }
+        if(!is_null($session_id)){
+            $data = $data->where('expenditure_items.session_id', $session_id);
         }
         $data = $data->orderBy('expenditure_items.name', 'ASC')->get();
 
@@ -172,12 +176,16 @@ class ExpenditureItemService implements ExpenditureItemInterface {
         $data = ExpenditureItem::select('expenditure_items.*')
                 ->join('expenditure_categories', ['expenditure_categories.id' => 'expenditure_items.expenditure_category_id'])
                 ->join('payment_items', ['payment_items.id' => 'expenditure_items.payment_item_id'])
+                ->join('sessions', ['sessions.id' => 'expenditure_items.session_id'])
                 ->where('expenditure_items.expenditure_category_id', $request->expenditure_category_id);
         if(!is_null($request->payment_item_id)){
             $data = $data->where('expenditure_items.payment_item_id', $request->payment_item_id);
         }
         if(!is_null($request->status)  && $request->status != "ALL") {
             $data = $data->where('expenditure_items.approve', $request->status);
+        }
+        if(!is_null($request->session_id)){
+            $data = $data->where('expenditure_items.session_id', $request->session_id);
         }
 
         $data = $data->orderBy('expenditure_items.name', 'ASC')->get();
