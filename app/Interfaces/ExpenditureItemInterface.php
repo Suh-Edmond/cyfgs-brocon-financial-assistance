@@ -7,7 +7,7 @@ interface ExpenditureItemInterface {
 
     public function updateExpenditureItem($request, $id, $expenditure_category_id);
 
-    public function getExpenditureItems($expenditure_category_id, $status);
+    public function getExpenditureItems($expenditure_category_id, $request);
 
     public function getExpenditureItem($id, $expenditure_category_id);
 

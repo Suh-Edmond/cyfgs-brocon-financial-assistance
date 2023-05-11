@@ -26,8 +26,8 @@ class ExpenditureItemRequest extends FormRequest
         return [
             'name'                  => 'required|max:255',
             'amount'                => 'required|numeric',
-            'comment'               => 'string|max:5000',
-            'venue'                 => 'required|max:255',
+            'comment'               => '',
+            'venue'                 => '',
             'date'                  => 'required|date',
             'payment_item_id'       => 'required|string'
         ];
