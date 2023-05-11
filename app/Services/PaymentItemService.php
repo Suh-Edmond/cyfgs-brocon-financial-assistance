@@ -2,14 +2,15 @@
 namespace App\Services;
 
 use App\Constants\PaymentItemFrequency;
-use App\Constants\PaymentItemType;
 use App\Http\Resources\PaymentItemCollection;
 use App\Interfaces\PaymentItemInterface;
 use App\Models\PaymentCategory;
 use App\Models\PaymentItem;
+use App\Traits\HelpTrait;
 
 class PaymentItemService implements PaymentItemInterface {
 
+    use HelpTrait;
     private SessionService $session_service;
 
     public function __construct(SessionService $sessionService)
@@ -45,7 +46,8 @@ class PaymentItemService implements PaymentItemInterface {
             'compulsory'    => $request->compulsory,
             'description'   => $request->description,
             'type'          => $request->type,
-            'frequency'     => $request->frequency
+            'frequency'     => $request->frequency,
+            'reference'     => $request->reference
         ]);
     }
 
@@ -119,4 +121,27 @@ class PaymentItemService implements PaymentItemInterface {
 
     }
 
+    public function updatePaymentItemReference($request)
+    {
+        $payment_item = PaymentItem::findOrFail($request->id);
+        $updated_references = "";
+        if(!is_null($payment_item->reference)){
+            $references = explode("/", $payment_item->reference);
+            foreach ($references as $key => $reference){
+                if($reference == $request->reference_id){
+                    unset($references[$key]);
+                }else {
+                    $updated_references = trim($reference) . "/" . trim($updated_references);
+                }
+            }
+        }
+        $payment_item->update([
+            'reference' => trim($updated_references)
+        ]);
+    }
+
+    public function getPaymentItemReferences($id) {
+        $payment_item = PaymentItem::findOrFail($id);
+        return $this->getReferenceResource($payment_item->reference);
+    }
 }

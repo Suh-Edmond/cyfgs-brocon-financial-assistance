@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Constants\Roles;
 use App\Http\Requests\PaymentItemRequest;
+use App\Http\Requests\UpdatePaymentItemReferenceRequest;
 use App\Http\Resources\PaymentItemResource;
 use App\Models\User;
 use App\Services\PaymentItemService;
@@ -107,5 +108,19 @@ class PaymentItemController extends Controller
         $pdf = PDF::loadView('PaymentItem.PaymentItems', $data);
 
         return $pdf->download('Payment_items.pdf');
+    }
+
+    public function updatePaymentItemReference(UpdatePaymentItemReferenceRequest $request)
+    {
+        $this->payment_item_service->updatePaymentItemReference($request);
+
+        return $this->sendResponse('success', 'reference updated successfully');
+    }
+
+    public function getPaymentItemReferences($id)
+    {
+        $data = $this->payment_item_service->getPaymentItemReferences($id);
+
+        return $this->sendResponse($data, 'success');
     }
 }

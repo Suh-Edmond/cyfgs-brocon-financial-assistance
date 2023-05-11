@@ -5,6 +5,8 @@ namespace App\Traits;
 use App\Constants\PaymentStatus;
 use App\Constants\RegistrationStatus;
 use App\Http\Resources\ExpenditureDetailResource;
+use App\Http\Resources\ReferenceResource;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -209,6 +211,25 @@ trait HelpTrait {
         return $total;
     }
 
+    public function getReferenceResource($references)
+    {
+        $data = [];
+        if(str_contains($references, "/")){
+            $reference_array = explode("/", $references);
+            foreach ($reference_array as $reference){
+                if(!empty($reference)){
+                    $resource = User::find($reference);
+                    array_push($data, new UserResource($resource, null, null));
+                }
+            }
+        }else {
+           if(!empty($references)){
+               $resource = User::find($references);
+               array_push($data, new UserResource($resource, null, null));
+           }
+        }
+        return $data;
+    }
 
 
 }

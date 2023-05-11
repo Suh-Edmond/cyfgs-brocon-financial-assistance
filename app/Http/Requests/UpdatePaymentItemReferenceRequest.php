@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class PaymentItemRequest extends FormRequest
+class UpdatePaymentItemReferenceRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,13 +24,8 @@ class PaymentItemRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'          => 'required|max:255',
-            'amount'        => 'required',
-            'compulsory'    => 'required|boolean',
-            'description'   => 'max:4000',
-            'type'          => 'required|string',
-            'frequency'     => 'required|string',
-            'reference'     => ''
+            'id'            => 'string|required',
+            'reference_id'  => 'string|required',
         ];
     }
 }

@@ -5,18 +5,12 @@ namespace App\Http\Resources;
 use App\Traits\HelpTrait;
 use App\Traits\ResponseTrait;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Ramsey\Uuid\Uuid;
 
 class PaymentItemResource extends JsonResource
 {
-    use ResponseTrait;
+    use ResponseTrait, HelpTrait;
 
-    /**
-     * Transform the resource into an array.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array
-     */
+
     public function toArray($request)
     {
         return [
@@ -31,8 +25,10 @@ class PaymentItemResource extends JsonResource
             'frequency'             => $this->frequency,
             'created_at'            => $this->created_at,
             'updated_at'            => $this->updated_at,
-            'session'               => $this->session
-
+            'session'               => $this->session,
+            'references'             => $this->getReferenceResource($this->reference),
         ];
     }
+
+
 }
