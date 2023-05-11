@@ -14,15 +14,23 @@ use Illuminate\Support\Facades\DB;
 class UsersavingService implements UserSavingInterface
 {
     use HelpTrait;
+    private SessionService  $sessionService;
+
+    public function __construct(SessionService $sessionService)
+    {
+        $this->sessionService = $sessionService;
+    }
 
     public function createUserSaving($request)
     {
+        $current_session = $this->sessionService->getCurrentSession();
         $user = User::findOrFail($request->user_id);
         UserSaving::create([
             'amount_deposited'      => $request->amount_deposited,
             'comment'               => $request->comment,
             'user_id'               => $user->id,
-            'updated_by'            => $request->user()->name
+            'updated_by'            => $request->user()->name,
+            'session_id'            => $current_session->id
         ]);
     }
 
