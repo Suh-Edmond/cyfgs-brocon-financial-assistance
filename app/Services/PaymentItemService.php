@@ -46,7 +46,8 @@ class PaymentItemService implements PaymentItemInterface {
             'compulsory'    => $request->compulsory,
             'description'   => $request->description,
             'type'          => $request->type,
-            'frequency'     => $request->frequency
+            'frequency'     => $request->frequency,
+            'reference'     => $request->reference
         ]);
     }
 
