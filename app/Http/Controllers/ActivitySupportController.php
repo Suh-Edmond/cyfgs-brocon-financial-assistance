@@ -26,7 +26,6 @@ class ActivitySupportController extends Controller
     public function fetchAll()
     {
         $data = $this->activity_support_service->fetchAllActivitySupport();
-
         return $this->sendResponse(ActivitySupportResource::collection($data), 200);
     }
 

@@ -13,9 +13,16 @@ use App\Traits\HelpTrait;
 class IncomeActivityService implements IncomeActivityInterface {
 
     use HelpTrait;
+    private SessionService $sessionService;
+
+    public function __construct(SessionService $sessionService)
+    {
+        $this->sessionService = $sessionService;
+    }
 
     public function createIncomeActivity($request, $id)
     {
+        $current_session = $this->sessionService->getCurrentSession();
         $organisation = Organisation::findOrFail($id);
         $payment_item_id = $this->getPaymentItemId($request->payment_item_id);
 
@@ -28,7 +35,8 @@ class IncomeActivityService implements IncomeActivityInterface {
             'organisation_id'   => $organisation->id,
             'payment_item_id'   => $payment_item_id,
             'updated_by'        =>$request->user()->name,
-            'scan_picture'      => $request->scan_picture
+            'scan_picture'      => $request->scan_picture,
+            'session_id'        => $current_session->id
         ]);
     }
 
@@ -107,9 +115,11 @@ class IncomeActivityService implements IncomeActivityInterface {
 
     private function findIncomeActivities($organisation_id)
     {
+        $current_session = $this->sessionService->getCurrentSession();
         return IncomeActivity::select('income_activities.*')
                             ->join('organisations', ['organisations.id' => 'income_activities.organisation_id'])
-                            ->where('income_activities.organisation_id', $organisation_id);
+                            ->where('income_activities.organisation_id', $organisation_id)
+                            ->where('income_activities.session_id', $current_session->id);
     }
 
     public function calculateTotal($activities)

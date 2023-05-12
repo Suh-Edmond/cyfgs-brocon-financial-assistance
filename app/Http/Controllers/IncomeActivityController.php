@@ -81,8 +81,8 @@ class IncomeActivityController extends Controller
 
     public function prepareData(Request $request) {
         $activities      = $this->filterIncomeActivity($request);
-        $activities      = json_decode(json_encode($activities))->original->data;
 
+        $activities      = json_decode(json_encode($activities))->original->data;
         return $activities;
     }
 
