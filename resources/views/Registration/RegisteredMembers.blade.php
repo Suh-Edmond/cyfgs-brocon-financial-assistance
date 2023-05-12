@@ -43,13 +43,17 @@
     <div style="float: left;">
         <label style="font-weight: bold; text-transform: uppercase; font-size: small;">Financial
             Secretary <br />
+            @isset($fin_secretary)
             {{ $fin_secretary->name }}
+            @endisset
         </label><br /><br />
     </div>
     <div style="float: right">
         <label style="font-weight: bold; text-transform: uppercase; font-size: small;">Treasurer
             <br />
+            @isset($treasurer)
             {{ $treasurer->name }}
+            @endisset
         </label><br /><br />
     </div>
 </div>

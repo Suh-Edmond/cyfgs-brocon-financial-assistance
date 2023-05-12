@@ -46,20 +46,23 @@
     </div>
     <div style="margin-top: 100px;">
         <div style="float: left;">
-            @if($fin_secretary != null)
+
             <label for="organisation"style="font-weight: bold; text-transform: uppercase; font-size: small;">Financial
                 Secretary <br />
-                {{ $fin_secretary->name }}
+                @isset($fin_secretary)
+                    {{ $fin_secretary->name }}
+                @endisset
             </label><br /><br />
-            @endif
         </div>
         <div style="float: right">
-            @if($treasurer != null)
+
             <label for="organisation"style="font-weight: bold; text-transform: uppercase; font-size: small;">Treasurer
                 <br />
-                {{ $treasurer->name }}
+                @isset($treasurer)
+                    {{ $treasurer->name }}
+                @endisset
             </label><br /><br />
-            @endif
+
         </div>
     </div>
     <div style="text-align:center; margin-top:80px">
