@@ -133,19 +133,24 @@ class UserSavingService implements UserSavingInterface
             ->leftJoin('users', 'users.id', '=', 'user_savings.user_id')
             ->leftJoin('organisations', 'users.organisation_id', '=', 'organisations.id')
             ->where('organisations.id', $organisation_id)
-            ->selectRaw('SUM(user_savings.amount_deposited) as total_amount_deposited, user_savings.*')
+            ->selectRaw('SUM(user_savings.amount_deposited) as total_amount_deposited, user_savings.*, users.*')
             ->groupBy('user_savings.user_id')
-            ->orderBy('users.created_at', 'DESC')
+            ->orderBy('users.name', 'ASC')
             ->get();
     }
 
 
     public function getUserSavingsForDownload($request) {
-        $savings = UserSaving::where('user_id', $request->user_id);
+        $savings = DB::table('user_savings')->join('users', 'users.id', '=', 'user_savings.user_id')
+                    ->where('user_savings.user_id', $request->user_id);
         if(!is_null($request->status)){
             $savings = $savings->where('approve', $this->convertStatusToNumber($request->status));
         }
-        return $savings->get();
+        $savings = $savings->selectRaw('SUM(user_savings.amount_deposited) as total_amount_deposited, user_savings.*, users.*');
+
+        $savings = $savings->orderBy('user_savings.created_at', 'DESC')->get();
+
+        return $savings;
     }
 
     public function getOrganisationSavingsForDownload($id)

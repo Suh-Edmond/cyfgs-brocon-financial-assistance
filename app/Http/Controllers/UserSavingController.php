@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Constants\Roles;
 use App\Http\Requests\UserSavingRequest;
 use App\Http\Requests\UpdateUserSavingRequest;
+use App\Http\Resources\UserSavingCollection;
 use App\Http\Resources\UserSavingResource;
 use App\Models\User;
 use App\Services\UserSavingService;
@@ -112,12 +113,7 @@ class UserSavingController extends Controller
 
         $organisation      = User::find($auth_user['id'])->organisation;
 
-        //user whose savings are been downloaded
-        $user              = User::find($request->user_id);
-
         $savings           = $this->user_saving_service->getUserSavingsForDownload($request);
-
-        $total             = $this->user_saving_service->calculateTotalSaving($savings);
 
         $president         = $this->getOrganisationAdministrators(Roles::PRESIDENT);
 
@@ -127,11 +123,11 @@ class UserSavingController extends Controller
 
 
         $data = [
-            'title'               => $user->name.' Savings',
+            'title'               => $savings[0]->name.' Savings',
             'date'                => date('m/d/Y'),
             'organisation'        => $organisation,
             'user_savings'        => $savings,
-            'total'               => $total,
+            'total'               => $savings[0]->total_amount_deposited,
             'president'           => $president,
             'organisation_telephone'   => $this->setOrganisationTelephone($organisation->telephone),
             'treasurer'           => $treasurer,

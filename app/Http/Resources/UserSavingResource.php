@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources;
 
-use App\Models\User;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class UserSavingResource extends JsonResource
@@ -21,9 +20,9 @@ class UserSavingResource extends JsonResource
             'comment'                => $this->comment,
             'approve'                => $this->approve,
             'user_id'                => $this->user_id,
-            'user_name'              => User::find($this->user_id)->name,
-            'email'                  => User::find($this->user_id)->email,
-            'telephone'              => User::find($this->user_id)->telephone,
+            'user_name'              => $this->name,
+            'email'                  => $this->email,
+            'telephone'              => $this->telephone,
             'created_at'             => $this->created_at,
             'updated_at'             => $this->updated_at,
             'updated_by'             => $this->updated_by,
