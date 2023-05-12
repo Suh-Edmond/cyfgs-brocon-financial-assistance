@@ -25,7 +25,7 @@ class UserSavingRequest extends FormRequest
     {
         return [
             'amount_deposited'      =>'required|min:1',
-            'comment'               =>'string|max:5000',
+            'comment'               =>'',
             'user_id'               =>'required|string',
             'id'                    =>''
         ];

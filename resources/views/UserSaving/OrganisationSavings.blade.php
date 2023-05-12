@@ -33,8 +33,8 @@
             @foreach ($user_savings as $key => $user_saving)
                 <tr style="border: 1px solid black; font-size: smaller">
                     <td style="padding: 5px;">{{ $key + 1 }}</td>
-                    <td style="border: 1px solid black; padding: 11px;">{{ \App\Models\User::find($user_saving->user_id)->name }}</td>
-                    <td style="border: 1px solid black; padding: 11px;">{{ \App\Models\User::find($user_saving->user_id)->telephone }}</td>
+                    <td style="border: 1px solid black; padding: 11px;">{{  $user_saving->name }}</td>
+                    <td style="border: 1px solid black; padding: 11px;">{{  $user_saving->telephone }}</td>
                     <td style="border: 1px solid black; padding: 11px;">{{ number_format($user_saving->total_amount_deposited) }}
                     </td>
                 </tr>
@@ -46,16 +46,20 @@
     </div>
     <div style="margin-top: 100px;">
         <div style="float: left;">
-            <label for="organisation"style="font-weight: bold; text-transform: uppercase; font-size: small;">Financial
-                Secretary <br />
-                {{ $fin_secretary->name }}
-            </label><br /><br />
+            @if($fin_secretary != null)
+                <label for="organisation"style="font-weight: bold; text-transform: uppercase; font-size: small;">Financial
+                    Secretary <br />
+                    {{ $fin_secretary->name }}
+                </label><br /><br />
+            @endif
         </div>
         <div style="float: right">
+            @if($treasurer != null)
             <label for="organisation"style="font-weight: bold; text-transform: uppercase; font-size: small;">Treasurer
                 <br />
                 {{ $treasurer->name }}
             </label><br /><br />
+            @endif
         </div>
     </div>
     <div style="text-align:center; margin-top:80px">

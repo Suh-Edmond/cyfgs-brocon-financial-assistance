@@ -60,7 +60,7 @@ class User extends Authenticatable
 
     protected  $guard_name = "api";
 
-    public function hasUserSaving(){
+    public function userSaving(){
         return $this->hasMany(UserSaving::class);
     }
 

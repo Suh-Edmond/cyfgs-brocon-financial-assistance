@@ -35,4 +35,5 @@ class UserSaving extends Model
         return $this->hasMany(Session::class);
     }
 
+
 }

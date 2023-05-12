@@ -11,18 +11,26 @@ use App\Models\UserSaving;
 use App\Traits\HelpTrait;
 use Illuminate\Support\Facades\DB;
 
-class UsersavingService implements UserSavingInterface
+class UserSavingService implements UserSavingInterface
 {
     use HelpTrait;
+    private SessionService  $sessionService;
+
+    public function __construct(SessionService $sessionService)
+    {
+        $this->sessionService = $sessionService;
+    }
 
     public function createUserSaving($request)
     {
+        $current_session = $this->sessionService->getCurrentSession();
         $user = User::findOrFail($request->user_id);
         UserSaving::create([
             'amount_deposited'      => $request->amount_deposited,
             'comment'               => $request->comment,
             'user_id'               => $user->id,
-            'updated_by'            => $request->user()->name
+            'updated_by'            => $request->user()->name,
+            'session_id'            => $current_session->id
         ]);
     }
 
@@ -125,19 +133,24 @@ class UsersavingService implements UserSavingInterface
             ->leftJoin('users', 'users.id', '=', 'user_savings.user_id')
             ->leftJoin('organisations', 'users.organisation_id', '=', 'organisations.id')
             ->where('organisations.id', $organisation_id)
-            ->selectRaw('SUM(user_savings.amount_deposited) as total_amount_deposited, user_savings.*')
+            ->selectRaw('SUM(user_savings.amount_deposited) as total_amount_deposited, user_savings.*, users.*')
             ->groupBy('user_savings.user_id')
-            ->orderBy('users.created_at', 'DESC')
+            ->orderBy('users.name', 'ASC')
             ->get();
     }
 
 
     public function getUserSavingsForDownload($request) {
-        $savings = UserSaving::where('user_id', $request->user_id);
-        if($request->status != "null"){
+        $savings = DB::table('user_savings')->join('users', 'users.id', '=', 'user_savings.user_id')
+                    ->where('user_savings.user_id', $request->user_id);
+        if(!is_null($request->status)){
             $savings = $savings->where('approve', $this->convertStatusToNumber($request->status));
         }
-        return $savings->get();
+        $savings = $savings->selectRaw('SUM(user_savings.amount_deposited) as total_amount_deposited, user_savings.*, users.*');
+
+        $savings = $savings->orderBy('user_savings.created_at', 'DESC')->get();
+
+        return $savings;
     }
 
     public function getOrganisationSavingsForDownload($id)
@@ -148,16 +161,17 @@ class UsersavingService implements UserSavingInterface
     public function  getMembersSavingsByName($request)
     {
         return  DB::table('user_savings')
-                ->leftJoin('users', 'users.id', '=', 'user_savings.user_id')
-                ->leftJoin('organisations', 'users.organisation_id', '=', 'organisations.id')
-                ->where('organisations.id', $request->organisation_id);
-        //add filter for the current year
+            ->join('users', 'users.id', '=', 'user_savings.user_id')
+            ->join('organisations', 'users.organisation_id', '=', 'organisations.id')
+            ->where('organisations.id', $request->organisation_id);
     }
 
     public function filterSavings($request)
     {
 
         $data = $this->getMembersSavingsByName($request);
+        $data = $data->where('user_savings.session_id', $request->year);
+
         if(!is_null($request->name)){
             $data = $data->where('users.name', 'LIKE', '%'.$request->name.'%');
         }
@@ -170,17 +184,16 @@ class UsersavingService implements UserSavingInterface
         if(!is_null($request->status) && $request->status != "ALL") {
             $data = $data->where('user_savings.approve', $request->status);
         }
-        if(!is_null($request->year)) {
-            $data = $data->whereYear('user_savings.created_at', $request->year);
-        }
         if (!is_null($request->month)) {
             $data = $data->whereMonth('user_savings.created_at', $this->convertMonthNameToNumber($request->month));
         }
+        if (!is_null($request->user_id)) {
+            $data = $data->where('user_savings.user_id', $request->user_id);
+        }
 
-        $data = $data->select('user_savings.*')
-                ->orderBy('user_savings.created_at', 'ASC')
-                ->get();
-
+        $data = $data->select('user_savings.*', 'users.*')
+            ->orderBy('user_savings.created_at', 'ASC')
+            ->get();
         return $data;
     }
 
