@@ -161,8 +161,8 @@ class UserSavingService implements UserSavingInterface
     public function  getMembersSavingsByName($request)
     {
         return  DB::table('user_savings')
-            ->leftJoin('users', 'users.id', '=', 'user_savings.user_id')
-            ->leftJoin('organisations', 'users.organisation_id', '=', 'organisations.id')
+            ->join('users', 'users.id', '=', 'user_savings.user_id')
+            ->join('organisations', 'users.organisation_id', '=', 'organisations.id')
             ->where('organisations.id', $request->organisation_id);
     }
 
@@ -171,6 +171,7 @@ class UserSavingService implements UserSavingInterface
 
         $data = $this->getMembersSavingsByName($request);
         $data = $data->where('user_savings.session_id', $request->year);
+
         if(!is_null($request->name)){
             $data = $data->where('users.name', 'LIKE', '%'.$request->name.'%');
         }
@@ -186,11 +187,13 @@ class UserSavingService implements UserSavingInterface
         if (!is_null($request->month)) {
             $data = $data->whereMonth('user_savings.created_at', $this->convertMonthNameToNumber($request->month));
         }
+        if (!is_null($request->user_id)) {
+            $data = $data->where('user_savings.user_id', $request->user_id);
+        }
 
-        $data = $data->select('user_savings.*')
+        $data = $data->select('user_savings.*', 'users.*')
             ->orderBy('user_savings.created_at', 'ASC')
             ->get();
-
         return $data;
     }
 
