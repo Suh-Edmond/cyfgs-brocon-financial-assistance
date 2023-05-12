@@ -11,7 +11,7 @@ use App\Models\UserSaving;
 use App\Traits\HelpTrait;
 use Illuminate\Support\Facades\DB;
 
-class UsersavingService implements UserSavingInterface
+class UserSavingService implements UserSavingInterface
 {
     use HelpTrait;
     private SessionService  $sessionService;
@@ -142,7 +142,7 @@ class UsersavingService implements UserSavingInterface
 
     public function getUserSavingsForDownload($request) {
         $savings = UserSaving::where('user_id', $request->user_id);
-        if($request->status != "null"){
+        if(!is_null($request->status)){
             $savings = $savings->where('approve', $this->convertStatusToNumber($request->status));
         }
         return $savings->get();
@@ -156,16 +156,16 @@ class UsersavingService implements UserSavingInterface
     public function  getMembersSavingsByName($request)
     {
         return  DB::table('user_savings')
-                ->leftJoin('users', 'users.id', '=', 'user_savings.user_id')
-                ->leftJoin('organisations', 'users.organisation_id', '=', 'organisations.id')
-                ->where('organisations.id', $request->organisation_id);
-        //add filter for the current year
+            ->leftJoin('users', 'users.id', '=', 'user_savings.user_id')
+            ->leftJoin('organisations', 'users.organisation_id', '=', 'organisations.id')
+            ->where('organisations.id', $request->organisation_id);
     }
 
     public function filterSavings($request)
     {
 
         $data = $this->getMembersSavingsByName($request);
+        $data = $data->where('user_savings.session_id', $request->year);
         if(!is_null($request->name)){
             $data = $data->where('users.name', 'LIKE', '%'.$request->name.'%');
         }
@@ -178,16 +178,13 @@ class UsersavingService implements UserSavingInterface
         if(!is_null($request->status) && $request->status != "ALL") {
             $data = $data->where('user_savings.approve', $request->status);
         }
-        if(!is_null($request->year)) {
-            $data = $data->whereYear('user_savings.created_at', $request->year);
-        }
         if (!is_null($request->month)) {
             $data = $data->whereMonth('user_savings.created_at', $this->convertMonthNameToNumber($request->month));
         }
 
         $data = $data->select('user_savings.*')
-                ->orderBy('user_savings.created_at', 'ASC')
-                ->get();
+            ->orderBy('user_savings.created_at', 'ASC')
+            ->get();
 
         return $data;
     }

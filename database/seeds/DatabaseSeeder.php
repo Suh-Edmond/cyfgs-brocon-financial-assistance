@@ -13,7 +13,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-//        $this->call(RoleAndPermissionSeeder::class);
+        $this->call(RoleAndPermissionSeeder::class);
 //        $this->call(OrganisationSeeder::class);
 //        $this->call(UserSeeder::class);
 //        $this->call(ExpenditureCategorySeeder::class);
@@ -25,13 +25,5 @@ class DatabaseSeeder extends Seeder
 //        $this->call(UserContributionSeeder::class);
 //        $this->call(UserSavingSeeder::class);
 //        $this->call(SessionSeeder::class);
-
-        Registration::create([
-            'amount' => 1000.0,
-            'motive' =>'Members registration fee',
-            'is_compulsory' => true,
-            'status' => SessionStatus::ACTIVE,
-            'updated_by' => 'Edmond'
-        ]);
     }
 }

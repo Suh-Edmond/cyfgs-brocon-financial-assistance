@@ -33,8 +33,8 @@
             @foreach ($user_savings as $key => $user_saving)
                 <tr style="border: 1px solid black; font-size: smaller">
                     <td style="padding: 5px;">{{ $key + 1 }}</td>
-                    <td style="border: 1px solid black; padding: 11px;">{{ $user_saving->user->name }}</td>
-                    <td style="border: 1px solid black; padding: 11px;">{{ $user_saving->user->telephone }}</td>
+                    <td style="border: 1px solid black; padding: 11px;">{{ $user_saving->name }}</td>
+                    <td style="border: 1px solid black; padding: 11px;">{{ $user_saving->telephone }}</td>
                     <td style="border: 1px solid black; padding: 11px;">{{ number_format($user_saving->amount_deposited) }}
                     </td>
                 </tr>

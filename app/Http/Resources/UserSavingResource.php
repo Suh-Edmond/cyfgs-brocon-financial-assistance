@@ -3,15 +3,16 @@
 namespace App\Http\Resources;
 
 use App\Models\User;
-use App\Traits\HelpTrait;
-use App\Traits\ResponseTrait;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Ramsey\Uuid\Uuid;
 
 class UserSavingResource extends JsonResource
 {
-    use ResponseTrait;
-
+    /**
+     * Transform the resource into an array.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
+     */
     public function toArray($request)
     {
         return [

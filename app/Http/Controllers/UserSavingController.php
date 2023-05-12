@@ -7,21 +7,20 @@ use App\Http\Requests\UserSavingRequest;
 use App\Http\Requests\UpdateUserSavingRequest;
 use App\Http\Resources\UserSavingResource;
 use App\Models\User;
-use App\Services\UsersavingService;
+use App\Services\UserSavingService;
 use App\Traits\HelpTrait;
 use App\Traits\ResponseTrait;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
-use function PHPUnit\Framework\isEmpty;
 
 class UserSavingController extends Controller
 {
 
     use ResponseTrait, HelpTrait;
 
-    private UsersavingService $user_saving_service;
+    private UserSavingService $user_saving_service;
 
-    public function __construct(UsersavingService $user_saving_service)
+    public function __construct(UserSavingService $user_saving_service)
     {
         $this->user_saving_service = $user_saving_service;
     }

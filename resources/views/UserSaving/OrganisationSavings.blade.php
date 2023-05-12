@@ -46,16 +46,20 @@
     </div>
     <div style="margin-top: 100px;">
         <div style="float: left;">
-            <label for="organisation"style="font-weight: bold; text-transform: uppercase; font-size: small;">Financial
-                Secretary <br />
-                {{ $fin_secretary->name }}
-            </label><br /><br />
+            @if($fin_secretary != null)
+                <label for="organisation"style="font-weight: bold; text-transform: uppercase; font-size: small;">Financial
+                    Secretary <br />
+                    {{ $fin_secretary->name }}
+                </label><br /><br />
+            @endif
         </div>
         <div style="float: right">
+            @if($treasurer != null)
             <label for="organisation"style="font-weight: bold; text-transform: uppercase; font-size: small;">Treasurer
                 <br />
                 {{ $treasurer->name }}
             </label><br /><br />
+            @endif
         </div>
     </div>
     <div style="text-align:center; margin-top:80px">
