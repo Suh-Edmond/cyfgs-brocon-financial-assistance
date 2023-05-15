@@ -25,7 +25,7 @@ class UpdateUserContributionRequest extends FormRequest
     {
         return [
             'amount_deposited'          => 'required|numeric',
-            'comment'                   => 'string|max:5000',
+            'comment'                   => 'max:5000',
         ];
     }
 }
