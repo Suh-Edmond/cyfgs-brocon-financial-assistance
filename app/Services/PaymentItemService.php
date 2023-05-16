@@ -95,7 +95,8 @@ class PaymentItemService implements PaymentItemInterface {
     }
 
     public function getPaymentItems() {
-        return PaymentItem::all();
+        $current_session = $this->session_service->getCurrentSession();
+        return PaymentItem::where('session_id', $current_session->id)->get();
     }
 
 

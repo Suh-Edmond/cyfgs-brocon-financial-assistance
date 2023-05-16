@@ -151,8 +151,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/expenditure-categories/{expenditure_category_id}/expenditures', [ExpenditureItemController::class, 'getExpenditureByCategory']);
         Route::get('/expenditure-categories/{expenditure_category_id}/expenditure-items/{id}', [ExpenditureItemController::class, 'getExpenditureItem']);
         Route::get('/expenditure-items/{id}', [ExpenditureItemController::class, 'getItem']);
-        Route::get('expenditure-categories/expenditure-items/download', [ExpenditureItemController::class, 'downloadExpenditureItems']);
+        Route::get('expenditure_categories/expenditure_items/download', [ExpenditureItemController::class, 'downloadExpenditureItems']);
         Route::get('/expenditure-items/payment-items/{payment_item_id}', [ExpenditureItemController::class, 'getExpenditureItemByPaymentItem']);
+        Route::get('/expenditure_categories/expenditure_items/filter', [ExpenditureItemController::class, 'filterExpenditureItems']);
     });
 
     Route::prefix('protected')->group(function () {

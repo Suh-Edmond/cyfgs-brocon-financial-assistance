@@ -65,6 +65,7 @@ trait HelpTrait {
 
     private function calculateTotalAmountGiven($expenditure_details): int
     {
+
         $total = 0;
         foreach ($expenditure_details as $expenditure_detail) {
             $total += $expenditure_detail->amount_given;

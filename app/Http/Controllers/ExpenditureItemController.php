@@ -91,6 +91,14 @@ class ExpenditureItemController extends Controller
         return $this->sendResponse($data, 200);
     }
 
+    public function filterExpenditureItems(Request $request)
+    {
+
+        $data = $this->expenditure_item_service->filterExpenditureItems($request);
+
+        return $this->sendResponse($data, 200);
+    }
+
     public function prepareDataForDownload(Request $request){
         $data = $this->expenditure_item_service->downloadExpenditureItems($request);
         $data      = json_decode(json_encode($data));
@@ -106,7 +114,6 @@ class ExpenditureItemController extends Controller
         $president         = $this->getOrganisationAdministrators(Roles::PRESIDENT);
         $treasurer         = $this->getOrganisationAdministrators(Roles::TREASURER);
         $fin_sec           = $this->getOrganisationAdministrators(Roles::FINANCIAL_SECRETARY);
-
 
         $data = [
             'title'               => 'Expenditure Activities',
