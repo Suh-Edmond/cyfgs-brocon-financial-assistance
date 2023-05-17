@@ -99,18 +99,26 @@ class UserContributionService implements UserContributionInterface {
         $user_contribution->delete();
     }
 
-    public function approveUserContribution($id, $type)
+    public function approveUserContribution($request)
     {
-        $user_contribution =  $this->findUserContributionById($id);
-        $user_contribution->approve = $type;
-        $user_contribution->save();
+          $user_contributions = UserContribution::
+                                 join('payment_items', 'payment_items.id', '=', 'user_contributions.payment_item_id')
+                                ->join('users', 'users.id', '=', 'user_contributions.user_id')
+                                ->join('sessions', 'sessions.id', '=', 'user_contributions.session_id')
+                                ->where('payment_items.id', $request->payment_item_id)
+                                ->where('users.id', $request->user_id)
+                                ->where('sessions.id', $request->session_id)->select('user_contributions.*')->get();
+          for ($counter = 0; $counter < count($user_contributions); $counter++){
+              $user_contributions[$counter]->approve = $request->type;
+              $user_contributions[$counter]->save();
+          }
     }
 
 
     public function filterContributions($request)
     {
         $contributions = $this->getUserContributions($request);
-        $contributions = $contributions->selectRaw('SUM(user_contributions.amount_deposited) as total_amount_deposited, user_contributions.*, sessions.*')
+        $contributions = $contributions->selectRaw('SUM(user_contributions.amount_deposited) as total_amount_deposited, user_contributions.*')
             ->groupBy('user_contributions.user_id')->orderBy('user_contributions.created_at', 'DESC')->get();
         return  $contributions;
     }

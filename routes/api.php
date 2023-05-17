@@ -256,7 +256,7 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::prefix('protected')->group(function () {
-        Route::put('contributions/{id}/approve', [UserContributionController::class, 'approveUserContribution']);
+        Route::put('contributions/approve', [UserContributionController::class, 'approveUserContribution']);
     });
 
     Route::prefix('protected')->group(function () {

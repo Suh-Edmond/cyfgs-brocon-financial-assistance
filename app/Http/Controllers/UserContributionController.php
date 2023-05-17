@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Constants\Roles;
+use App\Http\Requests\ApproveContributionRequest;
 use App\Http\Requests\BulkPaymentRequest;
 use App\Http\Requests\CreateUserContributionRequest;
 use App\Http\Requests\UpdateUserContributionRequest;
@@ -76,9 +77,9 @@ class UserContributionController extends Controller
     }
 
 
-    public function approveUserContribution($id, Request $request)
+    public function approveUserContribution(ApproveContributionRequest $request)
     {
-        $this->user_contribution_interface->approveUserContribution($id, $request->type);
+        $this->user_contribution_interface->approveUserContribution($request);
 
         return $this->sendResponse('success', 'Contribution approve successfully');
     }
