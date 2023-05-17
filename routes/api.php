@@ -186,7 +186,7 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::prefix('protected')->group(function () {
-        Route::get('/organisations/{id}/user-savings', [UserSavingController::class, 'getAllUserSavingsByOrganisation']);
+        Route::get('/savings', [UserSavingController::class, 'getAllUserSavingsByOrganisation']);
         Route::get('/organisations/{id}/user-savings/approve', [UserSavingController::class, 'getUserSavingsByStatusAndOrganisation']);
         Route::get('/user-savings', [UserSavingController::class, 'filterSavings']);
     });

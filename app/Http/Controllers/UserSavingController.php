@@ -76,9 +76,9 @@ class UserSavingController extends Controller
     }
 
 
-    public function getAllUserSavingsByOrganisation($id)
+    public function getAllUserSavingsByOrganisation(Request $request)
     {
-        $savings = $this->user_saving_service->getAllUserSavingsByOrganisation($id);
+        $savings = $this->user_saving_service->getAllUserSavingsByOrganisation($request->organisation_id, $request->session_id);
 
         return $this->sendResponse($savings, 200);
     }

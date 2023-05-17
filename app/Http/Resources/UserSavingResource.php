@@ -26,7 +26,9 @@ class UserSavingResource extends JsonResource
             'created_at'             => $this->created_at,
             'updated_at'             => $this->updated_at,
             'updated_by'             => $this->updated_by,
-//            'session'                => $this->session
+            'session_id'             => $this->session_id,
+//            'session'                => $this->session,
+//            'session_status'         => $this->session_status
         ];
     }
 }

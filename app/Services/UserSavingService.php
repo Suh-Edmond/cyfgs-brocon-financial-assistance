@@ -80,9 +80,9 @@ class UserSavingService implements UserSavingInterface
     }
 
 
-    public function getAllUserSavingsByOrganisation($id)
+    public function getAllUserSavingsByOrganisation($id, $session_id)
     {
-        $savings = $this->findOrganisationUserSavings($id);
+        $savings = $this->findOrganisationUserSavings($id, $session_id);
 
         $total_amount_deposited = $this->calculateOrganisationTotalSavings($savings);
 
@@ -127,13 +127,16 @@ class UserSavingService implements UserSavingInterface
     }
 
 
-    public function findOrganisationUserSavings($organisation_id)
+    public function findOrganisationUserSavings($organisation_id, $session_id)
     {
         return DB::table('user_savings')
-            ->leftJoin('users', 'users.id', '=', 'user_savings.user_id')
-            ->leftJoin('organisations', 'users.organisation_id', '=', 'organisations.id')
+            ->join('sessions', 'sessions.id', '=', 'user_savings.session_id')
+            ->join('users', 'users.id', '=', 'user_savings.user_id')
+            ->join('organisations', 'users.organisation_id', '=', 'organisations.id')
             ->where('organisations.id', $organisation_id)
-            ->selectRaw('SUM(user_savings.amount_deposited) as total_amount_deposited, user_savings.*, users.*')
+            ->where('sessions.id', $session_id)
+            ->selectRaw('SUM(user_savings.amount_deposited) as total_amount_deposited, user_savings.*, users.id as user_id,
+            users.name as name, users.email as email, users.telephone as telephone, sessions.id as session_id, sessions.year as session_year, sessions.status as session_status')
             ->groupBy('user_savings.user_id')
             ->orderBy('users.name', 'ASC')
             ->get();
@@ -153,9 +156,9 @@ class UserSavingService implements UserSavingInterface
         return $savings;
     }
 
-    public function getOrganisationSavingsForDownload($id)
+    public function getOrganisationSavingsForDownload($id, $session_id)
     {
-        return $this->findOrganisationUserSavings($id);
+        return $this->findOrganisationUserSavings($id, $session_id);
     }
 
     public function  getMembersSavingsByName($request)
@@ -163,6 +166,7 @@ class UserSavingService implements UserSavingInterface
         return  DB::table('user_savings')
             ->join('users', 'users.id', '=', 'user_savings.user_id')
             ->join('organisations', 'users.organisation_id', '=', 'organisations.id')
+            ->join('sessions', 'sessions.id', '=', 'user_savings.session_id')
             ->where('organisations.id', $request->organisation_id);
     }
 
@@ -170,7 +174,7 @@ class UserSavingService implements UserSavingInterface
     {
 
         $data = $this->getMembersSavingsByName($request);
-        $data = $data->where('user_savings.session_id', $request->year);
+        $data = $data->where('user_savings.session_id', $request->session_id);
 
         if(!is_null($request->name)){
             $data = $data->where('users.name', 'LIKE', '%'.$request->name.'%');
@@ -191,9 +195,11 @@ class UserSavingService implements UserSavingInterface
             $data = $data->where('user_savings.user_id', $request->user_id);
         }
 
-        $data = $data->select('user_savings.*', 'users.*')
+        $data = $data->select('user_savings.*', 'users.id as user_id',
+            'users.name as name', 'users.email as email', 'users.telephone as telephone', 'sessions.id as session_id', 'sessions.year as session_year', 'sessions.status as session_status')
             ->orderBy('user_savings.created_at', 'ASC')
             ->get();
+//        dd($data);
         return $data;
     }
 
