@@ -53,25 +53,25 @@
         <div style="float: left;">
             <label for="organisation"style="font-weight: bold; text-transform: uppercase; font-size: small;">Financial
                 Secretary <br />
-                @if(!is_null($fin_secretary))
+                @isset($fin_secretary))
                     {{ $fin_secretary->name }}
-                @endif
+                @endisset
             </label><br /><br />
         </div>
         <div style="float: right">
             <label for="organisation"style="font-weight: bold; text-transform: uppercase; font-size: small;">Treasurer
                 <br />
-                @if(!is_null($treasurer))
+                @isset($treasurer))
                     {{ $treasurer->name }}
-                @endif
+                @endisset
             </label><br /><br />
         </div>
     </div>
     <div style="text-align:center; margin-top:80px">
         <label for="organisation"style="font-weight: bold; text-transform: uppercase; font-size: small;">President <br />
-            @if(!is_null($president))
+            @isset($president))
                 {{ $president->name }}
-            @endif
+            @endisset
         </label><br />
     </div>
 @endsection

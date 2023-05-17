@@ -15,7 +15,7 @@ interface UserContributionInterface {
 
     public function deleteUserContribution($id);
 
-    public function approveUserContribution($id, $type);
+    public function approveUserContribution($request);
 
     public function filterContributions($request);
 

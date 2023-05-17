@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreateUserContributionRequest extends FormRequest
+class ApproveContributionRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,10 +24,10 @@ class CreateUserContributionRequest extends FormRequest
     public function rules()
     {
         return [
-            'amount_deposited'          => 'required|numeric',
-            'comment'                   => 'max:4000',
-            'user_id'                   => 'required|string',
-            'payment_item_id'           => 'required|string',
+            'payment_item_id' => 'required|string',
+            'user_id'         => 'required|string',
+            'session_id'      => 'required|string',
+            'type'            => 'required|string'
         ];
     }
 }

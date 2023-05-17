@@ -21,6 +21,12 @@ use App\Http\Resources\UserContributionCollection;
 class UserContributionService implements UserContributionInterface {
 
     use HelpTrait;
+    private SessionService $sessionService;
+
+    public function __construct(SessionService $sessionService)
+    {
+        $this->sessionService = $sessionService;
+    }
 
     public function createUserContribution($request)
     {
@@ -32,11 +38,15 @@ class UserContributionService implements UserContributionInterface {
     {
         $user_contribution = $this->findUserContributionById($id);
 
-        $total_amount_contributed = $this->getTotalAmountPaidByUserForTheItem($user_contribution->user_id, $user_contribution->payment_item_id);
+        $amount_contributed = $this->getTotalAmountPaidByUserForTheItem($user_contribution->user_id, $user_contribution->payment_item_id) - $user_contribution->amount_deposited;
+
+        $total_amount_contributed = $amount_contributed + $request->amount_deposited;
+
+        $balance = $user_contribution->paymentItem->amount - $total_amount_contributed;
 
         $hasCompleted = $this->verifyExcessUserContribution($total_amount_contributed, $user_contribution->paymentItem->amount);
 
-        $balance = $user_contribution->balance - $request->amount_deposited;
+        $status = $this->getUserContributionStatus($user_contribution->paymentItem->amount, $total_amount_contributed);
 
         if(!$hasCompleted){
             if($user_contribution->approve == PaymentStatus::PENDING){
@@ -45,6 +55,7 @@ class UserContributionService implements UserContributionInterface {
                     'comment'          => $request->comment,
                     'scan_picture'     => $request->scan_picture,
                     'balance'          => $balance,
+                    'status'           => $status
                 ]);
             }else {
                 throw new BusinessValidationException("Income activity cannot be updated after been approved or declined");
@@ -88,17 +99,25 @@ class UserContributionService implements UserContributionInterface {
         $user_contribution->delete();
     }
 
-    public function approveUserContribution($id, $type)
+    public function approveUserContribution($request)
     {
-        $user_contribution =  $this->findUserContributionById($id);
-        $user_contribution->approve = $type;
-        $user_contribution->save();
+          $user_contributions = UserContribution::
+                                 join('payment_items', 'payment_items.id', '=', 'user_contributions.payment_item_id')
+                                ->join('users', 'users.id', '=', 'user_contributions.user_id')
+                                ->join('sessions', 'sessions.id', '=', 'user_contributions.session_id')
+                                ->where('payment_items.id', $request->payment_item_id)
+                                ->where('users.id', $request->user_id)
+                                ->where('sessions.id', $request->session_id)->select('user_contributions.*')->get();
+          for ($counter = 0; $counter < count($user_contributions); $counter++){
+              $user_contributions[$counter]->approve = $request->type;
+              $user_contributions[$counter]->save();
+          }
     }
 
 
     public function filterContributions($request)
     {
-        $contributions = $this->getUserContributions($request->status,$request->payment_item_id, $request->year, $request->month, $request->date);
+        $contributions = $this->getUserContributions($request);
         $contributions = $contributions->selectRaw('SUM(user_contributions.amount_deposited) as total_amount_deposited, user_contributions.*')
             ->groupBy('user_contributions.user_id')->orderBy('user_contributions.created_at', 'DESC')->get();
         return  $contributions;
@@ -140,7 +159,7 @@ class UserContributionService implements UserContributionInterface {
         $total = 0;
         $user_contributions = UserContribution::join('payment_items', ['payment_items.id' => 'user_contributions.payment_item_id'])
                               ->where('payment_items.id', $payment_item_id)
-                              ->whereYear('user_contributions.created_at', $year)
+                              ->where('user_contributions.session_id', $year)
                               ->orderBy('payment_items.name', 'ASC')
                               ->get();
         if(isset($user_contributions)){
@@ -231,6 +250,7 @@ class UserContributionService implements UserContributionInterface {
 
     private function saveContribution($request, $user_id, $auth_user)
     {
+        $current_session = $this->sessionService->getCurrentSession();
 
         $payment_item = $this->findPaymentItem($request->payment_item_id);
 
@@ -259,7 +279,7 @@ class UserContributionService implements UserContributionInterface {
                 'scan_picture'      => null,
                 'updated_by'        => $auth_user,
                 'balance'           => $balance_contribution,
-                'year'              => $request->year
+                'session_id'        => $current_session->id
             ]);
         }
 
@@ -282,30 +302,27 @@ class UserContributionService implements UserContributionInterface {
         return $this->getContributionByUserAndPaymentItem($payment_item_id, $user_id)->orderBy('user_contributions.created_at', 'DESC')->first();
     }
 
-    private function  getUserContributions($status, $payment_item, $year, $month, $date) {
+    private function  getUserContributions($request) {
         $contributions =  DB::table('user_contributions')
             ->join('payment_items', 'payment_items.id' ,'=', 'user_contributions.payment_item_id')
             ->join('users', 'users.id', '=', 'user_contributions.user_id')
-            ->where('user_contributions.payment_item_id', $payment_item);
+            ->join('sessions', 'sessions.id', '=', 'user_contributions.session_id')
+            ->where('user_contributions.payment_item_id', $request->payment_item_id)
+            ->where('user_contributions.session_id', $request->year);
 
-        if(!is_null($status) && $status != "ALL"){
-            if($status == "PENDING" || "APPROVED" || "DECLINED"){
-                $contributions = $contributions->where('user_contributions.approve', $status);
+        if(!is_null($request->status) && $request->status != "ALL"){
+            if($request->status == "PENDING" || "APPROVED" || "DECLINED"){
+                $contributions = $contributions->where('user_contributions.approve', $request->status);
             }else {
-                $contributions = $contributions->where('user_contributions.status', $status);
+                $contributions = $contributions->where('user_contributions.status', $request->status);
             }
         }
-
-        if(!is_null($year)) {
-            $contributions = $contributions->whereYear('user_contributions.created_at', $year);
+        if(!is_null($request->month)){
+            $contributions = $contributions->whereMonth('user_contributions.created_at', $this->convertMonthNameToNumber($request->month));
         }
 
-        if(!is_null($month)){
-            $contributions = $contributions->whereMonth('user_contributions.created_at', $this->convertMonthNameToNumber($month));
-        }
-
-        if(!is_null($date)){
-            $contributions = $contributions->whereDate('user_contributions.created_at', $date);
+        if(!is_null($request->date)){
+            $contributions = $contributions->whereDate('user_contributions.created_at', $request->date);
         }
         return $contributions;
     }
@@ -388,9 +405,10 @@ class UserContributionService implements UserContributionInterface {
         return DB::table('user_contributions')
             ->join('payment_items', 'payment_items.id', '=', 'user_contributions.payment_item_id')
             ->join('users', 'users.id', '=', 'user_contributions.user_id')
+            ->join('sessions', 'sessions.id', '=', 'user_contributions.session_id')
             ->where('user_contributions.user_id', $user_id)
-            ->where('user_contributions.year', $year)
-            ->select('payment_items.id as payment_item_id', 'payment_items.name','payment_items.complusory','payment_items.amount as payment_item_amount',
+            ->where('user_contributions.session_id', $year)
+            ->select('payment_items.id as payment_item_id', 'payment_items.name','payment_items.compulsory','payment_items.amount as payment_item_amount',
                 'payment_items.description','payment_items.type','payment_items.frequency','payment_items.payment_category_id',
                 'payment_items.created_at','payment_items.updated_at','payment_items.updated_by', 'user_contributions.*')
             ->orderBy('user_contributions.created_at', 'DESC')->get()->toArray();
@@ -407,6 +425,8 @@ class UserContributionService implements UserContributionInterface {
 
         return $registration;
     }
+
+
 
 
 }

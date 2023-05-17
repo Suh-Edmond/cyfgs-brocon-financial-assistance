@@ -171,26 +171,31 @@ class ExpenditureItemService implements ExpenditureItemInterface {
         return $this->generateExpenditureItemResponse($items);
     }
 
-    public function downloadExpenditureItems($request)
+    public function filterExpenditureItems($request)
     {
-        $data = ExpenditureItem::select('expenditure_items.*')
-                ->join('expenditure_categories', ['expenditure_categories.id' => 'expenditure_items.expenditure_category_id'])
-                ->join('payment_items', ['payment_items.id' => 'expenditure_items.payment_item_id'])
-                ->join('sessions', ['sessions.id' => 'expenditure_items.session_id'])
-                ->where('expenditure_items.expenditure_category_id', $request->expenditure_category_id);
+        $current_session = $this->session_service->getCurrentSession();
+        $items = ExpenditureItem::select('expenditure_items.*')
+            ->join('payment_items', ['payment_items.id' => 'expenditure_items.payment_item_id'])
+            ->join('expenditure_categories', ['expenditure_categories.id' => 'expenditure_items.expenditure_category_id'])
+            ->join('sessions', ['sessions.id' => 'expenditure_items.session_id']);
+
+        $items = is_null($request->session_id) ? $items->where('expenditure_items.session_id', $current_session->id) : $items->where('expenditure_items.session_id', $request->session_id);
+        if(!is_null($request->expenditure_category_id)){
+            $items = $items->where('expenditure_items.expenditure_category_id', $request->expenditure_category_id);
+        }
         if(!is_null($request->payment_item_id)){
-            $data = $data->where('expenditure_items.payment_item_id', $request->payment_item_id);
+            $items = $items->where('expenditure_items.payment_item_id', $request->payment_item_id);
         }
         if(!is_null($request->status)  && $request->status != "ALL") {
-            $data = $data->where('expenditure_items.approve', $request->status);
+            $items = $items->where('expenditure_items.approve', $request->status);
         }
-        if(!is_null($request->session_id)){
-            $data = $data->where('expenditure_items.session_id', $request->session_id);
-        }
+        $items = $items->orderBy('expenditure_items.name', 'ASC')->get();
+        return $this->generateExpenditureItemResponse($items);
+    }
 
-        $data = $data->orderBy('expenditure_items.name', 'ASC')->get();
-
-        return $this->generateExpenditureItemResponse($data);
+    public function downloadExpenditureItems($request)
+    {
+        return $this->filterExpenditureItems($request);
     }
 
 }

@@ -48,15 +48,19 @@
     </div>
     <div style="margin-top: 100px;">
         <div style="float: left;">
-            <label for="organisation"style="font-weight: bold; text-transform: uppercase; font-size: small;">Financial
+            <label for="organisation" style="font-weight: bold; text-transform: uppercase; font-size: small;">Financial
                 Secretary <br />
+                @isset($fin_secretary)
                 {{ $fin_secretary->name }}
+                @endisset
             </label><br /><br />
         </div>
         <div style="float: right">
             <label for="organisation"style="font-weight: bold; text-transform: uppercase; font-size: small;">Treasurer
                 <br />
+                @isset($treasurer)
                 {{ $treasurer->name }}
+                @endisset
             </label><br /><br />
         </div>
     </div>

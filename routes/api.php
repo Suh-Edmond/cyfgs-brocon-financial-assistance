@@ -151,8 +151,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/expenditure-categories/{expenditure_category_id}/expenditures', [ExpenditureItemController::class, 'getExpenditureByCategory']);
         Route::get('/expenditure-categories/{expenditure_category_id}/expenditure-items/{id}', [ExpenditureItemController::class, 'getExpenditureItem']);
         Route::get('/expenditure-items/{id}', [ExpenditureItemController::class, 'getItem']);
-        Route::get('expenditure-categories/expenditure-items/download', [ExpenditureItemController::class, 'downloadExpenditureItems']);
+        Route::get('expenditure_categories/expenditure_items/download', [ExpenditureItemController::class, 'downloadExpenditureItems']);
         Route::get('/expenditure-items/payment-items/{payment_item_id}', [ExpenditureItemController::class, 'getExpenditureItemByPaymentItem']);
+        Route::get('/expenditure_categories/expenditure_items/filter', [ExpenditureItemController::class, 'filterExpenditureItems']);
     });
 
     Route::prefix('protected')->group(function () {
@@ -185,7 +186,7 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::prefix('protected')->group(function () {
-        Route::get('/organisations/{id}/user-savings', [UserSavingController::class, 'getAllUserSavingsByOrganisation']);
+        Route::get('/savings', [UserSavingController::class, 'getAllUserSavingsByOrganisation']);
         Route::get('/organisations/{id}/user-savings/approve', [UserSavingController::class, 'getUserSavingsByStatusAndOrganisation']);
         Route::get('/user-savings', [UserSavingController::class, 'filterSavings']);
     });
@@ -255,7 +256,7 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::prefix('protected')->group(function () {
-        Route::put('contributions/{id}/approve', [UserContributionController::class, 'approveUserContribution']);
+        Route::put('contributions/approve', [UserContributionController::class, 'approveUserContribution']);
     });
 
     Route::prefix('protected')->group(function () {

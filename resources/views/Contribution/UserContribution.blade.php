@@ -48,19 +48,25 @@
         <div style="float: left;">
             <label for="organisation"style="font-weight: bold; text-transform: uppercase; font-size: small;">Financial
                 Secretary <br />
+                @isset($fin_secretary)
                 {{ $fin_secretary->name }}
+                @endisset
             </label><br /><br />
         </div>
         <div style="float: right">
             <label for="organisation"style="font-weight: bold; text-transform: uppercase; font-size: small;">Treasurer
                 <br />
+                @isset($treasurer)
                 {{ $treasurer->name }}
+                @endisset
             </label><br /><br />
         </div>
     </div>
     <div style="text-align:center; margin-top:80px">
         <label for="organisation"style="font-weight: bold; text-transform: uppercase; font-size: small;">President <br />
+            @isset($president)
             {{ $president->name }}
+            @endisset
         </label><br />
     </div>
 @endsection
