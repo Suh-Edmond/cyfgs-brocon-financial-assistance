@@ -33,7 +33,9 @@ class UserContributionResource extends JsonResource
             'updated_by'               => $this->updated_by,
             'created_at'               => $this->created_at,
             'total_amount_deposited'   => $this->total_amount_deposited == null ? 0: $this->total_amount_deposited,
-            'session_id'               => $this->session_id
+            'session_id'               => $this->session_id,
+            'quarterly_name'           => $this->quarterly_name,
+            'month_name'               => $this->month_name
         ];
     }
 }

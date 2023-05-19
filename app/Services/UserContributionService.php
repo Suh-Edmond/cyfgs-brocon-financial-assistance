@@ -311,7 +311,9 @@ class UserContributionService implements UserContributionInterface {
                 'scan_picture'      => null,
                 'updated_by'        => $auth_user,
                 'balance'           => $balance_contribution,
-                'session_id'        => $current_session->id
+                'session_id'        => $current_session->id,
+                'quarterly_name'    => trim($request->quarterly_name, " "),
+                'month_name'        => $request->month_name
             ]);
         }
 
