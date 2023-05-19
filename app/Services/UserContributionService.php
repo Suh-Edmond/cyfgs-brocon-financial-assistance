@@ -188,11 +188,11 @@ class UserContributionService implements UserContributionInterface {
     public function getMemberDebt($user_id, $year)
     {
         $reg_debts = $this->checkIfMemberIsRegistered($user_id, $year);
-        $debts = $this->getMemberOwingItems($year, $user_id);
-        if(!is_null($reg_debts)){
-            array_push($debts, $reg_debts);
-        }
-        return $debts;
+//        $debts = $this->getMemberOwingItems($year, $user_id);
+//        if(!is_null($reg_debts)){
+//            array_push($debts, $reg_debts);
+//        }
+        return $reg_debts;
     }
 
 
@@ -213,13 +213,13 @@ class UserContributionService implements UserContributionInterface {
 
     }
 
-    private function getMemberRegistration($user_id, $year)
+    private function getMemberRegistration($user_id, $session_id)
     {
-        return DB::table('payment_items')
-            ->leftJoin('member_registrations', 'member_registrations.payment_item_id', '=', 'payment_items.id')
+        return DB::table('member_registrations')
             ->leftJoin('users', 'users.id', '=', 'member_registrations.user_id')
+            ->leftJoin('sessions', 'sessions.id', '=', 'member_registrations.session_id')
             ->where('member_registrations.user_id', $user_id)
-            ->where('member_registrations.year', $year);
+            ->where('member_registrations.session_id', $session_id);
     }
 
     private function findUser($id)
@@ -341,10 +341,9 @@ class UserContributionService implements UserContributionInterface {
                  ->whereIn('member_registrations.approve', [PaymentStatus::APPROVED, PaymentStatus::PENDING])
                  ->first();
         if(is_null($exist)){
-            $payment_item = DB::table('registrations')->where('status', SessionStatus::ACTIVE)->where('is_compulsory', true)->first();
+            $reg = DB::table('registrations')->where('status', SessionStatus::ACTIVE)->where('is_compulsory', true)->first();
             //need to add check for freq
-            $payment_item =  new MemberPaymentItemResource($payment_item->id,
-                "Registration Fee", $payment_item->amount, $payment_item->compulsory, null, $payment_item->frequency, 'REGISTRATION');
+            $payment_item =  new MemberPaymentItemResource($reg->id, "Registration Fee", $reg->amount, $reg->is_compulsory, null, $reg->frequency, 'REGISTRATION');
         }
         return $payment_item;
     }
@@ -414,13 +413,13 @@ class UserContributionService implements UserContributionInterface {
             ->orderBy('user_contributions.created_at', 'DESC')->get()->toArray();
     }
 
-    private function getRegistration($user_id, $year) {
+    private function getRegistration($user_id, $session_id) {
         $registration = null;
-        $data = $this->getMemberRegistration($user_id, $year)
+        $data = $this->getMemberRegistration($user_id, $session_id)
             ->whereIn('member_registrations.approve', [PaymentStatus::APPROVED, PaymentStatus::PENDING])
-            ->select('payment_items.id as payment_item_id', 'payment_items.name', 'payment_items.amount', 'member_registrations.*')->first();
+            ->select('member_registrations.*')->first();
         if(!is_null($data)){
-            $registration = new MemberContributedItemResource($data->id, $data->payment_item_id, $data->name,  $data->amount, 0.0, PaymentStatus::COMPLETE, $data->approve, $data->created_at, $data->year);
+//            $registration = new MemberContributedItemResource($data->id, $data->payment_item_id, $data->name,  $data->amount, 0.0, PaymentStatus::COMPLETE, $data->approve, $data->created_at, $data->year);
         }
 
         return $registration;

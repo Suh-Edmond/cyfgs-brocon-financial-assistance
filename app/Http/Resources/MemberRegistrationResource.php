@@ -15,14 +15,15 @@ class MemberRegistrationResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id'        => $this->id,
-            'session'      => $this->session,
-            'approve'   => $this->approve,
-            'amount'    => $this->amount,
-            'user'           => $this->user,
+            'id'              => $this->id,
+            'session'         => $this->session,
+            'approve'         => $this->approve,
+            'amount'          => $this->amount,
+            'user'            => $this->user,
             'created_at'      => $this->created_at,
             'updated_at'      => $this->updated_at,
-            'updated_by'      => $this->updated_by
+            'updated_by'      => $this->updated_by,
+            'month_name'      => $this->month_name
         ];
     }
 }

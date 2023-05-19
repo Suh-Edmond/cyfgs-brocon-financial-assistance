@@ -21,7 +21,8 @@ class MemberRegistration extends Model
         'year',
         'user_id',
         'updated_by',
-        'session_id'
+        'session_id',
+        'month_name'
     ];
 
     public function user()

@@ -32,7 +32,8 @@ class RegistrationService implements RegistrationInterface
             MemberRegistration::create([
                 'user_id'           => $user->id,
                 'session_id'        => $current_session->id,
-                'updated_by'        => $request->user()->name
+                'updated_by'        => $request->user()->name,
+                'month_name'        => $request->month_name
             ]);
         }else {
             $exist_user->approve = PaymentStatus::PENDING;

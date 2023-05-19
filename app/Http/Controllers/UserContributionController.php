@@ -132,7 +132,7 @@ class UserContributionController extends Controller
 
     public function getMemberOweContributions(Request $request)
     {
-        $data = $this->user_contribution_interface->getMemberDebt($request->user_id, $request->year);
+        $data = $this->user_contribution_interface->getMemberDebt($request->user_id, $request->session_id);
         return $this->sendResponse($data, 200);
     }
 

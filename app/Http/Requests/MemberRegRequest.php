@@ -24,7 +24,8 @@ class MemberRegRequest extends FormRequest
     public function rules()
     {
         return [
-            'user_id'  => 'required|string'
+            'user_id'  => 'required|string',
+            'month_name' => ''
         ];
     }
 }

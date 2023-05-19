@@ -19,7 +19,7 @@ class MemberPaymentItemResource extends JsonResource
         $this->id = $id;
         $this->name = $name;
         $this->amount = $amount;
-        $this->$compulsory = $compulsory;
+        $this->compulsory = $compulsory;
         $this->type = $type;
         $this->frequency = $frequency;
         $this->code = $code;
@@ -34,6 +34,7 @@ class MemberPaymentItemResource extends JsonResource
             'type'          => $this->type,
             'is_compulsory' => $this->compulsory,
             'has_pay'       => false,
+            'frequency'     => $this->frequency,
             'code'          => $this->code
         ];
     }
