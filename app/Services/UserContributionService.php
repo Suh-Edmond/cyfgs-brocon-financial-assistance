@@ -3,13 +3,16 @@
 namespace App\Services;
 
 use App\Constants\PaymentItemType;
+use App\Constants\RegistrationFrequency;
 use App\Constants\SessionStatus;
 use App\Exceptions\BusinessValidationException;
 use App\Http\Resources\MemberContributedItemResource;
 use App\Http\Resources\MemberPaymentItemResource;
+use App\Http\Resources\SessionResource;
 use App\Interfaces\UserContributionInterface;
 use App\Models\MemberRegistration;
 use App\Models\PaymentItem;
+use App\Models\Registration;
 use App\Models\User;
 use App\Models\UserContribution;
 use App\Traits\HelpTrait;
@@ -187,7 +190,7 @@ class UserContributionService implements UserContributionInterface {
 
     public function getMemberDebt($user_id, $year)
     {
-        $reg_debts = $this->checkIfMemberIsRegistered($user_id, $year);
+        $reg_debts = $this->getMemberRegistration($user_id);
 //        $debts = $this->getMemberOwingItems($year, $user_id);
 //        if(!is_null($reg_debts)){
 //            array_push($debts, $reg_debts);
@@ -213,13 +216,42 @@ class UserContributionService implements UserContributionInterface {
 
     }
 
-    private function getMemberRegistration($user_id, $session_id)
+    private function getMemberRegistration($user_id)
     {
-        return DB::table('member_registrations')
-            ->leftJoin('users', 'users.id', '=', 'member_registrations.user_id')
-            ->leftJoin('sessions', 'sessions.id', '=', 'member_registrations.session_id')
-            ->where('member_registrations.user_id', $user_id)
-            ->where('member_registrations.session_id', $session_id);
+        $reg_debts = [];
+        $reg = Registration::where('is_compulsory', true)->first();
+        $sessions = $this->sessionService->getAllSessions();
+        if($reg->frequency == RegistrationFrequency::YEARLY){
+            foreach ($sessions as $session){
+                $reg_session = DB::table('member_registrations')
+                                ->join('users', 'users.id', '=', 'member_registrations.user_id')
+                                ->join('sessions', 'sessions.id', '=', 'member_registrations.session_id')
+                                ->where('member_registrations.user_id', $user_id)
+                                ->where('member_registrations.session_id', $session->id)
+                                ->whereNotIn('member_registrations.approve',[PaymentStatus::PENDING, PaymentStatus::APPROVED])
+                                ->select('users.id as user_id', 'sessions.*')->first();
+                if (is_null($reg_session)){
+                    $session_resource = new SessionResource($session);
+                    array_push($reg_debts, new MemberPaymentItemResource($reg->id, 'Members Registration',
+                        $reg->amount, $reg->is_compulsory, null, $reg->frequency, 'REGISTRATION', $session_resource, null));
+                }
+            }
+        }
+        if($reg->frequency == RegistrationFrequency::MONTHLY) {
+            foreach ($this->getMonths() as $month){
+                $reg_session = DB::table('member_registrations')
+                    ->join('users', 'users.id', '=', 'member_registrations.user_id')
+                    ->where('member_registrations.user_id', $user_id)
+                    ->where('member_registrations.month_name', $month)
+                    ->whereNotIn('member_registrations.approve',[PaymentStatus::PENDING, PaymentStatus::APPROVED])
+                    ->select( 'member_registrations.*')->first();
+                if (is_null($reg_session)){
+                    array_push($reg_debts, new MemberPaymentItemResource($reg->id, 'Members Registration',
+                        $reg->amount, $reg->is_compulsory, null, $reg->frequency, 'REGISTRATION', null, $month));
+                }
+            }
+        }
+        return $reg_debts;
     }
 
     private function findUser($id)
@@ -334,20 +366,6 @@ class UserContributionService implements UserContributionInterface {
             ->where('payment_items.id', $payment_item_id);
     }
 
-    private function checkIfMemberIsRegistered($user_id, $year)
-    {
-        $payment_item = null;
-        $exist = $this->getMemberRegistration($user_id, $year)
-                 ->whereIn('member_registrations.approve', [PaymentStatus::APPROVED, PaymentStatus::PENDING])
-                 ->first();
-        if(is_null($exist)){
-            $reg = DB::table('registrations')->where('status', SessionStatus::ACTIVE)->where('is_compulsory', true)->first();
-            //need to add check for freq
-            $payment_item =  new MemberPaymentItemResource($reg->id, "Registration Fee", $reg->amount, $reg->is_compulsory, null, $reg->frequency, 'REGISTRATION');
-        }
-        return $payment_item;
-    }
-
     private function getMemberOwingItems($year, $user_id)
     {
         $debts = [];
@@ -415,7 +433,7 @@ class UserContributionService implements UserContributionInterface {
 
     private function getRegistration($user_id, $session_id) {
         $registration = null;
-        $data = $this->getMemberRegistration($user_id, $session_id)
+        $data = $this->getMemberRegistration($user_id)
             ->whereIn('member_registrations.approve', [PaymentStatus::APPROVED, PaymentStatus::PENDING])
             ->select('member_registrations.*')->first();
         if(!is_null($data)){
@@ -426,6 +444,22 @@ class UserContributionService implements UserContributionInterface {
     }
 
 
+    private function getMonths(){
+        return $months = [
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December",
+        ];
+    }
 
 
 }
