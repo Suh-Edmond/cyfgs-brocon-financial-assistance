@@ -313,7 +313,7 @@ class UserContributionService implements UserContributionInterface {
                 'updated_by'        => $auth_user,
                 'balance'           => $balance_contribution,
                 'session_id'        => $current_session->id,
-                'quarterly_name'    => trim($request->quarterly_name, " "),
+                'quarterly_name'    => trim($request->quarterly_name),
                 'month_name'        => $request->month_name
             ]);
         }
@@ -495,7 +495,7 @@ class UserContributionService implements UserContributionInterface {
             ->whereIn('member_registrations.approve', [PaymentStatus::PENDING, PaymentStatus::APPROVED])
             ->select('sessions.year as year', 'member_registrations.*', 'registrations.amount', 'registrations.frequency','registrations.is_compulsory')->first();
         if(!is_null($reg)){
-            $registration = new MemberContributedItemResource($reg->id, $reg->registration_id, "Member's Registration",  $reg->amount, $reg->amount,0.0,
+            $registration = new MemberContributedItemResource($reg->id, $reg->registration_id,   $reg->amount, "Member's Registration", $reg->amount,0.0,
                 PaymentStatus::COMPLETE, $reg->approve, $reg->created_at, $reg->year);
         }
 
@@ -542,7 +542,6 @@ class UserContributionService implements UserContributionInterface {
     {
         return   $this->fetchUserContributions($payment_item_id, $user_id)
                     ->where('sessions.id', $session_id)
-                    ->where('user_contributions.status', PaymentStatus::INCOMPLETE)
                     ->select('user_contributions.*')
                     ->latest()
                     ->first();
@@ -552,7 +551,6 @@ class UserContributionService implements UserContributionInterface {
     {
         return $this->fetchUserContributions($payment_item_id, $user_id)
                     ->where('user_contributions.quarterly_name', $quarter)
-                    ->where('user_contributions.status', PaymentStatus::INCOMPLETE)
                     ->select('user_contributions.*')
                     ->latest()
                     ->first();
@@ -580,7 +578,6 @@ class UserContributionService implements UserContributionInterface {
     {
         return $this->fetchUserContributions($payment_item_id, $user_id)
             ->where('user_contributions.month_name', $month)
-            ->where('user_contributions.status', PaymentStatus::INCOMPLETE)
             ->select('user_contributions.*')
             ->latest()
             ->first();
@@ -596,7 +593,6 @@ class UserContributionService implements UserContributionInterface {
     private function verifyOneTimeIncompleteItemPayment($payment_item_id, $user_id)
     {
         return $this->fetchUserContributions($payment_item_id, $user_id)
-            ->where('user_contributions.status', PaymentStatus::INCOMPLETE)
             ->select('user_contributions.*')
             ->latest()
             ->first();
@@ -611,7 +607,7 @@ class UserContributionService implements UserContributionInterface {
             array_push($debts, $to_be_paid);
         }
         $last_payment = $this->verifyIncompleteItemPaymentsByYear($item->id, $user_id, $current_session->id);
-        if(!is_null($last_payment)){
+        if(!is_null($last_payment) && $last_payment->status != PaymentStatus::COMPLETE){
             $session_resource = new SessionResource($current_session);
             $to_be_paid = new MemberPaymentItemResource($item->id, $item->name, $last_payment->balance,$item->amount, $item->compulsory,
                 $item->type, $item->frequency,"CONTRIBUTION",$session_resource, null, $this->getDateQuarter() );
@@ -631,7 +627,7 @@ class UserContributionService implements UserContributionInterface {
             array_push($debts, $to_be_paid);
         }
         $last_payment = $this->verifyIncompleteQuarterItemPayment($item->id, $user_id, $this->getDateQuarter());
-        if(!is_null($last_payment)){
+        if(!is_null($last_payment) && $last_payment->status != PaymentStatus::COMPLETE){
             $session_resource = new SessionResource($current_session);
             $to_be_paid = new MemberPaymentItemResource($item->id, $item->name, $last_payment->balance,$item->amount, $item->compulsory,
                 $item->type, $item->frequency,"CONTRIBUTION",$session_resource, null, $this->getDateQuarter() );
@@ -646,6 +642,7 @@ class UserContributionService implements UserContributionInterface {
     {
         $debts = [];
         $current_month = $this->convertNumberToMonth(Carbon::now()->month);
+
         if (count($this->verifyCompleteItemPaymentByMonth($item->id, $user_id, $current_month)) == 0) {
             $session_resource = new SessionResource($current_session);
             $to_be_paid = new MemberPaymentItemResource($item->id, $item->name, $item->amount,$item->amount, $item->compulsory,
@@ -653,7 +650,7 @@ class UserContributionService implements UserContributionInterface {
             array_push($debts, $to_be_paid);
         }
         $last_payment = $this->verifyIncompleteMonthItemPayment($item->id, $user_id, $current_month);
-        if(!is_null($last_payment)){
+        if(!is_null($last_payment) && $last_payment->status != PaymentStatus::COMPLETE){
             $session_resource = new SessionResource($current_session);
             $to_be_paid = new MemberPaymentItemResource($item->id, $item->name, $last_payment->balance,$item->amount, $item->compulsory,
                 $item->type, $item->frequency,"CONTRIBUTION",$session_resource, $current_month, $this->getDateQuarter() );
@@ -674,7 +671,7 @@ class UserContributionService implements UserContributionInterface {
             array_push($debts, $to_be_paid);
         }
         $last_payment = $this->verifyOneTimeIncompleteItemPayment($item->id, $user_id);
-        if(!is_null($last_payment)){
+        if(!is_null($last_payment) && $last_payment->status != PaymentStatus::COMPLETE){
             $session_resource = new SessionResource($current_session);
             $to_be_paid = new MemberPaymentItemResource($item->id, $item->name, $last_payment->balance,$item->amount, $item->compulsory,
                 $item->type, $item->frequency,"CONTRIBUTION",$session_resource,  null, $this->getDateQuarter() );
