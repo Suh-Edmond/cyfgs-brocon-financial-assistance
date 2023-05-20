@@ -15,6 +15,9 @@ class UpdateMemberRegistrationTable extends Migration
     {
         Schema::table('member_registrations', function (Blueprint $table) {
             $table->string('month_name')->nullable(true);
+            $table->uuid('registration_id');
+
+            $table->foreign('registration_id')->references('id')->on('registrations')->cascadeOnDelete();
         });
     }
 

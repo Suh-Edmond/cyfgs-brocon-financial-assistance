@@ -201,11 +201,12 @@ class UserContributionService implements UserContributionInterface {
 
     public function getMemberContributedItems($user_id, $year)
     {
-        $paid_debts = [];
-         $reg = $this->getRegistration($user_id, $year);
-         $contributions = $this->getAllMemberContribution($user_id, $year);
+         $paid_debts = [];
+         $current_session = $this->sessionService->getCurrentSession();
+         $reg = $this->getRegistration($user_id, $current_session->id);
+         $contributions = $this->getAllMemberContribution($user_id, $current_session->id);
          foreach ($contributions as $contribution){
-             $contributedItem = new MemberContributedItemResource($contribution->id, $contribution->payment_item_id, $contribution->name,
+             $contributedItem = new MemberContributedItemResource($contribution->id, $contribution->payment_item_id,$contribution->payment_item_amount, $contribution->name,
                  $contribution->amount_deposited, $contribution->balance, $contribution->status, $contribution->approve, $contribution->created_at, $year);
              array_push($paid_debts, $contributedItem);
          }
@@ -454,18 +455,19 @@ class UserContributionService implements UserContributionInterface {
 
     private function saveRegistration($request, $user, $auth_user)
     {
-        $payment_item = PaymentItem::findOrFail($request->payment_item_id);
-        $exist_user = MemberRegistration::where('user_id', $user->id)->where('year', $request->year)->get()->toArray();
-        if(count($exist_user) == 0){
+        $registration_fee = Registration::findOrFail($request->registration_id);
+        $exist_user = MemberRegistration::where('user_id', $user->id)->where('session_id', $request->year)->first();
+        if(is_null($exist_user)){
             MemberRegistration::create([
                 'user_id'           => $user->id,
-                'year'              => $request->year,
-                'payment_item_id'   => $payment_item->id,
-                'updated_by'        => $auth_user
+                'session_id'        => $request->year,
+                'updated_by'        => $auth_user,
+                'month_name'        => $request->month_name,
+                'registration_id'   => $registration_fee->id
             ]);
         }else {
-            $exist_user[0]->approve = PaymentStatus::PENDING;
-            $exist_user[0]->save();
+            $exist_user->approve = PaymentStatus::PENDING;
+            $exist_user->save();
         }
     }
 
@@ -484,11 +486,17 @@ class UserContributionService implements UserContributionInterface {
 
     private function getRegistration($user_id, $session_id) {
         $registration = null;
-        $data = $this->getMemberRegistration($user_id)
-            ->whereIn('member_registrations.approve', [PaymentStatus::APPROVED, PaymentStatus::PENDING])
-            ->select('member_registrations.*')->first();
-        if(!is_null($data)){
-//            $registration = new MemberContributedItemResource($data->id, $data->payment_item_id, $data->name,  $data->amount, 0.0, PaymentStatus::COMPLETE, $data->approve, $data->created_at, $data->year);
+        $reg = DB::table('member_registrations')
+            ->join('users', 'users.id', '=', 'member_registrations.user_id')
+            ->join('sessions', 'sessions.id', '=', 'member_registrations.session_id')
+            ->join('registrations', 'registrations.id', '=', 'member_registrations.registration_id')
+            ->where('member_registrations.user_id', $user_id)
+            ->where('member_registrations.session_id', $session_id)
+            ->whereIn('member_registrations.approve', [PaymentStatus::PENDING, PaymentStatus::APPROVED])
+            ->select('sessions.year as year', 'member_registrations.*', 'registrations.amount', 'registrations.frequency','registrations.is_compulsory')->first();
+        if(!is_null($reg)){
+            $registration = new MemberContributedItemResource($reg->id, $reg->registration_id, "Member's Registration",  $reg->amount, $reg->amount,0.0,
+                PaymentStatus::COMPLETE, $reg->approve, $reg->created_at, $reg->year);
         }
 
         return $registration;
