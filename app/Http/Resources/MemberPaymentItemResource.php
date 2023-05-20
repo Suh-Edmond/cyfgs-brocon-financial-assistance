@@ -8,6 +8,7 @@ class MemberPaymentItemResource extends JsonResource
 {
     private $id;
     private $name;
+    private $item_amount;
     private $amount;
     private $compulsory;
     private $type;
@@ -15,18 +16,21 @@ class MemberPaymentItemResource extends JsonResource
     private $code; //to tell if its REGISTRATION or CONTRIBUTION
     private $session;
     private $month_name;
-    public function __construct($id, $name, $amount, $compulsory, $type, $frequency, $code = 'CONTRIBUTION', $session, $month_name)
+    private $quarterly_name;
+    public function __construct($id, $name, $amount, $item_amount, $compulsory, $type, $frequency, $code, $session, $month_name, $quarterly_name)
     {
         parent::__construct(null);
         $this->id = $id;
         $this->name = $name;
         $this->amount = $amount;
+        $this->item_amount = $item_amount;
         $this->compulsory = $compulsory;
         $this->type = $type;
         $this->frequency = $frequency;
         $this->code = $code;
         $this->session = $session;
         $this->month_name = $month_name;
+        $this->quarterly_name = $quarterly_name;
     }
 
     public function toArray($request)
@@ -34,14 +38,16 @@ class MemberPaymentItemResource extends JsonResource
         return [
             'id'            => $this->id,
             'name'          => $this->name,
-            'amount'        => $this->amount,
+            'balance'       => $this->amount,
+            'item_amount'   => $this->item_amount,
             'type'          => $this->type,
             'is_compulsory' => $this->compulsory,
             'has_pay'       => false,
             'frequency'     => $this->frequency,
             'code'          => $this->code,
             'session'       => $this->session,
-            'month_name'    => $this->month_name
+            'month_name'    => $this->month_name,
+            'quarterly_name'=> $this->quarterly_name
         ];
     }
 }
