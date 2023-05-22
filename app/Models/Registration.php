@@ -22,4 +22,9 @@ class Registration extends Model
         'is_compulsory',
         'frequency'
     ];
+
+    public function memberRegistrations()
+    {
+        return $this->hasMany(MemberRegistration::class);
+    }
 }

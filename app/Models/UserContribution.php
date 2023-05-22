@@ -27,7 +27,9 @@ class UserContribution extends Model
         'scan_picture',
         'updated_by',
         'balance',
-        'session_id'
+        'session_id',
+        'quarterly_name',
+        'month_name'
     ];
 
 

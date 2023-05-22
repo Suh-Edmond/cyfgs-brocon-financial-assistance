@@ -2,17 +2,23 @@
 
 namespace App\Services;
 
+use App\Constants\PaymentItemFrequency;
 use App\Constants\PaymentItemType;
+use App\Constants\RegistrationFrequency;
 use App\Constants\SessionStatus;
 use App\Exceptions\BusinessValidationException;
 use App\Http\Resources\MemberContributedItemResource;
 use App\Http\Resources\MemberPaymentItemResource;
+use App\Http\Resources\SessionResource;
 use App\Interfaces\UserContributionInterface;
 use App\Models\MemberRegistration;
 use App\Models\PaymentItem;
+use App\Models\Registration;
 use App\Models\User;
 use App\Models\UserContribution;
 use App\Traits\HelpTrait;
+use Carbon\Carbon;
+use Carbon\Traits\Date;
 use Illuminate\Support\Facades\DB;
 use App\Constants\PaymentStatus;
 use App\Http\Resources\UserContributionCollection;
@@ -187,22 +193,20 @@ class UserContributionService implements UserContributionInterface {
 
     public function getMemberDebt($user_id, $year)
     {
-        $reg_debts = $this->checkIfMemberIsRegistered($user_id, $year);
-        $debts = $this->getMemberOwingItems($year, $user_id);
-        if(!is_null($reg_debts)){
-            array_push($debts, $reg_debts);
-        }
-        return $debts;
+        $reg_debts = $this->getMemberRegistration($user_id);
+        $debts = $this->getMemberOwingItems($user_id);
+        return array_merge($reg_debts, $debts);
     }
 
 
     public function getMemberContributedItems($user_id, $year)
     {
-        $paid_debts = [];
-         $reg = $this->getRegistration($user_id, $year);
-         $contributions = $this->getAllMemberContribution($user_id, $year);
+         $paid_debts = [];
+         $current_session = $this->sessionService->getCurrentSession();
+         $reg = $this->getRegistration($user_id, $current_session->id);
+         $contributions = $this->getAllMemberContribution($user_id, $current_session->id);
          foreach ($contributions as $contribution){
-             $contributedItem = new MemberContributedItemResource($contribution->id, $contribution->payment_item_id, $contribution->name,
+             $contributedItem = new MemberContributedItemResource($contribution->id, $contribution->payment_item_id,$contribution->payment_item_amount, $contribution->name,
                  $contribution->amount_deposited, $contribution->balance, $contribution->status, $contribution->approve, $contribution->created_at, $year);
              array_push($paid_debts, $contributedItem);
          }
@@ -213,13 +217,42 @@ class UserContributionService implements UserContributionInterface {
 
     }
 
-    private function getMemberRegistration($user_id, $year)
+    private function getMemberRegistration($user_id)
     {
-        return DB::table('payment_items')
-            ->leftJoin('member_registrations', 'member_registrations.payment_item_id', '=', 'payment_items.id')
-            ->leftJoin('users', 'users.id', '=', 'member_registrations.user_id')
-            ->where('member_registrations.user_id', $user_id)
-            ->where('member_registrations.year', $year);
+        $reg_debts = [];
+        $reg = Registration::where('is_compulsory', true)->first();
+        $sessions = $this->sessionService->getAllSessions();
+        if($reg->frequency == RegistrationFrequency::YEARLY){
+            foreach ($sessions as $session){
+                $reg_session = DB::table('member_registrations')
+                                ->join('users', 'users.id', '=', 'member_registrations.user_id')
+                                ->join('sessions', 'sessions.id', '=', 'member_registrations.session_id')
+                                ->where('member_registrations.user_id', $user_id)
+                                ->where('member_registrations.session_id', $session->id)
+                                ->whereIn('member_registrations.approve', [PaymentStatus::PENDING, PaymentStatus::APPROVED])
+                                ->select('users.id as user_id', 'sessions.*')->first();
+                if (is_null($reg_session)){
+                    $session_resource = new SessionResource($session);
+                    array_push($reg_debts, new MemberPaymentItemResource($reg->id, 'Members Registration',
+                        $reg->amount, $reg->amount, $reg->is_compulsory, null, $reg->frequency, 'REGISTRATION', $session_resource, null, $this->getDateQuarter()));
+                }
+            }
+        }
+        if($reg->frequency == RegistrationFrequency::MONTHLY) {
+            foreach ($this->getMonths() as $month){
+                $reg_session = DB::table('member_registrations')
+                    ->join('users', 'users.id', '=', 'member_registrations.user_id')
+                    ->where('member_registrations.user_id', $user_id)
+                    ->where('member_registrations.month_name', $month)
+                    ->whereIn('member_registrations.approve', [PaymentStatus::PENDING, PaymentStatus::APPROVED])
+                    ->select( 'member_registrations.*')->first();
+                if (is_null($reg_session)){
+                    array_push($reg_debts, new MemberPaymentItemResource($reg->id, 'Members Registration',
+                        $reg->amount, $reg->amount,  $reg->is_compulsory, null, $reg->frequency, 'REGISTRATION', null, $month, $this->getDateQuarter()));
+                }
+            }
+        }
+        return $reg_debts;
     }
 
     private function findUser($id)
@@ -279,7 +312,9 @@ class UserContributionService implements UserContributionInterface {
                 'scan_picture'      => null,
                 'updated_by'        => $auth_user,
                 'balance'           => $balance_contribution,
-                'session_id'        => $current_session->id
+                'session_id'        => $current_session->id,
+                'quarterly_name'    => trim($request->quarterly_name),
+                'month_name'        => $request->month_name
             ]);
         }
 
@@ -334,46 +369,80 @@ class UserContributionService implements UserContributionInterface {
             ->where('payment_items.id', $payment_item_id);
     }
 
-    private function checkIfMemberIsRegistered($user_id, $year)
-    {
-        $payment_item = null;
-        $exist = $this->getMemberRegistration($user_id, $year)
-                 ->whereIn('member_registrations.approve', [PaymentStatus::APPROVED, PaymentStatus::PENDING])
-                 ->first();
-        if(is_null($exist)){
-            $payment_item = DB::table('registrations')->where('status', SessionStatus::ACTIVE)->where('is_compulsory', true)->first();
-            //need to add check for freq
-            $payment_item =  new MemberPaymentItemResource($payment_item->id,
-                "Registration Fee", $payment_item->amount, $payment_item->compulsory, null, $payment_item->frequency, 'REGISTRATION');
-        }
-        return $payment_item;
-    }
-
-    private function getMemberOwingItems($year, $user_id)
+    private function getMemberOwingItems($user_id)
     {
         $debts = [];
-        $contributions = $this->getAllMemberContribution($user_id, $year);
-        $items =  DB::table('payment_items')->where('compulsory', true)->where('type', PaymentItemType::NORMAL)->select('*')->get()->collect();
-
-        if(count($contributions) == 0) {
-            foreach ($items as $item){
-                array_push($debts, new MemberPaymentItemResource($item->id, $item->name, $item->amount, $item->complusory, $item->type, $item->frequency, 'CONTRIBUTION'));
-            }
-        }else {
-            $payment_item_ids = $items->map(function ($item) {
-                return $item->id;
-            });
-            foreach ($contributions as $contribution){
-                $total_amount_contributed = $this->getTotalAmountPaidByUserForTheItem($user_id, $contribution->payment_item_id);
-                if(!in_array($contribution->payment_item_id, $payment_item_ids->toArray())){
-                    array_push($debts, new MemberPaymentItemResource($contribution->payment_item_id, $contribution->name,
-                        $contribution->payment_item_amount, $contribution->complusory, $contribution->type, $contribution->frequency, 'CONTRIBUTION'));
+        $current_session = $this->sessionService->getCurrentSession();
+        $payment_items =  PaymentItem::where('compulsory', true)->where('session_id', $current_session->id)->get();
+        foreach ($payment_items as $item) {
+            if ($item->type == PaymentItemType::ALL_MEMBERS){
+                switch ($item->frequency) {
+                    case PaymentItemFrequency::YEARLY:
+                        $debts = array_merge($debts, $this->verifyItemPaymentByYear($item, $user_id, $current_session));
+                        break;
+                    case PaymentItemFrequency::QUARTERLY:
+                        $debts = array_merge($debts, $this->verifyQuarterlyPayment($item, $user_id, $current_session));
+                        break;
+                    case PaymentItemFrequency::MONTHLY:
+                        $debts = array_merge($debts, $this->verifyMonthlyPayment($item, $user_id, $current_session));
+                        break;
+                    case PaymentItemFrequency::ONE_TIME:
+                        $debts = array_merge($debts,  $this->verifyOneTimePayment($item, $user_id, $current_session));
+                        break;
                 }
-                if(in_array($contribution->payment_item_id, $payment_item_ids->toArray()) && $contribution->payment_item_amount != $total_amount_contributed){
-                    $balance_payment = $contribution->payment_item_amount - $total_amount_contributed;
-                    array_push($debts, new MemberPaymentItemResource($contribution->payment_item_id, $contribution->name,
-                        $balance_payment, $contribution->complusory, $contribution->type, $contribution->frequency, 'CONTRIBUTION'));
-
+            }
+            if ($item->type == PaymentItemType::GROUPED_MEMBERS || PaymentItemType::A_MEMBER){
+                if($this->checkMemberExistAsReference($user_id, $item->reference)){
+                    switch ($item->frequency){
+                        case PaymentItemFrequency::YEARLY:
+                            $debts = array_merge($debts, $this->verifyItemPaymentByYear($item, $user_id, $current_session));
+                            break;
+                        case PaymentItemFrequency::QUARTERLY:
+                            $debts = array_merge($debts, $this->verifyQuarterlyPayment($item, $user_id, $current_session));
+                            break;
+                        case PaymentItemFrequency::MONTHLY:
+                            $debts = array_merge($debts, $this->verifyMonthlyPayment($item, $user_id, $current_session));
+                            break;
+                        case PaymentItemFrequency::ONE_TIME:
+                            $debts = array_merge($debts,  $this->verifyOneTimePayment($item, $user_id, $current_session));
+                            break;
+                    }
+                }
+            }
+            if ($item->type == PaymentItemType::MEMBERS_WITH_ROLES){
+                if (!is_null($this->checkMemberIsAdministrator($user_id))){
+                    switch ($item->frequency){
+                        case PaymentItemFrequency::YEARLY:
+                            $debts = array_merge($debts, $this->verifyItemPaymentByYear($item, $user_id, $current_session));
+                            break;
+                        case PaymentItemFrequency::QUARTERLY:
+                            $debts = array_merge($debts, $this->verifyQuarterlyPayment($item, $user_id, $current_session));
+                            break;
+                        case PaymentItemFrequency::MONTHLY:
+                            $debts = array_merge($debts, $this->verifyMonthlyPayment($item, $user_id, $current_session));
+                            break;
+                        case PaymentItemFrequency::ONE_TIME:
+                            $debts = array_merge($debts,  $this->verifyOneTimePayment($item, $user_id, $current_session));
+                            break;
+                    }
+                }
+            }
+            if ($item->type == PaymentItemType::MEMBERS_WITHOUT_ROLES){
+                if (!is_null($this->checkMemberNotAdministrator($user_id))){
+                    switch ($item->frequency){
+                        case PaymentItemFrequency::YEARLY:
+                            $debts = array_merge($debts, $this->verifyItemPaymentByYear($item, $user_id, $current_session));
+                            break;
+                        case PaymentItemFrequency::QUARTERLY:
+                            $debts = array_merge($debts, $this->verifyQuarterlyPayment($item, $user_id, $current_session));
+                            break;
+                        case PaymentItemFrequency::MONTHLY:
+                            $debts = array_merge($debts, $this->verifyMonthlyPayment($item, $user_id, $current_session));
+                            break;
+                        case PaymentItemFrequency::ONE_TIME:
+                            $debts = array_merge($debts,  $this->verifyOneTimePayment($item, $user_id, $current_session));
+                            break;
+                    }
                 }
             }
         }
@@ -386,18 +455,19 @@ class UserContributionService implements UserContributionInterface {
 
     private function saveRegistration($request, $user, $auth_user)
     {
-        $payment_item = PaymentItem::findOrFail($request->payment_item_id);
-        $exist_user = MemberRegistration::where('user_id', $user->id)->where('year', $request->year)->get()->toArray();
-        if(count($exist_user) == 0){
+        $registration_fee = Registration::findOrFail($request->registration_id);
+        $exist_user = MemberRegistration::where('user_id', $user->id)->where('session_id', $request->year)->first();
+        if(is_null($exist_user)){
             MemberRegistration::create([
                 'user_id'           => $user->id,
-                'year'              => $request->year,
-                'payment_item_id'   => $payment_item->id,
-                'updated_by'        => $auth_user
+                'session_id'        => $request->year,
+                'updated_by'        => $auth_user,
+                'month_name'        => $request->month_name,
+                'registration_id'   => $registration_fee->id
             ]);
         }else {
-            $exist_user[0]->approve = PaymentStatus::PENDING;
-            $exist_user[0]->save();
+            $exist_user->approve = PaymentStatus::PENDING;
+            $exist_user->save();
         }
     }
 
@@ -414,20 +484,202 @@ class UserContributionService implements UserContributionInterface {
             ->orderBy('user_contributions.created_at', 'DESC')->get()->toArray();
     }
 
-    private function getRegistration($user_id, $year) {
+    private function getRegistration($user_id, $session_id) {
         $registration = null;
-        $data = $this->getMemberRegistration($user_id, $year)
-            ->whereIn('member_registrations.approve', [PaymentStatus::APPROVED, PaymentStatus::PENDING])
-            ->select('payment_items.id as payment_item_id', 'payment_items.name', 'payment_items.amount', 'member_registrations.*')->first();
-        if(!is_null($data)){
-            $registration = new MemberContributedItemResource($data->id, $data->payment_item_id, $data->name,  $data->amount, 0.0, PaymentStatus::COMPLETE, $data->approve, $data->created_at, $data->year);
+        $reg = DB::table('member_registrations')
+            ->join('users', 'users.id', '=', 'member_registrations.user_id')
+            ->join('sessions', 'sessions.id', '=', 'member_registrations.session_id')
+            ->join('registrations', 'registrations.id', '=', 'member_registrations.registration_id')
+            ->where('member_registrations.user_id', $user_id)
+            ->where('member_registrations.session_id', $session_id)
+            ->whereIn('member_registrations.approve', [PaymentStatus::PENDING, PaymentStatus::APPROVED])
+            ->select('sessions.year as year', 'member_registrations.*', 'registrations.amount', 'registrations.frequency','registrations.is_compulsory')->first();
+        if(!is_null($reg)){
+            $registration = new MemberContributedItemResource($reg->id, $reg->registration_id,   $reg->amount, "Member's Registration", $reg->amount,0.0,
+                PaymentStatus::COMPLETE, $reg->approve, $reg->created_at, $reg->year);
         }
 
         return $registration;
     }
 
+    private function getMonths(){
+        return $months = [
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December",
+        ];
+    }
+
+    private function fetchUserContributions($payment_item_id, $user_id)
+    {
+        return DB::table('user_contributions')
+            ->join('payment_items', 'payment_items.id', '=', 'user_contributions.payment_item_id')
+            ->join('users', 'users.id', '=', 'user_contributions.user_id')
+            ->join('sessions', 'sessions.id', '=', 'user_contributions.session_id')
+            ->where('payment_items.id', $payment_item_id)
+            ->where('users.id', $user_id);
+    }
+
+    private function verifyCompleteItemPaymentByYear($payment_item_id, $user_id, $session_id)
+    {
+        return $this->fetchUserContributions($payment_item_id, $user_id)
+                    ->where('sessions.id', $session_id)
+                    ->select('user_contributions.*')
+                    ->get();
+
+    }
+
+    private function verifyIncompleteItemPaymentsByYear($payment_item_id, $user_id, $session_id)
+    {
+        return   $this->fetchUserContributions($payment_item_id, $user_id)
+                    ->where('sessions.id', $session_id)
+                    ->select('user_contributions.*')
+                    ->latest()
+                    ->first();
+    }
+
+    private function verifyIncompleteQuarterItemPayment($payment_item_id, $user_id, $quarter)
+    {
+        return $this->fetchUserContributions($payment_item_id, $user_id)
+                    ->where('user_contributions.quarterly_name', $quarter)
+                    ->select('user_contributions.*')
+                    ->latest()
+                    ->first();
+    }
+
+    private function verifyCompleteItemPaymentByQuarter($payment_item_id, $user_id, $quarter)
+    {
+        return $this->fetchUserContributions($payment_item_id, $user_id)
+            ->where('user_contributions.quarterly_name', $quarter)
+            ->select('user_contributions.*')
+            ->get();
+
+    }
+
+    private function verifyCompleteItemPaymentByMonth($payment_item_id, $user_id, $month)
+    {
+        return $this->fetchUserContributions($payment_item_id, $user_id)
+            ->where('user_contributions.month_name', $month)
+            ->select('user_contributions.*')
+            ->get();
+
+    }
+
+    private function verifyIncompleteMonthItemPayment($payment_item_id, $user_id, $month)
+    {
+        return $this->fetchUserContributions($payment_item_id, $user_id)
+            ->where('user_contributions.month_name', $month)
+            ->select('user_contributions.*')
+            ->latest()
+            ->first();
+    }
+
+    private function verifyOneTimeCompleteItemPayment($payment_item_id, $user_id)
+    {
+        return $this->fetchUserContributions($payment_item_id, $user_id)
+            ->select('user_contributions.*')
+            ->get();
+    }
+
+    private function verifyOneTimeIncompleteItemPayment($payment_item_id, $user_id)
+    {
+        return $this->fetchUserContributions($payment_item_id, $user_id)
+            ->select('user_contributions.*')
+            ->latest()
+            ->first();
+    }
+
+    private function verifyItemPaymentByYear($item, $user_id, $current_session) {
+        $debts = [];
+        if(count($this->verifyCompleteItemPaymentByYear($item->id, $user_id, $current_session->id)) == 0){
+            $session_resource = new SessionResource($current_session);
+            $to_be_paid = new MemberPaymentItemResource($item->id, $item->name, $item->amount,$item->amount, $item->compulsory,
+                $item->type, $item->frequency,"CONTRIBUTION",$session_resource, null, $this->getDateQuarter() );
+            array_push($debts, $to_be_paid);
+        }
+        $last_payment = $this->verifyIncompleteItemPaymentsByYear($item->id, $user_id, $current_session->id);
+        if(!is_null($last_payment) && $last_payment->status != PaymentStatus::COMPLETE){
+            $session_resource = new SessionResource($current_session);
+            $to_be_paid = new MemberPaymentItemResource($item->id, $item->name, $last_payment->balance,$item->amount, $item->compulsory,
+                $item->type, $item->frequency,"CONTRIBUTION",$session_resource, null, $this->getDateQuarter() );
+            array_push($debts, $to_be_paid);
+        }
+
+        return $debts;
+    }
+
+    private function verifyQuarterlyPayment($item, $user_id, $current_session)
+    {
+        $debts = [];
+        if (count($this->verifyCompleteItemPaymentByQuarter($item->id, $user_id, $this->getDateQuarter())) == 0) {
+            $session_resource = new SessionResource($current_session);
+            $to_be_paid = new MemberPaymentItemResource($item->id, $item->name, $item->amount,$item->amount, $item->compulsory,
+                $item->type, $item->frequency,"CONTRIBUTION",$session_resource, null, $this->getDateQuarter() );
+            array_push($debts, $to_be_paid);
+        }
+        $last_payment = $this->verifyIncompleteQuarterItemPayment($item->id, $user_id, $this->getDateQuarter());
+        if(!is_null($last_payment) && $last_payment->status != PaymentStatus::COMPLETE){
+            $session_resource = new SessionResource($current_session);
+            $to_be_paid = new MemberPaymentItemResource($item->id, $item->name, $last_payment->balance,$item->amount, $item->compulsory,
+                $item->type, $item->frequency,"CONTRIBUTION",$session_resource, null, $this->getDateQuarter() );
+            array_push($debts, $to_be_paid);
+        }
 
 
+        return $debts;
+    }
 
+    private function verifyMonthlyPayment($item, $user_id, $current_session)
+    {
+        $debts = [];
+        $current_month = $this->convertNumberToMonth(Carbon::now()->month);
+
+        if (count($this->verifyCompleteItemPaymentByMonth($item->id, $user_id, $current_month)) == 0) {
+            $session_resource = new SessionResource($current_session);
+            $to_be_paid = new MemberPaymentItemResource($item->id, $item->name, $item->amount,$item->amount, $item->compulsory,
+                $item->type, $item->frequency,"CONTRIBUTION",$session_resource, $current_month, $this->getDateQuarter() );
+            array_push($debts, $to_be_paid);
+        }
+        $last_payment = $this->verifyIncompleteMonthItemPayment($item->id, $user_id, $current_month);
+        if(!is_null($last_payment) && $last_payment->status != PaymentStatus::COMPLETE){
+            $session_resource = new SessionResource($current_session);
+            $to_be_paid = new MemberPaymentItemResource($item->id, $item->name, $last_payment->balance,$item->amount, $item->compulsory,
+                $item->type, $item->frequency,"CONTRIBUTION",$session_resource, $current_month, $this->getDateQuarter() );
+            array_push($debts, $to_be_paid);
+        }
+
+
+        return $debts;
+    }
+
+    private function verifyOneTimePayment($item, $user_id, $current_session)
+    {
+        $debts = [];
+        if (count($this->verifyOneTimeCompleteItemPayment($item->id, $user_id)) == 0) {
+            $session_resource = new SessionResource($current_session);
+            $to_be_paid = new MemberPaymentItemResource($item->id, $item->name, $item->amount,$item->amount, $item->compulsory,
+                $item->type, $item->frequency,"CONTRIBUTION",$session_resource, null, $this->getDateQuarter() );
+            array_push($debts, $to_be_paid);
+        }
+        $last_payment = $this->verifyOneTimeIncompleteItemPayment($item->id, $user_id);
+        if(!is_null($last_payment) && $last_payment->status != PaymentStatus::COMPLETE){
+            $session_resource = new SessionResource($current_session);
+            $to_be_paid = new MemberPaymentItemResource($item->id, $item->name, $last_payment->balance,$item->amount, $item->compulsory,
+                $item->type, $item->frequency,"CONTRIBUTION",$session_resource,  null, $this->getDateQuarter() );
+            array_push($debts, $to_be_paid);
+        }
+
+
+        return $debts;
+    }
 }
 

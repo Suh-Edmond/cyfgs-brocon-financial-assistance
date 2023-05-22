@@ -12,10 +12,12 @@ use App\Models\MemberRegistration;
 class RegistrationService implements RegistrationInterface
 {
     private SessionService $sessionService;
+    private RegistrationFeeService  $registrationFeeService;
 
-    public function __construct(SessionService $sessionService)
+    public function __construct(SessionService $sessionService, RegistrationFeeService $registrationFeeService)
     {
         $this->sessionService = $sessionService;
+        $this->registrationFeeService = $registrationFeeService;
     }
 
 
@@ -24,15 +26,18 @@ class RegistrationService implements RegistrationInterface
         $current_session = $this->sessionService->getCurrentSession();
         $user = User::findOrFail($request->user_id);
         $exist_user = MemberRegistration::join('users', ['users.id' => 'member_registrations.user_id'])
-            ->join('sessions', ['sessions.id' => 'member_registrations.session_id'])
-            ->where('session_id', $current_session->id)
-            ->where('member_registrations.user_id', $user->id)
-            ->first();
+                    ->join('sessions', ['sessions.id' => 'member_registrations.session_id'])
+                    ->where('session_id', $current_session->id)
+                    ->where('member_registrations.user_id', $user->id)
+                    ->first();
+        $reg_fee = $this->registrationFeeService->getCurrentRegistrationFee();
         if(is_null($exist_user)){
             MemberRegistration::create([
                 'user_id'           => $user->id,
                 'session_id'        => $current_session->id,
-                'updated_by'        => $request->user()->name
+                'updated_by'        => $request->user()->name,
+                'month_name'        => $request->month_name,
+                'registration_id'   => $reg_fee->id
             ]);
         }else {
             $exist_user->approve = PaymentStatus::PENDING;

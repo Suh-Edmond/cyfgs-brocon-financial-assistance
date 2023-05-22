@@ -123,7 +123,10 @@ class UserContributionController extends Controller
             'row.*.year'            => 'required|string',
             'row.*.amount_deposited'=> 'required|numeric',
             'row.*.code'            => 'required|string',
-            'row.*.is_compulsory'   => 'required|string'
+            'row.*.is_compulsory'   => 'required|string',
+            'row.*.month_name'      => '',
+            'row.*.quarterly_name'  => '',
+            'row.*.registration_id' => 'required|string'
         ]);
         $this->user_contribution_interface->bulkPayment($request);
         return $this->sendResponse("success", 200);
@@ -132,14 +135,14 @@ class UserContributionController extends Controller
 
     public function getMemberOweContributions(Request $request)
     {
-        $data = $this->user_contribution_interface->getMemberDebt($request->user_id, $request->year);
+        $data = $this->user_contribution_interface->getMemberDebt($request->user_id, $request->session_id);
         return $this->sendResponse($data, 200);
     }
 
 
     public function getAllMemberContributions(Request $request)
     {
-        $data = $this->user_contribution_interface->getMemberContributedItems($request->user_id, $request->year);
+        $data = $this->user_contribution_interface->getMemberContributedItems($request->user_id, $request->session_id);
         return $this->sendResponse($data, 200);
     }
 

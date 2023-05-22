@@ -4,10 +4,12 @@ namespace App\Traits;
 
 use App\Constants\PaymentStatus;
 use App\Constants\RegistrationStatus;
+use App\Constants\Roles;
 use App\Http\Resources\ExpenditureDetailResource;
 use App\Http\Resources\ReferenceResource;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -191,6 +193,25 @@ trait HelpTrait {
         return $this->months()[$month];
     }
 
+    private function convertNumberToMonth($num){
+         $months = [
+            1 => "January",
+            2 => "February",
+            3 =>"March",
+            4 => "April",
+            5 => "May",
+            6 => "June",
+            7 => "July",
+            8 => "August",
+            9 => "September",
+            10 => "October",
+            11 => "November",
+            12 =>"December",
+
+        ];
+         return $months[$num];
+    }
+
     public function  calculateTotal($data): int
     {
         $total = 0;
@@ -231,5 +252,46 @@ trait HelpTrait {
         return $data;
     }
 
+    public function getDateQuarter()
+    {
+        $quarters = array(1 => "January March", 2 => "April June", 3 => "July September", 4 => "October December");
+        $a = Carbon::parse(Carbon::now());
+        return $quarters[$a->quarter];
+    }
 
+    public function checkMemberExistAsReference($user_id, $reference)
+    {
+        if (str_contains($reference, "/")){
+            $reference_array = explode("/", $reference);
+            if (in_array($user_id, $reference_array)){
+                return true;
+            }else{
+                return  false;
+            }
+        }else{
+            return $user_id == trim($reference);
+        }
+    }
+
+    public static function checkMemberIsAdministrator($user_id)
+    {
+        return DB::table('users')
+            ->join('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
+            ->join('roles', 'roles.id', '=', 'model_has_roles.role_id')
+            ->where('users.id', $user_id)
+            ->whereIn('roles.name', [Roles::TREASURER, Roles::FINANCIAL_SECRETARY, Roles::PRESIDENT, Roles::AUDITOR])
+            ->select('users.*')
+            ->first();
+    }
+
+    public static function checkMemberNotAdministrator($user_id)
+    {
+        return DB::table('users')
+            ->join('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
+            ->join('roles', 'roles.id', '=', 'model_has_roles.role_id')
+            ->where('users.id', $user_id)
+            ->whereNotIn('roles.name', [Roles::TREASURER, Roles::FINANCIAL_SECRETARY, Roles::PRESIDENT, Roles::AUDITOR])
+            ->select('users.*')
+            ->first();
+    }
 }

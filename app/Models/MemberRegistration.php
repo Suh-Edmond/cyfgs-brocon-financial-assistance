@@ -21,7 +21,9 @@ class MemberRegistration extends Model
         'year',
         'user_id',
         'updated_by',
-        'session_id'
+        'session_id',
+        'month_name',
+        'registration_id'
     ];
 
     public function user()
@@ -31,5 +33,10 @@ class MemberRegistration extends Model
 
     public function session() {
         return $this->belongsTo(Session::class);
+    }
+
+    public function registration()
+    {
+        return $this->belongsTo(Registration::class);
     }
 }
