@@ -203,17 +203,15 @@ class UserContributionService implements UserContributionInterface {
     {
          $paid_debts = [];
          $current_session = $this->sessionService->getCurrentSession();
-         $reg = $this->getRegistration($user_id, $current_session->id);
+         $reg = $this->getRegistration($user_id);
          $contributions = $this->getAllMemberContribution($user_id, $current_session->id);
          foreach ($contributions as $contribution){
              $contributedItem = new MemberContributedItemResource($contribution->id, $contribution->payment_item_id,$contribution->payment_item_amount, $contribution->name,
                  $contribution->amount_deposited, $contribution->balance, $contribution->status, $contribution->approve, $contribution->created_at, $year);
              array_push($paid_debts, $contributedItem);
          }
-         if(!is_null($reg)){
-             array_push( $paid_debts, $reg);
-         }
-         return $paid_debts;
+
+          return array_merge( $paid_debts, $reg);
 
     }
 
@@ -484,22 +482,21 @@ class UserContributionService implements UserContributionInterface {
             ->orderBy('user_contributions.created_at', 'DESC')->get()->toArray();
     }
 
-    private function getRegistration($user_id, $session_id) {
-        $registration = null;
+    private function getRegistration($user_id) {
+        $registrations = [];
         $reg = DB::table('member_registrations')
             ->join('users', 'users.id', '=', 'member_registrations.user_id')
             ->join('sessions', 'sessions.id', '=', 'member_registrations.session_id')
             ->join('registrations', 'registrations.id', '=', 'member_registrations.registration_id')
             ->where('member_registrations.user_id', $user_id)
-            ->where('member_registrations.session_id', $session_id)
             ->whereIn('member_registrations.approve', [PaymentStatus::PENDING, PaymentStatus::APPROVED])
-            ->select('sessions.year as year', 'member_registrations.*', 'registrations.amount', 'registrations.frequency','registrations.is_compulsory')->first();
-        if(!is_null($reg)){
-            $registration = new MemberContributedItemResource($reg->id, $reg->registration_id,   $reg->amount, "Member's Registration", $reg->amount,0.0,
-                PaymentStatus::COMPLETE, $reg->approve, $reg->created_at, $reg->year);
+            ->select('sessions.year as year', 'member_registrations.*', 'registrations.amount', 'registrations.frequency','registrations.is_compulsory')
+            ->orderBy('member_registrations.created_at', 'DESC')->get();
+        foreach ($reg as $value){
+           array_push($registrations,  new MemberContributedItemResource($value->id, $value->registration_id,   $value->amount, "Member's Registration", $value->amount,0.0,
+               PaymentStatus::COMPLETE, $value->approve, $value->created_at, $value->year));
         }
-
-        return $registration;
+        return $registrations;
     }
 
     private function getMonths(){
