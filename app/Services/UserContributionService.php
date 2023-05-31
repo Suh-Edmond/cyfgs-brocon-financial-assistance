@@ -311,7 +311,7 @@ class UserContributionService implements UserContributionInterface {
                 'updated_by'        => $auth_user,
                 'balance'           => $balance_contribution,
                 'session_id'        => $current_session->id,
-                'quarterly_name'    => trim($request->quarterly_name),
+                'quarterly_name'    => !is_null($request->quarterly_name) ? $this->convertQuarterNameToNumber($request->quarterly_name) :"",
                 'month_name'        => $request->month_name
             ]);
         }
