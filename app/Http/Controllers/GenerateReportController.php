@@ -74,6 +74,6 @@ class GenerateReportController extends Controller
     {
         $data = $this->report_generation_service->generateQuarterlyReport($request);
 
-        return $this->sendResponse($data, 200);
+        return $this->sendResponse($data , 200);
     }
 }

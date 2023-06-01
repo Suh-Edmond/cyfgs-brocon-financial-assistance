@@ -5,4 +5,5 @@ interface ReportGenerationInterface {
     public function generateReportPerActivity($id);
 
     public function generateQuarterlyReport($request);
+
 }

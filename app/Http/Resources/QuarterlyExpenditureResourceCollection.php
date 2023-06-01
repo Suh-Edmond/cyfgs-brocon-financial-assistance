@@ -4,13 +4,15 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class QuarterlyIncomeResourceCollection extends ResourceCollection
+class QuarterlyExpenditureResourceCollection extends ResourceCollection
 {
     private $code;
-     public function __construct($collection, $code)
+    private $total_expenditure;
+    public function __construct($collection, $code, $total_expenditure)
     {
         parent::__construct($collection);
         $this->code = $code;
+        $this->total_expenditure = $total_expenditure;
     }
 
     public function toArray($request)
@@ -18,6 +20,7 @@ class QuarterlyIncomeResourceCollection extends ResourceCollection
         return [
             "data"        =>   $this->collection,
             'code_name'   =>   $this->code,
+            'total_expenditure' => $this->total_expenditure
         ];
     }
 }

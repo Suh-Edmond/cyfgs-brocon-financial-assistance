@@ -5,6 +5,9 @@ namespace App\Services;
 use App\Constants\PaymentStatus;
 use App\Http\Resources\ActivityReportResource;
 use App\Http\Resources\DetailResource;
+use App\Http\Resources\IncomeTotalResource;
+use App\Http\Resources\QuarterlyExpenditureResource;
+use App\Http\Resources\QuarterlyExpenditureResourceCollection;
 use App\Http\Resources\QuarterlyIncomeResource;
 use App\Http\Resources\QuarterlyIncomeResourceCollection;
 use App\Interfaces\ReportGenerationInterface;
@@ -48,13 +51,29 @@ class ReportGenerationService implements ReportGenerationInterface
 
     public function generateQuarterlyReport($request)
     {
-        $sponsorships =  new QuarterlyIncomeResourceCollection($this->getSponsorshipPerQuarterly($request->quarter), "Sponsorships");
-        $income_activities = new QuarterlyIncomeResourceCollection($this->getQuarterlyIncomeActivities($request->quarter), "Income Activities");
-        $registrations = $this->getMemberRegistrationPerQuarter($request->quarter);
-        $savings = $this->getMemberSavingPerQuarter($request->quarter);
-        $contributions = $this->getContributionsPerQuarterly($request->quarter);
+        $incomes = $this->fetchQuarterlyIncomes($request->quarter);
+        $expenditures = $this->fetchQuarterlyExpenditures($request->quarter);
 
-        return [collect($income_activities), (collect($sponsorships)), collect($registrations), $savings, collect($contributions)];
+        return [$incomes, $expenditures];
+    }
+
+    private function fetchQuarterlyIncomes($quarter)
+    {
+        $sponsorships =  new QuarterlyIncomeResourceCollection($this->getSponsorshipIncomePerQuarterly($quarter), "Sponsorships");
+        $income_activities = new QuarterlyIncomeResourceCollection($this->getQuarterlyIncomeActivities($quarter), "Income Activities");
+        $registrations =  new QuarterlyIncomeResourceCollection($this->getMemberRegistrationPerQuarter($quarter), "Member's Registrations");
+        $savings = new QuarterlyIncomeResourceCollection($this->getMemberSavingPerQuarter($quarter), "Member's Savings");
+        $contributions = new QuarterlyIncomeResourceCollection($this->getContributionsPerQuarterly($quarter), "Member's Contributions");
+
+        $total_income = $this->computeTotalIncomePerQuarter([($income_activities), ($sponsorships), ($registrations), ($savings), ($contributions)]);
+
+        return [($income_activities), ($sponsorships), ($registrations), ($savings), ($contributions), ($total_income)];
+    }
+    private function fetchQuarterlyExpenditures($quarter): QuarterlyExpenditureResourceCollection
+    {
+        $expenditures = $this->getQuarterlyExpenditures($quarter);
+        $expenditure_collection = new QuarterlyExpenditureResourceCollection($expenditures, "Expenditures", $this->computeTotalExpenditurePerQuarter($expenditures));
+        return ($expenditure_collection);
     }
 
     private function getApproveMembersContributionPerActivity($id)
@@ -102,7 +121,7 @@ class ReportGenerationService implements ReportGenerationInterface
             ->orderBy('expenditure_details.name', 'DESC')->get();
     }
 
-    private function getSponsorshipPerQuarterly($quarter_num): array
+    private function getSponsorshipIncomePerQuarterly($quarter_num): array
     {
         $current_year = $this->sessionService->getCurrentSession();
         $start_quarter = $this->getStartQuarter($current_year->year, $quarter_num)[0];
@@ -147,7 +166,7 @@ class ReportGenerationService implements ReportGenerationInterface
         return $income_activities;
     }
 
-    private function getMemberRegistrationPerQuarter($quarter_num): QuarterlyIncomeResource
+    private function getMemberRegistrationPerQuarter($quarter_num)
     {
         $current_year = $this->sessionService->getCurrentSession();
         $start_quarter = $this->getStartQuarter($current_year->year, $quarter_num)[0];
@@ -164,10 +183,10 @@ class ReportGenerationService implements ReportGenerationInterface
             ->get();
         $total = $this->computeTotalAmountByPaymentCategory($data);
 
-        return new QuarterlyIncomeResource("Member's Registration", $data, $total);
+        return [new QuarterlyIncomeResource("Member's Registration", $data, $total)];
     }
 
-    private function getMemberSavingPerQuarter($quarter_num): QuarterlyIncomeResource
+    private function getMemberSavingPerQuarter($quarter_num)
     {
         $current_year = $this->sessionService->getCurrentSession();
         $start_quarter = $this->getStartQuarter($current_year->year, $quarter_num)[0];
@@ -182,8 +201,9 @@ class ReportGenerationService implements ReportGenerationInterface
             ->get();
         $total = $this->computeTotalContribution($data);
 
-        return new QuarterlyIncomeResource("Member's Savings", $data, $total);
+        return [new QuarterlyIncomeResource("Member's Savings", $data, $total)];
     }
+
 
     private function getContributionsPerQuarterly($quarter_num){
         $current_year = $this->sessionService->getCurrentSession();
@@ -207,5 +227,47 @@ class ReportGenerationService implements ReportGenerationInterface
         }
 
         return $contributions;
+    }
+
+    private function  computeTotalIncomePerQuarter($incomes){
+        $total_quarter_income = 0;
+        foreach ($incomes as $income){
+            foreach ($income as $value){
+                 $total_quarter_income += json_decode(json_encode($value))->total;
+            }
+        }
+        return new IncomeTotalResource($total_quarter_income);
+    }
+    private function getQuarterlyExpenditures($quarter_num) {
+        $current_year = $this->sessionService->getCurrentSession();
+        $start_quarter = $this->getStartQuarter($current_year->year, $quarter_num)[0];
+        $end_quarter = $this->getStartQuarter($current_year->year, $quarter_num)[1];
+        $contributions = [];
+
+        $data =  DB::table('expenditure_details')
+            ->join('expenditure_items', 'expenditure_items.id', '=', 'expenditure_details.expenditure_item_id')
+            ->join('payment_items', 'payment_items.id', '=', 'expenditure_items.payment_item_id')
+            ->join('sessions', 'sessions.id' , '=', 'expenditure_items.session_id')
+            ->join('expenditure_categories', 'expenditure_categories.id' , '=', 'expenditure_items.expenditure_category_id')
+            ->where('expenditure_items.approve', PaymentStatus::APPROVED)
+            ->whereBetween('expenditure_items.created_at', [$start_quarter, $end_quarter])
+            ->select('expenditure_details.*', 'expenditure_items.name as expenditure_item_name', 'expenditure_categories.name as expenditure_category_name')
+            ->orderBy('expenditure_item_name')
+            ->get()->groupBy('expenditure_item_name');
+         foreach ($data as $contribution){
+            $total = $this->calculateTotalAmountSpent($contribution);
+            array_push($contributions, new QuarterlyExpenditureResource($contribution[0]->expenditure_item_name, $contribution, $total));
+        }
+
+        return $contributions;
+    }
+
+    private function computeTotalExpenditurePerQuarter($quarterly_expenditures){
+        $data = json_decode(json_encode($quarterly_expenditures));
+        $total_expenditure = 0;
+         foreach ($data as $expenditure){
+            $total_expenditure += $expenditure->total;
+        }
+        return $total_expenditure;
     }
 }
