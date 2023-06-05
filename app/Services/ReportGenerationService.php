@@ -57,6 +57,13 @@ class ReportGenerationService implements ReportGenerationInterface
         return [$incomes, $expenditures];
     }
 
+    public function downloadQuarterlyReport($request)
+    {
+         $data = $this->generateQuarterlyReport($request);
+         $data = json_decode(json_encode($data));
+         return $data;
+    }
+
     private function fetchQuarterlyIncomes($quarter)
     {
         $sponsorships =  new QuarterlyIncomeResourceCollection($this->getSponsorshipIncomePerQuarterly($quarter), "Sponsorships");
@@ -67,7 +74,7 @@ class ReportGenerationService implements ReportGenerationInterface
 
         $total_income = $this->computeTotalIncomePerQuarter([($income_activities), ($sponsorships), ($registrations), ($savings), ($contributions)]);
 
-        return [($income_activities), ($sponsorships), ($registrations), ($savings), ($contributions), ($total_income)];
+        return [($registrations), ($savings), ($contributions),($income_activities), ($sponsorships), ($total_income)];
     }
     private function fetchQuarterlyExpenditures($quarter): QuarterlyExpenditureResourceCollection
     {

@@ -6,4 +6,6 @@ interface ReportGenerationInterface {
 
     public function generateQuarterlyReport($request);
 
+    public function downloadQuarterlyReport($request);
+
 }
