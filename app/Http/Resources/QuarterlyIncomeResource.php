@@ -6,14 +6,16 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class QuarterlyIncomeResource extends JsonResource
 {
-    private $category;
+    private $code;
+    private $name;
     private $items;
     private $total;
 
-    public function __construct($category, $items, $total)
+    public function __construct($code, $name, $items, $total)
     {
         parent::__construct(null);
-        $this->category = $category;
+        $this->code = $code;
+        $this->name = $name;
         $this->items = $items;
         $this->total = $total;
     }
@@ -21,7 +23,8 @@ class QuarterlyIncomeResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'category'      => $this->category,
+            'code'          => $this->code,
+            'name'          => $this->name,
             'items'         => $this->items,
             'total'         => $this->total
         ];

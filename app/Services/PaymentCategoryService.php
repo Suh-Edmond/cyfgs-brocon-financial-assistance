@@ -46,10 +46,10 @@ class PaymentCategoryService implements PaymentCategoryInterface {
         }
     }
 
-    public function getPaymentCategories($organisation_id): array
+    public function getPaymentCategories($organisation_id)
     {
 
-        return PaymentCategory::where('organisation_id', $organisation_id)->orderBy('name', 'ASC')->get()->toArray();
+        return PaymentCategory::where('organisation_id', $organisation_id)->orderBy('name', 'ASC')->get();
     }
 
     public function filterPaymentCategory($request){

@@ -77,7 +77,7 @@ class GenerateReportController extends Controller
     {
         $data = $this->report_generation_service->generateQuarterlyReport($request);
 
-        return $this->sendResponse($data , 200);
+        return $this->sendResponse($data, 200);
     }
 
     public function downloadQuarterlyReport(Request $request)
@@ -94,21 +94,21 @@ class GenerateReportController extends Controller
 
         $fin_sec = $this->getOrganisationAdministrators(Roles::FINANCIAL_SECRETARY);
 
-//        dd($data[0][0]);
-//        if (count($data) > 0) {
-            $data = [
-                'title' => 'Financial Report From ' . $this->convertNumberToQuarterName($request->quarter) . " ". $this->session_service->getCurrentSession()->year,
-                'date' => date('m/d/Y'),
-                'organisation' => $organisation,
-//                'incomes' => $data[0][0],
-//                'expenditures' => $data[1],
-                'president' => $president,
+        if (count($data) > 0) {
+            $payload = [
+                'title'                  => 'Financial Report From ' . $this->convertNumberToQuarterName($request->quarter) . " ". $this->session_service->getCurrentSession()->year,
+                'date'                   => date('m/d/Y'),
+                'organisation'           => $organisation,
+                'incomes'                => $data[0],
+//                'expenditures'           => $data[1],
+                'president'              => $president,
                 'organisation_telephone' => $this->setOrganisationTelephone($organisation->telephone),
-                'treasurer' => $treasurer,
-                'fin_secretary' => $fin_sec,
+                'treasurer'              => $treasurer,
+                'fin_secretary'          => $fin_sec,
+                'year'                   => $this->session_service->getCurrentSession()->year,
             ];
-            $pdf = PDF::loadView('Reports.QuarterReport', $data);
-//        }
+            $pdf = PDF::loadView('Reports.QuarterReport', $payload);
+        }
         return $pdf->download('Quarter_Financial_Report.pdf');
     }
 }

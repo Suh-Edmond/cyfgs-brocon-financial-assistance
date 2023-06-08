@@ -2,22 +2,27 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Http\Resources\Json\JsonResource;
 
-class QuarterlyIncomeResourceCollection extends ResourceCollection
+class QuarterlyIncomeResourceCollection extends JsonResource
 {
     private $code;
-     public function __construct($collection, $code)
+    private $name;
+    private $payment_items;
+     public function __construct($payment_items, $code, $name)
     {
-        parent::__construct($collection);
+        parent::__construct(null);
         $this->code = $code;
+        $this->name = $name;
+        $this->payment_items = $payment_items;
     }
 
     public function toArray($request)
     {
         return [
-            "data"        =>   $this->collection,
-            'code_name'   =>   $this->code,
+            "payment_items"            =>   $this->payment_items,
+            'code'                     =>   $this->code,
+            'name'                     =>   $this->name,
         ];
     }
 }

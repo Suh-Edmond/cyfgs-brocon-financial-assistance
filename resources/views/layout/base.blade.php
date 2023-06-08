@@ -45,7 +45,7 @@
     }
     .column1 {
         float: left;
-        width: 5%;
+        width: 7%;
         border-left: .8px solid black;
         border-right: .8px solid black;
         padding: 4px;
@@ -79,7 +79,7 @@
     }
     .column5 {
         float: left;
-        width: 20%;
+        width: 18%;
         border-left: .8px solid black;
         padding: 4px;
         min-height: 25px;
