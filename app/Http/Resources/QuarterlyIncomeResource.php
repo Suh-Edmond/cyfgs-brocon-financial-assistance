@@ -6,10 +6,10 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class QuarterlyIncomeResource extends JsonResource
 {
-    private $code;
-    private $name;
-    private $items;
-    private $total;
+    public $code;
+    public $name;
+    public $items;
+    public $total;
 
     public function __construct($code, $name, $items, $total)
     {

@@ -4,11 +4,13 @@ namespace App\Services;
 use App\Constants\PaymentStatus;
 use App\Exceptions\BusinessValidationException;
 use App\Http\Resources\ExpenditureItemResource;
+use App\Http\Resources\QuarterlyExpenditureResource;
 use App\Interfaces\ExpenditureItemInterface;
 use App\Models\ExpenditureCategory;
 use App\Models\ExpenditureItem;
 use App\Models\PaymentItem;
 use App\Traits\HelpTrait;
+use Illuminate\Support\Facades\DB;
 
 class ExpenditureItemService implements ExpenditureItemInterface {
 
@@ -196,6 +198,18 @@ class ExpenditureItemService implements ExpenditureItemInterface {
     public function downloadExpenditureItems($request)
     {
         return $this->filterExpenditureItems($request);
+    }
+
+    public function getExpensesByCategoryAndQuarter($category_id, $start_quarter, $end_quarter){
+        return  DB::table('expenditure_items')
+                ->join('payment_items', 'payment_items.id', '=', 'expenditure_items.payment_item_id')
+                ->join('expenditure_categories', 'expenditure_categories.id' , '=', 'expenditure_items.expenditure_category_id')
+                ->where('expenditure_items.approve', PaymentStatus::APPROVED)
+                ->where('expenditure_categories.id', $category_id)
+                ->whereBetween('expenditure_items.created_at', [$start_quarter, $end_quarter])
+                ->select( 'expenditure_items.name', 'expenditure_items.amount', 'expenditure_items.id')
+                ->orderBy('name')
+                ->get();
     }
 
 }

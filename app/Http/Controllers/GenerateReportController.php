@@ -94,17 +94,23 @@ class GenerateReportController extends Controller
 
         $fin_sec = $this->getOrganisationAdministrators(Roles::FINANCIAL_SECRETARY);
 
+        $bal_brought_forward = $this->report_generation_service->computeBalanceBroughtForward($request,$this->session_service->getCurrentSession());
+
         if (count($data) > 0) {
             $payload = [
                 'title'                  => 'Financial Report From ' . $this->convertNumberToQuarterName($request->quarter) . " ". $this->session_service->getCurrentSession()->year,
                 'date'                   => date('m/d/Y'),
                 'organisation'           => $organisation,
                 'incomes'                => $data[0],
-//                'expenditures'           => $data[1],
+                'total_income'           => $data[2] + $bal_brought_forward,
+                'expenditures'           => $data[1],
+                'total_expenditures'     => $data[3],
+                'bal_brought_forward'    => $bal_brought_forward,
                 'president'              => $president,
                 'organisation_telephone' => $this->setOrganisationTelephone($organisation->telephone),
                 'treasurer'              => $treasurer,
                 'fin_secretary'          => $fin_sec,
+                'balance'                => $data[2] - $data[3],
                 'year'                   => $this->session_service->getCurrentSession()->year,
             ];
             $pdf = PDF::loadView('Reports.QuarterReport', $payload);

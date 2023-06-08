@@ -6,7 +6,7 @@
             <img src="{{ $organisation->logo }}" alt="organisation logo" width="100px;" height="100px;"
                  style="border-radius: 2px">
         </div>
-        <div style="float: right;text-transform: uppercase;font-weight: bold">
+        <div style="float: right;text-transform: capitalize;font-weight: bold">
             <label for="organisation"style="font-weight: bold; text-transform: uppercase; font-size: small;">
                 {{ $organisation->name }}</label><br />
             <label style="font-size: small;">{{ $organisation->salutation }}</label><br />
@@ -55,11 +55,11 @@
                     I1
             </div>
             <div class="column2" style="font-weight: bold; text-align: center">
-                Balance B/F
+                Balance Brought-Forward
             </div>
             <div class="column3"></div>
             <div class="column4"></div>
-            <div class="column5">100 000, 000</div>
+            <div class="column5">{{number_format($bal_brought_forward)}}</div>
         </div>
         <!-----end of balance brought forward-->
 
@@ -161,8 +161,8 @@
                 Total
             </div>
             <div class="column3"></div>
-            <div class="column4">{{number_format($income->total)}}</div>
-            <div class="column5">{{number_format($income->total)}}</div>
+            <div class="column4">{{number_format($total_income)}}</div>
+            <div class="column5">{{number_format($total_income)}}</div>
         </div>
         <!------end of total of income------------------->
 
@@ -199,14 +199,15 @@
         <!---end of title-->
 
         <!---start of expenditure categories-->
-        <div>
+        @foreach($expenditures as $key => $expenditure)
+            <div>
             <div class="row quarter_row">
                 <div>
                     <div class="column1">
-                        2
+                        {{$expenditure->code}}
                     </div>
                     <div class="column2" style="font-weight: bold;text-align: center">
-                        Meetings
+                        {{$expenditure->name}}
                     </div>
                     <div class="column3"></div>
                     <div class="column4"></div>
@@ -214,12 +215,13 @@
                 </div>
             </div>
             <!------list of activities under the category--->
-            <div class="row activity_row">
+            @foreach($expenditure->items as $k => $value)
+                <div class="row activity_row">
                 <div class="column1">
-                    2.1
+                    {{$expenditure->code}}.{{$value->code}}
                 </div>
                 <div class="column2" style="font-weight: bold">
-                    Visits to Petrons Meetings
+                    {{$value->name}}
                 </div>
                 <div class="column3" >
                 </div>
@@ -228,473 +230,53 @@
                 <div class="column5"></div>
 
                 <!-------------items under an activity------------>
-                <div>
-                    <div class="row item_row">
-                        <div class="column1">
-                            2.1.1
+                        <div class="row item_row">
+                            <div class="column1">
+                                {{$expenditure->code}}.{{$k + 1}}.{{array_key_first($value->items) + 1}}
+                            </div>
+                            <div class="column2">
+                                {{$value->items[0]->name}}
+                            </div>
+                            <div class="column3">{{number_format($value->items[0]->amount_spent)}}</div>
+                            <div class="column4"></div>
+                            <div class="column5"></div>
                         </div>
-                        <div class="column2">
-                            Cost during camp fire
+                @for($i = 0; $i < count($value->items); $i++)
+                        <div>
+                            <div class="row item_row">
+                                <div class="column1">
+                                    {{$expenditure->code}}.{{$k + 1}}.{{$i + 1}}
+                                </div>
+                                <div class="column2">
+                                   {{$value->items[$i]->name}}
+                                </div>
+                                <div class="column3" >{{number_format($value->items[$i]->amount_spent)}}</div>
+                                <div class="column4" ></div>
+                                <div class="column5" ></div>
+                            </div>
                         </div>
-                        <div class="column3" >30000</div>
-                        <div class="column4" ></div>
-                        <div class="column5" ></div>
-                    </div>
-                    <div class="row item_row">
-                        <div class="column1">
-                            2.1.2
-                        </div>
-                        <div class="column2">
-                            Cost during singing
-                        </div>
-                        <div class="column3">30000</div>
-                        <div class="column4"></div>
-                        <div class="column5"></div>
-                    </div>
-                    <div class="row item_row">
-                        <div class="column1">
-                            2.1.3
-                        </div>
-                        <div class="column2">
-                            Cost during dancing
-                        </div>
-                        <div class="column3">30000</div>
-                        <div class="column4"></div>
-                        <div class="column5"></div>
-                    </div>
-                    <div class="row item_row">
-                        <div class="column1">
-                            2.1.4
-                        </div>
-                        <div class="column2">
-                            Cost exhibition
-                        </div>
-                        <div class="column3">30000</div>
-                        <div class="column4"></div>
-                        <div class="column5"></div>
-                    </div>
-                    <div class="row item_row">
-                        <div class="column1">
-                            2.1.5
-                        </div>
-                        <div class="column2">
-                            Cost of Support
-                        </div>
-                        <div class="column3">30000</div>
-                        <div class="column4"></div>
-                        <div class="column5"></div>
-                    </div>
-                </div>
+                @endfor
                 <!-------------end of items----------------------->
 
                 <!--------- activity sub total and total -------------------->
                 <div class="row activity_total">
                     <div class="column1">
-                        2.1
+                        {{$expenditure->code}}.{{$value->code}}
                     </div>
-                    <div class="column2">
-                        ...
-                    </div>
-                    <div class="column3"></div>
-                    <div class="column4">150000</div>
-                    <div class="column5">150000</div>
-                </div>
-                <!---------end of activity sub total and total--------------->
-            </div>
-
-            <div class="row activity_row">
-                <div class="column1">
-                    2.2
-                </div>
-                <div class="column2" style="font-weight: bold">
-                    Representatives and Petrons Meetings
-                </div>
-                <div class="column3" >
-                </div>
-                <div class="column4">
-                </div>
-                <div class="column5"></div>
-
-                <!-------------items under an activity------------>
-                <div>
-                    <div class="row item_row">
-                        <div class="column1">
-                            2.2.1
-                        </div>
-                        <div class="column2">
-                            Cost during camp fire
-                        </div>
-                        <div class="column3" >30000</div>
-                        <div class="column4" ></div>
-                        <div class="column5" ></div>
-                    </div>
-                    <div class="row item_row">
-                        <div class="column1">
-                            2.2.2
-                        </div>
-                        <div class="column2">
-                            Cost during singing
-                        </div>
-                        <div class="column3">30000</div>
-                        <div class="column4"></div>
-                        <div class="column5"></div>
-                    </div>
-                    <div class="row item_row">
-                        <div class="column1">
-                            2.1.3
-                        </div>
-                        <div class="column2">
-                            Cost during dancing
-                        </div>
-                        <div class="column3">30000</div>
-                        <div class="column4"></div>
-                        <div class="column5"></div>
-                    </div>
-                    <div class="row item_row">
-                        <div class="column1">
-                            2.2.4
-                        </div>
-                        <div class="column2">
-                            Cost exhibition
-                        </div>
-                        <div class="column3">30000</div>
-                        <div class="column4"></div>
-                        <div class="column5"></div>
-                    </div>
-                    <div class="row item_row">
-                        <div class="column1">
-                            2.2.5
-                        </div>
-                        <div class="column2">
-                            Cost of Support
-                        </div>
-                        <div class="column3">30000</div>
-                        <div class="column4"></div>
-                        <div class="column5"></div>
-                    </div>
-                    <div class="row item_row">
-                        <div class="column1">
-                            2.2.6
-                        </div>
-                        <div class="column2">
-                            Cost of Support
-                        </div>
-                        <div class="column3">30000</div>
-                        <div class="column4"></div>
-                        <div class="column5"></div>
-                    </div>
-                    <div class="row item_row">
-                        <div class="column1">
-                            2.2.7
-                        </div>
-                        <div class="column2">
-                            Cost of Support
-                        </div>
-                        <div class="column3">30000</div>
-                        <div class="column4"></div>
-                        <div class="column5"></div>
-                    </div>
-                    <div class="row item_row">
-                        <div class="column1">
-                            2.2.8
-                        </div>
-                        <div class="column2">
-                            Cost of Support
-                        </div>
-                        <div class="column3">30000</div>
-                        <div class="column4"></div>
-                        <div class="column5"></div>
-                    </div>
-                    <div class="row item_row">
-                        <div class="column1">
-                            2.2.9
-                        </div>
-                        <div class="column2">
-                            Cost of Support
-                        </div>
-                        <div class="column3">30000</div>
-                        <div class="column4"></div>
-                        <div class="column5"></div>
-                    </div>
-                    <div class="row item_row">
-                        <div class="column1">
-                            2.2.10
-                        </div>
-                        <div class="column2">
-                            Cost of Support
-                        </div>
-                        <div class="column3">30000</div>
-                        <div class="column4"></div>
-                        <div class="column5"></div>
-                    </div>
-                </div>
-                <!-------------end of items----------------------->
-
-                <!--------- activity sub total and total -------------------->
-                <div class="row">
-                    <div class="column1">
-                        2.2
-                    </div>
-                    <div class="column2">
-                        ...
+                    <div class="column2" style="font-weight: bold">
+                        Sub-Total
                     </div>
                     <div class="column3"></div>
-                    <div class="column4">150000</div>
-                    <div class="column5">150000</div>
-                </div>
-                <!---------end of activity sub total and total--------------->
-            </div>
-            <!------end of activities------------------------>
-        </div>
-
-        <div>
-            <div class="row quarter_row">
-                <div>
-                    <div class="column1">
-                        3
-                    </div>
-                    <div class="column2" style="font-weight: bold;text-align: center">
-                        OutReaches and Internships
-                    </div>
-                    <div class="column3"></div>
-                    <div class="column4"></div>
+                    <div class="column4">{{$value->total}}</div>
                     <div class="column5"></div>
                 </div>
-            </div>
-            <!------list of activities under the category--->
-            <div class="row activity_row">
-                <div class="column1">
-                    3.1
-                </div>
-                <div class="column2" style="font-weight: bold">
-                    Visits to Petrons Meetings
-                </div>
-                <div class="column3" >
-                </div>
-                <div class="column4">
-                </div>
-                <div class="column5"></div>
-
-                <!-------------items under an activity------------>
-                <div>
-                    <div class="row item_row">
-                        <div class="column1">
-                            3.1.1
-                        </div>
-                        <div class="column2">
-                            Cost during camp fire
-                        </div>
-                        <div class="column3" >30000</div>
-                        <div class="column4" ></div>
-                        <div class="column5" ></div>
-                    </div>
-                    <div class="row item_row">
-                        <div class="column1">
-                            3.1.2
-                        </div>
-                        <div class="column2">
-                            Cost during singing
-                        </div>
-                        <div class="column3">30000</div>
-                        <div class="column4"></div>
-                        <div class="column5"></div>
-                    </div>
-                    <div class="row item_row">
-                        <div class="column1">
-                            3.1.3
-                        </div>
-                        <div class="column2">
-                            Cost during dancing
-                        </div>
-                        <div class="column3">30000</div>
-                        <div class="column4"></div>
-                        <div class="column5"></div>
-                    </div>
-                    <div class="row item_row">
-                        <div class="column1">
-                            3.1.4
-                        </div>
-                        <div class="column2">
-                            Cost exhibition
-                        </div>
-                        <div class="column3">30000</div>
-                        <div class="column4"></div>
-                        <div class="column5"></div>
-                    </div>
-                    <div class="row item_row">
-                        <div class="column1">
-                            3.1.5
-                        </div>
-                        <div class="column2">
-                            Cost of Support
-                        </div>
-                        <div class="column3">30000</div>
-                        <div class="column4"></div>
-                        <div class="column5"></div>
-                    </div>
-                </div>
-                <!-------------end of items----------------------->
-
-                <!--------- activity sub total and total -------------------->
-                <div class="row activity_total">
-                    <div class="column1">
-                        3.1
-                    </div>
-                    <div class="column2">
-                        ...
-                    </div>
-                    <div class="column3"></div>
-                    <div class="column4">150000</div>
-                    <div class="column5">150000</div>
-                </div>
                 <!---------end of activity sub total and total--------------->
             </div>
+            @endforeach
 
-            <div class="row activity_row">
-                <div class="column1">
-                    3.2
-                </div>
-                <div class="column2" style="font-weight: bold">
-                    Representatives and Petrons Meetings
-                </div>
-                <div class="column3" >
-                </div>
-                <div class="column4">
-                </div>
-                <div class="column5"></div>
-
-                <!-------------items under an activity------------>
-                <div>
-                    <div class="row item_row">
-                        <div class="column1">
-                            3.2.1
-                        </div>
-                        <div class="column2">
-                            Cost during camp fire
-                        </div>
-                        <div class="column3" >30000</div>
-                        <div class="column4" ></div>
-                        <div class="column5" ></div>
-                    </div>
-                    <div class="row item_row">
-                        <div class="column1">
-                            3.2.2
-                        </div>
-                        <div class="column2">
-                            Cost during singing
-                        </div>
-                        <div class="column3">30000</div>
-                        <div class="column4"></div>
-                        <div class="column5"></div>
-                    </div>
-                    <div class="row item_row">
-                        <div class="column1">
-                            3.1.3
-                        </div>
-                        <div class="column2">
-                            Cost during dancing
-                        </div>
-                        <div class="column3">30000</div>
-                        <div class="column4"></div>
-                        <div class="column5"></div>
-                    </div>
-                    <div class="row item_row">
-                        <div class="column1">
-                            3.2.4
-                        </div>
-                        <div class="column2">
-                            Cost exhibition
-                        </div>
-                        <div class="column3">30000</div>
-                        <div class="column4"></div>
-                        <div class="column5"></div>
-                    </div>
-                    <div class="row item_row">
-                        <div class="column1">
-                            3.2.5
-                        </div>
-                        <div class="column2">
-                            Cost of Support
-                        </div>
-                        <div class="column3">30000</div>
-                        <div class="column4"></div>
-                        <div class="column5"></div>
-                    </div>
-                    <div class="row item_row">
-                        <div class="column1">
-                            3.2.6
-                        </div>
-                        <div class="column2">
-                            Cost of Support
-                        </div>
-                        <div class="column3">30000</div>
-                        <div class="column4"></div>
-                        <div class="column5"></div>
-                    </div>
-                    <div class="row item_row">
-                        <div class="column1">
-                            3.2.7
-                        </div>
-                        <div class="column2">
-                            Cost of Support
-                        </div>
-                        <div class="column3">30000</div>
-                        <div class="column4"></div>
-                        <div class="column5"></div>
-                    </div>
-                    <div class="row item_row">
-                        <div class="column1">
-                            3.2.8
-                        </div>
-                        <div class="column2">
-                            Cost of Support
-                        </div>
-                        <div class="column3">30000</div>
-                        <div class="column4"></div>
-                        <div class="column5"></div>
-                    </div>
-                    <div class="row item_row">
-                        <div class="column1">
-                            3.2.9
-                        </div>
-                        <div class="column2">
-                            Cost of Support
-                        </div>
-                        <div class="column3">30000</div>
-                        <div class="column4"></div>
-                        <div class="column5"></div>
-                    </div>
-                    <div class="row item_row">
-                        <div class="column1">
-                            3.2.10
-                        </div>
-                        <div class="column2">
-                            Cost of Support
-                        </div>
-                        <div class="column3">30000</div>
-                        <div class="column4"></div>
-                        <div class="column5"></div>
-                    </div>
-                </div>
-                <!-------------end of items----------------------->
-
-                <!--------- activity sub total and total -------------------->
-                <div class="row">
-                    <div class="column1">
-                        3.2
-                    </div>
-                    <div class="column2">
-                        ...
-                    </div>
-                    <div class="column3"></div>
-                    <div class="column4">150000</div>
-                    <div class="column5">150000</div>
-                </div>
-                <!---------end of activity sub total and total--------------->
-            </div>
             <!------end of activities------------------------>
         </div>
-
+        @endforeach
         <!------total of expenditures------------------------->
         <div class="row quarter_row">
             <div class="column1">
@@ -703,8 +285,8 @@
                 Total Expenditure
             </div>
             <div class="column3"></div>
-            <div class="column4">500,0000</div>
-            <div class="column5">100 000, 000</div>
+            <div class="column4">{{number_format($total_expenditures)}}</div>
+            <div class="column5">{{$total_expenditures}}</div>
         </div>
         <!------end of total of expenditures------------------->
 
@@ -715,7 +297,7 @@
 
     <!----------------------------------------------------------summary of report-------------------------------------------------------------------------------------------->
 
-    <div style="margin-top: 20px;margin-bottom: 20px;">
+    <div style="margin-top: 20px;">
         <h3 style="font-weight: bold;font-size: small; text-align:center;text-transform: uppercase;padding-bottom: 20px;text-decoration: underline"><span style="padding-right: 5px"></span> Summary (F CFA)
         </h3>
     </div>
@@ -725,31 +307,19 @@
             <div class="summary">
                 Total Income
             </div>
-            <div class="totals"> 60000000</div>
+            <div class="totals">{{number_format($total_income)}}</div>
         </div>
         <div class="row quarter_row">
             <div class="summary">
                 Total Expenditure
             </div>
-            <div class="totals"> 10000000</div>
+            <div class="totals">{{number_format($total_expenditures)}}</div>
         </div>
         <div class="row quarter_row">
             <div class="summary">
                 Balance
             </div>
-            <div class="totals"> 10000</div>
-        </div>
-        <div class="row quarter_row">
-            <div class="summary">
-                Cash In Hand
-            </div>
-            <div class="totals"> 5000</div>
-        </div>
-        <div class="row quarter_row">
-            <div class="summary">
-                Account
-            </div>
-            <div class="totals"> 500000</div>
+            <div class="totals">{{number_format($balance)}}</div>
         </div>
     </div>
     <!----------------------------------------------------------end of summary of report------------------------------------------------------------------------------------->
