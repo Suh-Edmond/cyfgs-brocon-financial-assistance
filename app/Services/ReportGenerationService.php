@@ -3,15 +3,13 @@
 namespace App\Services;
 
 use App\Constants\PaymentStatus;
+use App\Constants\Roles;
 use App\Http\Resources\ActivityReportResource;
 use App\Http\Resources\DetailResource;
 use App\Http\Resources\IncomeResource;
-use App\Http\Resources\IncomeTotalResource;
-use App\Http\Resources\MemberContributionResource;
 use App\Http\Resources\QuarterlyExpenditureResource;
 use App\Http\Resources\QuarterlyExpenditureResourceCollection;
 use App\Http\Resources\QuarterlyIncomeResource;
-use App\Http\Resources\QuarterlyIncomeResourceCollection;
 use App\Interfaces\ReportGenerationInterface;
 use App\Traits\HelpTrait;
 use Illuminate\Support\Collection;
@@ -75,8 +73,13 @@ class ReportGenerationService implements ReportGenerationInterface
         $expenditures = $this->fetchQuarterlyExpenditures($request->quarter,$current_year, $request->user()->organisation_id);
         $expenditures_elements = $expenditures[0];
         $total_expenditures = $expenditures[1];
-        return [$income_elements,
-            $expenditures_elements, $total_income, $total_expenditures];
+        $balance_bf = $this->computeBalanceBroughtForward($request, $current_year);
+        $president = $this->getOrganisationAdministrators(Roles::PRESIDENT);
+
+        $treasurer = $this->getOrganisationAdministrators(Roles::TREASURER);
+
+        $fin_sec = $this->getOrganisationAdministrators(Roles::FINANCIAL_SECRETARY);
+        return [$income_elements, $expenditures_elements, $total_income, $total_expenditures, $balance_bf, $president, $treasurer,$fin_sec];
     }
 
     public function downloadQuarterlyReport($request)

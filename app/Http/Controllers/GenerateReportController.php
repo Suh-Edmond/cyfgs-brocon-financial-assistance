@@ -75,6 +75,7 @@ class GenerateReportController extends Controller
 
     public function generateQuarterlyReport(Request $request)
     {
+
         $data = $this->report_generation_service->generateQuarterlyReport($request);
 
         return $this->sendResponse($data, 200);
@@ -94,7 +95,6 @@ class GenerateReportController extends Controller
 
         $fin_sec = $this->getOrganisationAdministrators(Roles::FINANCIAL_SECRETARY);
 
-        $bal_brought_forward = $this->report_generation_service->computeBalanceBroughtForward($request,$this->session_service->getCurrentSession());
 
         if (count($data) > 0) {
             $payload = [
@@ -102,10 +102,10 @@ class GenerateReportController extends Controller
                 'date'                   => date('m/d/Y'),
                 'organisation'           => $organisation,
                 'incomes'                => $data[0],
-                'total_income'           => $data[2] + $bal_brought_forward,
+                'total_income'           => $data[2] + $data[4],
                 'expenditures'           => $data[1],
                 'total_expenditures'     => $data[3],
-                'bal_brought_forward'    => $bal_brought_forward,
+                'bal_brought_forward'    => $data[4],
                 'president'              => $president,
                 'organisation_telephone' => $this->setOrganisationTelephone($organisation->telephone),
                 'treasurer'              => $treasurer,
