@@ -9,6 +9,7 @@ use App\Interfaces\ExpenditureDetailInterface;
 use App\Models\ExpenditureDetail;
 use App\Models\ExpenditureItem;
 use App\Traits\HelpTrait;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class ExpenditureDetailService implements ExpenditureDetailInterface {
@@ -137,6 +138,17 @@ class ExpenditureDetailService implements ExpenditureDetailInterface {
             ->select( 'expenditure_details.name', 'expenditure_details.amount_spent', 'expenditure_details.id')
             ->orderBy('name')
             ->get();
+    }
+
+    public function getExpenditureActivities($payment_activity): Collection
+    {
+        return DB::table('expenditure_details')
+            ->join('expenditure_items', 'expenditure_items.id', '=', 'expenditure_details.expenditure_item_id')
+            ->join('payment_items', 'payment_items.id', '=', 'expenditure_items.payment_item_id')
+            ->where('payment_items.id', $payment_activity)
+            ->where('expenditure_details.approve', PaymentStatus::APPROVED)
+            ->select('expenditure_details.name', 'expenditure_details.amount_given', 'expenditure_details.amount_spent')
+            ->orderBy('expenditure_details.name', 'DESC')->get();
     }
 
 

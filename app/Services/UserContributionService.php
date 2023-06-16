@@ -689,5 +689,17 @@ class UserContributionService implements UserContributionInterface {
             ->selectRaw('SUM(user_contributions.amount_deposited) as amount, sessions.year as name, sessions.id, sessions.year')
             ->get()->toArray();
     }
+
+    public function getApproveMembersContributionPerActivity($id)
+    {
+        return DB::table('user_contributions')
+            ->join('users', 'users.id', '=' ,'user_contributions.user_id')
+            ->join('payment_items', 'payment_items.id', '=', 'user_contributions.payment_item_id')
+            ->where('user_contributions.payment_item_id', $id)
+            ->where('user_contributions.approve', PaymentStatus::APPROVED)
+            ->selectRaw('SUM(user_contributions.amount_deposited) as amount, payment_items.name')
+            ->groupBy('user_contributions.payment_item_id')
+            ->get();
+    }
 }
 

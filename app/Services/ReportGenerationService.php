@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Constants\PaymentStatus;
 use App\Constants\Roles;
 use App\Http\Resources\ActivityReportResource;
 use App\Http\Resources\DetailResource;
@@ -12,8 +11,6 @@ use App\Http\Resources\QuarterlyExpenditureResourceCollection;
 use App\Http\Resources\QuarterlyIncomeResource;
 use App\Interfaces\ReportGenerationInterface;
 use App\Traits\HelpTrait;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 
 class ReportGenerationService implements ReportGenerationInterface
 {
@@ -26,11 +23,17 @@ class ReportGenerationService implements ReportGenerationInterface
     private ExpenditureCategoryService $expenditureCategoryService;
     private ExpenditureItemService $expenditureItemService;
     private ExpenditureDetailService $expenditureDetailService;
+    private ActivitySupportService $activitySupportService;
+    private IncomeActivityService $incomeActivityService;
+    private RegistrationService $registrationService;
+    private UserSavingService $userSavingService;
 
     public function __construct(SessionService $sessionService, PaymentCategoryService $paymentCategoryService,
                                 PaymentItemService $paymentItemService, UserContributionService $contributionService,
                                 ExpenditureCategoryService $expenditureCategoryService, ExpenditureItemService $expenditureItemService,
-                                ExpenditureDetailService $expenditureDetailService)
+                                ExpenditureDetailService $expenditureDetailService, ActivitySupportService $activitySupportService,
+                                IncomeActivityService $incomeActivityService, RegistrationService $registrationService,
+                                UserSavingService $userSavingService)
     {
         $this->sessionService = $sessionService;
         $this->paymentCategoryService = $paymentCategoryService;
@@ -39,6 +42,10 @@ class ReportGenerationService implements ReportGenerationInterface
         $this->expenditureCategoryService = $expenditureCategoryService;
         $this->expenditureItemService = $expenditureItemService;
         $this->expenditureDetailService = $expenditureDetailService;
+        $this->activitySupportService = $activitySupportService;
+        $this->incomeActivityService = $incomeActivityService;
+        $this->registrationService = $registrationService;
+        $this->userSavingService = $userSavingService;
     }
 
     public function generateReportPerActivity($id)
@@ -50,10 +57,10 @@ class ReportGenerationService implements ReportGenerationInterface
         $balance = 0;
         $income_list = [];
         $expenditures = [];
-        $members_contributions = $this->getApproveMembersContributionPerActivity($id)->toArray();
+        $members_contributions = $this->userContributionService->getApproveMembersContributionPerActivity($id)->toArray();
         $total_members_contributions = count($members_contributions) > 0  ? $members_contributions[0]->amount: 0;
-        $incomes = $this->getIncomePerActivity($id)->toArray();
-        $sponsorship = $this->getSponsorshipPerActivity($id)->toArray();
+        $incomes = $this->incomeActivityService->getIncomePerActivity($id)->toArray();
+        $sponsorship = $this->activitySupportService->getSponsorshipPerActivity($id)->toArray();
         array_push($income_list, new ActivityReportResource("Members Contributions", $total_members_contributions));
         $data = array_merge($incomes, $sponsorship);
         foreach ($data as $contribution){
@@ -62,7 +69,7 @@ class ReportGenerationService implements ReportGenerationInterface
         }
         $total_income += $total_members_contributions;
 
-        $expenses = $this->getExpenditureActivities($id);
+        $expenses = $this->expenditureDetailService->getExpenditureActivities($id);
 
         foreach ($expenses as $expense){
             $total_amount_spent += $expense->amount_spent;
@@ -105,6 +112,18 @@ class ReportGenerationService implements ReportGenerationInterface
         return $this->generateQuarterlyReport($request);
     }
 
+    public function computeBalanceBroughtForward($request, $current_year){
+        $income = $this->fetchQuarterlyIncomes($request->quarter-1, $current_year, $request->user()->organisation_id);
+        $expenditure = $this->fetchQuarterlyExpenditures($request->quarter-1, $current_year, $request->user()->organisation_id);
+        return $income[1] - $expenditure[1];
+    }
+
+
+    public function generateYearlyReport($request)
+    {
+        $current_year = $this->sessionService->getCurrentSession();
+    }
+
     private function fetchQuarterlyExpenditures($quarter,$current_year, $organisation_id)
     {
         $start_quarter = $this->getStartQuarter($current_year->year, $quarter)[0];
@@ -128,112 +147,6 @@ class ReportGenerationService implements ReportGenerationInterface
         return [$expenses, $total];
     }
 
-    private function getApproveMembersContributionPerActivity($id)
-    {
-        return DB::table('user_contributions')
-            ->join('users', 'users.id', '=' ,'user_contributions.user_id')
-            ->join('payment_items', 'payment_items.id', '=', 'user_contributions.payment_item_id')
-            ->where('user_contributions.payment_item_id', $id)
-            ->where('user_contributions.approve', PaymentStatus::APPROVED)
-            ->selectRaw('SUM(user_contributions.amount_deposited) as amount, payment_items.name')
-            ->groupBy('user_contributions.payment_item_id')
-            ->get();
-    }
-
-    private function getSponsorshipPerActivity($id)
-    {
-        return DB::table('activity_supports')
-            ->join('payment_items', 'payment_items.id', '=', 'activity_supports.payment_item_id')
-            ->where('activity_supports.payment_item_id', $id)
-            ->where('activity_supports.approve', PaymentStatus::APPROVED)
-            ->select('activity_supports.supporter as name', 'activity_supports.amount_deposited as amount')
-            ->orderBy('activity_supports.supporter')
-            ->get();
-    }
-
-    private function getIncomePerActivity($id)
-    {
-        return DB::table('income_activities')
-            ->join('payment_items', 'payment_items.id', '=', 'income_activities.payment_item_id')
-            ->where('income_activities.payment_item_id', $id)
-            ->where('income_activities.approve', PaymentStatus::APPROVED)
-            ->select('income_activities.name', 'income_activities.amount')
-            ->orderBy('income_activities.name')
-            ->get();
-    }
-
-    private function getExpenditureActivities($payment_activity): Collection
-    {
-        return DB::table('expenditure_details')
-            ->join('expenditure_items', 'expenditure_items.id', '=', 'expenditure_details.expenditure_item_id')
-            ->join('payment_items', 'payment_items.id', '=', 'expenditure_items.payment_item_id')
-            ->where('payment_items.id', $payment_activity)
-            ->where('expenditure_details.approve', PaymentStatus::APPROVED)
-            ->select('expenditure_details.name', 'expenditure_details.amount_given', 'expenditure_details.amount_spent')
-            ->orderBy('expenditure_details.name', 'DESC')->get();
-    }
-
-    private function getSponsorshipIncomePerQuarterly($quarter_num, $current_year): array
-    {
-         $start_quarter = $this->getStartQuarter($current_year->year, $quarter_num)[0];
-         $end_quarter = $this->getStartQuarter($current_year->year, $quarter_num)[1];
-         return  DB::table('activity_supports')
-                    ->join('payment_items', 'payment_items.id', '=', 'activity_supports.payment_item_id')
-                    ->join('sessions', 'sessions.id' , '=', 'activity_supports.session_id')
-                    ->where('activity_supports.approve', PaymentStatus::APPROVED)
-                    ->whereBetween('activity_supports.created_at', [$start_quarter, $end_quarter])
-                    ->select('activity_supports.id', 'activity_supports.supporter as name', 'activity_supports.amount_deposited as amount', 'sessions.year')
-                    ->orderBy('name')
-                    ->get()
-                    ->toArray();
-    }
-
-    private function getQuarterlyIncomeActivities($quarter_num, $current_year): array
-    {
-        $start_quarter = $this->getStartQuarter($current_year->year, $quarter_num)[0];
-        $end_quarter = $this->getStartQuarter($current_year->year, $quarter_num)[1];
-
-        return  DB::table('income_activities')
-            ->join('payment_items', 'payment_items.id', '=', 'income_activities.payment_item_id')
-            ->join('sessions', 'sessions.id' , '=', 'income_activities.session_id')
-            ->where('income_activities.approve', PaymentStatus::APPROVED)
-            ->whereBetween('income_activities.created_at', [$start_quarter, $end_quarter])
-            ->select('income_activities.id', 'income_activities.name', 'income_activities.amount', 'sessions.year')
-            ->orderBy('name')
-            ->get()->toArray();
-    }
-
-    private function getMemberRegistrationPerQuarter($quarter_num, $current_year, $code)
-    {
-        $start_quarter = $this->getStartQuarter($current_year->year, $quarter_num)[0];
-        $end_quarter = $this->getStartQuarter($current_year->year, $quarter_num)[1];
-
-       $reg_amount = DB::table('member_registrations')
-            ->join('registrations', 'registrations.id' , '=', 'member_registrations.registration_id')
-            ->join('users', 'users.id', '=', 'member_registrations.user_id')
-            ->join('sessions', 'sessions.id' , '=', 'member_registrations.session_id')
-            ->where('member_registrations.approve', PaymentStatus::APPROVED)
-            ->whereBetween('member_registrations.created_at', [$start_quarter, $end_quarter])
-            ->selectRaw('SUM(registrations.amount) as amount')
-            ->get()[0]->amount;
-       return new QuarterlyIncomeResource($code, "Member's Registration", [], $reg_amount);
-    }
-
-    private function getMemberSavingPerQuarter($quarter_num, $current_year, $code)
-    {
-        $start_quarter = $this->getStartQuarter($current_year->year, $quarter_num)[0];
-        $end_quarter = $this->getStartQuarter($current_year->year, $quarter_num)[1];
-
-        $savings =  DB::table('user_savings')
-            ->join('users', 'users.id', '=', 'user_savings.user_id')
-            ->join('sessions', 'sessions.id' , '=', 'user_savings.session_id')
-            ->where('user_savings.approve', PaymentStatus::APPROVED)
-            ->whereBetween('user_savings.created_at', [$start_quarter, $end_quarter])
-            ->selectRaw('SUM(user_savings.amount_deposited) as amount')
-            ->get()[0]->amount;
-        return new QuarterlyIncomeResource($code, "Member's Savings", [], $savings);
-    }
-
 
     private function fetchQuarterlyIncomes($quarter_num, $current_year, $organisation_id)
     {
@@ -243,8 +156,8 @@ class ReportGenerationService implements ReportGenerationInterface
         $incomes = array();
         $total_reg_saving = 0;
         $total_income = 0;
-        $member_reg = $this->getMemberRegistrationPerQuarter($quarter_num, $current_year, "I2");
-        $savings = $this->getMemberSavingPerQuarter($quarter_num, $current_year, "I3");
+        $member_reg = $this->registrationService->getMemberRegistrationPerQuarter($quarter_num, $current_year, "I2");
+        $savings = $this->userSavingService->getMemberSavingPerQuarter($quarter_num, $current_year, "I3");
         array_push($incomes, $member_reg, $savings);
         $total_reg_saving += $member_reg->total + $savings->total;
         foreach ($payment_categories as $key => $payment_category){
@@ -253,8 +166,8 @@ class ReportGenerationService implements ReportGenerationInterface
             $payment_category_total = 0;
             foreach ($payment_items as $payment_item_key => $payment_item){
                 $payment_incomes = array();
-                $supports = $this->getSponsorshipIncomePerQuarterly($quarter_num, $current_year);
-                $activities = $this->getQuarterlyIncomeActivities($quarter_num, $current_year);
+                $supports = $this->activitySupportService->getSponsorshipIncomePerQuarterly($quarter_num, $current_year);
+                $activities = $this->incomeActivityService->getQuarterlyIncomeActivities($quarter_num, $current_year);
                 $user_contribution = $this->userContributionService->getContributionsByItemAndSession($payment_item->id, $start_quarter, $end_quarter);
                 $payment_incomes = array_merge($user_contribution, $payment_incomes, $supports, $activities);
                 $total = $this->calculateTotal($payment_incomes);
@@ -272,12 +185,4 @@ class ReportGenerationService implements ReportGenerationInterface
         }
         return [$incomes, $total_income];
     }
-
-    public function computeBalanceBroughtForward($request, $current_year){
-        $income = $this->fetchQuarterlyIncomes($request->quarter-1, $current_year, $request->user()->organisation_id);
-        $expenditure = $this->fetchQuarterlyExpenditures($request->quarter-1, $current_year, $request->user()->organisation_id);
-        return $income[1] - $expenditure[1];
-    }
-
-
 }

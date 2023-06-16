@@ -8,6 +8,7 @@ use App\Models\IncomeActivity;
 use App\Models\Organisation;
 use App\Models\PaymentItem;
 use App\Traits\HelpTrait;
+use Illuminate\Support\Facades\DB;
 
 
 class IncomeActivityService implements IncomeActivityInterface {
@@ -132,6 +133,31 @@ class IncomeActivityService implements IncomeActivityInterface {
         return $total;
     }
 
+    public function getQuarterlyIncomeActivities($quarter_num, $current_year): array
+    {
+        $start_quarter = $this->getStartQuarter($current_year->year, $quarter_num)[0];
+        $end_quarter = $this->getStartQuarter($current_year->year, $quarter_num)[1];
+
+        return  DB::table('income_activities')
+            ->join('payment_items', 'payment_items.id', '=', 'income_activities.payment_item_id')
+            ->join('sessions', 'sessions.id' , '=', 'income_activities.session_id')
+            ->where('income_activities.approve', PaymentStatus::APPROVED)
+            ->whereBetween('income_activities.created_at', [$start_quarter, $end_quarter])
+            ->select('income_activities.id', 'income_activities.name', 'income_activities.amount', 'sessions.year')
+            ->orderBy('name')
+            ->get()->toArray();
+    }
+
+    public function getIncomePerActivity($id): \Illuminate\Support\Collection
+    {
+        return DB::table('income_activities')
+            ->join('payment_items', 'payment_items.id', '=', 'income_activities.payment_item_id')
+            ->where('income_activities.payment_item_id', $id)
+            ->where('income_activities.approve', PaymentStatus::APPROVED)
+            ->select('income_activities.name', 'income_activities.amount')
+            ->orderBy('income_activities.name')
+            ->get();
+    }
     private function getPaymentItemId($id){
         $item = PaymentItem::findOrFail($id);
         return $item->id;

@@ -5,9 +5,11 @@ namespace App\Services;
 
 
 use App\Constants\PaymentStatus;
+use App\Http\Resources\QuarterlyIncomeResource;
 use App\Interfaces\RegistrationInterface;
 use App\Models\User;
 use App\Models\MemberRegistration;
+use Illuminate\Support\Facades\DB;
 
 class RegistrationService implements RegistrationInterface
 {
@@ -76,6 +78,22 @@ class RegistrationService implements RegistrationInterface
         $reg = MemberRegistration::where('user_id', $request->user_id)->where('session_id', $current_session->id)->firstOrFail();
         $reg->approve = $request->status;
         $reg->save();
+    }
+
+    public function getMemberRegistrationPerQuarter($quarter_num, $current_year, $code)
+    {
+        $start_quarter = $this->getStartQuarter($current_year->year, $quarter_num)[0];
+        $end_quarter = $this->getStartQuarter($current_year->year, $quarter_num)[1];
+
+        $reg_amount = DB::table('member_registrations')
+            ->join('registrations', 'registrations.id' , '=', 'member_registrations.registration_id')
+            ->join('users', 'users.id', '=', 'member_registrations.user_id')
+            ->join('sessions', 'sessions.id' , '=', 'member_registrations.session_id')
+            ->where('member_registrations.approve', PaymentStatus::APPROVED)
+            ->whereBetween('member_registrations.created_at', [$start_quarter, $end_quarter])
+            ->selectRaw('SUM(registrations.amount) as amount')
+            ->get()[0]->amount;
+        return new QuarterlyIncomeResource($code, "Member's Registration", [], $reg_amount);
     }
 
 }
