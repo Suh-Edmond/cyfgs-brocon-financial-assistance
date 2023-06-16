@@ -1,7 +1,7 @@
 @extends('layout.base')
 
 @section('section')
-    <div style="margin-bottom: 220px;">
+    <div style="margin-bottom: 220px;margin-top: 50px">
         <div style="float: left;">
             <img src="{{ $organisation->logo }}" alt="organisation logo" width="100px;" height="100px;"
                  style="border-radius: 2px">
@@ -99,6 +99,9 @@
     </div>
     <div>
         <div class="row" style="border: 1px solid black">
+            <div class="activity_summary_num">
+                S1
+            </div>
             <div class="activity_summary">
                 Total Income
             </div>
@@ -107,6 +110,9 @@
             </div>
         </div>
         <div class="row" style="border: 1px solid black">
+            <div class="activity_summary_num">
+                S2
+            </div>
             <div class="activity_summary">
                 Total Expenditure
             </div>
@@ -115,6 +121,9 @@
             </div>
         </div>
         <div class="row" style="border: 1px solid black">
+            <div class="activity_summary_num">
+                S3
+            </div>
             <div class="activity_summary">
                 Total Balance
             </div>

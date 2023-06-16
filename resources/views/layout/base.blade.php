@@ -154,9 +154,19 @@
         border-right: .8px solid black;
         font-size: small;
     }
+    .activity_summary_num {
+        float: left;
+        width: 10%;
+        padding: 10px;
+        min-height: 15px;
+        font-weight: bolder;
+        text-transform: uppercase;
+        border-right: .8px solid black;
+        font-size: small;
+    }
     .activity_summary {
         float: left;
-        width: 50%;
+        width: 45%;
         padding: 10px;
         min-height: 15px;
         font-weight: bolder;
@@ -166,7 +176,7 @@
     }
     .activity_summary_end {
         float: left;
-        width: 50%;
+        width: 45%;
         padding: 10px;
         min-height: 15px;
         font-weight: bolder;
