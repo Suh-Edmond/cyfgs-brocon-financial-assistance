@@ -1,7 +1,7 @@
 @extends('layout.base')
 
 @section('section')
-    <div style="margin-bottom: 220px;">
+    <div style="margin-bottom: 220px;margin-top: 50px">
         <div style="float: left;">
             <img src="{{ $organisation->logo }}" alt="organisation logo" width="100px;" height="100px;"
                  style="border-radius: 2px">
@@ -22,10 +22,13 @@
         <h3 style="font-weight: bold;font-size: medium; text-align:center;text-transform: uppercase;">{{ $title }}
         </h3>
     </div>
-{{--    imcome details--}}
+
+    <!----------------------------------------------------------START OF INCOME------------------------------------------------------------------------------------------>
     <div>
-        <h3 style="font-weight: bold;font-size: small; text-align:left;text-transform: uppercase;">Income
-        </h3>
+        <div style="margin-bottom: 20px;margin-top: 20px">
+            <h3 style="font-weight: bold;font-size: small; text-align:center;text-transform: uppercase;padding-bottom: 20px;text-decoration: underline"><span style="padding-right: 5px;"></span> Income (F CFA)
+            </h3>
+        </div>
         <table style="border: 1px solid black; border-collapse: collapse;width: 100%">
             <tr style="border: 1px solid black; font-size: smaller;">
                 <th style="border: 1px solid black;">S/N</th>
@@ -34,7 +37,7 @@
             </tr>
             @foreach ($incomes as $key => $value)
                 <tr style="border: 1px solid black; font-size: smaller">
-                    <td style="padding: 5px;">{{ $key + 1 }}</td>
+                    <td style="padding: 5px;">I.{{ $key + 1 }}</td>
                     <td style="border: 1px solid black; padding: 11px;">{{ $value->name }}</td>
                     <td style="border: 1px solid black; padding: 11px;">{{ number_format($value->amount) }}
                     </td>
@@ -47,10 +50,16 @@
             </tr>
         </table>
     </div>
-{{--    expenditure details--}}
-    <div style="margin-top: 20px">
-        <h3 style="font-weight: bold;font-size: small; text-align:left;text-transform: uppercase;">Expenditures/Disbursements
-        </h3>
+    <!----------------------------------------------------------END OF INCOME------------------------------------------------------------------------------------------>
+
+
+    <!----------------------------------------------------------START OF EXPENDITURES------------------------------------------------------------------------------------------>
+    <div style="margin-top: 20px;">
+        <div style="margin-bottom: 20px;margin-top: 20px">
+            <h3 style="font-weight: bold;font-size: small; text-align:center;text-transform: uppercase;padding-bottom: 20px;text-decoration: underline"><span style="padding-right: 5px;"></span>
+                Expenditures/Disbursements (F CFA)
+            </h3>
+        </div>
         <table style="border: 1px solid black; border-collapse: collapse;width: 100%">
             <tr style="border: 1px solid black; font-size: smaller;">
                 <th style="border: 1px solid black;">S/N</th>
@@ -61,7 +70,7 @@
             </tr>
             @foreach ($expenditures as $key => $value)
                 <tr style="border: 1px solid black; font-size: smaller">
-                    <td style="padding: 5px;">{{ $key + 1 }}</td>
+                    <td style="padding: 5px;">E.{{ $key + 1 }}</td>
                     <td style="border: 1px solid black; padding: 11px;">{{ $value->name }}</td>
                     <td style="border: 1px solid black; padding: 11px;">{{ number_format($value->amount_given) }}
                     </td>
@@ -80,30 +89,108 @@
             </tr>
         </table>
     </div>
+    <!----------------------------------------------------------END OF EXPENDITURES------------------------------------------------------------------------------------------>
 
-    <div style="margin-top: 10px">
-        <h3 style="font-weight: bold;font-size: medium; text-align:left;text-transform: capitalize;">Net Balance (Total income - Actual expenditure + Total balance):
-            <span style="padding-left: 20px;">{{number_format($net_balance)}} XAF</span>
+    <!----------------------------------------------------------SUMMARY OF REPORT-------------------------------------------------------------------------------------------->
+    <div style="margin-top: 50px;">
+        <h3 style="font-weight: bold;font-size: small; text-align:center;text-transform: uppercase;text-decoration: underline">
+            <span style="padding-right: 5px"></span> Summary (F CFA):
         </h3>
     </div>
+    <div>
+        <div class="row" style="border: 1px solid black">
+            <div class="activity_summary_num">
+                S1
+            </div>
+            <div class="activity_summary">
+                Total Income
+            </div>
+            <div class="activity_summary_end">
+                {{number_format($total_income)}}
+            </div>
+        </div>
+        <div class="row" style="border: 1px solid black">
+            <div class="activity_summary_num">
+                S2
+            </div>
+            <div class="activity_summary">
+                Total Expenditure
+            </div>
+            <div class="activity_summary_end">
+                {{number_format($total_amount_spent)}}
+            </div>
+        </div>
+        <div class="row" style="border: 1px solid black">
+            <div class="activity_summary_num">
+                S3
+            </div>
+            <div class="activity_summary">
+                Total Balance
+            </div>
+            <div class="activity_summary_end">
+                {{number_format($total_balance)}}
+            </div>
+        </div>
+    </div>
+    <!----------------------------------------------------------END OF SUMMARY OF REPORT------------------------------------------------------------------------------------->
 
+    <!------------------------------------------------------DETAILS OF PRESENTERS--------------------------------------------------------------------------------------------->
     <div style="margin-top: 40px;">
-        <div style="float: left;">
-            <label for="organisation"style="font-weight: bold; text-transform: uppercase; font-size: small;">Financial
-                Secretary <br />
-                {{ $fin_secretary->name }}
-            </label><br /><br />
+        <h3 style="font-weight: bold;font-size: small; text-align:center;text-transform: uppercase;text-decoration: underline"><span style="padding-right: 5px"></span> Prepared By:
+        </h3>
+    </div>
+    <div class="detail" style="margin-top: 30px;margin-bottom: 150px">
+        <!------------------------------Names of presenters------------------------------------>
+        <div style="float: left" class="fin_sec">
+            <div class=" " style="font-weight: bold;font-size: small;text-transform: uppercase; margin-bottom: 5px;text-align: center">
+                FINANCIAL SECRETARY
+            </div>
+            <div style="font-weight: bold;font-size: small; text-transform: uppercase;text-align: center">
+                @isset($treasurer)
+                    <span>{{$fin_secretary->name}}</span>
+                @endisset
+            </div>
+            <div style="font-weight: bold;text-transform: uppercase;font-size: small; margin-top: 20px;text-align: center">
+                SIGN
+            </div>
+            <div  style="border-bottom: 1px solid black; margin-top: 40px">
+            </div>
         </div>
-        <div style="float: right">
-            <label for="organisation"style="font-weight: bold; text-transform: uppercase; font-size: small;">Treasurer
-                <br />
-                {{ $treasurer->name }}
-            </label><br /><br />
+
+        <div style="float: right" class="treasurer">
+            <div  class=" " style="text-align: center;font-weight: bold;font-size: small;text-transform: uppercase; margin-bottom: 5px">
+                Treasurer
+            </div>
+            <div style="font-weight: bold;text-transform: uppercase;text-align: center">
+                @isset($treasurer)
+                    <span>{{$treasurer->name}}</span>
+                @endisset
+            </div>
+            <div style="font-weight: bold;text-transform: uppercase;font-size: small; margin-top: 20px;text-align: center">
+                SIGN
+            </div>
+            <div  style="border-bottom: 1px solid black; margin-top: 40px">
+            </div>
+        </div>
+        <!------------------------------End of presenters-------------------------------------->
+    </div>
+    <div class="president" style="text-align: center">
+        <div>
+            <div class=" " style="font-weight: bold;font-size: small;text-transform: uppercase; margin-bottom: 5px">
+                President
+            </div>
+            <div style="font-weight: bold;font-size: small; text-transform: uppercase">
+                @isset($president)
+                    <span>{{$president->name}}</span>
+                @endisset
+            </div>
+            <div style="font-weight: bold;text-transform: uppercase;font-size: small; margin-top: 20px">
+                SIGN
+            </div>
+            <div class="border_line" style="border-bottom: 1px solid black; margin-top: 40px;text-align: center">
+            </div>
         </div>
     </div>
-    <div style="text-align:center; margin-top:80px">
-        <label for="organisation"style="font-weight: bold; text-transform: uppercase; font-size: small;">President <br />
-            {{ $president->name }}
-        </label><br />
-    </div>
+    <!------------------------------------------------------END OF PRESENTERS-------------------------------------------------------------------------------------->
+
 @endsection

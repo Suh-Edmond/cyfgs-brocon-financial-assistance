@@ -324,83 +324,62 @@
     </div>
     <!----------------------------------------------------------end of summary of report------------------------------------------------------------------------------------->
 
-    <!------------------------------------------------------Details of presenter--------------------------------------------------------------------------------------------->
-    <div style="margin-top: 20px;margin-bottom: 10px;">
-        <h3 style="font-weight: bold;font-size: small; text-align:center;text-transform: uppercase;padding-bottom: 20px;text-decoration: underline"><span style="padding-right: 5px"></span> Prepared By:
+    <!------------------------------------------------------DETAILS OF PRESENTERS--------------------------------------------------------------------------------------------->
+    <div style="margin-top: 40px;">
+        <h3 style="font-weight: bold;font-size: small; text-align:center;text-transform: uppercase;text-decoration: underline"><span style="padding-right: 5px"></span> Prepared By:
         </h3>
     </div>
-    <div class="activity">
-        <div class="row quarter_row">
-            <div class="pre_column1" style="font-weight: bold">
-
-            </div>
-            <div class="pre_column2" style="font-weight: bold;text-transform: uppercase">
-                Name
-            </div>
-            <div class="pre_column3" style="font-weight: bold;text-transform: uppercase">
-                Date
-            </div>
-            <div class="pre_column4" style="font-weight: bold;text-transform: uppercase">
-                Sign
-            </div>
-        </div>
-
+    <div class="detail" style="margin-top: 30px;margin-bottom: 150px">
         <!------------------------------Names of presenters------------------------------------>
-        <div class="row quarter_row">
-            <div class="pre_column1" style="font-weight: bold">
-                    FINANCIAL SECRETARY
+        <div style="float: left" class="fin_sec">
+            <div class=" " style="font-weight: bold;font-size: small;text-transform: uppercase; margin-bottom: 5px;text-align: center">
+                FINANCIAL SECRETARY
             </div>
-            <div class="pre_column2" style="font-weight: normal;text-transform: capitalize">
+            <div style="font-weight: bold;font-size: small; text-transform: uppercase;text-align: center">
                 @isset($treasurer)
                     <span>{{$fin_secretary->name}}</span>
                 @endisset
             </div>
-            <div class="pre_column3" style="font-weight: normal;text-transform: uppercase">
-                {{$date}}
+            <div style="font-weight: bold;text-transform: uppercase;font-size: small; margin-top: 20px;text-align: center">
+                SIGN
             </div>
-            <div class="pre_column4" style="font-weight: normal;text-transform: uppercase">
-
+            <div  style="border-bottom: 1px solid black; margin-top: 40px">
             </div>
         </div>
 
-        <div class="row quarter_row">
-            <div class="pre_column1" style="font-weight: bold">
-                TREASURER
+        <div style="float: right" class="treasurer">
+            <div  class=" " style="text-align: center;font-weight: bold;font-size: small;text-transform: uppercase; margin-bottom: 5px">
+                Treasurer
             </div>
-            <div class="pre_column2" style="font-weight: normal;text-transform: capitalize">
+            <div style="font-weight: bold;text-transform: uppercase;text-align: center">
                 @isset($treasurer)
-                    <span>
-                    {{$treasurer->name}}
-                </span>
+                    <span>{{$treasurer->name}}</span>
                 @endisset
             </div>
-            <div class="pre_column3" style="font-weight: normal;text-transform: uppercase">
-                {{$date}}
+            <div style="font-weight: bold;text-transform: uppercase;font-size: small; margin-top: 20px;text-align: center">
+                SIGN
             </div>
-            <div class="pre_column4" style="font-weight: normal;text-transform: uppercase">
-
-            </div>
-        </div>
-
-        <div class="row quarter_row">
-            <div class="pre_column1" style="font-weight: bold">
-                PRESIDENT
-            </div>
-            <div class="pre_column2" style="font-weight: normal;text-transform: capitalize">
-                @isset($president)
-                    <span>
-                    {{$president->name}}
-                </span>
-                @endisset
-            </div>
-            <div class="pre_column3" style="font-weight: normal;text-transform: uppercase">
-                {{$date}}
-            </div>
-            <div class="pre_column4" style="font-weight: normal;text-transform: uppercase">
-
+            <div  style="border-bottom: 1px solid black; margin-top: 40px">
             </div>
         </div>
         <!------------------------------End of presenters-------------------------------------->
     </div>
-    <!------------------------------------------------------End of details of Presenter-------------------------------------------------------------------------------------->
+    <div class="president" style="text-align: center">
+        <div>
+            <div class=" " style="font-weight: bold;font-size: small;text-transform: uppercase; margin-bottom: 5px">
+                President
+            </div>
+            <div style="font-weight: bold;font-size: small; text-transform: uppercase">
+                @isset($president)
+                    <span>{{$president->name}}</span>
+                @endisset
+            </div>
+            <div style="font-weight: bold;text-transform: uppercase;font-size: small; margin-top: 20px">
+                SIGN
+            </div>
+            <div class="border_line" style="border-bottom: 1px solid black; margin-top: 40px;text-align: center">
+            </div>
+        </div>
+    </div>
+    <!------------------------------------------------------END OF PRESENTERS-------------------------------------------------------------------------------------->
 @endsection
