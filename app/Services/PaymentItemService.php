@@ -54,10 +54,10 @@ class PaymentItemService implements PaymentItemInterface {
     public function getPaymentItemsByCategory($payment_category_id)
     {
         $payment_items = $this->fetchPaymentItems($payment_category_id)
-                                ->orWhere('frequency', PaymentItemFrequency::YEARLY)
-                                ->orWhere('frequency', PaymentItemFrequency::MONTHLY)
-                                ->orWhere('frequency',PaymentItemFrequency::ONE_TIME)
-                                ->orWhere('frequency',PaymentItemFrequency::QUARTERLY)
+//                                ->orWhere('frequency', PaymentItemFrequency::YEARLY)
+//                                ->orWhere('frequency', PaymentItemFrequency::MONTHLY)
+//                                ->orWhere('frequency',PaymentItemFrequency::ONE_TIME)
+//                                ->orWhere('frequency',PaymentItemFrequency::QUARTERLY)
                                 ->orderBy('payment_items.name', 'ASC')
                                 ->get();
         return new PaymentItemCollection($payment_items, 0);
@@ -144,5 +144,15 @@ class PaymentItemService implements PaymentItemInterface {
     public function getPaymentItemReferences($id) {
         $payment_item = PaymentItem::findOrFail($id);
         return $this->getReferenceResource($payment_item->reference);
+    }
+
+    public function getPaymentActivitiesByCategoryAndSession($category, $session){
+        return PaymentItem::select('payment_items.id', 'payment_items.name','payment_items.amount')
+            ->join('payment_categories', ['payment_categories.id'  => 'payment_items.payment_category_id'])
+            ->where('payment_items.payment_category_id', $category)
+            ->where('session_id', $session)
+            ->orderBy('payment_items.name', 'ASC')
+            ->get();
+
     }
 }

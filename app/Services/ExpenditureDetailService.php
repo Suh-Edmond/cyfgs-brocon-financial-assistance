@@ -9,6 +9,7 @@ use App\Interfaces\ExpenditureDetailInterface;
 use App\Models\ExpenditureDetail;
 use App\Models\ExpenditureItem;
 use App\Traits\HelpTrait;
+use Illuminate\Support\Facades\DB;
 
 class ExpenditureDetailService implements ExpenditureDetailInterface {
 
@@ -125,6 +126,17 @@ class ExpenditureDetailService implements ExpenditureDetailInterface {
         else {
             return $this->filterExpenditureDetail($request->expenditure_item_id, $request->status);
         }
+    }
+
+    public function findExpenditureDetailsByItemAndQuarter($item, $start_quarter, $end_quarter){
+        return DB::table('expenditure_details')
+            ->join('expenditure_items', 'expenditure_items.id', '=', 'expenditure_details.expenditure_item_id')
+            ->where('expenditure_items.approve', PaymentStatus::APPROVED)
+            ->where('expenditure_details.expenditure_item_id', $item)
+            ->whereBetween('expenditure_items.created_at', [$start_quarter, $end_quarter])
+            ->select( 'expenditure_details.name', 'expenditure_details.amount_spent', 'expenditure_details.id')
+            ->orderBy('name')
+            ->get();
     }
 
 

@@ -2,15 +2,11 @@
 
 namespace App\Traits;
 
-use App\Constants\PaymentStatus;
-use App\Constants\RegistrationStatus;
 use App\Constants\Roles;
 use App\Http\Resources\ExpenditureDetailResource;
-use App\Http\Resources\ReferenceResource;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 trait HelpTrait {
@@ -212,6 +208,28 @@ trait HelpTrait {
          return $months[$num];
     }
 
+    private function convertQuarterNameToNumber($name)
+    {
+        $quarters = [
+         "January-March" => 1 ,
+         "April-June" => 2 ,
+         "July-September" => 3 ,
+         "October-December" => 4
+        ];
+        return $quarters[$name];
+    }
+
+    private function convertNumberToQuarterName($num)
+    {
+        $quarters = [
+            1 => "January - March",
+            2 => "April - June",
+            3 => "July - September",
+            4 =>"October - December"
+        ];
+        return $quarters[$num];
+    }
+
     public function  calculateTotal($data): int
     {
         $total = 0;
@@ -293,5 +311,24 @@ trait HelpTrait {
             ->whereNotIn('roles.name', [Roles::TREASURER, Roles::FINANCIAL_SECRETARY, Roles::PRESIDENT, Roles::AUDITOR])
             ->select('users.*')
             ->first();
+    }
+
+    public static function getStartQuarter($year, $quarter)
+    {
+        if($quarter == 1){
+            $start_date = Carbon::create($year, 2)->startOfQuarter();
+            $end_date = Carbon::create($year, 2)->endOfQuarter();
+        }elseif ($quarter == 2){
+            $start_date = Carbon::create($year, 5)->startOfQuarter();
+            $end_date = Carbon::create($year, 5)->endOfQuarter();
+        }elseif ($quarter = 4) {
+            $start_date = Carbon::create($year, 8)->startOfQuarter();
+            $end_date = Carbon::create($year, 8)->endOfQuarter();
+        }else {
+            $start_date = Carbon::create($year, 11)->startOfQuarter();
+            $end_date = Carbon::create($year, 11)->endOfQuarter();
+        }
+
+        return [$start_date->toDateTimeString(),  $end_date->toDateTimeString()];
     }
 }
