@@ -154,6 +154,25 @@
         border-right: .8px solid black;
         font-size: small;
     }
+    .activity_summary {
+        float: left;
+        width: 50%;
+        padding: 10px;
+        min-height: 15px;
+        font-weight: bolder;
+        text-transform: uppercase;
+        border-right: .8px solid black;
+        font-size: small;
+    }
+    .activity_summary_end {
+        float: left;
+        width: 50%;
+        padding: 10px;
+        min-height: 15px;
+        font-weight: bolder;
+        text-transform: uppercase;
+        font-size: small;
+    }
     .totals {
         float: left;
         width: 50%;
@@ -162,6 +181,18 @@
         min-height: 25px;
         text-transform: uppercase;
         font-size: small;
+    }
+
+    .fin_sec {
+        min-width: 27%;
+    }
+    .treasurer {
+        min-width: 27%;
+    }
+    .border_line {
+        width: 30px;
+        min-width: 30%;
+        margin-left: 270px;
     }
 </style>
 <body>

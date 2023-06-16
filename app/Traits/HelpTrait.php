@@ -93,7 +93,7 @@ trait HelpTrait {
         return DB::table('users')
             ->join('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
             ->join('roles', 'roles.id', '=', 'model_has_roles.role_id')
-            ->select('users.*')
+            ->select('users.name', 'users.telephone', 'users.email')
             ->where('roles.name', $role)
             ->first();
     }

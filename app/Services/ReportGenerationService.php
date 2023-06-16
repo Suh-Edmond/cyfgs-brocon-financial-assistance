@@ -43,25 +43,43 @@ class ReportGenerationService implements ReportGenerationInterface
 
     public function generateReportPerActivity($id)
     {
-        $total = 0;
-        $data = [];
+        $total_income = 0;
+        $total_amount_given = 0;
+        $total_amount_spent = 0;
+        $total_balance =0;
+        $balance = 0;
+        $income_list = [];
         $expenditures = [];
         $members_contributions = $this->getApproveMembersContributionPerActivity($id)->toArray();
         $total_members_contributions = count($members_contributions) > 0  ? $members_contributions[0]->amount: 0;
         $incomes = $this->getIncomePerActivity($id)->toArray();
         $sponsorship = $this->getSponsorshipPerActivity($id)->toArray();
-        array_push($data, new ActivityReportResource("Members Contributions", $total_members_contributions));
-        $result = array_merge($incomes, $sponsorship);
-        foreach ($result as $contribution){
-            $total += $contribution->amount;
-            array_push($data, new ActivityReportResource($contribution->name, $contribution->amount));
+        array_push($income_list, new ActivityReportResource("Members Contributions", $total_members_contributions));
+        $data = array_merge($incomes, $sponsorship);
+        foreach ($data as $contribution){
+            $total_income += $contribution->amount;
+            array_push($income_list, new ActivityReportResource($contribution->name, $contribution->amount));
         }
+        $total_income += $total_members_contributions;
 
         $expenses = $this->getExpenditureActivities($id);
+
         foreach ($expenses as $expense){
+            $total_amount_spent += $expense->amount_spent;
+            $total_amount_given += $expense->amount_given;
+            $balance += ($expense->amount_given- $expense->amount_spent);
             array_push($expenditures, new DetailResource($expense->name, $expense->amount_given, $expense->amount_spent, ($expense->amount_given- $expense->amount_spent)));
         }
-        return [$data, $expenditures];
+        $total_balance += ($total_income - $total_amount_spent)  + $balance;
+        $president = $this->getOrganisationAdministrators(Roles::PRESIDENT);
+
+        $treasurer = $this->getOrganisationAdministrators(Roles::TREASURER);
+
+        $fin_sec = $this->getOrganisationAdministrators(Roles::FINANCIAL_SECRETARY);
+
+        return [$income_list, $expenditures, ["total_income" => $total_income], ["total_amount_given" => $total_amount_given],
+            ["total_amount_spent" => $total_amount_spent], ["balance" => $balance], ["total_balance" => $total_balance],
+            ["president" => $president], ["fin_sec" => $fin_sec], ["treasurer" => $treasurer]];
     }
 
     public function generateQuarterlyReport($request)
@@ -129,7 +147,7 @@ class ReportGenerationService implements ReportGenerationInterface
             ->where('activity_supports.payment_item_id', $id)
             ->where('activity_supports.approve', PaymentStatus::APPROVED)
             ->select('activity_supports.supporter as name', 'activity_supports.amount_deposited as amount')
-            ->orderBy('activity_supports.supporter', 'DESC')
+            ->orderBy('activity_supports.supporter')
             ->get();
     }
 
@@ -140,7 +158,7 @@ class ReportGenerationService implements ReportGenerationInterface
             ->where('income_activities.payment_item_id', $id)
             ->where('income_activities.approve', PaymentStatus::APPROVED)
             ->select('income_activities.name', 'income_activities.amount')
-            ->orderBy('income_activities.name', 'DESC')
+            ->orderBy('income_activities.name')
             ->get();
     }
 

@@ -41,34 +41,27 @@ class GenerateReportController extends Controller
 
         $auth_user         = auth()->user();
 
-        $organisation      = User::find($auth_user['id'])->organisation;
-
-        $president         = $this->getOrganisationAdministrators(Roles::PRESIDENT);
-
-        $treasurer         = $this->getOrganisationAdministrators(Roles::TREASURER);
-
-        $fin_sec           = $this->getOrganisationAdministrators(Roles::FINANCIAL_SECRETARY);
-
-        if(count($data) > 0) {
+         $organisation      = User::find($auth_user['id'])->organisation;
+         if(count($data) > 0) {
             $data = [
                 'title'               => 'Financial Report for '.$request->payment_actvity. " ". $this->session_service->getCurrentSession()->year,
                 'date'                => date('m/d/Y'),
                 'organisation'        => $organisation,
                 'incomes'             => $data[0],
                 'expenditures'        => $data[1],
-                'president'           => $president,
-                'organisation_telephone'   => $this->setOrganisationTelephone($organisation->telephone),
-                'treasurer'           => $treasurer,
-                'fin_secretary'       => $fin_sec,
-                'total_income'        => $this->calculateTotal($data[0]),
-                'total_amount_given'        => $this->calculateTotalAmountGiven($data[1]),
-                'total_amount_spent'        => $this->calculateTotalAmountSpent($data[1]),
-                'balance'                   => $this->calculateBalance($data[1]),
-                'net_balance'               => ($this->calculateTotal($data[0]) - $this->calculateTotalAmountSpent($data[1])) + $this->calculateBalance($data[1])
+                'president'           => $data[7]['president'],
+                'organisation_telephone' => $this->setOrganisationTelephone($organisation->telephone),
+                'fin_secretary'       => $data[8]['fin_sec'],
+                'treasurer'           => $data[9]['treasurer'],
+                'total_income'        => $data[2]['total_income'],
+                'total_amount_given'  => $data[3]['total_amount_given'],
+                'total_amount_spent'  => $data[4]['total_amount_spent'],
+                'balance'             => $data[5]['balance'],
+                'total_balance'       => $data[6]['total_balance'],
+
             ];
             $pdf = PDF::loadView('Reports.ActivityReport', $data);
         }
-
         return $pdf->download('Activity_Financial_Report.pdf');
     }
 
