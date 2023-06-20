@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Constants\PaymentStatus;
 use App\Exceptions\BusinessValidationException;
+use App\Http\Resources\QuarterlyIncomeResource;
 use App\Http\Resources\UserSavingCollection;
 use App\Interfaces\UserSavingInterface;
 use App\Models\User;
@@ -105,6 +106,33 @@ class UserSavingService implements UserSavingInterface
         return new UserSavingCollection($savings, $total);
     }
 
+    public function getMemberSavingPerQuarter($quarter_num, $current_year, $code)
+    {
+        $start_quarter = $this->getStartQuarter($current_year->year, $quarter_num)[0];
+        $end_quarter = $this->getStartQuarter($current_year->year, $quarter_num)[1];
+
+        $savings =  DB::table('user_savings')
+            ->join('users', 'users.id', '=', 'user_savings.user_id')
+            ->join('sessions', 'sessions.id' , '=', 'user_savings.session_id')
+            ->where('user_savings.approve', PaymentStatus::APPROVED)
+            ->whereBetween('user_savings.created_at', [$start_quarter, $end_quarter])
+            ->selectRaw('SUM(user_savings.amount_deposited) as amount')
+            ->get()[0]->amount;
+        return new QuarterlyIncomeResource($code, "Member's Savings", [], $savings);
+    }
+
+    public function getMemberSavingPerYear($year, $code)
+    {
+        $savings =  DB::table('user_savings')
+            ->join('users', 'users.id', '=', 'user_savings.user_id')
+            ->join('sessions', 'sessions.id' , '=', 'user_savings.session_id')
+            ->where('user_savings.approve', PaymentStatus::APPROVED)
+            ->where('user_savings.session_id', $year)
+            ->selectRaw('SUM(user_savings.amount_deposited) as amount')
+            ->get()[0]->amount;
+        return new QuarterlyIncomeResource($code, "Member's Savings", [], $savings);
+    }
+
 
     private function findUserSaving($id, $user_id)
     {
@@ -199,7 +227,6 @@ class UserSavingService implements UserSavingInterface
             'users.name as name', 'users.email as email', 'users.telephone as telephone', 'sessions.id as session_id', 'sessions.year as session_year', 'sessions.status as session_status')
             ->orderBy('user_savings.created_at', 'ASC')
             ->get();
-//        dd($data);
         return $data;
     }
 

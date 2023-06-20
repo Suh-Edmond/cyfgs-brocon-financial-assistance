@@ -9,6 +9,7 @@ use App\Interfaces\ExpenditureDetailInterface;
 use App\Models\ExpenditureDetail;
 use App\Models\ExpenditureItem;
 use App\Traits\HelpTrait;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class ExpenditureDetailService implements ExpenditureDetailInterface {
@@ -128,15 +129,27 @@ class ExpenditureDetailService implements ExpenditureDetailInterface {
         }
     }
 
-    public function findExpenditureDetailsByItemAndQuarter($item, $start_quarter, $end_quarter){
+    public function findExpenditureDetailsByItemAndQuarter($item, $year){
         return DB::table('expenditure_details')
             ->join('expenditure_items', 'expenditure_items.id', '=', 'expenditure_details.expenditure_item_id')
+            ->join('sessions', 'sessions.id', '=', 'expenditure_items.session_id')
             ->where('expenditure_items.approve', PaymentStatus::APPROVED)
             ->where('expenditure_details.expenditure_item_id', $item)
-            ->whereBetween('expenditure_items.created_at', [$start_quarter, $end_quarter])
+            ->where('expenditure_items.session_id', $year)
             ->select( 'expenditure_details.name', 'expenditure_details.amount_spent', 'expenditure_details.id')
             ->orderBy('name')
             ->get();
+    }
+
+    public function getExpenditureActivities($payment_activity): Collection
+    {
+        return DB::table('expenditure_details')
+            ->join('expenditure_items', 'expenditure_items.id', '=', 'expenditure_details.expenditure_item_id')
+            ->join('payment_items', 'payment_items.id', '=', 'expenditure_items.payment_item_id')
+            ->where('payment_items.id', $payment_activity)
+            ->where('expenditure_details.approve', PaymentStatus::APPROVED)
+            ->select('expenditure_details.name', 'expenditure_details.amount_given', 'expenditure_details.amount_spent')
+            ->orderBy('expenditure_details.name', 'DESC')->get();
     }
 
 

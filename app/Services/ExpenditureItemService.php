@@ -212,4 +212,17 @@ class ExpenditureItemService implements ExpenditureItemInterface {
                 ->get();
     }
 
+    public function getExpensesByCategoryAndYear($category_id, $year){
+        return  DB::table('expenditure_items')
+            ->join('payment_items', 'payment_items.id', '=', 'expenditure_items.payment_item_id')
+            ->join('expenditure_categories', 'expenditure_categories.id' , '=', 'expenditure_items.expenditure_category_id')
+            ->join('sessions', 'sessions.id' , '=', 'expenditure_items.session_id')
+            ->where('expenditure_items.approve', PaymentStatus::APPROVED)
+            ->where('expenditure_categories.id', $category_id)
+            ->where('expenditure_items.session_id', $year)
+            ->select( 'expenditure_items.name', 'expenditure_items.amount', 'expenditure_items.id')
+            ->orderBy('name')
+            ->get();
+    }
+
 }

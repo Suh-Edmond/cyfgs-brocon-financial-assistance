@@ -4,10 +4,12 @@
 namespace App\Services;
 
 
+use App\Constants\PaymentStatus;
 use App\Interfaces\ActivitySupportInterface;
 use App\Models\ActivitySupport;
 use App\Models\PaymentItem;
 use App\Traits\HelpTrait;
+use Illuminate\Support\Facades\DB;
 
 class ActivitySupportService implements ActivitySupportInterface
 {
@@ -93,6 +95,45 @@ class ActivitySupportService implements ActivitySupportInterface
         $sponsorship->approve = $request->type;
 
         $sponsorship->save();
+    }
+
+    public function getSponsorshipIncomePerQuarterly($quarter_num, $current_year): array
+    {
+        $start_quarter = $this->getStartQuarter($current_year->year, $quarter_num)[0];
+        $end_quarter = $this->getStartQuarter($current_year->year, $quarter_num)[1];
+        return  DB::table('activity_supports')
+            ->join('payment_items', 'payment_items.id', '=', 'activity_supports.payment_item_id')
+            ->join('sessions', 'sessions.id' , '=', 'activity_supports.session_id')
+            ->where('activity_supports.approve', PaymentStatus::APPROVED)
+            ->whereBetween('activity_supports.created_at', [$start_quarter, $end_quarter])
+            ->select('activity_supports.id', 'activity_supports.supporter as name', 'activity_supports.amount_deposited as amount', 'sessions.year')
+            ->orderBy('name')
+            ->get()
+            ->toArray();
+    }
+
+    public function getSponsorshipIncomePerYear($year): array
+    {
+        return  DB::table('activity_supports')
+            ->join('payment_items', 'payment_items.id', '=', 'activity_supports.payment_item_id')
+            ->join('sessions', 'sessions.id' , '=', 'activity_supports.session_id')
+            ->where('activity_supports.approve', PaymentStatus::APPROVED)
+            ->where('activity_supports.session_id', $year)
+            ->select('activity_supports.id', 'activity_supports.supporter as name', 'activity_supports.amount_deposited as amount', 'sessions.year')
+            ->orderBy('name')
+            ->get()
+            ->toArray();
+    }
+
+    public function getSponsorshipPerActivity($id)
+    {
+        return DB::table('activity_supports')
+            ->join('payment_items', 'payment_items.id', '=', 'activity_supports.payment_item_id')
+            ->where('activity_supports.payment_item_id', $id)
+            ->where('activity_supports.approve', PaymentStatus::APPROVED)
+            ->select('activity_supports.supporter as name', 'activity_supports.amount_deposited as amount')
+            ->orderBy('activity_supports.supporter')
+            ->get();
     }
 
     private function findPaymentItem($payment_item)
