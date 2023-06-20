@@ -112,6 +112,19 @@ class ActivitySupportService implements ActivitySupportInterface
             ->toArray();
     }
 
+    public function getSponsorshipIncomePerYear($year): array
+    {
+        return  DB::table('activity_supports')
+            ->join('payment_items', 'payment_items.id', '=', 'activity_supports.payment_item_id')
+            ->join('sessions', 'sessions.id' , '=', 'activity_supports.session_id')
+            ->where('activity_supports.approve', PaymentStatus::APPROVED)
+            ->where('activity_supports.session_id', $year)
+            ->select('activity_supports.id', 'activity_supports.supporter as name', 'activity_supports.amount_deposited as amount', 'sessions.year')
+            ->orderBy('name')
+            ->get()
+            ->toArray();
+    }
+
     public function getSponsorshipPerActivity($id)
     {
         return DB::table('activity_supports')

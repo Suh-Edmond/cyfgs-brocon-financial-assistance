@@ -121,6 +121,18 @@ class UserSavingService implements UserSavingInterface
         return new QuarterlyIncomeResource($code, "Member's Savings", [], $savings);
     }
 
+    public function getMemberSavingPerYear($year, $code)
+    {
+        $savings =  DB::table('user_savings')
+            ->join('users', 'users.id', '=', 'user_savings.user_id')
+            ->join('sessions', 'sessions.id' , '=', 'user_savings.session_id')
+            ->where('user_savings.approve', PaymentStatus::APPROVED)
+            ->where('user_savings.session_id', $year)
+            ->selectRaw('SUM(user_savings.amount_deposited) as amount')
+            ->get()[0]->amount;
+        return new QuarterlyIncomeResource($code, "Member's Savings", [], $savings);
+    }
+
 
     private function findUserSaving($id, $user_id)
     {

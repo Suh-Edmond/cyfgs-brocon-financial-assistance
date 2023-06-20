@@ -8,6 +8,7 @@ use App\Models\IncomeActivity;
 use App\Models\Organisation;
 use App\Models\PaymentItem;
 use App\Traits\HelpTrait;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 
@@ -148,7 +149,20 @@ class IncomeActivityService implements IncomeActivityInterface {
             ->get()->toArray();
     }
 
-    public function getIncomePerActivity($id): \Illuminate\Support\Collection
+    public function getYearIncomeActivities($year): array
+    {
+
+        return  DB::table('income_activities')
+            ->join('payment_items', 'payment_items.id', '=', 'income_activities.payment_item_id')
+            ->join('sessions', 'sessions.id' , '=', 'income_activities.session_id')
+            ->where('income_activities.approve', PaymentStatus::APPROVED)
+            ->where('income_activities.session_id', $year)
+            ->select('income_activities.id', 'income_activities.name', 'income_activities.amount', 'sessions.year')
+            ->orderBy('name')
+            ->get()->toArray();
+    }
+
+    public function getIncomePerActivity($id): Collection
     {
         return DB::table('income_activities')
             ->join('payment_items', 'payment_items.id', '=', 'income_activities.payment_item_id')
