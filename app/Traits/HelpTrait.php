@@ -211,10 +211,10 @@ trait HelpTrait {
     private function convertQuarterNameToNumber($name)
     {
         $quarters = [
-         "January-March" => 1 ,
-         "April-June" => 2 ,
-         "July-September" => 3 ,
-         "October-December" => 4
+         "January - March" => 1 ,
+         "April - June" => 2 ,
+         "July - September" => 3 ,
+         "October - December" => 4
         ];
         return $quarters[$name];
     }
