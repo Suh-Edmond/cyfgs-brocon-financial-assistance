@@ -104,14 +104,14 @@ class GenerateReportController extends Controller
         return $pdf->download('Quarter_Financial_Report.pdf');
     }
 
-    public function generateYearlyReport(Request $request): Response //query param: ?year_id=example_year_id&year_label=example_year_label
+    public function generateYearlyReport(Request $request) //query param: ?year_id=example_year_id&year_label=example_year_label
     {
         $data = $this->report_generation_service->generateYearlyReport($request);
 
         return $this->sendResponse($data, 200);
     }
 
-    public function downloadYearlyReport(Request $request): Response //query param: ?year_id=example_year_id&year_label=example_year_label
+    public function downloadYearlyReport(Request $request) //query param: ?year_id=example_year_id&year_label=example_year_label
     {
         $data = $this->report_generation_service->downloadYearlyReport($request);
 
