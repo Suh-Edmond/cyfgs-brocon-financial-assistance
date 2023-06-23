@@ -18,11 +18,15 @@ class UsersImport implements ToModel
 
     private string $organisation_id;
     private RoleService $role_service;
+    private string $updated_by;
+    private  $assignRole;
 
-    public function __construct($organisation_id,  RoleService $role_service)
+    public function __construct($organisation_id,  RoleService $role_service, $updated_by, $assignRole)
     {
         $this->organisation_id = $organisation_id;
         $this->role_service = $role_service;
+        $this->updated_by = $updated_by;
+        $this->assignRole = $assignRole;
     }
 
     public function startRow(): int
@@ -43,9 +47,7 @@ class UsersImport implements ToModel
      */
     public function model(array $row)
     {
-        $update_by = User::find(auth()->user()['id'])->name;
-        $assignRole = CustomRole::findByName(Roles::MEMBER, 'api');
-        $created =User::create([
+        $created = User::create([
             'name'            => $row[0],
             'email'           => $row[1],
             'telephone'       => $row[2],
@@ -53,8 +55,8 @@ class UsersImport implements ToModel
             'address'         => $row[4],
             'occupation'      => $row[5],
             'organisation_id' => $this->organisation_id,
-            'updated_by'      => $update_by
+            'updated_by'      => $this->updated_by
         ]);
-        $this->saveUserRole($created, $assignRole);
+        $this->saveUserRole($created, $this->assignRole, $this->updated_by);
     }
 }

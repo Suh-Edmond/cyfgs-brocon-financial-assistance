@@ -17,8 +17,7 @@ class RoleController extends Controller
 
     public function addUserRole(AddUserRoleRequest $request)
     {
-
-        $exist = $this->roleService->addUserRole($request->user_id, $request->role);
+        $exist = $this->roleService->addUserRole($request->user_id, $request->role, $request->user()->name);
         if($exist){
             return $this->sendResponse('success', 'Role added successfully');
         }else {

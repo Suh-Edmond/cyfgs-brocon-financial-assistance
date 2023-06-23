@@ -16,26 +16,8 @@ class SessionSeeder extends Seeder
     public function run()
     {
         Session::create([
-            'year' =>  "2020",
-            'status' => SessionStatus::IN_ACTIVE,
-            'updated_by' => "Edmond"
-        ]);
-
-        Session::create([
-            'year' =>  "2021",
-            'status' => SessionStatus::IN_ACTIVE,
-            'updated_by' => "Edmond"
-        ]);
-
-        Session::create([
-            'year' =>  "2022",
-            'status' => SessionStatus::IN_ACTIVE,
-            'updated_by' => "Edmond"
-        ]);
-
-        Session::create([
             'year' =>  "2023",
-            'status' => SessionStatus::IN_ACTIVE,
+            'status' => SessionStatus::ACTIVE,
             'updated_by' => "Edmond"
         ]);
     }

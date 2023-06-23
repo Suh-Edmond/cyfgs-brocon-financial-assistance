@@ -2,6 +2,7 @@
 
 use App\Constants\SessionStatus;
 use App\Models\Registration;
+use Database\Seeders\SessionSeeder;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -24,6 +25,6 @@ class DatabaseSeeder extends Seeder
 //        $this->call(PaymentItemSeeder::class);
 //        $this->call(UserContributionSeeder::class);
 //        $this->call(UserSavingSeeder::class);
-//        $this->call(SessionSeeder::class);
+        $this->call(SessionSeeder::class);
     }
 }
