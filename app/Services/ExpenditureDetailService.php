@@ -129,7 +129,19 @@ class ExpenditureDetailService implements ExpenditureDetailInterface {
         }
     }
 
-    public function findExpenditureDetailsByItemAndQuarter($item, $year){
+    public function findExpenditureDetailsByItemAndQuarter($item, $start_quarter, $end_quarter){
+        return DB::table('expenditure_details')
+            ->join('expenditure_items', 'expenditure_items.id', '=', 'expenditure_details.expenditure_item_id')
+            ->join('sessions', 'sessions.id', '=', 'expenditure_items.session_id')
+            ->where('expenditure_items.approve', PaymentStatus::APPROVED)
+            ->where('expenditure_details.expenditure_item_id', $item)
+            ->whereBetween('expenditure_items.created_at', [$start_quarter, $end_quarter])
+            ->select( 'expenditure_details.name', 'expenditure_details.amount_spent', 'expenditure_details.id')
+            ->orderBy('name')
+            ->get();
+    }
+
+    public function findExpenditureDetailsByItemAndYear($item, $year){
         return DB::table('expenditure_details')
             ->join('expenditure_items', 'expenditure_items.id', '=', 'expenditure_details.expenditure_item_id')
             ->join('sessions', 'sessions.id', '=', 'expenditure_items.session_id')

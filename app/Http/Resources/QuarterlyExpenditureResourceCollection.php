@@ -10,12 +10,14 @@ class QuarterlyExpenditureResourceCollection extends JsonResource
     public $code;
     public $name;
     public $items;
-    public function __construct($code, $name, $items)
+    private $total;
+    public function __construct($code, $name, $items, $total)
     {
         parent::__construct(null);
         $this->code = $code;
         $this->name = $name;
         $this->items = $items;
+        $this->total = $total;
     }
 
     public function toArray($request)
@@ -23,7 +25,8 @@ class QuarterlyExpenditureResourceCollection extends JsonResource
         return [
             "code"        =>   $this->code,
             'name'        =>   $this->name,
-            'items'       => $this->items
+            'items'       =>   $this->items,
+            'total'       =>   $this->total
         ];
     }
 }

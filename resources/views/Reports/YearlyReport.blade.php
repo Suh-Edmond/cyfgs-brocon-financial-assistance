@@ -148,7 +148,7 @@
                         <!---------end of activity sub total and total--------------->
                     </div>
             @endforeach
-                <!------end of activities------------------------>
+            <!------end of activities------------------------>
             </div>
             @if(!empty($income->items))
                 <div class="row quarter_row">
@@ -162,9 +162,9 @@
                     <div class="column4">{{number_format($income->total)}}</div>
                     <div class="column5">{{number_format($income->total)}}</div>
                 </div>
-            @endif
-        @endforeach
-        <!------total of incomes------------------------->
+        @endif
+    @endforeach
+    <!------total of incomes------------------------->
         <div class="row quarter_row">
             <div class="column1">
             </div>
@@ -267,7 +267,7 @@
                                 </div>
                             </div>
                     @endfor
-                        <!-------------end of items----------------------->
+                    <!-------------end of items----------------------->
 
                         <!--------- activity sub total and total -------------------->
                         <div class="row activity_total">
@@ -283,8 +283,9 @@
                         </div>
                         <!---------end of activity sub total and total--------------->
                     </div>
-                @endforeach
-                <!------end of activities------------------------>
+            @endforeach
+
+            <!------end of activities------------------------>
             </div>
             <div class="row quarter_row">
                 <div class="column1">
@@ -297,8 +298,8 @@
                 <div class="column4">{{number_format($expenditure->total)}}</div>
                 <div class="column5">{{number_format($expenditure->total)}}</div>
             </div>
-        @endforeach
-        <!------total of expenditures------------------------->
+    @endforeach
+    <!------total of expenditures------------------------->
         <div class="row quarter_row">
             <div class="column1">
             </div>

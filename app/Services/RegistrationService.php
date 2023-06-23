@@ -9,10 +9,12 @@ use App\Http\Resources\QuarterlyIncomeResource;
 use App\Interfaces\RegistrationInterface;
 use App\Models\User;
 use App\Models\MemberRegistration;
+use App\Traits\HelpTrait;
 use Illuminate\Support\Facades\DB;
 
 class RegistrationService implements RegistrationInterface
 {
+    use HelpTrait;
     private SessionService $sessionService;
     private RegistrationFeeService  $registrationFeeService;
 

@@ -144,9 +144,19 @@
         display: table;
         clear: both;
     }
+    .summary_num {
+        float: left;
+        width: 5%;
+        padding: 4px;
+        min-height: 25px;
+        font-weight: bolder;
+        text-transform: uppercase;
+        border-right: .8px solid black;
+        font-size: small;
+    }
     .summary {
         float: left;
-        width: 50%;
+        width: 45%;
         padding: 4px;
         min-height: 25px;
         font-weight: bolder;
@@ -181,7 +191,7 @@
         min-height: 15px;
         font-weight: bolder;
         text-transform: uppercase;
-        font-size: small;
+        font-size: medium;
     }
     .totals {
         float: left;
@@ -190,7 +200,7 @@
         font-weight: bolder;
         min-height: 25px;
         text-transform: uppercase;
-        font-size: small;
+        font-size: medium;
     }
 
     .fin_sec {

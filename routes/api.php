@@ -285,7 +285,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/activity/{id}/report/download', [GenerateReportController::class, 'downloadReportByActivity']);
         Route::get('/generate-quarterly-report', [GenerateReportController::class, 'generateQuarterlyReport']);
         Route::get('/report/quarter/download', [GenerateReportController::class, 'downloadQuarterlyReport']);
-
+        Route::get('/report/yearly/generate', [GenerateReportController::class, 'generateYearlyReport']);
+        Route::get('/report/yearly/download', [GenerateReportController::class, 'downloadYearlyReport']);
     });
 
     Route::prefix('protected')->group(function() {

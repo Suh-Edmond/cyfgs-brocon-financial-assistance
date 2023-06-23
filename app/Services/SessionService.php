@@ -80,4 +80,9 @@ class SessionService implements SessionInterface
     {
         return Session::findOrFail($id)->delete();
     }
+
+    public function getSessionByLabel($label)
+    {
+        return Session::where('year', $label)->first();
+    }
 }
