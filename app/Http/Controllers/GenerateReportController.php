@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Constants\Roles;
 use App\Models\User;
 use App\Services\ReportGenerationService;
 use App\Services\SessionService;
@@ -10,6 +9,7 @@ use App\Traits\HelpTrait;
 use App\Traits\ResponseTrait;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class GenerateReportController extends Controller
 {
@@ -31,7 +31,7 @@ class GenerateReportController extends Controller
         return $this->sendResponse($data, 200);
     }
 
-    public function downloadReportByActivity($id, Request $request)
+    public function downloadReportByActivity($id, Request $request): Response //query param: ?payment_activity=example_payment_activity
     {
         $data = $this->report_generation_service->generateReportPerActivity($id);
 
@@ -44,7 +44,7 @@ class GenerateReportController extends Controller
          $organisation      = User::find($auth_user['id'])->organisation;
          if(count($data) > 0) {
             $data = [
-                'title'               => 'Financial Report for '.$request->payment_actvity. " ". $this->session_service->getCurrentSession()->year,
+                'title'               => 'Financial Report for '.$request->payment_activity. " ". $this->session_service->getCurrentSession()->year,
                 'date'                => date('m/d/Y'),
                 'organisation'        => $organisation,
                 'incomes'             => $data[0],
@@ -66,7 +66,7 @@ class GenerateReportController extends Controller
     }
 
 
-    public function generateQuarterlyReport(Request $request)
+    public function generateQuarterlyReport(Request $request)//query param: ?quarter=example_quarter
     {
 
         $data = $this->report_generation_service->generateQuarterlyReport($request);
@@ -74,7 +74,7 @@ class GenerateReportController extends Controller
         return $this->sendResponse($data, 200);
     }
 
-    public function downloadQuarterlyReport(Request $request)
+    public function downloadQuarterlyReport(Request $request): Response //query param: ?quarter=example_quarter
     {
         $data = $this->report_generation_service->downloadQuarterlyReport($request);
 
@@ -82,32 +82,62 @@ class GenerateReportController extends Controller
 
         $organisation = User::find($auth_user['id'])->organisation;
 
-        $president = $this->getOrganisationAdministrators(Roles::PRESIDENT);
-
-        $treasurer = $this->getOrganisationAdministrators(Roles::TREASURER);
-
-        $fin_sec = $this->getOrganisationAdministrators(Roles::FINANCIAL_SECRETARY);
-
-
         if (count($data) > 0) {
             $payload = [
                 'title'                  => 'Financial Report From ' . $this->convertNumberToQuarterName($request->quarter) . " ". $this->session_service->getCurrentSession()->year,
                 'date'                   => date('m/d/Y'),
                 'organisation'           => $organisation,
                 'incomes'                => $data[0],
-                'total_income'           => $data[2] + $data[4],
+                'total_income'           => $data[2]['total_income'] + $data[4]['balance_brought_forward'],
                 'expenditures'           => $data[1],
-                'total_expenditures'     => $data[3],
-                'bal_brought_forward'    => $data[4],
-                'president'              => $president,
+                'total_expenditure'     => $data[3]['total_expenditure'],
+                'bal_brought_forward'    => $data[4]['balance_brought_forward'],
+                'president'              => $data[5]['president'],
                 'organisation_telephone' => $this->setOrganisationTelephone($organisation->telephone),
-                'treasurer'              => $treasurer,
-                'fin_secretary'          => $fin_sec,
-                'balance'                => $data[2] - $data[3],
+                'treasurer'              => $data[6]['treasurer'],
+                'fin_secretary'          => $data[7]['fin_sec'],
+                'balance'                => ($data[2]['total_income'] + $data[4]['balance_brought_forward']) - $data[3]['total_expenditure'],
                 'year'                   => $this->session_service->getCurrentSession()->year,
             ];
             $pdf = PDF::loadView('Reports.QuarterReport', $payload);
         }
         return $pdf->download('Quarter_Financial_Report.pdf');
+    }
+
+    public function generateYearlyReport(Request $request): Response //query param: ?year_id=example_year_id&year_label=example_year_label
+    {
+        $data = $this->report_generation_service->generateYearlyReport($request);
+
+        return $this->sendResponse($data, 200);
+    }
+
+    public function downloadYearlyReport(Request $request): Response //query param: ?year_id=example_year_id&year_label=example_year_label
+    {
+        $data = $this->report_generation_service->downloadYearlyReport($request);
+
+        $auth_user = auth()->user();
+
+        $organisation = User::find($auth_user['id'])->organisation;
+
+        if (count($data) > 0) {
+            $payload = [
+                'title'                  => 'Financial Report From the Year  ' . $request->year_label,
+                'date'                   => date('m/d/Y'),
+                'organisation'           => $organisation,
+                'incomes'                => $data[0],
+                'total_income'           => $data[2]['total_income'] + $data[4]['bal_brought_forward'],
+                'expenditures'           => $data[1],
+                'total_expenditure'      => $data[3]['total_expenditure'],
+                'bal_brought_forward'    => $data[4]['bal_brought_forward'],
+                'president'              => $data[5]['president'],
+                'organisation_telephone' => $this->setOrganisationTelephone($organisation->telephone),
+                'treasurer'              => $data[6]['treasurer'],
+                'fin_secretary'          => $data[7]['fin_sec'],
+                'balance'                => ($data[2]['total_income'] + $data[4]['bal_brought_forward']) - $data[3]['total_expenditure'],
+                'year'                   => $request->year_label,
+            ];
+            $pdf = PDF::loadView('Reports.YearlyReport', $payload);
+        }
+        return $pdf->download('Yearly_Financial_Report.pdf');
     }
 }

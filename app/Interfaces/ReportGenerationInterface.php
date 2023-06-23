@@ -9,4 +9,6 @@ interface ReportGenerationInterface {
     public function downloadQuarterlyReport($request);
 
     public function generateYearlyReport($request);
+
+    public function downloadYearlyReport($request);
 }

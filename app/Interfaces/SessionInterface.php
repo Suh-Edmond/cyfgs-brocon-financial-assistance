@@ -15,4 +15,6 @@ interface SessionInterface
     public function updateSession($request, $id);
 
     public function deleteSession($id);
+
+    public function getSessionByLabel($label);
 }

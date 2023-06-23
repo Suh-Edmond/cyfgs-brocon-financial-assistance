@@ -46,7 +46,7 @@
             <tr style="border: 1px solid black; font-size: smaller;">
                 <td style="padding: 5px;font-weight: bold;"></td>
                 <td style="padding: 10px;font-weight: bold;">Total</td>
-                <td style="padding: 10px;font-weight: bold;">{{$total_income}}</td>
+                <td style="padding: 10px;font-weight: bold;border-left: 1px solid black">{{$total_income}}</td>
             </tr>
         </table>
     </div>
@@ -81,10 +81,10 @@
                 </tr>
             @endforeach
             <tr style="border: 1px solid black; font-size: smaller;">
-                <td style="padding: 5px;font-weight: bold;"></td>
-                <td style="padding: 10px;font-weight: bold;">Total</td>
-                <td style="padding: 10px;font-weight: bold;">{{$total_amount_given}}</td>
-                <td style="padding: 10px;font-weight: bold;">{{$total_amount_spent}}</td>
+                <td style="padding: 5px;font-weight: bold;border-right: 1px solid black;"></td>
+                <td style="padding: 10px;font-weight: bold;border-right: 1px solid black;">Total</td>
+                <td style="padding: 10px;font-weight: bold;border-right: 1px solid black;">{{$total_amount_given}}</td>
+                <td style="padding: 10px;font-weight: bold;border-right: 1px solid black;">{{$total_amount_spent}}</td>
                 <td style="padding: 10px;font-weight: bold;">{{$balance}}</td>
             </tr>
         </table>
