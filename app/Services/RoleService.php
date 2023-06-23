@@ -14,14 +14,14 @@ class RoleService implements RoleInterface {
 
     use ResponseTrait, HelpTrait;
 
-    public function addUserRole($user_id, $role): bool
+    public function addUserRole($user_id, $role, $updated_by): bool
     {
         $user = User::findOrFail($user_id);
         $assignRole = CustomRole::findByName($role, 'api');
 
         $role_exist = $this->checkIfAUserAlreadyHasTheRole($user, $role);
         if($role_exist){
-            $this->saveUserRole($user, $assignRole);
+            $this->saveUserRole($user, $assignRole, $updated_by);
         }
         return $role_exist;
     }

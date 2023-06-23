@@ -118,13 +118,13 @@ trait HelpTrait {
         return $total;
     }
 
-    public function  saveUserRole($user, $role)
+    public function  saveUserRole($user, $role, $updated_by)
     {
         DB::table('model_has_roles')->insert([
             'role_id'       => $role->id,
             'model_id'      => $user->id,
             'model_type'    => 'App\Models\User',
-            'updated_by'    => $user->name
+            'updated_by'    => $updated_by
         ]);
     }
 

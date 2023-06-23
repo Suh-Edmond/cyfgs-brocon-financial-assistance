@@ -41,7 +41,7 @@ class UserManagementService implements UserManagementInterface
         ]);
 
         $role = CustomRole::findByName(Roles::MEMBER, 'api');
-        $this->saveUserRole($created, $role);
+        $this->saveUserRole($created, $role,  $request->user()->name);
     }
 
     public function getUsers($organisation_id)
@@ -152,7 +152,8 @@ class UserManagementService implements UserManagementInterface
 
     public function importUsers($organisation_id, $request)
     {
-        Excel::import(new UsersImport($organisation_id, $this->role_service), $request->file('file'));
+        $memberRole = CustomRole::findByName(Roles::MEMBER, 'api');
+        Excel::import(new UsersImport($organisation_id, $this->role_service, $request->user()->name, $memberRole), $request->file('file'));
     }
 
     public function filterUsers($request)
