@@ -79,14 +79,13 @@ class PaymentItemService implements PaymentItemInterface {
 
     public function filterPaymentItems($request) {
         $payment_items = $this->fetchPaymentItems($request->payment_category_id);
-        $compulsory = json_decode($request->is_complusory);
-        if(!is_null($compulsory)){
-            $payment_items = $payment_items->where('compulsory', $compulsory);
+        if(!is_null($request->compulsory)){
+            $payment_items = $payment_items->where('compulsory', $request->compulsory);
         }
-        if(!is_null($request->type)){
+        if(!is_null($request->type) && $request->type !== "ALL"){
             $payment_items = $payment_items->where('type', $request->type);
         }
-        if(!is_null($request->frequency)){
+        if(!is_null($request->frequency) && $request->frequency !== "ALL"){
             $payment_items = $payment_items->where('frequency', $request->frequency);
         }
         $payment_items = $payment_items->orderBy('payment_items.name', 'DESC')->get();

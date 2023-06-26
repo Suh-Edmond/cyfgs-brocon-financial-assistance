@@ -85,9 +85,8 @@ class PaymentItemController extends Controller
 
     public function downloadPaymentItem(Request $request)
     {
-        $auth_user         = auth()->user();
-        $organisation      = User::find($auth_user['id'])->organisation;
-        $items             = $this->payment_item_service->getPaymentItemsByCategory($request->payment_category_id);
+        $organisation      = $request->user()->organisation;
+        $items             = $this->payment_item_service->filterPaymentItems($request);
 
         $president         = $this->getOrganisationAdministrators(Roles::PRESIDENT);
         $treasurer         = $this->getOrganisationAdministrators(Roles::TREASURER);
