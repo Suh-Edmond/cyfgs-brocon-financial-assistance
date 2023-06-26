@@ -315,5 +315,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('/registration_fees/{id}/set', [RegistrationController::class, 'setNewFee']);
     });
 
+    Route::get("protected/test", [ActivitySupportController::class, 'test']);
 });
 

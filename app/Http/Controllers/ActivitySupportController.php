@@ -11,6 +11,7 @@ use App\Traits\HelpTrait;
 use App\Traits\ResponseTrait;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ActivitySupportController extends Controller
 {
@@ -97,11 +98,12 @@ class ActivitySupportController extends Controller
 
         $supports          = $this->prepareData($request);
 
-        $president         = $this->getOrganisationAdministrators(Roles::PRESIDENT);
+        $admins            = $this->getOrganisationAdministrators();
+        $president         = $admins[0];
 
-        $treasurer         = $this->getOrganisationAdministrators(Roles::TREASURER);
+        $treasurer         = $admins[2];
 
-        $fin_sec           = $this->getOrganisationAdministrators(Roles::FINANCIAL_SECRETARY);
+        $fin_sec           = $admins[1];
 
         $data = [
             'title'               => 'Sponsorships for '.$supports[0]->payment_item->name,
@@ -118,5 +120,4 @@ class ActivitySupportController extends Controller
 
         return $pdf->download('ActivitySupport.pdf');
     }
-
 }

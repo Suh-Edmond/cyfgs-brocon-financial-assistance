@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Constants\Roles;
 use App\Http\Resources\ActivityReportResource;
 use App\Http\Resources\DetailResource;
 use App\Http\Resources\IncomeResource;
@@ -78,11 +77,10 @@ class ReportGenerationService implements ReportGenerationInterface
             array_push($expenditures, new DetailResource($expense->name, $expense->amount_given, $expense->amount_spent, ($expense->amount_given- $expense->amount_spent)));
         }
         $total_balance += ($total_income - $total_amount_spent)  + $balance;
-        $president = $this->getOrganisationAdministrators(Roles::PRESIDENT);
-
-        $treasurer = $this->getOrganisationAdministrators(Roles::TREASURER);
-
-        $fin_sec = $this->getOrganisationAdministrators(Roles::FINANCIAL_SECRETARY);
+        $admins            = $this->getOrganisationAdministrators();
+        $president         = $admins[0];
+        $treasurer         = $admins[2];
+        $fin_sec           = $admins[1];
 
         return [$income_list, $expenditures, ["total_income" => $total_income], ["total_amount_given" => $total_amount_given],
             ["total_amount_spent" => $total_amount_spent], ["balance" => $balance], ["total_balance" => $total_balance],
@@ -99,11 +97,10 @@ class ReportGenerationService implements ReportGenerationInterface
         $expenditures_elements = $expenditures[0];
         $total_expenditures = $expenditures[1];
         $balance_bf = $this->computeBalanceBroughtForwardByQuarter($request, $current_year);
-        $president = $this->getOrganisationAdministrators(Roles::PRESIDENT);
-
-        $treasurer = $this->getOrganisationAdministrators(Roles::TREASURER);
-
-        $fin_sec = $this->getOrganisationAdministrators(Roles::FINANCIAL_SECRETARY);
+        $admins            = $this->getOrganisationAdministrators();
+        $president         = $admins[0];
+        $treasurer         = $admins[2];
+        $fin_sec           = $admins[1];
         return [$income_elements, $expenditures_elements, ["total_income" => $total_income], ["total_expenditure" => $total_expenditures],
             ["balance_brought_forward" => $balance_bf], ["president" => $president], ["treasurer" => $treasurer], ["fin_sec" => $fin_sec]];
     }
@@ -138,11 +135,10 @@ class ReportGenerationService implements ReportGenerationInterface
 
         $expenditures = $this->fetchYearlyExpenditures($request->year_id, $request->user()->organisation_id);
 
-        $president = $this->getOrganisationAdministrators(Roles::PRESIDENT);
-
-        $treasurer = $this->getOrganisationAdministrators(Roles::TREASURER);
-
-        $fin_sec = $this->getOrganisationAdministrators(Roles::FINANCIAL_SECRETARY);
+        $admins            = $this->getOrganisationAdministrators();
+        $president         = $admins[0];
+        $treasurer         = $admins[2];
+        $fin_sec           = $admins[1];
         $income_list = $income[0];
         $total_income = $income[1];
         $expenditure_list = $expenditures[0];

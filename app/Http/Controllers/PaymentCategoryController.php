@@ -76,9 +76,10 @@ class PaymentCategoryController extends Controller
     public function downloadPaymentCategory(Request $request)
     {
         $organisation      = $request->user()->organisation;
-        $president         = $this->getOrganisationAdministrators(Roles::PRESIDENT);
-        $treasurer         = $this->getOrganisationAdministrators(Roles::TREASURER);
-        $fin_sec           = $this->getOrganisationAdministrators(Roles::FINANCIAL_SECRETARY);
+        $admins            = $this->getOrganisationAdministrators();
+        $president         = $admins[0];
+        $treasurer         = $admins[2];
+        $fin_sec           = $admins[1];
 
         $data = [
             'title'             =>'Payment Categories',

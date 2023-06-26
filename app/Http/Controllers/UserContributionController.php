@@ -111,7 +111,7 @@ class UserContributionController extends Controller
     public function downloadFilteredContributions(Request $request) {
         $contributions     = $this->filterContributions($request);
         $contributions     = json_decode(json_encode($contributions))->original->data;
-        $this->downloadContribution($contributions);
+        $this->downloadContribution($contributions, $request);
     }
 
 
@@ -149,19 +149,19 @@ class UserContributionController extends Controller
     public function downloadUserContributions(Request $request) {
         $contributions      = $this->getUsersContributionsByItem($request->payment_item_id, $request->user_id);
         $contributions      = json_decode(json_encode($contributions))->original->data;
-        $this->downloadContribution($contributions);
+        $this->downloadContribution($contributions, $request);
     }
 
 
-    public function downloadContribution($contributions)
+    public function downloadContribution($contributions, Request $request)
     {
 
-        $auth_user         = auth()->user();
-        $organisation      = User::find($auth_user['id'])->organisation;
+         $organisation      = $request->user()->organisation;
 
-        $president         = $this->getOrganisationAdministrators(Roles::PRESIDENT);
-        $treasurer         = $this->getOrganisationAdministrators(Roles::TREASURER);
-        $fin_sec           = $this->getOrganisationAdministrators(Roles::FINANCIAL_SECRETARY);
+        $admins            = $this->getOrganisationAdministrators();
+        $president         = $admins[0];
+        $treasurer         = $admins[2];
+        $fin_sec           = $admins[1];
         $total             = $this->computeTotalContribution($contributions);
 
         $data = [

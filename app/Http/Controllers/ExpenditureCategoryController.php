@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Constants\Roles;
 use App\Http\Requests\ExpenditureCategoryRequest;
 use App\Http\Resources\ExpenditureCategoryResource;
-use App\Models\User;
 use App\Services\ExpenditureCategoryService;
 use App\Traits\HelpTrait;
 use App\Traits\ResponseTrait;
@@ -77,13 +75,12 @@ class ExpenditureCategoryController extends Controller
 
     public function downloadExpenditureCategory(Request $request)
     {
-        $auth_user         = auth()->user();
-        $organisation      = User::find($auth_user['id'])->organisation;
+        $organisation      = $request->user()->organisation;
         $expenditure_categories = $this->expenditure_category_service->getExpenditureCategories($request->organisation_id);
-
-        $president         = $this->getOrganisationAdministrators(Roles::PRESIDENT);
-        $treasurer         = $this->getOrganisationAdministrators(Roles::TREASURER);
-        $fin_sec           = $this->getOrganisationAdministrators(Roles::FINANCIAL_SECRETARY);
+        $admins            = $this->getOrganisationAdministrators();
+        $president         = $admins[0];
+        $treasurer         = $admins[2];
+        $fin_sec           = $admins[1];
 
         $data = [
             'title'                    => 'Expenditure Categories',

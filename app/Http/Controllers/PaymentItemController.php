@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Constants\Roles;
 use App\Http\Requests\PaymentItemRequest;
 use App\Http\Requests\UpdatePaymentItemReferenceRequest;
 use App\Http\Resources\PaymentItemResource;
-use App\Models\User;
 use App\Services\PaymentItemService;
 use App\Traits\HelpTrait;
 use App\Traits\ResponseTrait;
@@ -77,9 +75,9 @@ class PaymentItemController extends Controller
         return $this->sendResponse($data, 200);
     }
 
-    public function getPaymentItemByType()
+    public function getPaymentItemByType(Request $request)
     {
-        $data = $this->payment_item_service->getPaymentItemByType();
+        $data = $this->payment_item_service->getPaymentItemByType($request->type);
         return $this->sendResponse(PaymentItemResource::collection($data), 200);
     }
 
@@ -87,10 +85,10 @@ class PaymentItemController extends Controller
     {
         $organisation      = $request->user()->organisation;
         $items             = $this->payment_item_service->filterPaymentItems($request);
-
-        $president         = $this->getOrganisationAdministrators(Roles::PRESIDENT);
-        $treasurer         = $this->getOrganisationAdministrators(Roles::TREASURER);
-        $fin_sec           = $this->getOrganisationAdministrators(Roles::FINANCIAL_SECRETARY);
+        $admins            = $this->getOrganisationAdministrators();
+        $president         = $admins[0];
+        $treasurer         = $admins[2];
+        $fin_sec           = $admins[1];
 
 
         $data = [

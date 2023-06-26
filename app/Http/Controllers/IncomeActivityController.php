@@ -3,10 +3,8 @@
 namespace App\Http\Controllers;
 
 
-use App\Constants\Roles;
-use App\Http\Resources\IncomeActivityResource;
+ use App\Http\Resources\IncomeActivityResource;
 use App\Http\Requests\IncomeActivityRequest;
-use App\Models\User;
 use App\Services\IncomeActivityService;
 use App\Traits\HelpTrait;
 use App\Traits\ResponseTrait;
@@ -89,18 +87,16 @@ class IncomeActivityController extends Controller
     //I will have to pass the parameters in the request and run the query to download the data
     public function generateIncomeActivityPDF(Request $request)
     {
-        $auth_user         = auth()->user();
-        $organisation      = User::find($auth_user['id'])->organisation;
+         $organisation      = $request->user()->organisation;
 
         $income_activities = $this->prepareData($request);
 
         $total             = $this->income_activity_service->calculateTotal($income_activities);
 
-        $president         = $this->getOrganisationAdministrators(Roles::PRESIDENT);
-
-        $treasurer         = $this->getOrganisationAdministrators(Roles::TREASURER);
-
-        $fin_sec           = $this->getOrganisationAdministrators(Roles::FINANCIAL_SECRETARY);
+        $admins            = $this->getOrganisationAdministrators();
+        $president         = $admins[0];
+        $treasurer         = $admins[2];
+        $fin_sec           = $admins[1];
 
 
         $data = [

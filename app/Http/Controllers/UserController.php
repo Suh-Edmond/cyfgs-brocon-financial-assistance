@@ -13,7 +13,6 @@ use App\Http\Requests\UpdatePasswordRequest;
 use App\Http\Requests\UpdateProfileRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\UserResource;
-use App\Models\User;
 use App\Services\RoleService;
 use App\Services\UserManagementService;
 use App\Traits\HelpTrait;
@@ -120,13 +119,12 @@ class UserController extends Controller
 
     public function downloadUsers(Request $request)
     {
-        $auth_user         = auth()->user();
-        $organisation      = User::find($auth_user['id'])->organisation;
+        $organisation      =$request->user()->organisation;
         $users             = $this->user_management_service->filterUsers($request);
-
-        $president         = $this->getOrganisationAdministrators(Roles::PRESIDENT);
-        $treasurer         = $this->getOrganisationAdministrators(Roles::TREASURER);
-        $fin_sec           = $this->getOrganisationAdministrators(Roles::FINANCIAL_SECRETARY);
+        $admins            = $this->getOrganisationAdministrators();
+        $president         = $admins[0];
+        $treasurer         = $admins[2];
+        $fin_sec           = $admins[1];
 
         $data = [
         'title'                      => $request->has_register == RegistrationStatus::REGISTERED ? 'Registered Organisation Members':'Non Registered Organisation Members',

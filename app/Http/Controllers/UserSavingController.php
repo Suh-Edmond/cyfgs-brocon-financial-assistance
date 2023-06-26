@@ -2,12 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Constants\Roles;
 use App\Http\Requests\UserSavingRequest;
 use App\Http\Requests\UpdateUserSavingRequest;
-use App\Http\Resources\UserSavingCollection;
 use App\Http\Resources\UserSavingResource;
-use App\Models\User;
 use App\Services\UserSavingService;
 use App\Traits\HelpTrait;
 use App\Traits\ResponseTrait;
@@ -108,18 +105,14 @@ class UserSavingController extends Controller
 
     public function download(Request $request)
     {
-
-        $auth_user         = auth()->user();
-
-        $organisation      = User::find($auth_user['id'])->organisation;
+        $organisation      = $request->user()->organisation;
 
         $savings           = $this->user_saving_service->getUserSavingsForDownload($request);
 
-        $president         = $this->getOrganisationAdministrators(Roles::PRESIDENT);
-
-        $treasurer         = $this->getOrganisationAdministrators(Roles::TREASURER);
-
-        $fin_sec           = $this->getOrganisationAdministrators(Roles::FINANCIAL_SECRETARY);
+        $admins            = $this->getOrganisationAdministrators();
+        $president         = $admins[0];
+        $treasurer         = $admins[2];
+        $fin_sec           = $admins[1];
 
 
         $data = [
@@ -140,20 +133,16 @@ class UserSavingController extends Controller
 
     public function downloadOrganisationSavings(Request  $request)
     {
+        $organisation      = $request->user()->organisation;
 
-        $auth_user         = auth()->user();
-
-        $organisation      = User::find($auth_user['id'])->organisation;
-
-        $savings = $this->user_saving_service->getOrganisationSavingsForDownload($request->organisation_id);
+        $savings = $this->user_saving_service->getOrganisationSavingsForDownload($request->organisation_id, $request->session_id);
 
         $total = $this->user_saving_service->calculateOrganisationTotalSavings($savings);
 
-        $president         = $this->getOrganisationAdministrators(Roles::PRESIDENT);
-
-        $treasurer         = $this->getOrganisationAdministrators(Roles::TREASURER);
-
-        $fin_sec           = $this->getOrganisationAdministrators(Roles::FINANCIAL_SECRETARY);
+        $admins            = $this->getOrganisationAdministrators();
+        $president         = $admins[0];
+        $treasurer         = $admins[2];
+        $fin_sec           = $admins[1];
 
 
         $data = [
