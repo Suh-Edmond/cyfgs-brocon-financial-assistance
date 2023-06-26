@@ -314,5 +314,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/registration_fees/{id}', [RegistrationController::class, 'deleteRegistrationFee']);
         Route::put('/registration_fees/{id}/set', [RegistrationController::class, 'setNewFee']);
     });
+
 });
 

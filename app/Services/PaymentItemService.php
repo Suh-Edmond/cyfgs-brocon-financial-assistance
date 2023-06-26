@@ -2,6 +2,7 @@
 namespace App\Services;
 
 use App\Constants\PaymentItemFrequency;
+use App\Constants\PaymentItemType;
 use App\Http\Resources\PaymentItemCollection;
 use App\Interfaces\PaymentItemInterface;
 use App\Models\PaymentCategory;
@@ -32,7 +33,7 @@ class PaymentItemService implements PaymentItemInterface {
             'type'                => $request->type,
             'frequency'           => $request->frequency,
             'session_id'          => $current_session->id,
-            'reference'           => $request->reference
+            'reference'           => $this->setPaymentItemReference($request->type)
         ]);
     }
 
@@ -47,7 +48,7 @@ class PaymentItemService implements PaymentItemInterface {
             'description'   => $request->description,
             'type'          => $request->type,
             'frequency'     => $request->frequency,
-            'reference'     => $request->reference
+            'reference'     => $this->setPaymentItemReference($request->type)
         ]);
     }
 
@@ -153,5 +154,17 @@ class PaymentItemService implements PaymentItemInterface {
             ->orderBy('payment_items.name', 'ASC')
             ->get();
 
+    }
+
+    private function setPaymentItemReference($type)
+    {
+        $reference = null;
+        if ($type == PaymentItemType::MEMBERS_WITH_ROLES){
+            $reference = $this->getAllAdminsId();
+        }
+        if($type == PaymentItemType::MEMBERS_WITHOUT_ROLES){
+            $reference = $this->getAllNoAdminsId();
+        }
+        return $reference;
     }
 }

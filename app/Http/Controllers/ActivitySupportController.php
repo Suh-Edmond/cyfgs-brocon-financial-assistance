@@ -118,4 +118,5 @@ class ActivitySupportController extends Controller
 
         return $pdf->download('ActivitySupport.pdf');
     }
+
 }

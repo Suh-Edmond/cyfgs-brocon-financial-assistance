@@ -317,6 +317,33 @@ trait HelpTrait {
             ->first();
     }
 
+    public static function getAllAdminsId()
+    {
+        $adminRef = null;
+        $adminId = DB::table('users')
+                    ->join('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
+                    ->join('roles', 'roles.id', '=', 'model_has_roles.role_id')
+                    ->select('users.id')
+                    ->whereIn('roles.name', [Roles::TREASURER, Roles::FINANCIAL_SECRETARY, Roles::PRESIDENT, Roles::AUDITOR])
+                    ->get()->toArray();
+        foreach ($adminId as $id){
+            $adminRef .= $id->id ."/";
+        }
+        return $adminRef;
+    }
+
+    public static function getAllNoAdminsId()
+    {
+        $nonAdminRef = null;
+        $nonAdminId = User::all();
+        foreach ($nonAdminId as $user){
+            if (count($user->roles) <= 1){
+                $nonAdminRef .= $user->id ."/";
+            }
+        }
+        return $nonAdminRef;
+    }
+
     public static function getStartQuarter($year, $quarter)
     {
         if($quarter == 1){
