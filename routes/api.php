@@ -91,7 +91,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
     Route::prefix('protected')->group(function () {
-        Route::get('/organisations/{organisation_id}/payment-categories', [PaymentCategoryController::class, 'getPaymentCategories']);
+        Route::get('/organisation/payment-categories', [PaymentCategoryController::class, 'getPaymentCategories']);
         Route::get('/organisations/{organisation_id}/payment-categories/{id}', [PaymentCategoryController::class, 'getPaymentCategory']);
         Route::get('/download-payment-categories', [PaymentCategoryController::class, 'downloadPaymentCategory']);
         Route::get('/filter-payment-categories', [PaymentCategoryController::class, 'filterPaymentCategory']);

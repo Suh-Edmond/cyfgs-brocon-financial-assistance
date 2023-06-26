@@ -36,12 +36,10 @@ class PaymentCategoryController extends Controller
     }
 
 
-    public function getPaymentCategories($organisation_id)
+    public function getPaymentCategories(Request $request)
     {
-        $payment_categories = $this->payment_category_service->getPaymentCategories($organisation_id);
-
+        $payment_categories = $this->payment_category_service->getPaymentCategories($request);
         return $this->sendResponse($payment_categories, 200);
-
     }
 
 
@@ -77,9 +75,7 @@ class PaymentCategoryController extends Controller
 
     public function downloadPaymentCategory(Request $request)
     {
-        $auth_user         = auth()->user();
-        $organisation      = User::find($auth_user['id'])->organisation;
-
+        $organisation      = $request->user()->organisation;
         $president         = $this->getOrganisationAdministrators(Roles::PRESIDENT);
         $treasurer         = $this->getOrganisationAdministrators(Roles::TREASURER);
         $fin_sec           = $this->getOrganisationAdministrators(Roles::FINANCIAL_SECRETARY);
@@ -89,7 +85,7 @@ class PaymentCategoryController extends Controller
             'date'              => date('m/d/Y'),
             'organisation'      => $organisation,
             'organisation_telephone' => $this->setOrganisationTelephone($organisation->telephone),
-            'categories'        => $this->payment_category_service->getPaymentCategories($request['organisation_id']),
+            'categories'        => $this->payment_category_service->getPaymentCategories($request),
             'president'         => $president,
             'treasurer'         => $treasurer,
             'fin_secretary'     => $fin_sec
