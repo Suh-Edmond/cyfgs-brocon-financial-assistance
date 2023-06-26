@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use App\Constants\PaymentItemFrequency;
 use App\Constants\Roles;
 use App\Http\Resources\ExpenditureDetailResource;
 use App\Http\Resources\UserResource;
@@ -270,11 +271,14 @@ trait HelpTrait {
         return $data;
     }
 
-    public function getDateQuarter()
+    public function getDateQuarter($item)
     {
-        $quarters = array(1 => "January March", 2 => "April June", 3 => "July September", 4 => "October December");
-        $a = Carbon::parse(Carbon::now());
-        return $quarters[$a->quarter];
+        $quarter = null;
+        if($item->frequency == PaymentItemFrequency::QUARTERLY){
+            $a = Carbon::parse(Carbon::now());
+            $quarter = $this->convertNumberToQuarterName($a->quarter);
+        }
+        return $quarter;
     }
 
     public function checkMemberExistAsReference($user_id, $reference)

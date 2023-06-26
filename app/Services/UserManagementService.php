@@ -50,7 +50,7 @@ class UserManagementService implements UserManagementInterface
                  ->leftJoin('member_registrations', 'users.id', '=', 'member_registrations.user_id')
                  ->where('organisations.id', $organisation_id)
                  ->select('users.*', 'member_registrations.approve')
-                 ->orderBy('created_at', 'DESC')->get();
+                 ->orderBy('name')->get();
 
     }
 

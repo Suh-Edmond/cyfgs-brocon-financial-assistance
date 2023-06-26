@@ -16,7 +16,11 @@ class MemberContributedItemResource extends JsonResource
     private $approve;
     private $created_at;
     private $year;
-    public function __construct($id, $payment_item_id, $payment_item_amount, $name, $amount_deposited, $balance, $status, $approve, $created_at, $year)
+    private $frequency;
+    private $month_name;
+    private $quarterly_name;
+    public function __construct($id, $payment_item_id, $payment_item_amount, $name, $amount_deposited,
+                                $balance, $status, $approve, $created_at, $year, $frequency, $month_name, $quarterly_name)
     {
         parent::__construct(null);
         $this->id = $id;
@@ -29,6 +33,9 @@ class MemberContributedItemResource extends JsonResource
         $this->approve = $approve;
         $this->year = $year;
         $this->created_at = $created_at;
+        $this->frequency = $frequency;
+        $this->month_name = $month_name;
+        $this->quarterly_name = $quarterly_name;
     }
 
     public function toArray($request)
@@ -44,6 +51,9 @@ class MemberContributedItemResource extends JsonResource
             'approve'         => $this->approve,
             'year'             => $this->year,
             'created_at'       => $this->created_at,
+            'frequency'        => $this->frequency,
+            'month_name'       => $this->month_name,
+            'quarterly_name'   => $this->quarterly_name
         ];
     }
 }
