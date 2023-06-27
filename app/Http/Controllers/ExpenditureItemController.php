@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Constants\Roles;
-use App\Http\Requests\ExpenditureItemRequest;
-use App\Models\User;
-use App\Services\ExpenditureItemService;
+ use App\Http\Requests\ExpenditureItemRequest;
+ use App\Services\ExpenditureItemService;
 use App\Traits\HelpTrait;
 use App\Traits\ResponseTrait;
 use Illuminate\Http\Request;
@@ -107,13 +105,13 @@ class ExpenditureItemController extends Controller
 
     public function downloadExpenditureItems(Request $request)
     {
-        $auth_user         = auth()->user();
-        $organisation      = User::find($auth_user['id'])->organisation;
+        $organisation      = $request->user()->organisation;
         $expenditure_items = $this->prepareDataForDownload($request);
 
-        $president         = $this->getOrganisationAdministrators(Roles::PRESIDENT);
-        $treasurer         = $this->getOrganisationAdministrators(Roles::TREASURER);
-        $fin_sec           = $this->getOrganisationAdministrators(Roles::FINANCIAL_SECRETARY);
+        $admins            = $this->getOrganisationAdministrators();
+        $president         = $admins[0];
+        $treasurer         = $admins[2];
+        $fin_sec           = $admins[1];
 
         $data = [
             'title'               => 'Expenditure Activities',

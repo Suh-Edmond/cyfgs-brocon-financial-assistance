@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use App\Constants\PaymentItemFrequency;
 use App\Constants\Roles;
 use App\Http\Resources\ExpenditureDetailResource;
 use App\Http\Resources\UserResource;
@@ -88,14 +89,14 @@ trait HelpTrait {
     }
 
 
-    public static function getOrganisationAdministrators($role)
+    public static function getOrganisationAdministrators()
     {
         return DB::table('users')
             ->join('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
             ->join('roles', 'roles.id', '=', 'model_has_roles.role_id')
             ->select('users.name', 'users.telephone', 'users.email')
-            ->where('roles.name', $role)
-            ->first();
+            ->whereIn('roles.name', [Roles::PRESIDENT, Roles::FINANCIAL_SECRETARY, Roles::TREASURER])
+            ->get()->toArray();
     }
 
     public static function computeTotalAmountByPaymentCategory($items): int
@@ -270,11 +271,14 @@ trait HelpTrait {
         return $data;
     }
 
-    public function getDateQuarter()
+    public function getDateQuarter($item)
     {
-        $quarters = array(1 => "January March", 2 => "April June", 3 => "July September", 4 => "October December");
-        $a = Carbon::parse(Carbon::now());
-        return $quarters[$a->quarter];
+        $quarter = null;
+        if($item->frequency == PaymentItemFrequency::QUARTERLY){
+            $a = Carbon::parse(Carbon::now());
+            $quarter = $this->convertNumberToQuarterName($a->quarter);
+        }
+        return $quarter;
     }
 
     public function checkMemberExistAsReference($user_id, $reference)
@@ -311,6 +315,33 @@ trait HelpTrait {
             ->whereNotIn('roles.name', [Roles::TREASURER, Roles::FINANCIAL_SECRETARY, Roles::PRESIDENT, Roles::AUDITOR])
             ->select('users.*')
             ->first();
+    }
+
+    public static function getAllAdminsId()
+    {
+        $adminRef = null;
+        $adminId = DB::table('users')
+                    ->join('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
+                    ->join('roles', 'roles.id', '=', 'model_has_roles.role_id')
+                    ->select('users.id')
+                    ->whereIn('roles.name', [Roles::TREASURER, Roles::FINANCIAL_SECRETARY, Roles::PRESIDENT, Roles::AUDITOR])
+                    ->get()->toArray();
+        foreach ($adminId as $id){
+            $adminRef .= $id->id ."/";
+        }
+        return $adminRef;
+    }
+
+    public static function getAllNoAdminsId()
+    {
+        $nonAdminRef = null;
+        $nonAdminId = User::all();
+        foreach ($nonAdminId as $user){
+            if (count($user->roles) <= 1){
+                $nonAdminRef .= $user->id ."/";
+            }
+        }
+        return $nonAdminRef;
     }
 
     public static function getStartQuarter($year, $quarter)

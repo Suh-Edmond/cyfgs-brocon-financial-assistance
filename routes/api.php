@@ -91,7 +91,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
     Route::prefix('protected')->group(function () {
-        Route::get('/organisations/{organisation_id}/payment-categories', [PaymentCategoryController::class, 'getPaymentCategories']);
+        Route::get('/organisation/payment-categories', [PaymentCategoryController::class, 'getPaymentCategories']);
         Route::get('/organisations/{organisation_id}/payment-categories/{id}', [PaymentCategoryController::class, 'getPaymentCategory']);
         Route::get('/download-payment-categories', [PaymentCategoryController::class, 'downloadPaymentCategory']);
         Route::get('/filter-payment-categories', [PaymentCategoryController::class, 'filterPaymentCategory']);
@@ -174,7 +174,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/user-savings/{user_id}/{id}', [UserSavingController::class, 'getUserSaving']);
         Route::get('savings/download', [UserSavingController::class, 'download']);
         Route::get('organisation-savings/download', [UserSavingController::class, 'downloadOrganisationSavings']);
-        Route::get('savings', [UserSavingController::class, 'getMembersSavingsByName']);
+        Route::get('savings', [UserSavingController::class, 'getMembersSavingsByOrganisation']);
     });
 
     Route::prefix('protected')->group(function () {
@@ -314,5 +314,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/registration_fees/{id}', [RegistrationController::class, 'deleteRegistrationFee']);
         Route::put('/registration_fees/{id}/set', [RegistrationController::class, 'setNewFee']);
     });
+
+    Route::get("protected/test", [ActivitySupportController::class, 'test']);
 });
 

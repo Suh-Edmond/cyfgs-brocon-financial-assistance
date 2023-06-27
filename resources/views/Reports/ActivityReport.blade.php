@@ -146,7 +146,7 @@
                 FINANCIAL SECRETARY
             </div>
             <div style="font-weight: bold;font-size: small; text-transform: uppercase;text-align: center">
-                @isset($treasurer)
+                @isset($fin_secretary)
                     <span>{{$fin_secretary->name}}</span>
                 @endisset
             </div>

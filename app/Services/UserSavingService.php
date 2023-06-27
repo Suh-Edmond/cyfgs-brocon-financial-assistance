@@ -189,7 +189,7 @@ class UserSavingService implements UserSavingInterface
         return $this->findOrganisationUserSavings($id, $session_id);
     }
 
-    public function  getMembersSavingsByName($request)
+    public function  getMembersSavingsByOrganisation($request)
     {
         return  DB::table('user_savings')
             ->join('users', 'users.id', '=', 'user_savings.user_id')
@@ -201,9 +201,12 @@ class UserSavingService implements UserSavingInterface
     public function filterSavings($request)
     {
 
-        $data = $this->getMembersSavingsByName($request);
+        $data = $this->getMembersSavingsByOrganisation($request);
         $data = $data->where('user_savings.session_id', $request->session_id);
 
+        if (!is_null($request->user_id)) {
+            $data = $data->where('user_savings.user_id', $request->user_id);
+        }
         if(!is_null($request->name)){
             $data = $data->where('users.name', 'LIKE', '%'.$request->name.'%');
         }
@@ -218,9 +221,6 @@ class UserSavingService implements UserSavingInterface
         }
         if (!is_null($request->month)) {
             $data = $data->whereMonth('user_savings.created_at', $this->convertMonthNameToNumber($request->month));
-        }
-        if (!is_null($request->user_id)) {
-            $data = $data->where('user_savings.user_id', $request->user_id);
         }
 
         $data = $data->select('user_savings.*', 'users.id as user_id',

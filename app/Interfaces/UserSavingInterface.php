@@ -2,8 +2,6 @@
 namespace App\Interfaces;
 
 
-use Illuminate\Http\Request;
-
 interface UserSavingInterface {
 
     public function createUserSaving($request);
@@ -22,6 +20,6 @@ interface UserSavingInterface {
 
     public function findUserSavingByStatus($status, $id);
 
-    public function  getMembersSavingsByName(Request  $request);
+    public function  getMembersSavingsByOrganisation($request);
 }
 

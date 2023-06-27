@@ -2,6 +2,7 @@
 namespace App\Models;
 
 use App\Traits\GenerateUuid;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
@@ -75,6 +76,11 @@ class User extends Authenticatable
 
     public function registrations() {
         return $this->hasMany(MemberRegistration::class);
+    }
+
+    public function userRoles()
+    {
+        return  $this->hasMany(CustomRole::class);
     }
 
 }

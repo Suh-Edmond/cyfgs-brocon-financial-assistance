@@ -17,10 +17,10 @@ class PaymentCategorySeeder extends Seeder
 
     public function run(Faker $faker)
     {
-       for($i = 0; $i < 50; $i++)
+       for($i = 0; $i < 1; $i++)
        {
             PaymentCategory::create([
-                'name'              => $faker->name,
+                'name'              => "Rallies",
                 'description'       => $faker->sentence,
                 'organisation_id'   => $this->organisations[0],
                 'updated_by'        => $faker->name

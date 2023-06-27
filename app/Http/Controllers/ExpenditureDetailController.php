@@ -2,9 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Constants\Roles;
 use App\Http\Requests\ExpenditureDetailRequest;
-use App\Models\User;
 use App\Services\ExpenditureDetailService;
 use App\Traits\HelpTrait;
 use App\Traits\ResponseTrait;
@@ -81,16 +79,14 @@ class ExpenditureDetailController extends Controller
 
     public function downloadExpenditureDetail(Request $request)
     {
-        $auth_user         = auth()->user();
-        $organisation      = User::find($auth_user['id'])->organisation;
+        $organisation      = $request->user()->organisation;
 
         $expenditure_details = $this->expenditure_detail_service->setDataForDownload($request);
 
-        $president         = $this->getOrganisationAdministrators(Roles::PRESIDENT);
-
-        $treasurer         = $this->getOrganisationAdministrators(Roles::TREASURER);
-
-        $fin_sec           = $this->getOrganisationAdministrators(Roles::FINANCIAL_SECRETARY);
+        $admins            = $this->getOrganisationAdministrators();
+        $president         = $admins[0];
+        $treasurer         = $admins[2];
+        $fin_sec           = $admins[1];
 
         $total_amount_given = $this->calculateTotalAmountGiven($expenditure_details);
 

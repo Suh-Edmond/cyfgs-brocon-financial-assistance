@@ -2,6 +2,7 @@
 namespace App\Services;
 
 use App\Constants\PaymentItemFrequency;
+use App\Constants\PaymentItemType;
 use App\Http\Resources\PaymentItemCollection;
 use App\Interfaces\PaymentItemInterface;
 use App\Models\PaymentCategory;
@@ -32,7 +33,7 @@ class PaymentItemService implements PaymentItemInterface {
             'type'                => $request->type,
             'frequency'           => $request->frequency,
             'session_id'          => $current_session->id,
-            'reference'           => $request->reference
+            'reference'           => $this->setPaymentItemReference($request->type)
         ]);
     }
 
@@ -47,7 +48,7 @@ class PaymentItemService implements PaymentItemInterface {
             'description'   => $request->description,
             'type'          => $request->type,
             'frequency'     => $request->frequency,
-            'reference'     => $request->reference
+            'reference'     => $this->setPaymentItemReference($request->type)
         ]);
     }
 
@@ -79,14 +80,13 @@ class PaymentItemService implements PaymentItemInterface {
 
     public function filterPaymentItems($request) {
         $payment_items = $this->fetchPaymentItems($request->payment_category_id);
-        $compulsory = json_decode($request->is_complusory);
-        if(!is_null($compulsory)){
-            $payment_items = $payment_items->where('compulsory', $compulsory);
+        if(!is_null($request->compulsory)){
+            $payment_items = $payment_items->where('compulsory', $request->compulsory);
         }
-        if(!is_null($request->type)){
+        if(!is_null($request->type) && $request->type !== "ALL"){
             $payment_items = $payment_items->where('type', $request->type);
         }
-        if(!is_null($request->frequency)){
+        if(!is_null($request->frequency) && $request->frequency !== "ALL"){
             $payment_items = $payment_items->where('frequency', $request->frequency);
         }
         $payment_items = $payment_items->orderBy('payment_items.name', 'DESC')->get();
@@ -154,5 +154,17 @@ class PaymentItemService implements PaymentItemInterface {
             ->orderBy('payment_items.name', 'ASC')
             ->get();
 
+    }
+
+    private function setPaymentItemReference($type)
+    {
+        $reference = null;
+        if ($type == PaymentItemType::MEMBERS_WITH_ROLES){
+            $reference = $this->getAllAdminsId();
+        }
+        if($type == PaymentItemType::MEMBERS_WITHOUT_ROLES){
+            $reference = $this->getAllNoAdminsId();
+        }
+        return $reference;
     }
 }
