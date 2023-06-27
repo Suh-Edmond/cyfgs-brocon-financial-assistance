@@ -89,8 +89,8 @@ class UserSavingController extends Controller
         return $this->sendResponse($savings, 200);
     }
 
-    public function getMembersSavingsByName(Request $request){
-        $savings = $this->user_saving_service->getMembersSavingsByName($request);
+    public function getMembersSavingsByOrganisation(Request $request){
+        $savings = $this->user_saving_service->getMembersSavingsByOrganisation($request);
 
         return $this->sendResponse($savings, 200);
     }
