@@ -180,7 +180,6 @@ class ExpenditureItemService implements ExpenditureItemInterface {
             ->join('payment_items', ['payment_items.id' => 'expenditure_items.payment_item_id'])
             ->join('expenditure_categories', ['expenditure_categories.id' => 'expenditure_items.expenditure_category_id'])
             ->join('sessions', ['sessions.id' => 'expenditure_items.session_id']);
-
         $items = is_null($request->session_id) ? $items->where('expenditure_items.session_id', $current_session->id) : $items->where('expenditure_items.session_id', $request->session_id);
         if(!is_null($request->expenditure_category_id)){
             $items = $items->where('expenditure_items.expenditure_category_id', $request->expenditure_category_id);
