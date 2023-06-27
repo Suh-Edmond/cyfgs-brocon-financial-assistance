@@ -52,14 +52,19 @@ class ExpenditureDetailService implements ExpenditureDetailInterface {
 
     public function getExpenditureDetails($expenditure_item_id)
     {
+        $expenditure_item_name = null;
+        $expenditure_item_amount = 0;
         $details            = $this->findExpenditureDetails($expenditure_item_id);
-
         $response           = $this->generateResponseForExpenditureDetails($details);
-        $item_amount        = $this->setExpenditureItemAmount($details);
-        $total_amount_given = $this->calculateTotalAmountGiven($details);
-        $total_amount_spent = $this->calculateTotalAmountSpent($details);
-        $balance            = $this->calculateExpenditureBalanceByExpenditureItem($details, $item_amount);
-        return new ExpenditureDetailCollection($response, $item_amount, $total_amount_given, $total_amount_spent, $balance);
+        if(count($details) > 0){
+            $expenditure_item_name = $details[0]->expenditureItem->name;
+            $expenditure_item_amount = $details[0]->expenditureItem->amount;
+        }
+        $total_amount_given = collect($details)->sum('amount_given');
+        $total_amount_spent = collect($details)->sum('amount_spent');
+        $balance            = ($expenditure_item_amount - $total_amount_given) + ($total_amount_given - $total_amount_spent);
+
+        return new ExpenditureDetailCollection($response,$expenditure_item_name, $expenditure_item_amount, $total_amount_given, $total_amount_spent, $balance);
     }
 
     public function getExpenditureDetail($id)
@@ -122,7 +127,7 @@ class ExpenditureDetailService implements ExpenditureDetailInterface {
 
     public function setDataForDownload($request) {
         if(is_null($request->status)) {
-            return $this->getExpenditureDetails($request->expenditure_item_id);
+             return $this->getExpenditureDetails($request->expenditure_item_id);
         }
         else {
             return $this->filterExpenditureDetail($request->expenditure_item_id, $request->status);

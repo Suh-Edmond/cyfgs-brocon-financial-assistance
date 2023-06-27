@@ -82,20 +82,20 @@ class ExpenditureDetailController extends Controller
         $organisation      = $request->user()->organisation;
 
         $expenditure_details = $this->expenditure_detail_service->setDataForDownload($request);
-
+        dd($expenditure_details);
         $admins            = $this->getOrganisationAdministrators();
         $president         = $admins[0];
         $treasurer         = $admins[2];
         $fin_sec           = $admins[1];
 
-        $total_amount_given = $this->calculateTotalAmountGiven($expenditure_details);
+        $total_amount_given = $expenditure_details->total_amount_given;
 
-        $total_amount_spent = $this->calculateTotalAmountSpent($expenditure_details);
+        $total_amount_spent = $expenditure_details;
 
         $balance            = $this->calculateExpenditureBalanceByExpenditureItem($expenditure_details, $expenditure_details[0]->expenditureItem->amount);
 
         $data = [
-            'title'                 => 'Expenditure Details for '.$expenditure_details[0]->expenditureItem->name,
+            'title'                 => 'Expenditure Details for '.$request->expenditure_item_name,
             'date'                  => date('m/d/Y'),
             'organisation'          => $organisation,
             'expenditure_details'   => $expenditure_details,
