@@ -42,7 +42,7 @@ class ExpenditureDetailController extends Controller
 
     public function getExpenditureDetails($expenditure_item_id)
     {
-        $details = $this->expenditure_detail_service->getExpenditureDetails($expenditure_item_id);
+        $details = $this->expenditure_detail_service->getExpenditureDetails($expenditure_item_id[0]);
 
         return $this->sendResponse($details, 200);
     }
@@ -82,23 +82,22 @@ class ExpenditureDetailController extends Controller
         $organisation      = $request->user()->organisation;
 
         $expenditure_details = $this->expenditure_detail_service->setDataForDownload($request);
-        dd($expenditure_details);
         $admins            = $this->getOrganisationAdministrators();
         $president         = $admins[0];
         $treasurer         = $admins[2];
         $fin_sec           = $admins[1];
 
-        $total_amount_given = $expenditure_details->total_amount_given;
+        $total_amount_given = $expenditure_details[3]['total_amount_given'];
 
-        $total_amount_spent = $expenditure_details;
+        $total_amount_spent = $expenditure_details[4]['total_amount_spent'];
 
-        $balance            = $this->calculateExpenditureBalanceByExpenditureItem($expenditure_details, $expenditure_details[0]->expenditureItem->amount);
+        $balance            = $expenditure_details[5]['balance'];
 
         $data = [
-            'title'                 => 'Expenditure Details for '.$request->expenditure_item_name,
+            'title'                 => $expenditure_details[1]['expenditure_item_name'],
             'date'                  => date('m/d/Y'),
             'organisation'          => $organisation,
-            'expenditure_details'   => $expenditure_details,
+            'expenditure_details'   => $expenditure_details[0],
             'president'             => $president,
             'treasurer'             => $treasurer,
             'fin_secretary'         => $fin_sec,
@@ -106,7 +105,8 @@ class ExpenditureDetailController extends Controller
             'total_amount_given'    => $total_amount_given,
             'total_amount_spent'    => $total_amount_spent,
             'balance'               => $balance,
-            'item'                  => $expenditure_details[0]->expenditureItem
+            'item_name'             => $expenditure_details[1]['expenditure_item_name'],
+            'item_amount'           => $expenditure_details[2]['expenditure_item_amount']
         ];
 
         $pdf = PDF::loadView('ExpenditureDetail.ExpenditureDetail', $data);

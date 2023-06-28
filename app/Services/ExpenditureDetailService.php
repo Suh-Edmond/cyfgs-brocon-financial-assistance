@@ -64,7 +64,8 @@ class ExpenditureDetailService implements ExpenditureDetailInterface {
         $total_amount_spent = collect($details)->sum('amount_spent');
         $balance            = ($expenditure_item_amount - $total_amount_given) + ($total_amount_given - $total_amount_spent);
 
-        return new ExpenditureDetailCollection($response,$expenditure_item_name, $expenditure_item_amount, $total_amount_given, $total_amount_spent, $balance);
+        return  [$response, ['expenditure_item_name' => $expenditure_item_name], ['expenditure_item_amount' => $expenditure_item_amount],
+            ['total_amount_given' => $total_amount_given], ['total_amount_spent' => $total_amount_spent], ['balance' => $balance]];
     }
 
     public function getExpenditureDetail($id)
