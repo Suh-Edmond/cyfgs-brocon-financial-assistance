@@ -158,7 +158,7 @@ trait HelpTrait {
     {
         $total = 0;
         foreach ($savings as $saving) {
-            $total += $saving->total_amount_deposited;
+            $total += $saving->total_amount;
         }
 
         return $total;
