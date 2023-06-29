@@ -76,8 +76,7 @@ class RegistrationService implements RegistrationInterface
 
     public function approveRegisteredMember($request)
     {
-        $current_session = $this->sessionService->getCurrentSession();
-        $reg = MemberRegistration::where('user_id', $request->user_id)->where('session_id', $current_session->id)->firstOrFail();
+        $reg = MemberRegistration::where('user_id', $request->user_id)->where('session_id', $request->session_id)->firstOrFail();
         $reg->approve = $request->status;
         $reg->save();
     }

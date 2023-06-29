@@ -80,7 +80,6 @@ class UserController extends Controller
     public function getUsers($id)
     {
         $users = $this->user_management_service->getUsers($id);
-
         return $this->sendResponse(UserResource::collection($users), 'success');
     }
 
