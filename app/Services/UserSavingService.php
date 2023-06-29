@@ -164,7 +164,7 @@ class UserSavingService implements UserSavingInterface
             ->join('organisations', 'users.organisation_id', '=', 'organisations.id')
             ->where('organisations.id', $organisation_id)
             ->where('sessions.id', $session_id)
-            ->selectRaw('SUM(user_savings.amount_deposited) as total_amount_deposited, user_savings.*, users.id as user_id,
+            ->selectRaw('(SUM(user_savings.amount_deposited) - SUM(user_savings.amount_used)) as total_amount, user_savings.*, users.id as user_id,
             users.name as name, users.email as email, users.telephone as telephone, sessions.id as session_id, sessions.year as session_year, sessions.status as session_status')
             ->groupBy('user_savings.user_id')
             ->orderBy('users.name', 'ASC')
