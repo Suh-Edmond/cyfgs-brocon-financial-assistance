@@ -92,6 +92,8 @@ class ExpenditureDetailService implements ExpenditureDetailInterface {
 
     public function filterExpenditureDetail($id, $status)
     {
+        $expenditure_item_name = null;
+        $expenditure_item_amount = 0;
         $details = ExpenditureDetail::select('expenditure_details.*', 'expenditure_items.amount as expenditure_item_amount')
                                     ->join('expenditure_items', ['expenditure_items.id' => 'expenditure_details.expenditure_item_id'])
                                     ->where('expenditure_items.id', $id);
@@ -100,12 +102,17 @@ class ExpenditureDetailService implements ExpenditureDetailInterface {
         }
         $details = $details ->orderBy('expenditure_details.name', 'ASC')->get();
 
-        $response           = $this->generateResponseForExpenditureDetails($details);
-        $item_amount        = $this->setExpenditureItemAmount($details);
-        $total_amount_given = $this->calculateTotalAmountGiven($details);
-        $total_amount_spent = $this->calculateTotalAmountSpent($details);
-        $balance            = $this->calculateExpenditureBalanceByExpenditureItem($details, $item_amount);
-        return new ExpenditureDetailCollection($response, $item_amount, $total_amount_given, $total_amount_spent, $balance);
+        $detail_response           = $this->generateResponseForExpenditureDetails($details);
+        if(count($details) > 0){
+            $expenditure_item_name = $details[0]->expenditureItem->name;
+            $expenditure_item_amount = $details[0]->expenditureItem->amount;
+        }
+        $total_amount_given = collect($details)->sum('amount_given');
+        $total_amount_spent = collect($details)->sum('amount_spent');
+        $balance            = ($expenditure_item_amount - $total_amount_given) + ($total_amount_given - $total_amount_spent);
+
+        return  [$detail_response, ['expenditure_item_name' => $expenditure_item_name], ['expenditure_item_amount' => $expenditure_item_amount],
+            ['total_amount_given' => $total_amount_given], ['total_amount_spent' => $total_amount_spent], ['balance' => $balance]];
     }
 
     private function findExpenditureDetail($id)

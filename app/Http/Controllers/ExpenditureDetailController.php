@@ -42,8 +42,7 @@ class ExpenditureDetailController extends Controller
 
     public function getExpenditureDetails($expenditure_item_id)
     {
-        $details = $this->expenditure_detail_service->getExpenditureDetails($expenditure_item_id[0]);
-
+        $details = $this->expenditure_detail_service->getExpenditureDetails($expenditure_item_id);
         return $this->sendResponse($details, 200);
     }
 

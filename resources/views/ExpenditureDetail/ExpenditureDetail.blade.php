@@ -19,7 +19,7 @@
         </div>
     </div>
     <div style="margin-bottom: 20px">
-        <h3 style="font-weight: bold;font-size: medium; text-align:center;text-transform: uppercase;">{{ $title }}
+        <h3 style="font-weight: bold;font-size: medium; text-align:center;text-transform: uppercase;text-decoration: underline">{{ $title }}
         </h3>
     </div>
     <div>
@@ -46,7 +46,7 @@
     </div>
 
     <!----------------------------------------------------------SUMMARY OF REPORT-------------------------------------------------------------------------------------------->
-    <div style="margin-top: 50px;">
+    <div style="margin-top: 50px;margin-bottom: 10px">
         <h3 style="font-weight: bold;font-size: small; text-align:center;text-transform: uppercase;text-decoration: underline">
             <span style="padding-right: 5px"></span> Summary (F CFA):
         </h3>
