@@ -49,29 +49,64 @@
             </tr>
         </table>
     </div>
-    <div style="margin-top: 100px;">
-        <div style="float: left;">
-            <label for="organisation"style="font-weight: bold; text-transform: uppercase; font-size: small;">Financial
-                Secretary <br />
-                @isset($fin_secretary))
-                    {{ $fin_secretary->name }}
+
+    <!------------------------------------------------------DETAILS OF PRESENTERS--------------------------------------------------------------------------------------------->
+    <div style="margin-top: 40px;">
+        <h3 style="font-weight: bold;font-size: small; text-align:center;text-transform: uppercase;text-decoration: underline"><span style="padding-right: 5px"></span> Prepared By:
+        </h3>
+    </div>
+    <div class="detail" style="margin-top: 30px;margin-bottom: 150px">
+        <!------------------------------Names of presenters------------------------------------>
+        <div style="float: left" class="fin_sec">
+            <div class=" " style="font-weight: bold;font-size: small;text-transform: uppercase; margin-bottom: 5px;text-align: center">
+                FINANCIAL SECRETARY
+            </div>
+            <div style="font-weight: bold;font-size: small; text-transform: uppercase;text-align: center">
+                @isset($fin_secretary)
+                    <span>{{$fin_secretary->name}}</span>
                 @endisset
-            </label><br /><br />
+            </div>
+            <div style="font-weight: bold;text-transform: uppercase;font-size: small; margin-top: 20px;text-align: center">
+                SIGN
+            </div>
+            <div  style="border-bottom: 1px solid black; margin-top: 40px">
+            </div>
         </div>
-        <div style="float: right">
-            <label for="organisation"style="font-weight: bold; text-transform: uppercase; font-size: small;">Treasurer
-                <br />
-                @isset($treasurer))
-                    {{ $treasurer->name }}
+
+        <div style="float: right" class="treasurer">
+            <div  class=" " style="text-align: center;font-weight: bold;font-size: small;text-transform: uppercase; margin-bottom: 5px">
+                Treasurer
+            </div>
+            <div style="font-weight: bold;text-transform: uppercase;text-align: center">
+                @isset($treasurer)
+                    <span>{{$treasurer->name}}</span>
                 @endisset
-            </label><br /><br />
+            </div>
+            <div style="font-weight: bold;text-transform: uppercase;font-size: small; margin-top: 20px;text-align: center">
+                SIGN
+            </div>
+            <div  style="border-bottom: 1px solid black; margin-top: 40px">
+            </div>
+        </div>
+        <!------------------------------End of presenters-------------------------------------->
+    </div>
+    <div class="president" style="text-align: center">
+        <div>
+            <div class=" " style="font-weight: bold;font-size: small;text-transform: uppercase; margin-bottom: 5px">
+                President
+            </div>
+            <div style="font-weight: bold;font-size: small; text-transform: uppercase">
+                @isset($president)
+                    <span>{{$president->name}}</span>
+                @endisset
+            </div>
+            <div style="font-weight: bold;text-transform: uppercase;font-size: small; margin-top: 20px">
+                SIGN
+            </div>
+            <div class="border_line" style="border-bottom: 1px solid black; margin-top: 40px;text-align: center">
+            </div>
         </div>
     </div>
-    <div style="text-align:center; margin-top:80px">
-        <label for="organisation"style="font-weight: bold; text-transform: uppercase; font-size: small;">President <br />
-            @isset($president))
-                {{ $president->name }}
-            @endisset
-        </label><br />
-    </div>
+    <!------------------------------------------------------END OF PRESENTERS-------------------------------------------------------------------------------------->
+
 @endsection

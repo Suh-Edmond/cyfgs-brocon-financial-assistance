@@ -23,7 +23,8 @@ class UserSaving extends Model
         'comment',
         'user_id',
         'updated_by',
-        'session_id'
+        'session_id',
+        'amount_used'
     ];
 
 

@@ -38,11 +38,10 @@ trait HelpTrait {
 
     public static function generateResponseForExpenditureDetails($details): array
     {
-        $response = array();
+        $response = [];
 
         foreach ($details as $detail) {
             $balance = HelpTrait::calculateExpenditureBalance($detail);
-
             array_push($response, new ExpenditureDetailResource($detail, $balance));
         }
 

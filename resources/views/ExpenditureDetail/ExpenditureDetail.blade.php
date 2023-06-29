@@ -18,8 +18,8 @@
             <label style="font-size: small;">Printed date: {{ $date }}</label>
         </div>
     </div>
-    <div>
-        <h3 style="font-weight: bold;font-size: medium; text-align:center;text-transform: uppercase;">{{ $title }}
+    <div style="margin-bottom: 20px">
+        <h3 style="font-weight: bold;font-size: medium; text-align:center;text-transform: uppercase;text-decoration: underline">{{ $title }}
         </h3>
     </div>
     <div>
@@ -43,39 +43,120 @@
                 </tr>
             @endforeach
         </table>
-        <p> <label style="font-size: 15px; font-weight: bold">Total Amount Specissety for <span
-                    style="text-transform: uppercase">{{ $item->name }}</span>:
-                {{ number_format($item->amount) }} <span style="padding-left: 5px;">FCFA</span> </label></p>
-        <p> <label style="font-size: 15px;; font-weight: bold">Total Amount Given:
-                {{ number_format($total_amount_given) }} <span style="padding-left: 5px;">FCFA</span> </label></p>
-        <p><label style="font-size: 15px;; font-weight: bold">Total Amount Spent: {{ number_format($total_amount_spent) }}
-                <span style="padding-left: 5px;">FCFA</span> </label></p>
-        <p><label style="font-size: 15px;; font-weight: bold">Balance: {{ number_format($balance) }} <span
-                    style="padding-left: 5px;">FCFA</span> </label></p>
     </div>
-    <div style="margin-top: 100px;">
-        <div style="float: left;">
-            <label for="organisation"style="font-weight: bold; text-transform: uppercase; font-size: small;">Financial
-                Secretary <br />
-                @isset($fin_secretary))
-                    {{ $fin_secretary->name }}
-                @endisset
-            </label><br /><br />
+
+    <!----------------------------------------------------------SUMMARY OF REPORT-------------------------------------------------------------------------------------------->
+    <div style="margin-top: 50px;margin-bottom: 10px">
+        <h3 style="font-weight: bold;font-size: small; text-align:center;text-transform: uppercase;text-decoration: underline">
+            <span style="padding-right: 5px"></span> Summary (F CFA):
+        </h3>
+    </div>
+    <div>
+        <div class="row" style="border: 1px solid black">
+            <div class="activity_summary_num">
+                S1
+            </div>
+            <div class="activity_summary">
+                Estimated Expenditure
+            </div>
+            <div class="activity_summary_end">
+                {{number_format($item_amount)}}
+            </div>
         </div>
-        <div style="float: right">
-            <label for="organisation"style="font-weight: bold; text-transform: uppercase; font-size: small;">Treasurer
-                <br />
-                @isset($treasurer))
-                    {{ $treasurer->name }}
-                @endisset
-            </label><br /><br />
+        <div class="row" style="border: 1px solid black">
+            <div class="activity_summary_num">
+                S2
+            </div>
+            <div class="activity_summary">
+                Total Amount Given
+            </div>
+            <div class="activity_summary_end">
+                {{number_format($total_amount_given)}}
+            </div>
+        </div>
+        <div class="row" style="border: 1px solid black">
+            <div class="activity_summary_num">
+                S3
+            </div>
+            <div class="activity_summary">
+                Total Amount Spent
+            </div>
+            <div class="activity_summary_end">
+                {{number_format($total_amount_spent)}}
+            </div>
+        </div>
+        <div class="row" style="border: 1px solid black">
+            <div class="activity_summary_num">
+                S4
+            </div>
+            <div class="activity_summary">
+                Total Balance
+            </div>
+            <div class="activity_summary_end">
+                {{number_format($balance)}}
+            </div>
         </div>
     </div>
-    <div style="text-align:center; margin-top:80px">
-        <label for="organisation"style="font-weight: bold; text-transform: uppercase; font-size: small;">President <br />
-            @isset($president))
-                {{ $president->name }}
-            @endisset
-        </label><br />
+    <!----------------------------------------------------------END OF SUMMARY OF REPORT------------------------------------------------------------------------------------->
+
+
+    <!------------------------------------------------------DETAILS OF PRESENTERS--------------------------------------------------------------------------------------------->
+    <div style="margin-top: 40px;">
+        <h3 style="font-weight: bold;font-size: small; text-align:center;text-transform: uppercase;text-decoration: underline"><span style="padding-right: 5px"></span> Prepared By:
+        </h3>
     </div>
+    <div class="detail" style="margin-top: 30px;margin-bottom: 150px">
+        <!------------------------------Names of presenters------------------------------------>
+        <div style="float: left" class="fin_sec">
+            <div class=" " style="font-weight: bold;font-size: small;text-transform: uppercase; margin-bottom: 5px;text-align: center">
+                FINANCIAL SECRETARY
+            </div>
+            <div style="font-weight: bold;font-size: small; text-transform: uppercase;text-align: center">
+                @isset($fin_secretary)
+                    <span>{{$fin_secretary->name}}</span>
+                @endisset
+            </div>
+            <div style="font-weight: bold;text-transform: uppercase;font-size: small; margin-top: 20px;text-align: center">
+                SIGN
+            </div>
+            <div  style="border-bottom: 1px solid black; margin-top: 40px">
+            </div>
+        </div>
+
+        <div style="float: right" class="treasurer">
+            <div  class=" " style="text-align: center;font-weight: bold;font-size: small;text-transform: uppercase; margin-bottom: 5px">
+                Treasurer
+            </div>
+            <div style="font-weight: bold;text-transform: uppercase;text-align: center">
+                @isset($treasurer)
+                    <span>{{$treasurer->name}}</span>
+                @endisset
+            </div>
+            <div style="font-weight: bold;text-transform: uppercase;font-size: small; margin-top: 20px;text-align: center">
+                SIGN
+            </div>
+            <div  style="border-bottom: 1px solid black; margin-top: 40px">
+            </div>
+        </div>
+        <!------------------------------End of presenters-------------------------------------->
+    </div>
+    <div class="president" style="text-align: center">
+        <div>
+            <div class=" " style="font-weight: bold;font-size: small;text-transform: uppercase; margin-bottom: 5px">
+                President
+            </div>
+            <div style="font-weight: bold;font-size: small; text-transform: uppercase">
+                @isset($president)
+                    <span>{{$president->name}}</span>
+                @endisset
+            </div>
+            <div style="font-weight: bold;text-transform: uppercase;font-size: small; margin-top: 20px">
+                SIGN
+            </div>
+            <div class="border_line" style="border-bottom: 1px solid black; margin-top: 40px;text-align: center">
+            </div>
+        </div>
+    </div>
+    <!------------------------------------------------------END OF PRESENTERS-------------------------------------------------------------------------------------->
+
 @endsection
