@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Constants\Roles;
 use App\Http\Requests\CreateUpdateActivitySupportRequest;
 use App\Http\Resources\ActivitySupportResource;
 use App\Models\User;
@@ -11,7 +10,6 @@ use App\Traits\HelpTrait;
 use App\Traits\ResponseTrait;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class ActivitySupportController extends Controller
 {
@@ -120,4 +118,5 @@ class ActivitySupportController extends Controller
 
         return $pdf->download('ActivitySupport.pdf');
     }
+
 }

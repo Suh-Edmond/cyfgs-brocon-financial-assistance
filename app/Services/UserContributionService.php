@@ -26,10 +26,12 @@ class UserContributionService implements UserContributionInterface {
 
     use HelpTrait;
     private SessionService $sessionService;
+    private UserSavingService $userSavingService;
 
-    public function __construct(SessionService $sessionService)
+    public function __construct(SessionService $sessionService, UserSavingService $userSavingService)
     {
         $this->sessionService = $sessionService;
+        $this->userSavingService = $userSavingService;
     }
 
     public function createUserContribution($request)
@@ -313,6 +315,10 @@ class UserContributionService implements UserContributionInterface {
                 'quarterly_name'    => !is_null($request->quarterly_name) ? $this->convertQuarterNameToNumber($request->quarterly_name) :"",
                 'month_name'        => $request->month_name
             ]);
+        }
+
+        if($request->contributed_via_saving){
+            $this->userSavingService->deductSavingAfterContribution($user_id, $request->amount_deposited);
         }
 
     }

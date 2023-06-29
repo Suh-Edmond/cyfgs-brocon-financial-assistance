@@ -17,6 +17,7 @@ class UserSavingService implements UserSavingInterface
     use HelpTrait;
     private SessionService  $sessionService;
 
+
     public function __construct(SessionService $sessionService)
     {
         $this->sessionService = $sessionService;
@@ -31,7 +32,7 @@ class UserSavingService implements UserSavingInterface
             'comment'               => $request->comment,
             'user_id'               => $user->id,
             'updated_by'            => $request->user()->name,
-            'session_id'            => $current_session->id
+            'session_id'            => $current_session->id,
         ]);
     }
 
@@ -44,7 +45,7 @@ class UserSavingService implements UserSavingInterface
                 'comment'               => $request->comment,
             ]);
         }else {
-            throw new BusinessValidationException("Income activity cannot be updated after been approved or declined");
+            throw new BusinessValidationException("Saving cannot be updated after been approved or declined");
         }
     }
 
@@ -230,4 +231,11 @@ class UserSavingService implements UserSavingInterface
         return $data;
     }
 
+    public function deductSavingAfterContribution($user_id, $amount)
+    {
+        $saving = UserSaving::where('user_id', $user_id)->where('amount_deposited', '>=', $amount)->first();
+        $saving->update([
+            'amount_used' => $amount
+        ]);
+    }
 }
