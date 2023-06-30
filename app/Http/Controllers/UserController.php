@@ -83,6 +83,12 @@ class UserController extends Controller
         return $this->sendResponse(UserResource::collection($users), 'success');
     }
 
+    public function getTotalUsersByRegStatus(Request $request)
+    {
+        $users = $this->user_management_service->getTotalUsersByRegStatus($request->organisation_id);
+        return $this->sendResponse($users, 200);
+    }
+
 
     public function getUser($user_id)
     {
