@@ -55,6 +55,18 @@ class UserManagementService implements UserManagementInterface
 
     }
 
+    public function getTotalUsersByRegStatus($organisation_id)
+    {
+
+        $users = $this->getUsers($organisation_id);
+        $group_users = collect($users)->groupBy('approve')->toArray();
+        $response = [];
+        if(count($group_users) > 0){
+            $response = [count($group_users['APPROVED']), count($group_users['PENDING']), count($group_users[''])];
+        }
+        return $response;
+    }
+
     public function getUser($user_id)
     {
         $user = User::leftJoin('member_registrations', 'users.id', '=', 'member_registrations.user_id')
