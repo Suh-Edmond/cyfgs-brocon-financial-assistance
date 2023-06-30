@@ -9,8 +9,8 @@ use App\Http\Resources\UserContributionResource;
 use App\Services\UserContributionService;
 use App\Traits\HelpTrait;
 use App\Traits\ResponseTrait;
-use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Http\Request;
 
 class UserContributionController extends Controller
 {
@@ -108,7 +108,30 @@ class UserContributionController extends Controller
     public function downloadFilteredContributions(Request $request) {
         $contributions     = $this->filterContributions($request);
         $contributions     = json_decode(json_encode($contributions))->original->data;
-        $this->downloadContribution($contributions, $request);
+
+        $organisation      = $request->user()->organisation;
+
+        $admins            = $this->getOrganisationAdministrators();
+        $president         = $admins[0];
+        $treasurer         = $admins[2];
+        $fin_sec           = $admins[1];
+        $total             = $this->computeTotalContribution($contributions);
+
+        $data = [
+            'title'             => "Member's Contribution for ".$request->payment_item_name,
+            'date'              => date('m/d/Y'),
+            'organisation'      => $organisation,
+            'contributions'     => $contributions,
+            'organisation_telephone'   => $this->setOrganisationTelephone($organisation->telephone),
+            'president'         => $president,
+            'treasurer'         => $treasurer,
+            'fin_secretary'     => $fin_sec,
+            'total'             => $total,
+            'balance'           => $contributions[0]->payment_item_amount - $total
+        ];
+
+        $pdf = PDF::loadView('Contribution.UsersContribution', $data);
+        return $pdf->download('UsersContributions.pdf');
     }
 
 
@@ -146,14 +169,7 @@ class UserContributionController extends Controller
     public function downloadUserContributions(Request $request) {
         $contributions      = $this->getUsersContributionsByItem($request->payment_item_id, $request->user_id);
         $contributions      = json_decode(json_encode($contributions))->original->data;
-        $this->downloadContribution($contributions, $request);
-    }
-
-
-    public function downloadContribution($contributions, Request $request)
-    {
-
-         $organisation      = $request->user()->organisation;
+        $organisation      = $request->user()->organisation;
 
         $admins            = $this->getOrganisationAdministrators();
         $president         = $admins[0];
@@ -162,7 +178,7 @@ class UserContributionController extends Controller
         $total             = $this->computeTotalContribution($contributions);
 
         $data = [
-            'title'             => 'User Contribution for '.$contributions[0]->payment_item_name,
+            'title'             => $request->user_name." Contributions for ".$request->payment_item_name,
             'date'              => date('m/d/Y'),
             'organisation'      => $organisation,
             'contributions'     => $contributions,
@@ -170,11 +186,11 @@ class UserContributionController extends Controller
             'president'         => $president,
             'treasurer'         => $treasurer,
             'fin_secretary'     => $fin_sec,
-            'total'             => $total
+            'total'             => $total,
+            'balance'           => $contributions[0]->payment_item_amount - $total
         ];
 
-        $pdf = PDF::loadView('Contribution.UserContribution', $data);
-
-        return $pdf->download('User_Contributions.pdf');
+        $pdf = PDF::loadView('Contribution.MemberContribution', $data);
+        return $pdf->download('MemberContributions.pdf');
     }
 }

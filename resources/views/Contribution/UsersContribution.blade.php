@@ -4,7 +4,7 @@
     <div style="margin-bottom: 220px;">
         <div style="float: left;">
             <img src="{{ $organisation->logo }}" alt="organisation logo" width="100px;" height="100px;"
-                 style="border-radius: 2px">
+                style="border-radius: 2px">
         </div>
         <div style="float: right">
             <label for="organisation"style="font-weight: bold; text-transform: uppercase; font-size: small;">
@@ -18,34 +18,62 @@
             <label style="font-size: small;">Printed date: {{ $date }}</label>
         </div>
     </div>
-    <div>
-        <h3 style="font-weight: bold;font-size: medium; text-align:center;text-transform: uppercase;">{{ $title }}
+    <div style="margin-bottom: 10px">
+        <h3 style="font-weight: bold;font-size: medium; text-align:center;text-transform: capitalize;text-decoration: underline">{{ $title }}
         </h3>
     </div>
     <div>
         <table style="border: 1px solid black; border-collapse: collapse;width: 100%">
-            <tr style="border: 1px solid black; font-size: smaller;">
-                <th style="border: 1px solid black;">S/N</th>
-                <th style="padding: 12px; border: 1px solid black;">Name</th>
-                <th style="padding: 12px; border: 1px solid black;">Amount Deposited(F CFA)</th>
+            <tr style="padding: 13px;border: 1px solid black; font-size: smaller;">
+                <th style="padding: 1px; border: 1px solid black;">S/N</th>
+                <th style="padding: 12px; border: 1px solid black;">Member's Name</th>
+                <th style="padding: 12px; border: 1px solid black;">Total Amount Deposited (XAF)</th>
+                <th style="padding: 12px; border: 1px solid black;">Telephone</th>
             </tr>
-            @foreach ($supports as $key => $value)
+            @foreach ($contributions as $key => $contribution)
                 <tr style="border: 1px solid black; font-size: smaller">
                     <td style="padding: 5px;">{{ $key + 1 }}</td>
-                    <td style="border: 1px solid black; padding: 11px;">{{ $value->supporter }}</td>
-                    <td style="border: 1px solid black; padding: 11px;">{{ number_format($value->amount_deposited) }}
-                    </td>
+                    <td style="border: 1px solid black; padding: 11px; text-align: center">{{ $contribution->user_name }}</td>
+                    <td style="border: 1px solid black; padding: 11px; text-align: center">
+                        {{ number_format($contribution->amount_deposited) }}</td>
+                    <td style="border: 1px solid black; padding: 11px;text-align: center">{{ $contribution->user_telephone }}</td>
                 </tr>
             @endforeach
-            <tr style="padding: 12px; border: 1px solid black; font-size: smaller">
-                <td style="padding: 15px; font-weight: 200" colspan="2"> Total Amount: {{ number_format($total) }} XAF
-                </td>
-                <td style="padding: 15px;font-weight: 200"> </td>
-                <td style="padding: 15px;font-weight: 200"> </td>
-                <td style="padding: 15px;font-weight: 200"> </td>
-            </tr>
         </table>
     </div>
+
+    <!----------------------------------------------------------SUMMARY OF REPORT-------------------------------------------------------------------------------------------->
+    <div style="margin-top: 50px;margin-bottom: 10px">
+        <h3 style="font-weight: bold;font-size: small; text-align:center;text-transform: uppercase;text-decoration: underline">
+            <span style="padding-right: 5px"></span> Summary (F CFA):
+        </h3>
+    </div>
+    <div>
+        <div class="row" style="border: 1px solid black">
+            <div class="activity_summary_num">
+                S1
+            </div>
+            <div class="activity_summary">
+                Total Contribution
+            </div>
+            <div class="activity_summary_end">
+                {{number_format($total)}}
+            </div>
+        </div>
+        <div class="row" style="border: 1px solid black">
+            <div class="activity_summary_num">
+                S2
+            </div>
+            <div class="activity_summary">
+                Total Balance
+            </div>
+            <div class="activity_summary_end">
+                {{number_format($balance)}}
+            </div>
+        </div>
+    </div>
+    <!----------------------------------------------------------END OF SUMMARY OF REPORT------------------------------------------------------------------------------------->
+
 
     <!------------------------------------------------------DETAILS OF PRESENTERS--------------------------------------------------------------------------------------------->
     <div style="margin-top: 40px;">

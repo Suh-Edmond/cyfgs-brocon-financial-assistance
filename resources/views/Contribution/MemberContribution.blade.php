@@ -18,34 +18,38 @@
             <label style="font-size: small;">Printed date: {{ $date }}</label>
         </div>
     </div>
-    <div>
-        <h3 style="font-weight: bold;font-size: medium; text-align:center;text-transform: uppercase;">{{ $title }}
+    <div style="margin-bottom: 10px">
+        <h3 style="font-weight: bold;font-size: medium; text-align:center;text-transform: capitalize;text-decoration: underline">{{ $title }}
         </h3>
     </div>
+
+    <!----------------------------------------------------------SUMMARY OF REPORT-------------------------------------------------------------------------------------------->
     <div>
-        <table style="border: 1px solid black; border-collapse: collapse;width: 100%">
-            <tr style="border: 1px solid black; font-size: smaller;">
-                <th style="border: 1px solid black;">S/N</th>
-                <th style="padding: 12px; border: 1px solid black;">Name</th>
-                <th style="padding: 12px; border: 1px solid black;">Amount Deposited(F CFA)</th>
-            </tr>
-            @foreach ($supports as $key => $value)
-                <tr style="border: 1px solid black; font-size: smaller">
-                    <td style="padding: 5px;">{{ $key + 1 }}</td>
-                    <td style="border: 1px solid black; padding: 11px;">{{ $value->supporter }}</td>
-                    <td style="border: 1px solid black; padding: 11px;">{{ number_format($value->amount_deposited) }}
-                    </td>
-                </tr>
-            @endforeach
-            <tr style="padding: 12px; border: 1px solid black; font-size: smaller">
-                <td style="padding: 15px; font-weight: 200" colspan="2"> Total Amount: {{ number_format($total) }} XAF
-                </td>
-                <td style="padding: 15px;font-weight: 200"> </td>
-                <td style="padding: 15px;font-weight: 200"> </td>
-                <td style="padding: 15px;font-weight: 200"> </td>
-            </tr>
-        </table>
+        <div class="row" style="border: 1px solid black">
+            <div class="activity_summary_num">
+                1
+            </div>
+            <div class="activity_summary">
+                Total Contribution
+            </div>
+            <div class="activity_summary_end">
+                {{number_format($total)}}
+            </div>
+        </div>
+        <div class="row" style="border: 1px solid black">
+            <div class="activity_summary_num">
+                2
+            </div>
+            <div class="activity_summary">
+                Total Balance
+            </div>
+            <div class="activity_summary_end">
+                {{number_format($balance)}}
+            </div>
+        </div>
     </div>
+    <!----------------------------------------------------------END OF SUMMARY OF REPORT------------------------------------------------------------------------------------->
+
 
     <!------------------------------------------------------DETAILS OF PRESENTERS--------------------------------------------------------------------------------------------->
     <div style="margin-top: 40px;">
@@ -107,3 +111,4 @@
     <!------------------------------------------------------END OF PRESENTERS-------------------------------------------------------------------------------------->
 
 @endsection
+
