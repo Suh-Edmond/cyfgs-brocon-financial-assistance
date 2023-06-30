@@ -49,7 +49,8 @@ class UserManagementService implements UserManagementInterface
           return User::join('organisations', 'organisations.id', '=', 'users.organisation_id')
                  ->leftJoin('member_registrations', 'users.id', '=', 'member_registrations.user_id')
                  ->where('organisations.id', $organisation_id)
-                 ->select('users.*', 'member_registrations.approve')
+                 ->select('users.*', 'member_registrations.approve', 'member_registrations.session_id')
+                 ->distinct()
                  ->orderBy('name')->get();
 
     }
