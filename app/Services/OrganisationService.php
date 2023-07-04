@@ -15,7 +15,7 @@ class OrganisationService implements OrganisationInterface
         $user = User::findOrFail(Auth::user()['id']);
 
         $organisation = Organisation::find($request->id);
-
+        $save_organ = null;
         if (is_null($organisation)) {
             $saved = Organisation::create([
                 'name'             => $request->name,
@@ -32,6 +32,7 @@ class OrganisationService implements OrganisationInterface
                 'organisation_id' => $saved->id,
                 'updated_by'      => $request->user()->name
             ]);
+            $save_organ = $saved;
         } else {
             $organisation->name             = $request->name;
             $organisation->email            = $request->email;
@@ -43,7 +44,11 @@ class OrganisationService implements OrganisationInterface
             $organisation->updated_by       = $request->user()->name;
 
             $organisation->save();
+
+            $save_organ = $organisation;
         }
+
+        return $save_organ;
     }
 
     public function getOrganisation($id)
@@ -62,9 +67,12 @@ class OrganisationService implements OrganisationInterface
 
     public function updatedOrganisation($request, $id)
     {
-        Organisation::findOrFail($id)->update([
+        $updated =  Organisation::findOrFail($id);
+        $updated->update([
             'logo'             => $request->logo,
         ]);
+
+        return $updated;
     }
 
     public function deleteOgranisation($id)

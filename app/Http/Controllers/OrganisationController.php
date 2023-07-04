@@ -20,9 +20,9 @@ class OrganisationController extends Controller
 
     public function createOrganisation(CreateOrganisationRequest $request)
     {
-        $this->organisation_service->createOrganisation($request);
+        $data = $this->organisation_service->createOrganisation($request);
 
-        return $this->sendResponse('success', 'Organisation created successfully' );
+        return $this->sendResponse($data, 'Organisation created successfully' );
     }
 
 
@@ -54,9 +54,9 @@ class OrganisationController extends Controller
 
     public function updateOrganisation(UpdateOrganisationRequest $request, $id)
     {
-        $this->organisation_service->updatedOrganisation($request, $id);
+        $data = $this->organisation_service->updatedOrganisation($request, $id);
 
-        return $this->sendResponse( 'success', 'successfully updated organisation');
+        return $this->sendResponse( $data, 'successfully updated organisation');
     }
 
 
