@@ -60,6 +60,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('download-users', [UserController::class, 'downloadUsers']);
         Route::get('filter-users', [UserController::class, 'filterUsers']);
         Route::get('/users', [UserController::class, 'getTotalUsersByRegStatus']);
+        Route::get('registered_users', [UserController::class, 'getRegMemberByMonths']);
     });
 
 

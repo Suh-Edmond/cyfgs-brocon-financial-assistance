@@ -67,6 +67,23 @@ class UserManagementService implements UserManagementInterface
         return $response;
     }
 
+    public function getRegMemberByMonths($organisation_id)
+    {
+        $data = [];
+        for ($month = 1; $month <= 12; $month++){
+            $users = User::join('organisations', 'organisations.id', '=', 'users.organisation_id')
+                ->join('member_registrations', 'users.id', '=', 'member_registrations.user_id')
+                ->where('organisations.id', $organisation_id)
+                ->where('member_registrations.approve', PaymentStatus::APPROVED)
+                ->whereMonth('member_registrations.created_at', $month)
+                ->select('users.*', 'member_registrations.approve', 'member_registrations.session_id')
+                ->distinct()
+                ->orderBy('name')->get()->toArray();
+            array_push($data, count($users));
+        }
+        return $data;
+    }
+
     public function getUser($user_id)
     {
         $user = User::leftJoin('member_registrations', 'users.id', '=', 'member_registrations.user_id')

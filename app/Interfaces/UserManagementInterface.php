@@ -10,6 +10,8 @@ interface UserManagementInterface {
 
     public function getTotalUsersByRegStatus($organisation_id);
 
+    public function getRegMemberByMonths($organisation_id);
+
     public function getUser($user_id);
 
     public function updateUser($user_id, $request);
