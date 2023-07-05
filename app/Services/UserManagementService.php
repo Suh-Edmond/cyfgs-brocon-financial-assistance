@@ -60,11 +60,32 @@ class UserManagementService implements UserManagementInterface
 
         $users = $this->getUsers($organisation_id);
         $group_users = collect($users)->groupBy('approve')->toArray();
-        $response = [];
-        if(count($group_users) > 0){
-            $response = [count($group_users['APPROVED']), count($group_users['PENDING']), count($group_users[''])];
+        $total_approved_record = 0;
+        $total_pending = 0;
+        $total_unregistered = 0;
+         if(count($group_users) > 0){
+             $total_approved_record  = isset($group_users['APPROVED']) ? count($group_users['APPROVED']) : 0;
+             $total_pending = isset($group_users['PENDING']) ? count($group_users['PENDING']) : 0;
+             $total_unregistered = isset($group_users['']) ? count($group_users['']): 0;
+         }
+        return [$total_approved_record, $total_pending, $total_unregistered];
+    }
+
+    public function getRegMemberByMonths($organisation_id)
+    {
+        $data = [];
+        for ($month = 1; $month <= 12; $month++){
+            $users = User::join('organisations', 'organisations.id', '=', 'users.organisation_id')
+                ->join('member_registrations', 'users.id', '=', 'member_registrations.user_id')
+                ->where('organisations.id', $organisation_id)
+                ->where('member_registrations.approve', PaymentStatus::APPROVED)
+                ->whereMonth('member_registrations.created_at', $month)
+                ->select('users.*', 'member_registrations.approve', 'member_registrations.session_id')
+                ->distinct()
+                ->orderBy('name')->get()->toArray();
+            array_push($data, count($users));
         }
-        return $response;
+        return $data;
     }
 
     public function getUser($user_id)

@@ -89,6 +89,12 @@ class UserController extends Controller
         return $this->sendResponse($users, 200);
     }
 
+    public function getRegMemberByMonths(Request $request)
+    {
+        $users = $this->user_management_service->getRegMemberByMonths($request->organisation_id);
+
+        return $this->sendResponse($users, 200);
+    }
 
     public function getUser($user_id)
     {
