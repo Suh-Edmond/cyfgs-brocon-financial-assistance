@@ -177,6 +177,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('savings/download', [UserSavingController::class, 'download']);
         Route::get('organisation-savings/download', [UserSavingController::class, 'downloadOrganisationSavings']);
         Route::get('savings', [UserSavingController::class, 'getMembersSavingsByOrganisation']);
+        Route::get('/savings/statistics', [UserSavingController::class, 'getSavingsStatistics']);
     });
 
     Route::prefix('protected')->group(function () {
