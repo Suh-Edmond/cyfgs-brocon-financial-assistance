@@ -21,5 +21,7 @@ interface UserSavingInterface {
     public function findUserSavingByStatus($status, $id);
 
     public function  getMembersSavingsByOrganisation($request);
+
+    public function getSavingsStatistics($request);
 }
 

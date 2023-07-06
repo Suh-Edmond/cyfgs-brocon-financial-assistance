@@ -238,4 +238,64 @@ class UserSavingService implements UserSavingInterface
             'amount_used' => $amount
         ]);
     }
+
+    public function getSavingsStatistics($request)
+    {
+        $monthly_stat = $this->getTotalMonthlySavings($request);
+        $yearly_stat = $this->getTotalYearlySavings();
+        $status_stat =  $this->getSavingsStatByStatus();
+
+        return ['monthly_stat' => $monthly_stat, 'yearly_stat' => $yearly_stat, 'status_stat' => $status_stat];
+    }
+
+    private function getTotalMonthlySavings($request)
+    {
+        $total_monthly_savings = [];
+        for ($counter = 1; $counter <= 12; $counter++){
+            $savings = DB::table('user_savings')
+                ->join('sessions', 'sessions.id', '=', 'user_savings.session_id')
+                ->where('sessions.id', $request->session_id)
+                ->whereMonth('user_savings.created_at', $counter)
+                ->where('user_savings.approve', PaymentStatus::APPROVED)
+                ->selectRaw('SUM(amount_deposited) - SUM(amount_used) as total_saving')->first();
+            isset($savings->total_saving)? array_push($total_monthly_savings, $savings->total_saving) : array_push($total_monthly_savings, 0);
+        }
+        return $total_monthly_savings;
+    }
+
+    private function getTotalYearlySavings()
+    {
+        $total_yearly_savings = [];
+        $sessions = $this->sessionService->getAllSessions();
+        foreach ($sessions as $session){
+            $savings = DB::table('user_savings')
+                ->join('sessions', 'sessions.id', '=', 'user_savings.session_id')
+                ->where('sessions.id', $session->id)
+                ->where('user_savings.approve', PaymentStatus::APPROVED)
+                ->selectRaw('SUM(amount_deposited) - SUM(amount_used) as total_saving')->first();
+            isset($savings->total_saving)? array_push($total_yearly_savings, $savings->total_saving) : array_push($total_yearly_savings, 0);
+        }
+        return $total_yearly_savings;
+    }
+
+    private function getSavingsStatByStatus()
+    {
+        $savings_by_status = [];
+        $current_session = $this->sessionService->getCurrentSession();
+        $savings = DB::table('user_savings')
+            ->join('sessions', 'sessions.id', '=', 'user_savings.session_id')
+            ->where('sessions.id', $current_session->id)
+            ->select('user_savings.*')
+            ->get();
+        $saving_collect = collect($savings)->groupBy('approve')->toArray();
+        if($saving_collect < 0){
+            return [0, 0, 0];
+        }else {
+            isset($saving_collect['PENDING']) ? array_push($savings_by_status, count($saving_collect['PENDING'])): array_push($savings_by_status, 0);
+            isset($saving_collect['APPROVED']) ? array_push($savings_by_status, count($saving_collect['APPROVED'])): array_push($savings_by_status,  0);
+            isset($saving_collect['DECLINED']) ? array_push($savings_by_status, count($saving_collect['DECLINED'])): array_push($savings_by_status, 0);
+        }
+
+        return $savings_by_status;
+    }
 }

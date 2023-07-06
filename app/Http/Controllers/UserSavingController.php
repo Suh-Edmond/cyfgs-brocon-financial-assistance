@@ -160,4 +160,11 @@ class UserSavingController extends Controller
 
         return $pdf->download('Organisation_Saving.pdf');
     }
+
+    public function getSavingsStatistics(Request $request)
+    {
+        $data = $this->user_saving_service->getSavingsStatistics($request);
+        return $this->sendResponse($data, 200);
+    }
+
 }
