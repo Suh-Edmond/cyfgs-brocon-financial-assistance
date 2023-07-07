@@ -763,7 +763,7 @@ class UserContributionService implements UserContributionInterface {
             $totalContribution = collect($contributions)->sum('amount_deposited');
             $contributors = count($contributions);
             $percentage =  round(($totalContribution / $payment_item->amount) * 100, 2);
-            array_push($percentages, ["name" => $payment_item->name, "percentage" => $percentage, "contributors" => $contributors]);
+            array_push($percentages, ["name" => $payment_item->name, "percentage" => $totalContribution, "contributors" => $contributors]);
         }
 
         return $percentages;
