@@ -27,11 +27,13 @@ class UserContributionService implements UserContributionInterface {
     use HelpTrait;
     private SessionService $sessionService;
     private UserSavingService $userSavingService;
+    private PaymentItemService $paymentItemService;
 
-    public function __construct(SessionService $sessionService, UserSavingService $userSavingService)
+    public function __construct(SessionService $sessionService, UserSavingService $userSavingService, PaymentItemService $paymentItemService)
     {
         $this->sessionService = $sessionService;
         $this->userSavingService = $userSavingService;
+        $this->paymentItemService = $paymentItemService;
     }
 
     public function createUserContribution($request)
@@ -269,7 +271,13 @@ class UserContributionService implements UserContributionInterface {
         return collect($data)->sum('amount_deposited');
     }
 
+    public function getContributionStatistics($request)
+    {
+        $payment_items =  $this->paymentItemService->getPaymentItemsBySessionAndFrequency($request);
+        $contributions_by_percent = $this->getPercentageContributionsByItemAndSession($payment_items, $request->session_id);
 
+        return $contributions_by_percent;
+    }
     private function getMemberRegistration($user_id)
     {
         $reg_debts = [];
@@ -386,7 +394,6 @@ class UserContributionService implements UserContributionInterface {
         if($amount_deposited > $payment_item_amount) {
             throw new BusinessValidationException("Amount Deposited must not be more than the amount for the payment item");
         }
-
         return true;
     }
 
@@ -736,6 +743,29 @@ class UserContributionService implements UserContributionInterface {
 
 
         return $debts;
+    }
+
+    public function getPercentageContributionsByItemAndSession($payment_items, $session_id)
+    {
+        $percentages = [];
+        foreach ($payment_items as $payment_item){
+            $contributions = DB::table('user_contributions')
+                ->join('payment_items', 'payment_items.id', '=', 'user_contributions.payment_item_id')
+                ->join('sessions', 'sessions.id', '=', 'user_contributions.session_id')
+                ->where('user_contributions.session_id', $session_id)
+                ->where('user_contributions.payment_item_id', $payment_item->id)
+                ->where('user_contributions.approve', PaymentStatus::APPROVED)
+                ->select('user_contributions.*')
+                ->orderBy('payment_items.created_at')
+                ->get()
+                ->toArray();
+            $totalContribution = collect($contributions)->sum('amount_deposited');
+            $contributors = count($contributions);
+            $percentage =  round(($totalContribution / $payment_item->amount) * 100, 2);
+            array_push($percentages, ["name" => $payment_item->name, "percentage" => $percentage, "contributors" => $contributors]);
+        }
+
+        return $percentages;
     }
 }
 

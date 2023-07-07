@@ -8,6 +8,7 @@ use App\Interfaces\PaymentItemInterface;
 use App\Models\PaymentCategory;
 use App\Models\PaymentItem;
 use App\Traits\HelpTrait;
+use Illuminate\Support\Facades\DB;
 
 class PaymentItemService implements PaymentItemInterface {
 
@@ -99,27 +100,9 @@ class PaymentItemService implements PaymentItemInterface {
         return PaymentItem::where('session_id', $current_session->id)->get();
     }
 
-
     public function getPaymentItemByType($type)
     {
         return PaymentItem::where('type', $type)->get();
-    }
-
-    private function findPaymentItem($id, $payment_category_id)
-    {
-        return PaymentItem::select('payment_items.*')->join('payment_categories', ['payment_categories.id' => 'payment_items.payment_category_id'])
-            ->where('payment_items.id', $id)
-            ->where('payment_items.payment_category_id', $payment_category_id)
-            ->firstOrFail();
-    }
-
-    private  function fetchPaymentItems($payment_category_id) {
-        $current_session = $this->session_service->getCurrentSession();
-        return PaymentItem::select('payment_items.*')
-            ->join('payment_categories', ['payment_categories.id'  => 'payment_items.payment_category_id'])
-            ->where('payment_items.payment_category_id', $payment_category_id)
-            ->where('session_id', $current_session->id);
-
     }
 
     public function updatePaymentItemReference($request)
@@ -153,6 +136,35 @@ class PaymentItemService implements PaymentItemInterface {
             ->where('session_id', $session)
             ->orderBy('payment_items.name', 'ASC')
             ->get();
+
+    }
+
+    public function getPaymentItemsBySessionAndFrequency($request)
+    {
+        return DB::table('payment_items')
+            ->join('payment_categories', 'payment_categories.id', '=', 'payment_items.payment_category_id')
+            ->join('sessions', 'sessions.id', '=', 'payment_items.session_id')
+            ->where('payment_items.session_id', $request->session_id)
+            ->orWhere('payment_items.frequency', PaymentItemFrequency::YEARLY)
+            ->select('payment_items.id', 'payment_items.name', 'payment_items.amount', 'payment_items.session_id')
+            ->distinct()
+            ->get()->toArray();
+    }
+
+    private function findPaymentItem($id, $payment_category_id)
+    {
+        return PaymentItem::select('payment_items.*')->join('payment_categories', ['payment_categories.id' => 'payment_items.payment_category_id'])
+            ->where('payment_items.id', $id)
+            ->where('payment_items.payment_category_id', $payment_category_id)
+            ->firstOrFail();
+    }
+
+    private  function fetchPaymentItems($payment_category_id) {
+        $current_session = $this->session_service->getCurrentSession();
+        return PaymentItem::select('payment_items.*')
+            ->join('payment_categories', ['payment_categories.id'  => 'payment_items.payment_category_id'])
+            ->where('payment_items.payment_category_id', $payment_category_id)
+            ->where('session_id', $current_session->id);
 
     }
 

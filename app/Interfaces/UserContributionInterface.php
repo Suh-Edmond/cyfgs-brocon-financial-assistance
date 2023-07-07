@@ -32,4 +32,6 @@ interface UserContributionInterface {
     public function getMemberContributedItems($user_id, $year);
 
     public function getYearlyContributions($request);
+
+    public function getContributionStatistics($request);
 }

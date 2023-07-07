@@ -17,17 +17,17 @@ class UserContributionController extends Controller
 
     use ResponseTrait, HelpTrait;
 
-    private UserContributionService $user_contribution_interface;
+    private UserContributionService $userContributionService;
 
-    public function __construct(UserContributionService $user_contribution_interface)
+    public function __construct(UserContributionService $userContributionService)
     {
-        $this->user_contribution_interface = $user_contribution_interface;
+        $this->userContributionService = $userContributionService;
     }
 
 
     public function createUserContribution(CreateUserContributionRequest $request)
     {
-        $this->user_contribution_interface->createUserContribution($request);
+        $this->userContributionService->createUserContribution($request);
 
         return $this->sendResponse('success', 'Contribution saved successfully');
     }
@@ -36,7 +36,7 @@ class UserContributionController extends Controller
 
     public function updateUserContribution(UpdateUserContributionRequest $request,  $id)
     {
-       $this->user_contribution_interface->updateUserContribution($request, $id);
+       $this->userContributionService->updateUserContribution($request, $id);
 
        return $this->sendResponse('success', 'Contribution updated successfully');
     }
@@ -44,7 +44,7 @@ class UserContributionController extends Controller
 
     public function getUsersContributionsByItem($id, $user_id)
     {
-        $contributions = $this->user_contribution_interface->getContributionByUserAndItem($id, $user_id);
+        $contributions = $this->userContributionService->getContributionByUserAndItem($id, $user_id);
 
         return $this->sendResponse(UserContributionResource::collection($contributions), 200);
     }
@@ -52,7 +52,7 @@ class UserContributionController extends Controller
 
     public function getContributionByUser($id)
     {
-        $contributions = $this->user_contribution_interface->getUserContributionsByUser($id);
+        $contributions = $this->userContributionService->getUserContributionsByUser($id);
 
         return $this->sendResponse($contributions, 200);
     }
@@ -60,7 +60,7 @@ class UserContributionController extends Controller
 
     public function getTotalAmountPaidByUserForTheItem($user_id, $id)
     {
-        $contributions = $this->user_contribution_interface->getTotalAmountPaidByUserForTheItem($user_id, $id);
+        $contributions = $this->userContributionService->getTotalAmountPaidByUserForTheItem($user_id, $id);
 
         return $this->sendResponse($contributions, 200);
     }
@@ -68,7 +68,7 @@ class UserContributionController extends Controller
 
     public function deleteUserContributon($id)
     {
-        $this->user_contribution_interface->deleteUserContribution($id);
+        $this->userContributionService->deleteUserContribution($id);
 
         return $this->sendResponse( 'success', 'Contribution deleted sucessfully');
     }
@@ -76,7 +76,7 @@ class UserContributionController extends Controller
 
     public function approveUserContribution(ApproveContributionRequest $request)
     {
-        $this->user_contribution_interface->approveUserContribution($request);
+        $this->userContributionService->approveUserContribution($request);
 
         return $this->sendResponse('success', 'Contribution approve successfully');
     }
@@ -84,7 +84,7 @@ class UserContributionController extends Controller
 
     public function filterContributions(Request $request)
     {
-        $contributions = $this->user_contribution_interface->filterContributions($request);
+        $contributions = $this->userContributionService->filterContributions($request);
 
         return $this->sendResponse(UserContributionResource::collection($contributions), 200);
     }
@@ -94,13 +94,13 @@ class UserContributionController extends Controller
 
     public function getContribution($id)
     {
-        $contribution = $this->user_contribution_interface->getContribution($id);
+        $contribution = $this->userContributionService->getContribution($id);
 
         return $this->sendResponse(new UserContributionResource($contribution), 200);
     }
 
     public function getContributionsByPaymentItem($id) {
-        $contributions = $this->user_contribution_interface->getContributionsByItem($id);
+        $contributions = $this->userContributionService->getContributionsByItem($id);
 
         return $this->sendResponse($contributions, 200);
     }
@@ -148,21 +148,21 @@ class UserContributionController extends Controller
             'row.*.quarterly_name'  => '',
             'row.*.registration_id' => 'required|string'
         ]);
-        $this->user_contribution_interface->bulkPayment($request);
+        $this->userContributionService->bulkPayment($request);
         return $this->sendResponse("success", 200);
     }
 
 
     public function getMemberOweContributions(Request $request)
     {
-        $data = $this->user_contribution_interface->getMemberDebt($request->user_id, $request->session_id);
+        $data = $this->userContributionService->getMemberDebt($request->user_id, $request->session_id);
         return $this->sendResponse($data, 200);
     }
 
 
     public function getAllMemberContributions(Request $request)
     {
-        $data = $this->user_contribution_interface->getMemberContributedItems($request->user_id, $request->session_id);
+        $data = $this->userContributionService->getMemberContributedItems($request->user_id, $request->session_id);
         return $this->sendResponse($data, 200);
     }
 
@@ -197,8 +197,14 @@ class UserContributionController extends Controller
 
     public function getYearlyContributions(Request $request)
     {
-        $data = $this->user_contribution_interface->getYearlyContributions($request);
+        $data = $this->userContributionService->getYearlyContributions($request);
 
+        return $this->sendResponse($data, 200);
+    }
+
+    public function getContributionStatistics(Request $request)
+    {
+        $data = $this->userContributionService->getContributionStatistics($request);
         return $this->sendResponse($data, 200);
     }
 }
