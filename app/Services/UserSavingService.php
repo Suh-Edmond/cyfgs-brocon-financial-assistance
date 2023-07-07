@@ -255,8 +255,8 @@ class UserSavingService implements UserSavingInterface
             $savings = DB::table('user_savings')
                 ->join('sessions', 'sessions.id', '=', 'user_savings.session_id')
                 ->where('sessions.id', $request->session_id)
-                ->whereMonth('user_savings.created_at', $counter)
                 ->where('user_savings.approve', PaymentStatus::APPROVED)
+                ->whereMonth('user_savings.created_at', $counter)
                 ->selectRaw('SUM(amount_deposited) - SUM(amount_used) as total_saving')->first();
             isset($savings->total_saving)? array_push($total_monthly_savings, $savings->total_saving) : array_push($total_monthly_savings, 0);
         }

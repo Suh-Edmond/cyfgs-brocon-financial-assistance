@@ -27,11 +27,13 @@ class UserContributionService implements UserContributionInterface {
     use HelpTrait;
     private SessionService $sessionService;
     private UserSavingService $userSavingService;
+    private PaymentItemService $paymentItemService;
 
-    public function __construct(SessionService $sessionService, UserSavingService $userSavingService)
+    public function __construct(SessionService $sessionService, UserSavingService $userSavingService, PaymentItemService $paymentItemService)
     {
         $this->sessionService = $sessionService;
         $this->userSavingService = $userSavingService;
+        $this->paymentItemService = $paymentItemService;
     }
 
     public function createUserContribution($request)
@@ -176,6 +178,8 @@ class UserContributionService implements UserContributionInterface {
 
         return new UserContributionCollection($user_contributions, $total);
     }
+
+
     public function bulkPayment($request)
     {
         $auth_user = $request->user()->name;
@@ -190,6 +194,7 @@ class UserContributionService implements UserContributionInterface {
             }
         }
     }
+
 
     public function getMemberDebt($user_id, $year)
     {
@@ -216,6 +221,64 @@ class UserContributionService implements UserContributionInterface {
 
     }
 
+
+    public function getContributionsByItemAndSession($item, $start_quarter, $end_quarter){
+        return DB::table('user_contributions')
+            ->join('payment_items', 'payment_items.id', '=', 'user_contributions.payment_item_id')
+            ->join('sessions', 'sessions.id' , '=', 'user_contributions.session_id')
+            ->where('payment_items.id', $item)
+            ->where('user_contributions.approve', PaymentStatus::APPROVED)
+            ->whereBetween('user_contributions.created_at', [$start_quarter, $end_quarter])
+            ->selectRaw('SUM(user_contributions.amount_deposited) as amount, sessions.year as name, sessions.id, sessions.year')
+            ->get()->toArray();
+    }
+
+
+    public function getContributionsByItemAndYear($item, $year){
+        return DB::table('user_contributions')
+            ->join('payment_items', 'payment_items.id', '=', 'user_contributions.payment_item_id')
+            ->join('sessions', 'sessions.id' , '=', 'user_contributions.session_id')
+            ->where('payment_items.id', $item)
+            ->where('user_contributions.approve', PaymentStatus::APPROVED)
+            ->where('user_contributions.session_id', $year)
+            ->selectRaw('SUM(user_contributions.amount_deposited) as amount, sessions.year as name, sessions.id, sessions.year')
+            ->get()->toArray();
+    }
+
+
+    public function getApproveMembersContributionPerActivity($id)
+    {
+        return DB::table('user_contributions')
+            ->join('users', 'users.id', '=' ,'user_contributions.user_id')
+            ->join('payment_items', 'payment_items.id', '=', 'user_contributions.payment_item_id')
+            ->where('user_contributions.payment_item_id', $id)
+            ->where('user_contributions.approve', PaymentStatus::APPROVED)
+            ->selectRaw('SUM(user_contributions.amount_deposited) as amount, payment_items.name')
+            ->groupBy('user_contributions.payment_item_id')
+            ->get();
+    }
+
+
+    public function getYearlyContributions($request)
+    {
+        $data = DB::table('user_contributions')
+                    ->join('sessions', 'sessions.id', '=', 'user_contributions.session_id')
+                    ->join('payment_items', 'payment_items.id', '=', 'user_contributions.payment_item_id')
+                    ->where('sessions.id', $request->session_id)
+                    ->where('user_contributions.approve', PaymentStatus::APPROVED)
+                    ->select('user_contributions.*')
+                    ->get()->toArray();
+        return collect($data)->sum('amount_deposited');
+    }
+
+    public function getContributionStatistics($request)
+    {
+        $payment_items =  $this->paymentItemService->getPaymentItemsBySessionAndFrequency($request);
+        $percentage_contributions = $this->getPercentageContributionsByItemAndSession($payment_items, $request->session_id);
+        $average_contributions_by_frequency = $this->getAverageContributionsByPaymentFrequency($request);
+        $average_contributions_by_type = $this->getAverageContributionByPaymentItemType($request);
+        return [["percentages_data" =>$percentage_contributions], ["avg_by_frequency" => $average_contributions_by_frequency], ["avg_by_type" => $average_contributions_by_type]];
+    }
     private function getMemberRegistration($user_id)
     {
         $reg_debts = [];
@@ -332,7 +395,6 @@ class UserContributionService implements UserContributionInterface {
         if($amount_deposited > $payment_item_amount) {
             throw new BusinessValidationException("Amount Deposited must not be more than the amount for the payment item");
         }
-
         return true;
     }
 
@@ -684,38 +746,95 @@ class UserContributionService implements UserContributionInterface {
         return $debts;
     }
 
-    public function getContributionsByItemAndSession($item, $start_quarter, $end_quarter){
-        return DB::table('user_contributions')
-            ->join('payment_items', 'payment_items.id', '=', 'user_contributions.payment_item_id')
-            ->join('sessions', 'sessions.id' , '=', 'user_contributions.session_id')
-            ->where('payment_items.id', $item)
-            ->where('user_contributions.approve', PaymentStatus::APPROVED)
-            ->whereBetween('user_contributions.created_at', [$start_quarter, $end_quarter])
-            ->selectRaw('SUM(user_contributions.amount_deposited) as amount, sessions.year as name, sessions.id, sessions.year')
-            ->get()->toArray();
-    }
-
-    public function getContributionsByItemAndYear($item, $year){
-        return DB::table('user_contributions')
-            ->join('payment_items', 'payment_items.id', '=', 'user_contributions.payment_item_id')
-            ->join('sessions', 'sessions.id' , '=', 'user_contributions.session_id')
-            ->where('payment_items.id', $item)
-            ->where('user_contributions.approve', PaymentStatus::APPROVED)
-            ->where('user_contributions.session_id', $year)
-            ->selectRaw('SUM(user_contributions.amount_deposited) as amount, sessions.year as name, sessions.id, sessions.year')
-            ->get()->toArray();
-    }
-
-    public function getApproveMembersContributionPerActivity($id)
+    public function getPercentageContributionsByItemAndSession($payment_items, $session_id)
     {
-        return DB::table('user_contributions')
-            ->join('users', 'users.id', '=' ,'user_contributions.user_id')
-            ->join('payment_items', 'payment_items.id', '=', 'user_contributions.payment_item_id')
-            ->where('user_contributions.payment_item_id', $id)
-            ->where('user_contributions.approve', PaymentStatus::APPROVED)
-            ->selectRaw('SUM(user_contributions.amount_deposited) as amount, payment_items.name')
-            ->groupBy('user_contributions.payment_item_id')
-            ->get();
+        $percentages = [];
+        foreach ($payment_items as $payment_item){
+            $contributions = DB::table('user_contributions')
+                ->join('payment_items', 'payment_items.id', '=', 'user_contributions.payment_item_id')
+                ->join('sessions', 'sessions.id', '=', 'user_contributions.session_id')
+                ->where('user_contributions.session_id', $session_id)
+                ->where('user_contributions.payment_item_id', $payment_item->id)
+                ->where('user_contributions.approve', PaymentStatus::APPROVED)
+                ->select('user_contributions.*')
+                ->orderBy('payment_items.created_at')
+                ->get()
+                ->toArray();
+            $totalContribution = collect($contributions)->sum('amount_deposited');
+            $contributors = count($contributions);
+            $percentage =  round(($totalContribution / $payment_item->amount) * 100, 2);
+            array_push($percentages, ["name" => $payment_item->name, "percentage" => $percentage, "contributors" => $contributors]);
+        }
+
+        return $percentages;
+    }
+
+    public function getAverageContributionsByPaymentFrequency($request)
+    {
+        $frequencies = [PaymentItemFrequency::YEARLY, PaymentItemFrequency::QUARTERLY, PaymentItemFrequency::MONTHLY, PaymentItemFrequency::ONE_TIME];
+        $averages = [];
+        foreach ($frequencies as $frequency){
+            switch ($frequency){
+                case  PaymentItemFrequency::YEARLY:
+                    $payment_items = $this->paymentItemService->getPaymentItemsByFrequency($request->session_id, PaymentItemFrequency::YEARLY);
+                    array_push($averages, $this->computeAverageContributionByPaymentFrequency($payment_items, $request->session_id));
+                    break;
+                case  PaymentItemFrequency::QUARTERLY:
+                    $payment_items = $this->paymentItemService->getPaymentItemsByFrequency($request->session_id, PaymentItemFrequency::QUARTERLY);
+                    array_push($averages, $this->computeAverageContributionByPaymentFrequency($payment_items, $request->session_id));
+                    break;
+                case  PaymentItemFrequency::MONTHLY:
+                    $payment_items = $this->paymentItemService->getPaymentItemsByFrequency($request->session_id, PaymentItemFrequency::MONTHLY);
+                    array_push($averages, $this->computeAverageContributionByPaymentFrequency($payment_items, $request->session_id));
+                    break;
+                case  PaymentItemFrequency::ONE_TIME:
+                    $payment_items = $this->paymentItemService->getPaymentItemsByFrequency($request->session_id, PaymentItemFrequency::ONE_TIME);
+                    array_push($averages, $this->computeAverageContributionByPaymentFrequency($payment_items, $request->session_id));
+                    break;
+            }
+        }
+
+        return $averages;
+    }
+
+    private function getAverageContributionByPaymentItemType($request)
+    {
+        $frequencies = [PaymentItemType::ALL_MEMBERS, PaymentItemType::A_MEMBER, PaymentItemType::MEMBERS_WITH_ROLES, PaymentItemType::MEMBERS_WITHOUT_ROLES, PaymentItemType::GROUPED_MEMBERS];
+        $averages = [];
+        foreach ($frequencies as $frequency){
+            switch ($frequency){
+                case  PaymentItemType::ALL_MEMBERS:
+                    $payment_items = $this->paymentItemService->getPaymentItemsByType($request->session_id, PaymentItemType::ALL_MEMBERS);
+                    array_push($averages, $this->computeAverageContributionByPaymentFrequency($payment_items, $request->session_id));
+                    break;
+                case  PaymentItemType::A_MEMBER:
+                    $payment_items = $this->paymentItemService->getPaymentItemsByType($request->session_id, PaymentItemType::A_MEMBER);
+                    array_push($averages, $this->computeAverageContributionByPaymentFrequency($payment_items, $request->session_id));
+                    break;
+                case  PaymentItemType::MEMBERS_WITH_ROLES:
+                    $payment_items = $this->paymentItemService->getPaymentItemsByType($request->session_id, PaymentItemType::MEMBERS_WITH_ROLES);
+                    array_push($averages, $this->computeAverageContributionByPaymentFrequency($payment_items, $request->session_id));
+                    break;
+                case  PaymentItemType::MEMBERS_WITHOUT_ROLES:
+                    $payment_items = $this->paymentItemService->getPaymentItemsByType($request->session_id, PaymentItemType::MEMBERS_WITHOUT_ROLES);
+                    array_push($averages, $this->computeAverageContributionByPaymentFrequency($payment_items, $request->session_id));
+                    break;
+                case  PaymentItemType::GROUPED_MEMBERS:
+                    $payment_items = $this->paymentItemService->getPaymentItemsByType($request->session_id, PaymentItemType::GROUPED_MEMBERS);
+                    array_push($averages, $this->computeAverageContributionByPaymentFrequency($payment_items, $request->session_id));
+                    break;
+            }
+        }
+
+        return $averages;
+    }
+
+    private function computeAverageContributionByPaymentFrequency($payment_items, $session_id)
+    {
+        $contributions_percentages = $this->getPercentageContributionsByItemAndSession($payment_items, $session_id);
+
+        return count($payment_items) > 0 ? round(collect($contributions_percentages)->sum('percentage') / count($payment_items), 2): 0;
+
     }
 }
 

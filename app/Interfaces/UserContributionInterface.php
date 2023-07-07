@@ -30,4 +30,10 @@ interface UserContributionInterface {
     public function getMemberDebt($user_id, $year);
 
     public function getMemberContributedItems($user_id, $year);
+
+    public function getYearlyContributions($request);
+
+    public function getContributionStatistics($request);
+
+    public function getAverageContributionsByPaymentFrequency($request);
 }
