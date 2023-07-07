@@ -176,6 +176,8 @@ class UserContributionService implements UserContributionInterface {
 
         return new UserContributionCollection($user_contributions, $total);
     }
+
+
     public function bulkPayment($request)
     {
         $auth_user = $request->user()->name;
@@ -190,6 +192,7 @@ class UserContributionService implements UserContributionInterface {
             }
         }
     }
+
 
     public function getMemberDebt($user_id, $year)
     {
@@ -215,6 +218,57 @@ class UserContributionService implements UserContributionInterface {
           return array_merge( $paid_debts, $reg);
 
     }
+
+
+    public function getContributionsByItemAndSession($item, $start_quarter, $end_quarter){
+        return DB::table('user_contributions')
+            ->join('payment_items', 'payment_items.id', '=', 'user_contributions.payment_item_id')
+            ->join('sessions', 'sessions.id' , '=', 'user_contributions.session_id')
+            ->where('payment_items.id', $item)
+            ->where('user_contributions.approve', PaymentStatus::APPROVED)
+            ->whereBetween('user_contributions.created_at', [$start_quarter, $end_quarter])
+            ->selectRaw('SUM(user_contributions.amount_deposited) as amount, sessions.year as name, sessions.id, sessions.year')
+            ->get()->toArray();
+    }
+
+
+    public function getContributionsByItemAndYear($item, $year){
+        return DB::table('user_contributions')
+            ->join('payment_items', 'payment_items.id', '=', 'user_contributions.payment_item_id')
+            ->join('sessions', 'sessions.id' , '=', 'user_contributions.session_id')
+            ->where('payment_items.id', $item)
+            ->where('user_contributions.approve', PaymentStatus::APPROVED)
+            ->where('user_contributions.session_id', $year)
+            ->selectRaw('SUM(user_contributions.amount_deposited) as amount, sessions.year as name, sessions.id, sessions.year')
+            ->get()->toArray();
+    }
+
+
+    public function getApproveMembersContributionPerActivity($id)
+    {
+        return DB::table('user_contributions')
+            ->join('users', 'users.id', '=' ,'user_contributions.user_id')
+            ->join('payment_items', 'payment_items.id', '=', 'user_contributions.payment_item_id')
+            ->where('user_contributions.payment_item_id', $id)
+            ->where('user_contributions.approve', PaymentStatus::APPROVED)
+            ->selectRaw('SUM(user_contributions.amount_deposited) as amount, payment_items.name')
+            ->groupBy('user_contributions.payment_item_id')
+            ->get();
+    }
+
+
+    public function getYearlyContributions($request)
+    {
+        $data = DB::table('user_contributions')
+                    ->join('sessions', 'sessions.id', '=', 'user_contributions.session_id')
+                    ->join('payment_items', 'payment_items.id', '=', 'user_contributions.payment_item_id')
+                    ->where('sessions.id', $request->session_id)
+                    ->where('user_contributions.approve', PaymentStatus::APPROVED)
+                    ->select('user_contributions.*')
+                    ->get()->toArray();
+        return collect($data)->sum('amount_deposited');
+    }
+
 
     private function getMemberRegistration($user_id)
     {
@@ -682,40 +736,6 @@ class UserContributionService implements UserContributionInterface {
 
 
         return $debts;
-    }
-
-    public function getContributionsByItemAndSession($item, $start_quarter, $end_quarter){
-        return DB::table('user_contributions')
-            ->join('payment_items', 'payment_items.id', '=', 'user_contributions.payment_item_id')
-            ->join('sessions', 'sessions.id' , '=', 'user_contributions.session_id')
-            ->where('payment_items.id', $item)
-            ->where('user_contributions.approve', PaymentStatus::APPROVED)
-            ->whereBetween('user_contributions.created_at', [$start_quarter, $end_quarter])
-            ->selectRaw('SUM(user_contributions.amount_deposited) as amount, sessions.year as name, sessions.id, sessions.year')
-            ->get()->toArray();
-    }
-
-    public function getContributionsByItemAndYear($item, $year){
-        return DB::table('user_contributions')
-            ->join('payment_items', 'payment_items.id', '=', 'user_contributions.payment_item_id')
-            ->join('sessions', 'sessions.id' , '=', 'user_contributions.session_id')
-            ->where('payment_items.id', $item)
-            ->where('user_contributions.approve', PaymentStatus::APPROVED)
-            ->where('user_contributions.session_id', $year)
-            ->selectRaw('SUM(user_contributions.amount_deposited) as amount, sessions.year as name, sessions.id, sessions.year')
-            ->get()->toArray();
-    }
-
-    public function getApproveMembersContributionPerActivity($id)
-    {
-        return DB::table('user_contributions')
-            ->join('users', 'users.id', '=' ,'user_contributions.user_id')
-            ->join('payment_items', 'payment_items.id', '=', 'user_contributions.payment_item_id')
-            ->where('user_contributions.payment_item_id', $id)
-            ->where('user_contributions.approve', PaymentStatus::APPROVED)
-            ->selectRaw('SUM(user_contributions.amount_deposited) as amount, payment_items.name')
-            ->groupBy('user_contributions.payment_item_id')
-            ->get();
     }
 }
 

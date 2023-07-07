@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use App\Constants\PaymentItemFrequency;
+use App\Constants\PaymentStatus;
 use App\Constants\Roles;
 use App\Http\Resources\ExpenditureDetailResource;
 use App\Http\Resources\UserResource;
@@ -158,7 +159,9 @@ trait HelpTrait {
     {
         $total = 0;
         foreach ($savings as $saving) {
-            $total += $saving->total_amount;
+            if($saving->approve == PaymentStatus::APPROVED){
+                $total += $saving->total_amount;
+            }
         }
 
         return $total;

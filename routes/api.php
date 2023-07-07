@@ -256,6 +256,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('contributions/bulk-payments', [UserContributionController::class, 'bulkPayment']);
         Route::get('contributions/members/debts', [UserContributionController::class, 'getMemberOweContributions']);
         Route::get('contributions/members/paid', [UserContributionController::class, 'getAllMemberContributions']);
+        Route::get('contributions/yearly/total', [UserContributionController::class, 'getYearlyContributions']);
     });
 
     Route::prefix('protected')->group(function () {

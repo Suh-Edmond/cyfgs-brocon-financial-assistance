@@ -193,4 +193,12 @@ class UserContributionController extends Controller
         $pdf = PDF::loadView('Contribution.MemberContribution', $data);
         return $pdf->download('MemberContributions.pdf');
     }
+
+
+    public function getYearlyContributions(Request $request)
+    {
+        $data = $this->user_contribution_interface->getYearlyContributions($request);
+
+        return $this->sendResponse($data, 200);
+    }
 }
