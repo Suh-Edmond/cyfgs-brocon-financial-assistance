@@ -274,9 +274,10 @@ class UserContributionService implements UserContributionInterface {
     public function getContributionStatistics($request)
     {
         $payment_items =  $this->paymentItemService->getPaymentItemsBySessionAndFrequency($request);
-        $contributions_by_percent = $this->getPercentageContributionsByItemAndSession($payment_items, $request->session_id);
-
-        return $contributions_by_percent;
+        $percentage_contributions = $this->getPercentageContributionsByItemAndSession($payment_items, $request->session_id);
+        $average_contributions_by_frequency = $this->getAverageContributionsByPaymentFrequency($request);
+        $average_contributions_by_type = $this->getAverageContributionByPaymentItemType($request);
+        return [["percentages_data" =>$percentage_contributions], ["avg_by_frequency" => $average_contributions_by_frequency], ["avg_by_type" => $average_contributions_by_type]];
     }
     private function getMemberRegistration($user_id)
     {
@@ -766,6 +767,74 @@ class UserContributionService implements UserContributionInterface {
         }
 
         return $percentages;
+    }
+
+    public function getAverageContributionsByPaymentFrequency($request)
+    {
+        $frequencies = [PaymentItemFrequency::YEARLY, PaymentItemFrequency::QUARTERLY, PaymentItemFrequency::MONTHLY, PaymentItemFrequency::ONE_TIME];
+        $averages = [];
+        foreach ($frequencies as $frequency){
+            switch ($frequency){
+                case  PaymentItemFrequency::YEARLY:
+                    $payment_items = $this->paymentItemService->getPaymentItemsByFrequency($request->session_id, PaymentItemFrequency::YEARLY);
+                    array_push($averages, $this->computeAverageContributionByPaymentFrequency($payment_items, $request->session_id));
+                    break;
+                case  PaymentItemFrequency::QUARTERLY:
+                    $payment_items = $this->paymentItemService->getPaymentItemsByFrequency($request->session_id, PaymentItemFrequency::QUARTERLY);
+                    array_push($averages, $this->computeAverageContributionByPaymentFrequency($payment_items, $request->session_id));
+                    break;
+                case  PaymentItemFrequency::MONTHLY:
+                    $payment_items = $this->paymentItemService->getPaymentItemsByFrequency($request->session_id, PaymentItemFrequency::MONTHLY);
+                    array_push($averages, $this->computeAverageContributionByPaymentFrequency($payment_items, $request->session_id));
+                    break;
+                case  PaymentItemFrequency::ONE_TIME:
+                    $payment_items = $this->paymentItemService->getPaymentItemsByFrequency($request->session_id, PaymentItemFrequency::ONE_TIME);
+                    array_push($averages, $this->computeAverageContributionByPaymentFrequency($payment_items, $request->session_id));
+                    break;
+            }
+        }
+
+        return $averages;
+    }
+
+    private function getAverageContributionByPaymentItemType($request)
+    {
+        $frequencies = [PaymentItemType::ALL_MEMBERS, PaymentItemType::A_MEMBER, PaymentItemType::MEMBERS_WITH_ROLES, PaymentItemType::MEMBERS_WITHOUT_ROLES, PaymentItemType::GROUPED_MEMBERS];
+        $averages = [];
+        foreach ($frequencies as $frequency){
+            switch ($frequency){
+                case  PaymentItemType::ALL_MEMBERS:
+                    $payment_items = $this->paymentItemService->getPaymentItemsByType($request->session_id, PaymentItemType::ALL_MEMBERS);
+                    array_push($averages, $this->computeAverageContributionByPaymentFrequency($payment_items, $request->session_id));
+                    break;
+                case  PaymentItemType::A_MEMBER:
+                    $payment_items = $this->paymentItemService->getPaymentItemsByType($request->session_id, PaymentItemType::A_MEMBER);
+                    array_push($averages, $this->computeAverageContributionByPaymentFrequency($payment_items, $request->session_id));
+                    break;
+                case  PaymentItemType::MEMBERS_WITH_ROLES:
+                    $payment_items = $this->paymentItemService->getPaymentItemsByType($request->session_id, PaymentItemType::MEMBERS_WITH_ROLES);
+                    array_push($averages, $this->computeAverageContributionByPaymentFrequency($payment_items, $request->session_id));
+                    break;
+                case  PaymentItemType::MEMBERS_WITHOUT_ROLES:
+                    $payment_items = $this->paymentItemService->getPaymentItemsByType($request->session_id, PaymentItemType::MEMBERS_WITHOUT_ROLES);
+                    array_push($averages, $this->computeAverageContributionByPaymentFrequency($payment_items, $request->session_id));
+                    break;
+                case  PaymentItemType::GROUPED_MEMBERS:
+                    $payment_items = $this->paymentItemService->getPaymentItemsByType($request->session_id, PaymentItemType::GROUPED_MEMBERS);
+                    array_push($averages, $this->computeAverageContributionByPaymentFrequency($payment_items, $request->session_id));
+                    break;
+            }
+        }
+
+        return $averages;
+    }
+
+    private function computeAverageContributionByPaymentFrequency($payment_items, $session_id)
+    {
+        $contributions_percentages = $this->getPercentageContributionsByItemAndSession($payment_items, $session_id);
+
+        return count($payment_items) > 0 ? round(collect($contributions_percentages)->sum('percentage') / count($payment_items), 2): 0;
+
     }
 }
 

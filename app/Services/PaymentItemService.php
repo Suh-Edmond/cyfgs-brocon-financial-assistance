@@ -151,6 +151,30 @@ class PaymentItemService implements PaymentItemInterface {
             ->get()->toArray();
     }
 
+    public function getPaymentItemsByFrequency($session_id, $frequency)
+    {
+        return DB::table('payment_items')
+            ->join('payment_categories', 'payment_categories.id', '=', 'payment_items.payment_category_id')
+            ->join('sessions', 'sessions.id', '=', 'payment_items.session_id')
+            ->where('payment_items.session_id', $session_id)
+            ->Where('payment_items.frequency', $frequency)
+            ->select('payment_items.id', 'payment_items.name', 'payment_items.amount', 'payment_items.session_id')
+            ->distinct()
+            ->get()->toArray();
+    }
+
+    public function getPaymentItemsByType($session_id, $type)
+    {
+        return DB::table('payment_items')
+            ->join('payment_categories', 'payment_categories.id', '=', 'payment_items.payment_category_id')
+            ->join('sessions', 'sessions.id', '=', 'payment_items.session_id')
+            ->where('payment_items.session_id', $session_id)
+            ->Where('payment_items.type', $type)
+            ->select('payment_items.id', 'payment_items.name', 'payment_items.amount', 'payment_items.session_id')
+            ->distinct()
+            ->get()->toArray();
+    }
+
     private function findPaymentItem($id, $payment_category_id)
     {
         return PaymentItem::select('payment_items.*')->join('payment_categories', ['payment_categories.id' => 'payment_items.payment_category_id'])

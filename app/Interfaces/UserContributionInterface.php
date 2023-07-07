@@ -34,4 +34,6 @@ interface UserContributionInterface {
     public function getYearlyContributions($request);
 
     public function getContributionStatistics($request);
+
+    public function getAverageContributionsByPaymentFrequency($request);
 }
