@@ -3,7 +3,6 @@ namespace App\Services;
 
 use App\Constants\PaymentStatus;
 use App\Exceptions\BusinessValidationException;
-use App\Http\Resources\ExpenditureDetailCollection;
 use App\Http\Resources\ExpenditureDetailResource;
 use App\Interfaces\ExpenditureDetailInterface;
 use App\Models\ExpenditureDetail;
@@ -115,27 +114,9 @@ class ExpenditureDetailService implements ExpenditureDetailInterface {
             ['total_amount_given' => $total_amount_given], ['total_amount_spent' => $total_amount_spent], ['balance' => $balance]];
     }
 
-    private function findExpenditureDetail($id)
-    {
-        return ExpenditureDetail::findOrFail($id);
-    }
-
-    private function findExpenditureDetails($id)
-    {
-        return ExpenditureDetail::select('expenditure_details.*', 'expenditure_items.amount as expenditure_item_amount')
-                                ->join('expenditure_items', ['expenditure_items.id' => 'expenditure_details.expenditure_item_id'])
-                                ->where('expenditure_items.id', $id)
-                                ->orderBy('expenditure_details.name', 'ASC')
-                                ->get();
-    }
-
-    private function setExpenditureItemAmount($data) {
-        return count($data->toArray()) == 0 ? 0: $data[0]->expenditure_item_amount;
-    }
-
     public function setDataForDownload($request) {
         if(is_null($request->status)) {
-             return $this->getExpenditureDetails($request->expenditure_item_id);
+            return $this->getExpenditureDetails($request->expenditure_item_id);
         }
         else {
             return $this->filterExpenditureDetail($request->expenditure_item_id, $request->status);
@@ -177,5 +158,37 @@ class ExpenditureDetailService implements ExpenditureDetailInterface {
             ->orderBy('expenditure_details.name', 'DESC')->get();
     }
 
+    public function computeTotalExpendituresByYearly($request)
+    {
+        $expenses =  DB::table('expenditure_details')
+            ->join('expenditure_items', 'expenditure_items.id', '=', 'expenditure_details.expenditure_item_id')
+            ->join('sessions', 'sessions.id', '=', 'expenditure_items.session_id')
+            ->where('sessions.id', $request->session_id)
+            ->where('expenditure_details.approve', PaymentStatus::APPROVED)
+            ->selectRaw('SUM(expenditure_details.amount_spent) as total')
+            ->first();
+
+        return is_null($expenses->total) ? 0 : $expenses->total;
+    }
+
+
+
+    private function findExpenditureDetail($id)
+    {
+        return ExpenditureDetail::findOrFail($id);
+    }
+
+    private function findExpenditureDetails($id)
+    {
+        return ExpenditureDetail::select('expenditure_details.*', 'expenditure_items.amount as expenditure_item_amount')
+                                ->join('expenditure_items', ['expenditure_items.id' => 'expenditure_details.expenditure_item_id'])
+                                ->where('expenditure_items.id', $id)
+                                ->orderBy('expenditure_details.name', 'ASC')
+                                ->get();
+    }
+
+    private function setExpenditureItemAmount($data) {
+        return count($data->toArray()) == 0 ? 0: $data[0]->expenditure_item_amount;
+    }
 
 }
