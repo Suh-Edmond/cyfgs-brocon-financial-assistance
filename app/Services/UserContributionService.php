@@ -277,7 +277,8 @@ class UserContributionService implements UserContributionInterface {
         $percentage_contributions = $this->getPercentageContributionsByItemAndSession($payment_items, $request->session_id);
         $average_contributions_by_frequency = $this->getAverageContributionsByPaymentFrequency($request);
         $average_contributions_by_type = $this->getAverageContributionByPaymentItemType($request);
-        return [["percentages_data" =>$percentage_contributions], ["avg_by_frequency" => $average_contributions_by_frequency], ["avg_by_type" => $average_contributions_by_type]];
+
+         return [["percentages_data" =>$percentage_contributions], ["avg_by_frequency" => $average_contributions_by_frequency], ["avg_by_type" => $average_contributions_by_type]];
     }
     private function getMemberRegistration($user_id)
     {
@@ -762,8 +763,8 @@ class UserContributionService implements UserContributionInterface {
                 ->toArray();
             $totalContribution = collect($contributions)->sum('amount_deposited');
             $contributors = count($contributions);
-            $percentage =  round(($totalContribution / $payment_item->amount) * 100, 2);
-            array_push($percentages, ["name" => $payment_item->name, "percentage" => $percentage, "contributors" => $contributors]);
+//            $percentage =  round(($totalContribution / $payment_item->amount) * 100, 2);
+            array_push($percentages, ["name" => $payment_item->name, "percentage" => $totalContribution, "contributors" => $contributors]);
         }
 
         return $percentages;

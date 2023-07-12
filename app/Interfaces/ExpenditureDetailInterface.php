@@ -17,4 +17,5 @@ interface ExpenditureDetailInterface {
 
     public function filterExpenditureDetail($item, $status);
 
+    public function computeTotalExpendituresByYearly($request);
 }
