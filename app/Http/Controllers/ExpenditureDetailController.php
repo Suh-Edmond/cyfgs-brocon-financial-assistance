@@ -113,10 +113,19 @@ class ExpenditureDetailController extends Controller
         return $pdf->download('Expenditure_Details.pdf');
     }
 
+
     public function computeTotalExpendituresByYearly(Request $request)
     {
         $total = $this->expenditure_detail_service->computeTotalExpendituresByYearly($request);
 
         return $this->sendResponse($total, 200);
+    }
+
+
+    public function getExpenditureStatistics(Request $request)
+    {
+        $data = $this->expenditure_detail_service->getExpenditureStatistics($request);
+
+        return $this->sendResponse($data, 200);
     }
 }

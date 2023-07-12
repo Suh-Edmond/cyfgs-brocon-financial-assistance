@@ -14,6 +14,12 @@ use Illuminate\Support\Facades\DB;
 class ExpenditureDetailService implements ExpenditureDetailInterface {
 
     use HelpTrait;
+    private PaymentItemService $paymentItemService;
+
+    public function __construct(PaymentItemService $paymentItemService)
+    {
+        $this->paymentItemService = $paymentItemService;
+    }
 
     public function createExpenditureDetail($request, $id)
     {
@@ -164,14 +170,21 @@ class ExpenditureDetailService implements ExpenditureDetailInterface {
             ->join('expenditure_items', 'expenditure_items.id', '=', 'expenditure_details.expenditure_item_id')
             ->join('sessions', 'sessions.id', '=', 'expenditure_items.session_id')
             ->where('sessions.id', $request->session_id)
-            ->where('expenditure_details.approve', PaymentStatus::APPROVED)
+            ->where('expenditure_items.approve', PaymentStatus::APPROVED)
             ->selectRaw('SUM(expenditure_details.amount_spent) as total')
             ->first();
 
         return is_null($expenses->total) ? 0 : $expenses->total;
     }
 
+    public function getExpenditureStatistics($request)
+    {
+        $payment_items = $this->paymentItemService->getPaymentItemsBySessionAndFrequency($request);
+        $monthly_expenditures = $this->getMonthlyExpenditures($request->session_id);
+        $expenditures_by_items = $this->getExpendituresByPaymentItems($payment_items, $request->session_id);
 
+        return ["monthly_expenses" => $monthly_expenditures, "expenses_by_items" => $expenditures_by_items];
+    }
 
     private function findExpenditureDetail($id)
     {
@@ -185,6 +198,44 @@ class ExpenditureDetailService implements ExpenditureDetailInterface {
                                 ->where('expenditure_items.id', $id)
                                 ->orderBy('expenditure_details.name', 'ASC')
                                 ->get();
+    }
+
+    private function getMonthlyExpenditures($session_id)
+    {
+        $expenditures = [];
+        for ($month = 1; $month <= 12; $month ++){
+            $expenditure = DB::table('expenditure_details')
+                        ->join('expenditure_items', 'expenditure_items.id', '=', 'expenditure_details.expenditure_item_id')
+                        ->join('sessions', 'sessions.id', '=', 'expenditure_items.session_id')
+                        ->where('sessions.id', $session_id)
+                        ->where('expenditure_items.approve', PaymentStatus::APPROVED)
+                        ->whereMonth('expenditure_items.date', $month)
+                        ->selectRaw('SUM(expenditure_details.amount_spent) as total')
+                        ->first();
+            array_push($expenditures, is_null($expenditure->total) ? 0 : $expenditure->total);
+        }
+
+        return $expenditures;
+    }
+
+    private function getExpendituresByPaymentItems($items, $session_id)
+    {
+        $expenditures = [];
+        foreach ($items as $item){
+            $expenditure = DB::table('expenditure_details')
+                            ->join('expenditure_items', 'expenditure_items.id', '=', 'expenditure_details.expenditure_item_id')
+                            ->join('sessions', 'sessions.id', '=', 'expenditure_items.session_id')
+                            ->join('payment_items', 'payment_items.id', '=', 'expenditure_items.payment_item_id')
+                            ->where('sessions.id', $session_id)
+                            ->where('payment_items.id', $item->id)
+                            ->where('expenditure_items.approve', PaymentStatus::APPROVED)
+                            ->selectRaw('SUM(expenditure_details.amount_spent) as total')
+                            ->first();
+            $amount = is_null($expenditure->total) ? 0 : $expenditure->total;
+            array_push($expenditures, ["name" => $item->name, "amount" => $amount]);
+        }
+
+        return $expenditures;
     }
 
     private function setExpenditureItemAmount($data) {

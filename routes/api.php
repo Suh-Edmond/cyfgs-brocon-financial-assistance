@@ -229,6 +229,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('expenditure-details', [ExpenditureDetailController::class, 'filterExpenditureDetails']);
         Route::get('expenditure-item-details/download', [ExpenditureDetailController::class, 'downloadExpenditureDetail']);
         Route::get('expenditures_total', [ExpenditureDetailController::class, 'computeTotalExpendituresByYearly']);
+        Route::get('expenditure_statistics', [ExpenditureDetailController::class, 'getExpenditureStatistics']);
     });
 
     Route::prefix('protected')->group(function () {
