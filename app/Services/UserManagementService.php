@@ -133,7 +133,8 @@ class UserManagementService implements UserManagementInterface
 
     public function loginUser($request)
     {
-        $user = User::where('telephone', str_replace(" ", "", $request->telephone))->orwhere('email', $request->email)->firstOrFail();
+        $telephone = str_replace(" ", "", $request->telephone);
+        $user = User::where('telephone', $telephone)->firstOrFail();
 
         if (!Hash::check($request->password, $user->password)) {
             return $this->sendError('Unauthorized', 'Bad Credentials', 401);
