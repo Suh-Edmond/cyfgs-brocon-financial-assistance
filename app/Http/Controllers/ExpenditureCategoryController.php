@@ -90,7 +90,8 @@ class ExpenditureCategoryController extends Controller
             'organisation_telephone'   => $this->setOrganisationTelephone($organisation->telephone),
             'president'                => $president,
             'treasurer'                => $treasurer,
-            'fin_secretary'            => $fin_sec
+            'fin_secretary'            => $fin_sec,
+            'organisation_log'         => env('FILE_DOWNLOAD_URL_PATH').$organisation->logo
         ];
 
         $pdf = PDF::loadView('ExpenditureCategory.ExpenditureCategories', $data);

@@ -122,7 +122,8 @@ class ExpenditureItemController extends Controller
             'organisation_telephone'   => $this->setOrganisationTelephone($organisation->telephone),
             'treasurer'           => $treasurer,
             'fin_secretary'       => $fin_sec,
-            'total'               => $this->expenditure_item_service->calculateTotal($expenditure_items)
+            'total'               => $this->expenditure_item_service->calculateTotal($expenditure_items),
+            'organisation_logo'   => env('FILE_DOWNLOAD_URL_PATH').$organisation->logo
         ];
 
         $pdf = PDF::loadView('ExpenditureItem.ExpenditureItems', $data);

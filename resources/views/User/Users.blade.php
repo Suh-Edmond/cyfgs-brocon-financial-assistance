@@ -4,7 +4,7 @@
 @section('section')
     <div style="margin-bottom: 220px;">
         <div style="float: left;">
-            <img :src={{$organisation_logo}} alt="organisation logo" width="100px;" height="100px;"
+            <img src="{{url($organisation_logo)}}" alt="organisation_logo" width="100px;" height="100px;"
                 style="border-radius: 2px">
         </div>
         <div style="float: right">
@@ -19,7 +19,7 @@
             <label style="font-size: small;">Printed date: {{ $date }}</label>
         </div>
     </div>
-    <div style="margin-bottom: 2rem">
+    <div style="margin-bottom: 2rem;border-bottom: 1px solid black;">
         <h3 style="font-weight: bold;font-size: medium; text-align:center;text-transform: capitalize;">{{ $title }}
         </h3>
     </div>

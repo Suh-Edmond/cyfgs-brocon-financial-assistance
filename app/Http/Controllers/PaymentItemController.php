@@ -99,7 +99,8 @@ class PaymentItemController extends Controller
             'president'           => $president,
             'treasurer'           => $treasurer,
             'fin_secretary'       => $fin_sec,
-            'total'               => $this->computeTotalAmountByPaymentCategory($items)
+            'total'               => $this->computeTotalAmountByPaymentCategory($items),
+            'organisation_logo'   => env('FILE_DOWNLOAD_URL_PATH').$organisation->logo
         ];
 
         $pdf = PDF::loadView('PaymentItem.PaymentItems', $data);

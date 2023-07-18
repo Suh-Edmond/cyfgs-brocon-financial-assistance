@@ -127,7 +127,8 @@ class UserContributionController extends Controller
             'treasurer'         => $treasurer,
             'fin_secretary'     => $fin_sec,
             'total'             => $total,
-            'balance'           => $contributions[0]->payment_item_amount - $total
+            'balance'           => $contributions[0]->payment_item_amount - $total,
+            'organisation_logo' => env('FILE_DOWNLOAD_URL_PATH').$organisation->logo
         ];
 
         $pdf = PDF::loadView('Contribution.UsersContribution', $data);

@@ -105,7 +105,8 @@ class ExpenditureDetailController extends Controller
             'total_amount_spent'    => $total_amount_spent,
             'balance'               => $balance,
             'item_name'             => $expenditure_details[1]['expenditure_item_name'],
-            'item_amount'           => $expenditure_details[2]['expenditure_item_amount']
+            'item_amount'           => $expenditure_details[2]['expenditure_item_amount'],
+            'organisation_logo'     => env('FILE_DOWNLOAD_URL_PATH').$organisation->logo
         ];
 
         $pdf = PDF::loadView('ExpenditureDetail.ExpenditureDetail', $data);
