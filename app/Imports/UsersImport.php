@@ -50,7 +50,7 @@ class UsersImport implements ToModel
         $created = User::create([
             'name'            => $row[0],
             'email'           => $row[1],
-            'telephone'       => $row[2],
+            'telephone'       => str_replace(" ", "", $row[2]),
             'gender'          => $row[3],
             'address'         => $row[4],
             'occupation'      => $row[5],

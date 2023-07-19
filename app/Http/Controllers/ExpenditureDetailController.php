@@ -105,7 +105,8 @@ class ExpenditureDetailController extends Controller
             'total_amount_spent'    => $total_amount_spent,
             'balance'               => $balance,
             'item_name'             => $expenditure_details[1]['expenditure_item_name'],
-            'item_amount'           => $expenditure_details[2]['expenditure_item_amount']
+            'item_amount'           => $expenditure_details[2]['expenditure_item_amount'],
+            'organisation_logo'     => env('FILE_DOWNLOAD_URL_PATH').$organisation->logo
         ];
 
         $pdf = PDF::loadView('ExpenditureDetail.ExpenditureDetail', $data);
@@ -113,10 +114,19 @@ class ExpenditureDetailController extends Controller
         return $pdf->download('Expenditure_Details.pdf');
     }
 
+
     public function computeTotalExpendituresByYearly(Request $request)
     {
         $total = $this->expenditure_detail_service->computeTotalExpendituresByYearly($request);
 
         return $this->sendResponse($total, 200);
+    }
+
+
+    public function getExpenditureStatistics(Request $request)
+    {
+        $data = $this->expenditure_detail_service->getExpenditureStatistics($request);
+
+        return $this->sendResponse($data, 200);
     }
 }

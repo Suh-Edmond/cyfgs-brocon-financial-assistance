@@ -21,12 +21,10 @@ class IsPresidentOrIsFinancialSecretary
      */
     public function handle(Request $request, Closure $next)
     {
-        if($request->user()->hasRole(CustomRole::findByName(Roles::PRESIDENT, 'api'))){
-            return $next($request);
+
+        if(count(collect($request->user()->roles->toArray())->whereIn('name', [Roles::MEMBER, Roles::PRESIDENT, Roles::FINANCIAL_SECRETARY])->toArray()) < 2){
+            return ResponseTrait::sendError('Access denied', 'You dont have the role to access this route', 403);
         }
-        if($request->user()->hasRole(CustomRole::findByName(Roles::FINANCIAL_SECRETARY, 'api'))){
-            return $next($request);
-        }
-        return ResponseTrait::sendError('Access denied', 'You dont have the role to access this route', 403);
+        return $next($request);
     }
 }

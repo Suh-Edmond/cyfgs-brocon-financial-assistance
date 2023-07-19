@@ -130,6 +130,7 @@ class UserController extends Controller
 
     public function downloadUsers(Request $request)
     {
+
         $organisation      =$request->user()->organisation;
         $users             = $this->user_management_service->filterUsers($request);
         $admins            = $this->getOrganisationAdministrators();
@@ -138,14 +139,15 @@ class UserController extends Controller
         $fin_sec           = $admins[1];
 
         $data = [
-        'title'                      => $request->has_register == RegistrationStatus::REGISTERED ? 'Registered Organisation Members':'Non Registered Organisation Members',
+            'title'                      => $request->has_register == RegistrationStatus::REGISTERED ? 'Registered Organisation Members':'Non Registered Organisation Members',
             'date'                   => date('m/d/Y'),
             'organisation'           => $organisation,
             'organisation_telephone' => $this->setOrganisationTelephone($organisation->telephone),
             'users'                  => $users,
             'president'              => $president,
             'treasurer'              => $treasurer,
-            'fin_secretary'          => $fin_sec
+            'fin_secretary'          => $fin_sec,
+            'organisation_logo'      => env('FILE_DOWNLOAD_URL_PATH').$organisation->logo
         ];
 
         $pdf = PDF::loadView('User.Users', $data);

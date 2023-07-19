@@ -15,26 +15,26 @@ class SessionSeeder extends Seeder
      */
     public function run()
     {
-        Session::create([
-            'year' =>  "2027",
-            'status' => SessionStatus::IN_ACTIVE,
-            'updated_by' => "Edmond"
-        ]);
-        Session::create([
-            'year' =>  "2026",
-            'status' => SessionStatus::IN_ACTIVE,
-            'updated_by' => "Edmond"
-        ]);
-        Session::create([
-            'year' =>  "2025",
-            'status' => SessionStatus::IN_ACTIVE,
-            'updated_by' => "Edmond"
-        ]);
-        Session::create([
-            'year' =>  "2024",
-            'status' => SessionStatus::IN_ACTIVE,
-            'updated_by' => "Edmond"
-        ]);
+//        Session::create([
+//            'year' =>  "2027",
+//            'status' => SessionStatus::IN_ACTIVE,
+//            'updated_by' => "Edmond"
+//        ]);
+//        Session::create([
+//            'year' =>  "2026",
+//            'status' => SessionStatus::IN_ACTIVE,
+//            'updated_by' => "Edmond"
+//        ]);
+//        Session::create([
+//            'year' =>  "2025",
+//            'status' => SessionStatus::IN_ACTIVE,
+//            'updated_by' => "Edmond"
+//        ]);
+//        Session::create([
+//            'year' =>  "2024",
+//            'status' => SessionStatus::IN_ACTIVE,
+//            'updated_by' => "Edmond"
+//        ]);
         Session::create([
             'year' =>  "2023",
             'status' => SessionStatus::ACTIVE,

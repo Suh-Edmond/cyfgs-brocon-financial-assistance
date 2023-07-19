@@ -32,7 +32,7 @@ class UserManagementService implements UserManagementInterface
         $created =  User::create([
             'name'            => $request->name,
             'email'           => $request->email,
-            'telephone'       => $request->telephone,
+            'telephone'       => str_replace(" ", "", $request->telephone),
             'gender'          => $request->gender,
             'address'         => $request->address,
             'occupation'      => $request->occupation,
@@ -133,7 +133,8 @@ class UserManagementService implements UserManagementInterface
 
     public function loginUser($request)
     {
-        $user = User::where('telephone', $request->telephone)->orwhere('email', $request->email)->firstOrFail();
+        $telephone = str_replace(" ", "", $request->telephone);
+        $user = User::where('telephone', $telephone)->firstOrFail();
 
         if (!Hash::check($request->password, $user->password)) {
             return $this->sendError('Unauthorized', 'Bad Credentials', 401);
@@ -149,7 +150,7 @@ class UserManagementService implements UserManagementInterface
     {
         return User::create([
             'name'       => $request->name,
-            'telephone'  => $request->telephone,
+            'telephone'  => str_replace(" ", "", $request->telephone),
             'password'   => Hash::make($request->password),
             'email'      => $request->email,
         ]);
@@ -181,7 +182,7 @@ class UserManagementService implements UserManagementInterface
 
     public function checkUserExist($request)
     {
-        return User::where('telephone', $request->credential)->orWhere('email', $request->credential)->firstOrFail();
+        return User::where('telephone', str_replace(" ", "", $request->credential))->orWhere('email', $request->credential)->firstOrFail();
     }
 
     public function importUsers($organisation_id, $request)
