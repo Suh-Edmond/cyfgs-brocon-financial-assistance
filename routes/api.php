@@ -268,7 +268,7 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::prefix('protected')->middleware('isPresident')->group(function () {
-        Route::delete('contributions/{id}', [UserContributionController::class, 'deleteUserContributon']);
+        Route::delete('contributions/{id}', [UserContributionController::class, 'deleteUserContribution']);
     });
 
 //

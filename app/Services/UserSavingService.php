@@ -52,7 +52,9 @@ class UserSavingService implements UserSavingInterface
     public function getUserSavings($user_id)
     {
 
-        $savings = UserSaving::where('user_id', $user_id)->get();
+        $savings = UserSaving::select('user_savings.*', 'users.email', 'users.name', 'users.telephone')
+                        ->join('users', ['users.id' => 'user_savings.user_id'])
+                        ->where('user_id', $user_id)->get();
 
         $total = $this->calculateTotalSaving($savings);
 

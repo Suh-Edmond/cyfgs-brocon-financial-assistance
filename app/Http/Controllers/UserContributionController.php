@@ -66,11 +66,11 @@ class UserContributionController extends Controller
     }
 
 
-    public function deleteUserContributon($id)
+    public function deleteUserContribution($id)
     {
         $this->userContributionService->deleteUserContribution($id);
 
-        return $this->sendResponse( 'success', 'Contribution deleted sucessfully');
+        return $this->sendResponse( 'success', 'Contribution deleted Successfully');
     }
 
 
