@@ -101,12 +101,6 @@ class UserManagementService implements UserManagementInterface
     {
         $updated = User::findOrFail($user_id);
         $updated->update([
-            'name'            => $request->name,
-            'email'           => $request->email,
-            'address'         => $request->address,
-            'occupation'      => $request->occupation,
-            'gender'          => $request->gender,
-            'updated_by'      => $request->user()->name,
             'picture'         => $request->picture
         ]);
     }

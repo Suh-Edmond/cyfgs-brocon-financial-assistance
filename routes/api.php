@@ -35,14 +35,10 @@ Route::prefix('public/auth')->group(function () {
     Route::post('/login', [UserController::class, 'logInUser']);
     Route::post('/signup', [UserController::class, 'createAccount']);
     Route::post('/check-user', [UserController::class, 'checkUserExist']);
+    Route::post('/set-password', [UserController::class, 'setPassword']);
 });
 
 Route::middleware('auth:sanctum')->group(function () {
-
-    Route::prefix('protected/auth')->middleware('isUser')->group(function () {
-        Route::post('/set-password', [UserController::class, 'setPassword']);
-    });
-
 
     Route::prefix('protected/roles')->group(function () {
         Route::post('', [RoleController::class, 'addUserRole'])->middleware('isPresident');

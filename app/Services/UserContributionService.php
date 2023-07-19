@@ -285,33 +285,35 @@ class UserContributionService implements UserContributionInterface {
         $reg_debts = [];
         $reg = Registration::where('is_compulsory', true)->first();
         $sessions = $this->sessionService->getAllSessions();
-        if($reg->frequency == RegistrationFrequency::YEARLY){
-            foreach ($sessions as $session){
-                $reg_session = DB::table('member_registrations')
-                                ->join('users', 'users.id', '=', 'member_registrations.user_id')
-                                ->join('sessions', 'sessions.id', '=', 'member_registrations.session_id')
-                                ->where('member_registrations.user_id', $user_id)
-                                ->where('member_registrations.session_id', $session->id)
-                                ->whereIn('member_registrations.approve', [PaymentStatus::PENDING, PaymentStatus::APPROVED])
-                                ->select('users.id as user_id', 'sessions.*')->first();
-                if (is_null($reg_session)){
-                    $session_resource = new SessionResource($session);
-                    array_push($reg_debts, new MemberPaymentItemResource($reg->id, 'Members Registration',
-                        $reg->amount, $reg->amount, $reg->is_compulsory, null, $reg->frequency, 'REGISTRATION', $session_resource, null, null));
+        if(isset($reg)){
+            if($reg->frequency == RegistrationFrequency::YEARLY){
+                foreach ($sessions as $session){
+                    $reg_session = DB::table('member_registrations')
+                        ->join('users', 'users.id', '=', 'member_registrations.user_id')
+                        ->join('sessions', 'sessions.id', '=', 'member_registrations.session_id')
+                        ->where('member_registrations.user_id', $user_id)
+                        ->where('member_registrations.session_id', $session->id)
+                        ->whereIn('member_registrations.approve', [PaymentStatus::PENDING, PaymentStatus::APPROVED])
+                        ->select('users.id as user_id', 'sessions.*')->first();
+                    if (is_null($reg_session)){
+                        $session_resource = new SessionResource($session);
+                        array_push($reg_debts, new MemberPaymentItemResource($reg->id, 'Members Registration',
+                            $reg->amount, $reg->amount, $reg->is_compulsory, null, $reg->frequency, 'REGISTRATION', $session_resource, null, null));
+                    }
                 }
             }
-        }
-        if($reg->frequency == RegistrationFrequency::MONTHLY) {
-            foreach ($this->getMonths() as $month){
-                $reg_session = DB::table('member_registrations')
-                    ->join('users', 'users.id', '=', 'member_registrations.user_id')
-                    ->where('member_registrations.user_id', $user_id)
-                    ->where('member_registrations.month_name', $month)
-                    ->whereIn('member_registrations.approve', [PaymentStatus::PENDING, PaymentStatus::APPROVED])
-                    ->select( 'member_registrations.*')->first();
-                if (is_null($reg_session)){
-                    array_push($reg_debts, new MemberPaymentItemResource($reg->id, 'Members Registration',
-                        $reg->amount, $reg->amount,  $reg->is_compulsory, null, $reg->frequency, 'REGISTRATION', null, $month, null));
+            if($reg->frequency == RegistrationFrequency::MONTHLY) {
+                foreach ($this->getMonths() as $month){
+                    $reg_session = DB::table('member_registrations')
+                        ->join('users', 'users.id', '=', 'member_registrations.user_id')
+                        ->where('member_registrations.user_id', $user_id)
+                        ->where('member_registrations.month_name', $month)
+                        ->whereIn('member_registrations.approve', [PaymentStatus::PENDING, PaymentStatus::APPROVED])
+                        ->select( 'member_registrations.*')->first();
+                    if (is_null($reg_session)){
+                        array_push($reg_debts, new MemberPaymentItemResource($reg->id, 'Members Registration',
+                            $reg->amount, $reg->amount,  $reg->is_compulsory, null, $reg->frequency, 'REGISTRATION', null, $month, null));
+                    }
                 }
             }
         }
