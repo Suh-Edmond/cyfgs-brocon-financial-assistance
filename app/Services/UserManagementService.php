@@ -66,7 +66,7 @@ class UserManagementService implements UserManagementInterface
          if(count($group_users) > 0){
              $total_approved_record  = isset($group_users['APPROVED']) ? count($group_users['APPROVED']) : 0;
              $total_pending = isset($group_users['PENDING']) ? count($group_users['PENDING']) : 0;
-             $total_unregistered = isset($group_users['']) ? count($group_users['']): 0;
+             $total_unregistered = isset($group_users['DECLINED']) ? count($group_users['DECLINED']): 0;
          }
         return [$total_approved_record, $total_pending, $total_unregistered];
     }
@@ -74,16 +74,21 @@ class UserManagementService implements UserManagementInterface
     public function getRegMemberByMonths($organisation_id)
     {
         $data = [];
+        $payment_statuses = [PaymentStatus::APPROVED, PaymentStatus::PENDING, PaymentStatus::DECLINED];
         for ($month = 1; $month <= 12; $month++){
-            $users = User::join('organisations', 'organisations.id', '=', 'users.organisation_id')
-                ->join('member_registrations', 'users.id', '=', 'member_registrations.user_id')
-                ->where('organisations.id', $organisation_id)
-                ->where('member_registrations.approve', PaymentStatus::APPROVED)
-                ->whereMonth('member_registrations.created_at', $month)
-                ->select('users.*', 'member_registrations.approve', 'member_registrations.session_id')
-                ->distinct()
-                ->orderBy('name')->get()->toArray();
-            array_push($data, count($users));
+            $users_by_status = [];
+            foreach ($payment_statuses as $payment_status){
+                $users = User::join('organisations', 'organisations.id', '=', 'users.organisation_id')
+                    ->join('member_registrations', 'users.id', '=', 'member_registrations.user_id')
+                    ->where('organisations.id', $organisation_id)
+                    ->where('member_registrations.approve', $payment_status)
+                    ->whereMonth('member_registrations.created_at', $month)
+                    ->select('users.*', 'member_registrations.approve', 'member_registrations.session_id')
+                    ->distinct()
+                    ->orderBy('name')->get()->toArray();
+                array_push($users_by_status, count($users));
+            }
+            array_push($data, $users_by_status);
         }
         return $data;
     }
