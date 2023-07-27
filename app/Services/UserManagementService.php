@@ -9,11 +9,16 @@ use App\Exceptions\BusinessValidationException;
 use App\Http\Resources\UserResource;
 use App\Imports\UsersImport;
 use App\Interfaces\UserManagementInterface;
+use App\Mail\PasswordResetMail;
 use App\Models\CustomRole;
+use App\Models\PasswordReset;
 use App\Models\User;
 use App\Traits\HelpTrait;
 use App\Traits\ResponseTrait;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
 
 class UserManagementService implements UserManagementInterface
@@ -210,6 +215,40 @@ class UserManagementService implements UserManagementInterface
         return $filter_users;
     }
 
+
+    public function setPasswordResetToken($request)
+    {
+        $request->validate([
+            'email'  => 'required|email'
+        ]);
+        $user = User::where('email', $request->email)->firstOrFail();
+        $token = md5(mt_rand());
+        $redirectLink = env('PASSWORD_RESET_UI_REDIRECT_LINK')."?token=".$token;
+        $organisation_logo = env('FILE_DOWNLOAD_URL_PATH').$user->organisation->logo;
+        try {
+            Mail::to($user['email'])->send(new PasswordResetMail($user, $redirectLink, $organisation_logo));
+        }catch (\Exception $exception){
+
+        }
+        PasswordReset::create([
+            'email' => $user->email,
+            'token' => $token,
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
+            'user_id' => $user->id,
+            'expire_at' => Carbon::now()->addHours(4)
+        ]);
+    }
+
+    public function validateResetToken($request)
+    {
+
+    }
+
+    public function setNewPassword($request)
+    {
+
+    }
 
 
     private function generateToken($user)

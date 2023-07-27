@@ -168,4 +168,10 @@ class UserController extends Controller
 
         return $this->sendResponse($user, 'success');
     }
+
+    public function setPasswordResetToken(Request $request){
+        $this->user_management_service->setPasswordResetToken($request);
+
+        return $this->sendResponse("Password Reset Token sent successfully", 'success');
+    }
 }
