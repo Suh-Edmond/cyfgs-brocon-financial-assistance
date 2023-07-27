@@ -38,5 +38,5 @@ interface UserManagementInterface {
 
     public function validateResetToken($request);
 
-    public function setNewPassword($request);
+    public function resetPassword($request);
 }

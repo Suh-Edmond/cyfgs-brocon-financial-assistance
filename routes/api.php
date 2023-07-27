@@ -37,6 +37,8 @@ Route::prefix('public/auth')->group(function () {
     Route::post('/check-user', [UserController::class, 'checkUserExist']);
     Route::post('/set-password', [UserController::class, 'setPassword']);
     Route::post('/reset-password-token', [UserController::class, 'setPasswordResetToken']);
+    Route::post('/validate/password-reset', [UserController::class, 'validateResetToken']);
+    Route::post('/reset-password', [UserController::class, 'resetPassword']);
 });
 
 Route::middleware('auth:sanctum')->group(function () {

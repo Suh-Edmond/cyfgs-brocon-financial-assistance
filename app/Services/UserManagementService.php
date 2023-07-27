@@ -6,6 +6,7 @@ use App\Constants\PaymentStatus;
 use App\Constants\RegistrationStatus;
 use App\Constants\Roles;
 use App\Exceptions\BusinessValidationException;
+use App\Http\Resources\PasswordResetResponse;
 use App\Http\Resources\UserResource;
 use App\Imports\UsersImport;
 use App\Interfaces\UserManagementInterface;
@@ -16,7 +17,7 @@ use App\Models\User;
 use App\Traits\HelpTrait;
 use App\Traits\ResponseTrait;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
+use Exception;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
@@ -227,7 +228,7 @@ class UserManagementService implements UserManagementInterface
         $organisation_logo = env('FILE_DOWNLOAD_URL_PATH').$user->organisation->logo;
         try {
             Mail::to($user['email'])->send(new PasswordResetMail($user, $redirectLink, $organisation_logo));
-        }catch (\Exception $exception){
+        }catch (Exception $exception){
 
         }
         PasswordReset::create([
@@ -242,11 +243,38 @@ class UserManagementService implements UserManagementInterface
 
     public function validateResetToken($request)
     {
+        $request->validate([
+            'token' => 'required|string'
+        ]);
 
+        try {
+            $resetData = PasswordReset::where('token',$request->token)->first();
+            if(Carbon::now()->greaterThan($resetData->expired_at)){
+                throw new BusinessValidationException("Password Reset token has Expired");
+            }
+            return $this->sendResponse(new PasswordResetResponse($resetData->email, $resetData->user_id), 'success');
+        }catch (Exception $exception){
+            throw new BusinessValidationException("Invalid token");
+        }
     }
 
-    public function setNewPassword($request)
+    public function resetPassword($request)
     {
+        $resetData = PasswordReset::where('token',$request->token)->first();
+        if(isset($resetData)){
+            if(Carbon::now()->greaterThan($resetData->expired_at)){
+                throw new BusinessValidationException("Password Reset token has Expired");
+            }
+            $user = User::findOrFail($request->user_id);
+            $user->password = Hash::make($request->new_password);
+            $user->save();
+
+            $token = $this->generateToken($user);
+
+            return new UserResource($user, $token, true);
+        }else {
+            throw new BusinessValidationException("Invalid token");
+        }
 
     }
 
