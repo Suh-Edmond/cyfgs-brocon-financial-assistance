@@ -36,6 +36,9 @@ Route::prefix('public/auth')->group(function () {
     Route::post('/signup', [UserController::class, 'createAccount']);
     Route::post('/check-user', [UserController::class, 'checkUserExist']);
     Route::post('/set-password', [UserController::class, 'setPassword']);
+    Route::post('/reset-password-token', [UserController::class, 'setPasswordResetToken']);
+    Route::post('/validate/password-reset', [UserController::class, 'validateResetToken']);
+    Route::post('/reset-password', [UserController::class, 'resetPassword']);
 });
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -267,11 +270,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('contributions/{id}', [UserContributionController::class, 'deleteUserContribution']);
     });
 
-//
-//    Route::prefix('protected')->middleware(['isUser'])->group(function () {
-//        Route::post('upload-file', [FileUploadController::class, 'uploadFile']);
-//        Route::get('fetch-file', [FileUploadController::class, 'getUploadFile']);
-//    });
 
     Route::prefix('protected')->middleware('isPresidentOrIsFinancialSecretary')->group(function (){
         Route::post('/activity-supports', [ActivitySupportController::class, 'createActivitySupport']);

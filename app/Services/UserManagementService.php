@@ -6,14 +6,20 @@ use App\Constants\PaymentStatus;
 use App\Constants\RegistrationStatus;
 use App\Constants\Roles;
 use App\Exceptions\BusinessValidationException;
+use App\Http\Resources\PasswordResetResponse;
 use App\Http\Resources\UserResource;
 use App\Imports\UsersImport;
 use App\Interfaces\UserManagementInterface;
+use App\Mail\PasswordResetMail;
 use App\Models\CustomRole;
+use App\Models\PasswordReset;
 use App\Models\User;
 use App\Traits\HelpTrait;
 use App\Traits\ResponseTrait;
+use Carbon\Carbon;
+use Exception;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
 
 class UserManagementService implements UserManagementInterface
@@ -62,28 +68,35 @@ class UserManagementService implements UserManagementInterface
         $group_users = collect($users)->groupBy('approve')->toArray();
         $total_approved_record = 0;
         $total_pending = 0;
+        $total_declined = 0;
         $total_unregistered = 0;
          if(count($group_users) > 0){
              $total_approved_record  = isset($group_users['APPROVED']) ? count($group_users['APPROVED']) : 0;
              $total_pending = isset($group_users['PENDING']) ? count($group_users['PENDING']) : 0;
+             $total_declined = isset($group_users['DECLINED']) ? count($group_users['DECLINED']): 0;
              $total_unregistered = isset($group_users['']) ? count($group_users['']): 0;
          }
-        return [$total_approved_record, $total_pending, $total_unregistered];
+        return [$total_approved_record, $total_pending,$total_declined, $total_unregistered];
     }
 
     public function getRegMemberByMonths($organisation_id)
     {
         $data = [];
+        $payment_statuses = [PaymentStatus::APPROVED, PaymentStatus::PENDING, PaymentStatus::DECLINED];
         for ($month = 1; $month <= 12; $month++){
-            $users = User::join('organisations', 'organisations.id', '=', 'users.organisation_id')
-                ->join('member_registrations', 'users.id', '=', 'member_registrations.user_id')
-                ->where('organisations.id', $organisation_id)
-                ->where('member_registrations.approve', PaymentStatus::APPROVED)
-                ->whereMonth('member_registrations.created_at', $month)
-                ->select('users.*', 'member_registrations.approve', 'member_registrations.session_id')
-                ->distinct()
-                ->orderBy('name')->get()->toArray();
-            array_push($data, count($users));
+            $users_by_status = [];
+            foreach ($payment_statuses as $payment_status){
+                $users = User::join('organisations', 'organisations.id', '=', 'users.organisation_id')
+                    ->join('member_registrations', 'users.id', '=', 'member_registrations.user_id')
+                    ->where('organisations.id', $organisation_id)
+                    ->where('member_registrations.approve', $payment_status)
+                    ->whereMonth('member_registrations.created_at', $month)
+                    ->select('users.*', 'member_registrations.approve', 'member_registrations.session_id')
+                    ->distinct()
+                    ->orderBy('name')->get()->toArray();
+                array_push($users_by_status, count($users));
+            }
+            array_push($data, $users_by_status);
         }
         return $data;
     }
@@ -203,6 +216,67 @@ class UserManagementService implements UserManagementInterface
         return $filter_users;
     }
 
+
+    public function setPasswordResetToken($request)
+    {
+        $request->validate([
+            'email'  => 'required|email'
+        ]);
+        $user = User::where('email', $request->email)->firstOrFail();
+        $token = md5(mt_rand());
+        $redirectLink = env('PASSWORD_RESET_UI_REDIRECT_LINK')."?token=".$token;
+        $organisation_logo = env('FILE_DOWNLOAD_URL_PATH').$user->organisation->logo;
+        try {
+            Mail::to($user['email'])->send(new PasswordResetMail($user, $redirectLink, $organisation_logo));
+        }catch (Exception $exception){
+
+        }
+        PasswordReset::create([
+            'email' => $user->email,
+            'token' => $token,
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
+            'user_id' => $user->id,
+            'expire_at' => Carbon::now()->addHours(4)
+        ]);
+    }
+
+    public function validateResetToken($request)
+    {
+        $request->validate([
+            'token' => 'required|string'
+        ]);
+
+        try {
+            $resetData = PasswordReset::where('token',$request->token)->first();
+            if(Carbon::now()->greaterThan($resetData->expired_at)){
+                throw new BusinessValidationException("Password Reset token has Expired");
+            }
+            return $this->sendResponse(new PasswordResetResponse($resetData->email, $resetData->user_id), 'success');
+        }catch (Exception $exception){
+            throw new BusinessValidationException("Invalid token");
+        }
+    }
+
+    public function resetPassword($request)
+    {
+        $resetData = PasswordReset::where('token',$request->token)->first();
+        if(isset($resetData)){
+            if(Carbon::now()->greaterThan($resetData->expired_at)){
+                throw new BusinessValidationException("Password Reset token has Expired");
+            }
+            $user = User::findOrFail($request->user_id);
+            $user->password = Hash::make($request->new_password);
+            $user->save();
+
+            $token = $this->generateToken($user);
+
+            return new UserResource($user, $token, true);
+        }else {
+            throw new BusinessValidationException("Invalid token");
+        }
+
+    }
 
 
     private function generateToken($user)

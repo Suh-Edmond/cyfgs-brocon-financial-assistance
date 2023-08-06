@@ -8,6 +8,7 @@ use App\Http\Requests\CheckUserRequest;
 use App\Http\Requests\CreateAccountRequest;
 use App\Http\Requests\CreateUserRequest;
 use App\Http\Requests\LoginRequest;
+use App\Http\Requests\PasswordResetRequest;
 use App\Http\Requests\SetPasswordRequest;
 use App\Http\Requests\UpdatePasswordRequest;
 use App\Http\Requests\UpdateProfileRequest;
@@ -167,5 +168,23 @@ class UserController extends Controller
         $user = $this->user_management_service->updateProfile($request);
 
         return $this->sendResponse($user, 'success');
+    }
+
+    public function setPasswordResetToken(Request $request){
+        $this->user_management_service->setPasswordResetToken($request);
+
+        return $this->sendResponse("Password Reset Token sent successfully", 'success');
+    }
+
+    public function validateResetToken(Request $request)
+    {
+        $this->user_management_service->validateResetToken($request);
+    }
+
+    public function resetPassword(PasswordResetRequest $request)
+    {
+        $data = $this->user_management_service->resetPassword($request);
+
+        return $this->sendResponse($data, 'success');
     }
 }
