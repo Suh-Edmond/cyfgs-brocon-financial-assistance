@@ -253,16 +253,16 @@ class UserManagementService implements UserManagementInterface
         $request->validate([
             'token' => 'required|string'
         ]);
-
-        try {
-            $resetData = PasswordReset::where('token',$request->token)->first();
-            if(Carbon::now()->greaterThan($resetData->expired_at)){
+        $resetData = PasswordReset::where('token',$request->token)->first();
+        if(isset($resetData)){
+            if(Carbon::now()->greaterThan($resetData->expire_at)){
                 throw new BusinessValidationException("Password Reset token has Expired");
             }
-            return $this->sendResponse(new PasswordResetResponse($resetData->email, $resetData->user_id), 'success');
-        }catch (Exception $exception){
+        }else {
             throw new BusinessValidationException("Invalid token");
         }
+
+        return new PasswordResetResponse($resetData->email, $resetData->user_id);
     }
 
     public function resetPassword($request)
