@@ -275,7 +275,7 @@ class UserSavingService implements UserSavingInterface
                 ->where('sessions.id', $session->id)
                 ->where('user_savings.approve', PaymentStatus::APPROVED)
                 ->selectRaw('SUM(amount_deposited) - SUM(amount_used) as total_saving')->first();
-            isset($savings->total_saving)? array_push($total_yearly_savings, $savings->total_saving) : array_push($total_yearly_savings, 0);
+            isset($savings->total_saving)? array_push($total_yearly_savings, ["amount" =>$savings->total_saving, "year" => $session->year]) : array_push($total_yearly_savings, 0);
         }
         return $total_yearly_savings;
     }
