@@ -270,11 +270,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('contributions/{id}', [UserContributionController::class, 'deleteUserContribution']);
     });
 
-//
-//    Route::prefix('protected')->middleware(['isUser'])->group(function () {
-//        Route::post('upload-file', [FileUploadController::class, 'uploadFile']);
-//        Route::get('fetch-file', [FileUploadController::class, 'getUploadFile']);
-//    });
 
     Route::prefix('protected')->middleware('isPresidentOrIsFinancialSecretary')->group(function (){
         Route::post('/activity-supports', [ActivitySupportController::class, 'createActivitySupport']);
