@@ -11,10 +11,11 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class UserResource extends JsonResource
 {
-    private $token;
-    private $hasLoginBefore;
     use ResponseTrait;
     use HelpTrait;
+
+    private $token;
+    private $hasLoginBefore;
 
     public function __construct($resource, $token = null, $hasLoginBefore = null)
     {
@@ -49,6 +50,6 @@ class UserResource extends JsonResource
             'approve'        => !is_null($this->approve)? $this->approve : '',
             'year'           => !is_null(Session::find($this->session_id)) ? Session::find($this->session_id)->year : null,
             'session_id'     => $this->session_id,
-         ];
+          ];
     }
 }
