@@ -140,7 +140,7 @@ class UserController extends Controller
         $fin_sec           = $admins[1];
 
         $data = [
-            'title'                      => $request->has_register == RegistrationStatus::REGISTERED ? 'Registered Organisation Members':'Non Registered Organisation Members',
+            'title'                      => $this->setTitle($request),
             'date'                   => date('m/d/Y'),
             'organisation'           => $organisation,
             'organisation_telephone' => $this->setOrganisationTelephone($organisation->telephone),
@@ -188,5 +188,20 @@ class UserController extends Controller
         $data = $this->user_management_service->resetPassword($request);
 
         return $this->sendResponse($data, 'success');
+    }
+
+    private function setTitle(Request $request): string
+    {
+        if(isset($request->has_register)){
+            if($request->has_register == RegistrationStatus::REGISTERED){
+                $title = 'Registered Organisation Members';
+            }else {
+                $title = 'Non Registered Organisation Members';
+            }
+        }else {
+            $title = "Organisation Members";
+        }
+
+        return $title;
     }
 }
