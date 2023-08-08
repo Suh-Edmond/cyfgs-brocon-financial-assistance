@@ -178,7 +178,9 @@ class UserController extends Controller
 
     public function validateResetToken(Request $request)
     {
-        $this->user_management_service->validateResetToken($request);
+        $data = $this->user_management_service->validateResetToken($request);
+
+        return $this->sendResponse($data, 'success');
     }
 
     public function resetPassword(PasswordResetRequest $request)

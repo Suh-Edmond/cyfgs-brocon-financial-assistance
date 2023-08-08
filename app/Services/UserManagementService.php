@@ -7,6 +7,7 @@ use App\Constants\RegistrationStatus;
 use App\Constants\Roles;
 use App\Exceptions\BusinessValidationException;
 use App\Http\Resources\PasswordResetResponse;
+use App\Http\Resources\TokenResource;
 use App\Http\Resources\UserResource;
 use App\Imports\UsersImport;
 use App\Interfaces\UserManagementInterface;
@@ -27,10 +28,12 @@ class UserManagementService implements UserManagementInterface
     use ResponseTrait, HelpTrait;
 
     private RoleService $role_service;
+    private SessionService  $session_service;
 
-    public function __construct(RoleService $role_service)
+    public function __construct(RoleService $role_service, SessionService  $sessionService)
     {
         $this->role_service = $role_service;
+        $this->session_service = $sessionService;
     }
 
     public function AddUserUserToOrganisation($request, $id)
@@ -129,7 +132,9 @@ class UserManagementService implements UserManagementInterface
         ]);
         $updated = $user->refresh();
         $token = $this->generateToken($updated);
-        return new UserResource($updated,$token, true);
+        $currentSession = $this->session_service->getCurrentSession();
+
+        return new TokenResource(new UserResource($updated,$token, true), $currentSession);
     }
 
 
@@ -148,8 +153,9 @@ class UserManagementService implements UserManagementInterface
         } else {
             $token = $this->generateToken($user);
             $hasLoginBefore = $this->checkIfUserHasLogin($user);
+            $currentSession = $this->session_service->getCurrentSession();
 
-            return new UserResource($user, $token, $hasLoginBefore);
+            return new TokenResource(new UserResource($user, $token, $hasLoginBefore), $currentSession);
         }
     }
 
@@ -172,8 +178,9 @@ class UserManagementService implements UserManagementInterface
 
         $token = $this->generateToken($user);
         $hasLoginBefore = $this->checkIfUserHasLogin($user);
+        $currentSession = $this->session_service->getCurrentSession();
 
-        return new UserResource($user, $token, $hasLoginBefore);
+        return new TokenResource(new UserResource($user, $token, $hasLoginBefore), $currentSession);
     }
 
     public function updatePassword($request)
@@ -246,16 +253,16 @@ class UserManagementService implements UserManagementInterface
         $request->validate([
             'token' => 'required|string'
         ]);
-
-        try {
-            $resetData = PasswordReset::where('token',$request->token)->first();
-            if(Carbon::now()->greaterThan($resetData->expired_at)){
+        $resetData = PasswordReset::where('token',$request->token)->first();
+        if(isset($resetData)){
+            if(Carbon::now()->greaterThan($resetData->expire_at)){
                 throw new BusinessValidationException("Password Reset token has Expired");
             }
-            return $this->sendResponse(new PasswordResetResponse($resetData->email, $resetData->user_id), 'success');
-        }catch (Exception $exception){
+        }else {
             throw new BusinessValidationException("Invalid token");
         }
+
+        return new PasswordResetResponse($resetData->email, $resetData->user_id);
     }
 
     public function resetPassword($request)
@@ -270,8 +277,8 @@ class UserManagementService implements UserManagementInterface
             $user->save();
 
             $token = $this->generateToken($user);
-
-            return new UserResource($user, $token, true);
+            $currentSession = $this->session_service->getCurrentSession();
+            return new TokenResource(new UserResource($user, $token, true), $currentSession);
         }else {
             throw new BusinessValidationException("Invalid token");
         }
