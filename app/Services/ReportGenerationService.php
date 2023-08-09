@@ -120,7 +120,7 @@ class ReportGenerationService implements ReportGenerationInterface
     {
         $previous_year = (int)$request->year_label - 1;
         $previous_year_id = $this->sessionService->getSessionByLabel($previous_year);
-        $income = $this->fetchYearIncomes($previous_year_id, $request->user()->organisation_id)[1];
+        $income = $this->fetchYearIncomes($previous_year_id, $request->year_label, $request->user()->organisation_id)[1];
         $expenditure = $this->fetchYearlyExpenditures($previous_year_id, $request->user()->organisation_id)[1];
 
         return $income - $expenditure;
@@ -131,7 +131,7 @@ class ReportGenerationService implements ReportGenerationInterface
     {
         $bal_brought_forward = $this->computeBalanceBroughtForwardByYear($request);
 
-        $income = $this->fetchYearIncomes($request->year_id, $request->user()->organisation_id);
+        $income = $this->fetchYearIncomes($request->year_id, $request->year_label, $request->user()->organisation_id);
 
         $expenditures = $this->fetchYearlyExpenditures($request->year_id, $request->user()->organisation_id);
 
@@ -168,10 +168,10 @@ class ReportGenerationService implements ReportGenerationInterface
                 $sub_total = collect($details)->sum('amount_spent');
                 $expenditure = json_encode(new QuarterlyExpenditureResource(($key + 1), $expenditure_item->name, ($details->toArray()), $sub_total));
                 array_push($expenditures_by_cat, json_decode($expenditure));
-            }
+                $total += $sub_total;
+             }
             array_push($expenses, json_decode(json_encode(new QuarterlyExpenditureResourceCollection("E".($key + 1), $expenditure_category->name,
                 $expenditures_by_cat, $sub_total))));
-            $total += $sub_total;
         }
         return [$expenses, $total];
     }
@@ -181,7 +181,7 @@ class ReportGenerationService implements ReportGenerationInterface
     {
         $start_quarter = $this->getStartQuarter($current_year->year, $quarter_num)[0];
         $end_quarter = $this->getStartQuarter($current_year->year, $quarter_num)[1];
-        $payment_categories = $this->paymentCategoryService->getPaymentCategories($organisation_id);
+        $payment_categories = $this->paymentCategoryService->getPaymentCategories($organisation_id, $current_year->year);
         $incomes = array();
         $total_reg_saving = 0;
         $total_income = 0;
@@ -214,9 +214,9 @@ class ReportGenerationService implements ReportGenerationInterface
         return [$incomes, $total_income];
     }
 
-    private function fetchYearIncomes($year_id, $organisation_id): array
+    private function fetchYearIncomes($year_id, $year_label, $organisation_id): array
     {
-        $payment_categories = $this->paymentCategoryService->getPaymentCategories($organisation_id);
+        $payment_categories = $this->paymentCategoryService->getPaymentCategories($organisation_id, $year_label);
         $incomes = array();
         $total_reg_saving = 0;
         $total_income = 0;
@@ -263,10 +263,10 @@ class ReportGenerationService implements ReportGenerationInterface
                 $sub_total = collect($details)->sum('amount_spent');
                 $expenditure = json_encode(new QuarterlyExpenditureResource(($key + 1), $expenditure_item->name, ($details->toArray()), $sub_total));
                 array_push($expenditures_by_cat, json_decode($expenditure));
+                $total += $sub_total;
             }
             array_push($expenses, json_decode(json_encode(new QuarterlyExpenditureResourceCollection("E".($key + 1), $expenditure_category->name,
                 $expenditures_by_cat, $sub_total))));
-            $total += $sub_total;
         }
         return [$expenses, $total];
     }

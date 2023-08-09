@@ -294,8 +294,8 @@
                     Total
                 </div>
                 <div class="column3"></div>
-                <div class="column4">{{number_format($expenditure->total)}}</div>
-                <div class="column5">{{number_format($expenditure->total)}}</div>
+                <div class="column4">{{number_format($total_expenditure)}}</div>
+                <div class="column5">{{number_format($total_expenditure)}}</div>
             </div>
         @endforeach
         <!------total of expenditures------------------------->
@@ -306,7 +306,7 @@
                 Total Expenditure
             </div>
             <div class="column3"></div>
-            <div class="column4"></div>
+            <div class="column4">{{number_format($total_expenditure)}}</div>
             <div class="column5">{{number_format($total_expenditure)}}</div>
         </div>
         <!------end of total of expenditures------------------->
