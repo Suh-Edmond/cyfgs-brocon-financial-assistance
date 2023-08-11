@@ -306,7 +306,7 @@ Route::middleware('auth:sanctum')->group(function () {
     });
     Route::put('/protected/members-registration/approve', [MemberRegistrationController::class, 'approveRegisteredMember'])->middleware('isTreasurer');
 
-    Route::prefix('protected')->middleware('isPresident')->group(function (){
+    Route::prefix('protected')->middleware('isPresidentOrIsFinancialSecretary')->group(function (){
         Route::post('/sessions', [SessionController::class, 'createSession']);
         Route::put('/sessions/update', [SessionController::class, 'updateSession']);
         Route::delete('/sessions/{id}', [SessionController::class, 'deleteSession']);
@@ -316,7 +316,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/sessions/current', [SessionController::class, 'getCurrentSession']);
     });
 
-    Route::prefix('protected')->middleware('isPresident')->group(function (){
+    Route::prefix('protected')->middleware('isPresidentOrIsFinancialSecretary')->group(function (){
         Route::post('/registration_fees', [RegistrationController::class, 'createRegFee']);
         Route::put('/registration_fees/{id}', [RegistrationController::class, 'updateRegFee']);
         Route::put('/registration_fees/{id}/set', [RegistrationController::class, 'setNewFee']);

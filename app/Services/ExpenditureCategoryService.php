@@ -14,6 +14,7 @@ class ExpenditureCategoryService implements ExpenditureCategoryInterface {
         $expenditure_category = ExpenditureCategory::find($request->id);
         if(is_null($expenditure_category)){
             ExpenditureCategory::create([
+                'code'              => $request->code,
                 'name'              => $request->name,
                 'description'       => $request->description,
                 'organisation_id'   => $organisation->id,
@@ -21,6 +22,7 @@ class ExpenditureCategoryService implements ExpenditureCategoryInterface {
             ]);
         }else {
             $expenditure_category->update([
+                'code'        => $request->code,
                 'name'        => $request->name,
                 'description' => $request->description,
                 'updated_by'  => $request->user()->name,
@@ -33,6 +35,7 @@ class ExpenditureCategoryService implements ExpenditureCategoryInterface {
         $update_expenditure_category = $this->findExpenditureCategory($id, $organisation_id);
         $update_expenditure_category->update([
             'name'              => $request->name,
+            'code'              => $request->code,
             'description'       => $request->description,
         ]);
     }

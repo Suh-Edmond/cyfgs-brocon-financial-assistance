@@ -18,6 +18,7 @@ class PaymentCategoryResource extends JsonResource
         return [
             'id'                => $this->id,
             'name'              => $this->name,
+            'code'              => $this->code,
             'description'       => $this->description,
             'organisation_id'   => $this->organisation->id,
             'organisation_name' => $this->organisation->name,
