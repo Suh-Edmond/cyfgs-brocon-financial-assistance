@@ -54,8 +54,17 @@ class Handler extends ExceptionHandler
         if($exception instanceof ModelNotFoundException && $request->wantsJson()){
             return response()->json(['message' => "Resource not found", "status"=> "404"], 404);
         }
-        if ($exception instanceof  BusinessValidationException && $request->wantsJson()) {
-            return response()->json(['message' => $exception->getMessage(), "status"=> "403"], 403);
+        if ($exception instanceof  BusinessValidationException) {
+            return response()->json(['message' => $exception->getMessage(), "status"=> $exception->getCode()], $exception->getCode());
+        }
+        if ($exception instanceof ResourceNotFoundException){
+            return response()->json(['message' => $exception->getMessage(), 'status' => $exception->getCode()], $exception->getCode());
+        }
+        if ($exception instanceof  EmailException){
+            return  response()->json(['message' => $exception->getMessage(), 'status'=>$exception->getCode()], $exception->getCode());
+        }
+        if ($exception instanceof  UnAuthorizedException){
+            return  response()->json(['message' => $exception->getMessage(), 'status'=>$exception->getCode()], $exception->getCode());
         }
 
         return parent::render($request, $exception);

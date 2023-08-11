@@ -5,7 +5,7 @@ namespace App\Exceptions;
 use Exception;
 use Throwable;
 
-class BusinessValidationException extends Exception
+class ResourceNotFoundException extends Exception
 {
     public function __construct($message = "", $code = 0, Throwable $previous = null)
     {
@@ -19,7 +19,7 @@ class BusinessValidationException extends Exception
      */
     public function register()
     {
-        $this->reportable(function (BusinessValidationException $e) {
+        $this->reportable(function (ResourceNotFoundException $e) {
             //
         });
     }
