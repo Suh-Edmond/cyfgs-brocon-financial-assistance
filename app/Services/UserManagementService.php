@@ -176,6 +176,7 @@ class UserManagementService implements UserManagementInterface
     {
 
         $user = $this->checkUserExist($request);
+        $this->validateIfUserCanLogin($user);
         $user->password = Hash::make($request->password);
         $user->save();
 
