@@ -34,7 +34,7 @@ class PaymentItemService implements PaymentItemInterface {
             'type'                => $request->type,
             'frequency'           => $request->frequency,
             'session_id'          => $current_session->id,
-            'reference'           => $this->setPaymentItemReference($request->type)
+            'reference'           => $this->setPaymentItemReference($request->reference, $request->type)
         ]);
     }
 
@@ -49,17 +49,13 @@ class PaymentItemService implements PaymentItemInterface {
             'description'   => $request->description,
             'type'          => $request->type,
             'frequency'     => $request->frequency,
-            'reference'     => $this->setPaymentItemReference($request->type)
+            'reference'     => $this->setPaymentItemReference($request->reference, $request->type)
         ]);
     }
 
     public function getPaymentItemsByCategory($payment_category_id)
     {
         $payment_items = $this->fetchPaymentItems($payment_category_id)
-//                                ->orWhere('frequency', PaymentItemFrequency::YEARLY)
-//                                ->orWhere('frequency', PaymentItemFrequency::MONTHLY)
-//                                ->orWhere('frequency',PaymentItemFrequency::ONE_TIME)
-//                                ->orWhere('frequency',PaymentItemFrequency::QUARTERLY)
                                 ->orderBy('payment_items.name', 'ASC')
                                 ->get();
         return new PaymentItemCollection($payment_items, 0);
@@ -192,9 +188,8 @@ class PaymentItemService implements PaymentItemInterface {
 
     }
 
-    private function setPaymentItemReference($type)
+    private function setPaymentItemReference($reference, $type)
     {
-        $reference = null;
         if ($type == PaymentItemType::MEMBERS_WITH_ROLES){
             $reference = $this->getAllAdminsId();
         }
