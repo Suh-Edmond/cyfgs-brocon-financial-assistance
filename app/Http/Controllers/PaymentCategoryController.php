@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Constants\Roles;
 use App\Http\Requests\PaymentCategoryRequest;
 use App\Http\Resources\PaymentCategoryResource;
-use App\Models\User;
 use App\Services\PaymentCategoryService;
 use App\Traits\HelpTrait;
 use App\Traits\ResponseTrait;
@@ -38,7 +36,7 @@ class PaymentCategoryController extends Controller
 
     public function getPaymentCategories(Request $request)
     {
-        $payment_categories = $this->payment_category_service->getPaymentCategories($request);
+        $payment_categories = $this->payment_category_service->getPaymentCategories($request->organisation_id, $request->year);
         return $this->sendResponse($payment_categories, 200);
     }
 

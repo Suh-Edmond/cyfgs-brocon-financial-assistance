@@ -17,6 +17,7 @@ class PaymentCategoryService implements PaymentCategoryInterface {
         if(is_null($payment_category)){
 
             PaymentCategory::create([
+                'code'              => $request->code,
                 'name'              => $request->name,
                 'description'       => $request->description,
                 'organisation_id'   => $organisation->id,
@@ -24,6 +25,7 @@ class PaymentCategoryService implements PaymentCategoryInterface {
             ]);
         }else{
             $payment_category->update([
+                'code'  => $request->code,
                 'name' => $request->name,
                 'description' => $request->description,
                 'updated_by'        =>$request->user()->name,
@@ -39,7 +41,7 @@ class PaymentCategoryService implements PaymentCategoryInterface {
                             ->where('payment_categories.id', $id)
                             ->first();
 
-        if(!is_null()){
+        if(!is_null($updated)){
             $updated->name          = $request->name;
             $updated->description   = $request->description;
             $updated->save();

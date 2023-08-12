@@ -26,7 +26,8 @@ class PaymentCategoryRequest extends FormRequest
         return [
             'name'          => 'required|max:255',
             'description'   => 'required|max:5000',
-            'id'            => ''
+            'id'            => '',
+            'code'          => 'required|max:100|unique:payment_categories,code'
         ];
     }
 }

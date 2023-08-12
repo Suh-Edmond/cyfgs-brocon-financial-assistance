@@ -6,6 +6,8 @@ use App\Constants\PaymentStatus;
 use App\Constants\RegistrationStatus;
 use App\Constants\Roles;
 use App\Exceptions\BusinessValidationException;
+use App\Exceptions\EmailException;
+use App\Exceptions\UnAuthorizedException;
 use App\Http\Resources\PasswordResetResponse;
 use App\Http\Resources\TokenResource;
 use App\Http\Resources\UserResource;
@@ -147,16 +149,17 @@ class UserManagementService implements UserManagementInterface
     {
         $telephone = str_replace(" ", "", $request->telephone);
         $user = User::where('telephone', $telephone)->firstOrFail();
-
         if (!Hash::check($request->password, $user->password)) {
-            return $this->sendError('Unauthorized', 'Bad Credentials', 401);
+            throw new UnAuthorizedException('Bad Credentials', 403);
         } else {
+            $this->validateIfUserCanLogin($user);
             $token = $this->generateToken($user);
             $hasLoginBefore = $this->checkIfUserHasLogin($user);
             $currentSession = $this->session_service->getCurrentSession();
 
             return new TokenResource(new UserResource($user, $token, $hasLoginBefore), $currentSession);
         }
+
     }
 
     public function createAccount($request)
@@ -173,6 +176,7 @@ class UserManagementService implements UserManagementInterface
     {
 
         $user = $this->checkUserExist($request);
+        $this->validateIfUserCanLogin($user);
         $user->password = Hash::make($request->password);
         $user->save();
 
@@ -187,7 +191,7 @@ class UserManagementService implements UserManagementInterface
     {
         $user = User::findOrFail($request->user_id);
         if(!Hash::check($request->old_password, $user->password)){
-            throw new BusinessValidationException("Old Password not match");
+            throw new UnAuthorizedException("Old Password not match", 403);
         }
         $user->password = Hash::make($request->password);
         $user->save();
@@ -230,13 +234,14 @@ class UserManagementService implements UserManagementInterface
             'email'  => 'required|email'
         ]);
         $user = User::where('email', $request->email)->firstOrFail();
+        $this->validateIfUserCanLogin($user);
         $token = md5(mt_rand());
         $redirectLink = env('PASSWORD_RESET_UI_REDIRECT_LINK')."?token=".$token;
         $organisation_logo = env('FILE_DOWNLOAD_URL_PATH').$user->organisation->logo;
         try {
             Mail::to($user['email'])->send(new PasswordResetMail($user, $redirectLink, $organisation_logo));
         }catch (Exception $exception){
-
+            throw new EmailException("Could not send reset email link", 550);
         }
         PasswordReset::create([
             'email' => $user->email,
@@ -256,10 +261,10 @@ class UserManagementService implements UserManagementInterface
         $resetData = PasswordReset::where('token',$request->token)->first();
         if(isset($resetData)){
             if(Carbon::now()->greaterThan($resetData->expire_at)){
-                throw new BusinessValidationException("Password Reset token has Expired");
+                throw new UnAuthorizedException("Password Reset token has Expired", 403);
             }
         }else {
-            throw new BusinessValidationException("Invalid token");
+            throw new UnAuthorizedException("Invalid token", 403);
         }
 
         return new PasswordResetResponse($resetData->email, $resetData->user_id);
@@ -270,9 +275,10 @@ class UserManagementService implements UserManagementInterface
         $resetData = PasswordReset::where('token',$request->token)->first();
         if(isset($resetData)){
             if(Carbon::now()->greaterThan($resetData->expired_at)){
-                throw new BusinessValidationException("Password Reset token has Expired");
+                throw new UnAuthorizedException("Password Reset token has Expired", 403);
             }
             $user = User::findOrFail($request->user_id);
+            $this->validateIfUserCanLogin($user);
             $user->password = Hash::make($request->new_password);
             $user->save();
 
@@ -280,7 +286,7 @@ class UserManagementService implements UserManagementInterface
             $currentSession = $this->session_service->getCurrentSession();
             return new TokenResource(new UserResource($user, $token, true), $currentSession);
         }else {
-            throw new BusinessValidationException("Invalid token");
+            throw new UnAuthorizedException("Invalid token", 403);
         }
 
     }
@@ -306,5 +312,11 @@ class UserManagementService implements UserManagementInterface
         return $hasLoginBefore;
     }
 
+    private function validateIfUserCanLogin($user)
+    {
+        if(empty(collect($user->roles)->whereIn('name', [Roles::TREASURER, Roles::FINANCIAL_SECRETARY, Roles::PRESIDENT, Roles::AUDITOR, Roles::SYSTEM_ADMIN])->toArray())){
+            throw new UnAuthorizedException("User does not have any Administrator role", 403);
+        }
+    }
 
 }
