@@ -39,4 +39,6 @@ interface UserManagementInterface {
     public function validateResetToken($request);
 
     public function resetPassword($request);
+
+    public function getUserByPaymentItem($id, $request);
 }

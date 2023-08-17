@@ -58,6 +58,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('filter-users', [UserController::class, 'filterUsers']);
         Route::get('/users', [UserController::class, 'getTotalUsersByRegStatus']);
         Route::get('registered_users', [UserController::class, 'getRegMemberByMonths']);
+        Route::get('/payment_items/{id}/users', [UserController::class, 'getUserByPaymentItem']);
     });
 
     Route::prefix('protected/organisations')->middleware('isPresidentOrIsFinancialSecretary')->group(function (){

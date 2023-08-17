@@ -190,6 +190,12 @@ class UserController extends Controller
         return $this->sendResponse($data, 'success');
     }
 
+    public function getUserByPaymentItem($id, Request $request)
+    {
+        $data = $this->user_management_service->getUserByPaymentItem($id, $request);
+
+        return $this->sendResponse($data, 'success');
+    }
     private function setTitle(Request $request): string
     {
         if(isset($request->has_register)){
