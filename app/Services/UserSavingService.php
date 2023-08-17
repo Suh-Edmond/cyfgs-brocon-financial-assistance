@@ -150,11 +150,13 @@ class UserSavingService implements UserSavingInterface
     public function calculateTotalSaving($savings)
     {
         $total = 0;
+        $total_amount_used = 0;
         foreach ($savings as $saving) {
             $total += $saving->amount_deposited;
+            $total_amount_used += $saving->amount_used;
         }
 
-        return $total;
+        return $total - $total_amount_used;
     }
 
 
@@ -237,7 +239,7 @@ class UserSavingService implements UserSavingInterface
     {
         $saving = UserSaving::where('user_id', $user_id)->where('amount_deposited', '>=', $amount)->first();
         $saving->update([
-            'amount_used' => $amount
+            'amount_used' => $amount + $saving->amount_used
         ]);
     }
 
