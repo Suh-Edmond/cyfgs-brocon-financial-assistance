@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Constants\PaymentItemType;
 use App\Constants\PaymentStatus;
 use App\Constants\RegistrationStatus;
 use App\Constants\Roles;
@@ -16,6 +17,7 @@ use App\Interfaces\UserManagementInterface;
 use App\Mail\PasswordResetMail;
 use App\Models\CustomRole;
 use App\Models\PasswordReset;
+use App\Models\PaymentItem;
 use App\Models\User;
 use App\Traits\HelpTrait;
 use App\Traits\ResponseTrait;
@@ -289,6 +291,22 @@ class UserManagementService implements UserManagementInterface
             throw new UnAuthorizedException("Invalid token", 403);
         }
 
+    }
+
+    public function getUserByPaymentItem($id, $request)
+    {
+        $paymentItem = PaymentItem::findOrFail($id);
+        switch ($paymentItem->type){
+            case PaymentItemType::ALL_MEMBERS:
+                $users = UserResource::collection($this->getUsers($request->organisation_id));
+            break;
+            default:
+                $users = $this->getReferenceResource($paymentItem->reference);
+            break;
+
+
+        }
+        return $users;
     }
 
 
