@@ -434,7 +434,8 @@ class UserContributionService implements UserContributionInterface {
         return UserContribution::join('users', ['users.id' => 'user_contributions.user_id'])
             ->join('payment_items', ['payment_items.id' => 'user_contributions.payment_item_id'])
             ->where('users.id', $user_id)
-            ->where('payment_items.id', $payment_item_id);
+            ->where('payment_items.id', $payment_item_id)
+            ->whereIn('user_contributions.approve', [PaymentStatus::APPROVED, PaymentStatus::PENDING]);
     }
 
     private function getMemberOwingItems($user_id)
