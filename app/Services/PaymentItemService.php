@@ -8,6 +8,7 @@ use App\Interfaces\PaymentItemInterface;
 use App\Models\PaymentCategory;
 use App\Models\PaymentItem;
 use App\Traits\HelpTrait;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class PaymentItemService implements PaymentItemInterface {
@@ -34,7 +35,8 @@ class PaymentItemService implements PaymentItemInterface {
             'type'                => $request->type,
             'frequency'           => $request->frequency,
             'session_id'          => $current_session->id,
-            'reference'           => $this->setPaymentItemReference($request->reference, $request->type)
+            'reference'           => $this->setPaymentItemReference($request->reference, $request->type),
+            'deadline'            => $request->deadline
         ]);
     }
 
@@ -49,7 +51,8 @@ class PaymentItemService implements PaymentItemInterface {
             'description'   => $request->description,
             'type'          => $request->type,
             'frequency'     => $request->frequency,
-            'reference'     => $this->setPaymentItemReference($request->reference, $request->type)
+            'reference'     => $this->setPaymentItemReference($request->reference, $request->type),
+            'deadline'      => $request->deadline
         ]);
     }
 
@@ -76,15 +79,22 @@ class PaymentItemService implements PaymentItemInterface {
     }
 
     public function filterPaymentItems($request) {
+
         $payment_items = $this->fetchPaymentItems($request->payment_category_id);
-        if(!is_null($request->compulsory)){
-            $payment_items = $payment_items->where('compulsory', $request->compulsory);
+        if(isset($request->is_compulsory) && $request->is_compulsory !== "ALL"){
+             $payment_items = $payment_items->where('compulsory', $request->is_compulsory);
         }
-        if(!is_null($request->type) && $request->type !== "ALL"){
+        if(isset($request->type) && $request->type !== "ALL"){
             $payment_items = $payment_items->where('type', $request->type);
         }
-        if(!is_null($request->frequency) && $request->frequency !== "ALL"){
+        if(isset($request->frequency) && $request->frequency !== "ALL"){
             $payment_items = $payment_items->where('frequency', $request->frequency);
+        }
+        if(isset($request->state) && $request->state == 'active'){
+            $payment_items = $payment_items->whereDate('deadline', '<=', Carbon::now()->toDateString());
+        }
+        if (isset($request->state) && $request->state == "expired"){
+            $payment_items = $payment_items->whereDate('deadline', '>=', Carbon::now()->toDateString());
         }
         $payment_items = $payment_items->orderBy('payment_items.name', 'DESC')->get();
 

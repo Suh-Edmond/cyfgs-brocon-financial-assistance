@@ -27,6 +27,7 @@ class PaymentItemResource extends JsonResource
             'updated_at'            => $this->updated_at,
             'session'               => $this->session,
             'references'            => collect($this->getReferenceResource($this->reference))->sortBy('name')->toArray(),
+            'deadline'              => $this->deadline
         ];
     }
 
