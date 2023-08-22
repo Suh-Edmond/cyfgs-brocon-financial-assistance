@@ -90,10 +90,10 @@ class PaymentItemService implements PaymentItemInterface {
         if(isset($request->frequency) && $request->frequency !== "ALL"){
             $payment_items = $payment_items->where('frequency', $request->frequency);
         }
-        if(isset($request->state) && $request->state == 'active'){
+        if(isset($request->state) && $request->state == "active" && $request->state !== 'ALL'){
             $payment_items = $payment_items->whereDate('deadline', '<=', Carbon::now()->toDateString());
         }
-        if (isset($request->state) && $request->state == "expired"){
+        if (isset($request->state) && $request->state == "expired" && $request->state !== 'ALL'){
             $payment_items = $payment_items->whereDate('deadline', '>=', Carbon::now()->toDateString());
         }
         $payment_items = $payment_items->orderBy('payment_items.name', 'DESC')->get();
