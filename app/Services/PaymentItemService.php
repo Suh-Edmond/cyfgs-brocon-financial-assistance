@@ -60,8 +60,8 @@ class PaymentItemService implements PaymentItemInterface {
     {
         $payment_items = $this->fetchPaymentItems($payment_category_id)
                                 ->orderBy('payment_items.name', 'ASC')
-                                ->get();
-        return new PaymentItemCollection($payment_items, 0);
+                                ->paginate(2);
+        return  new PaymentItemCollection($payment_items, $payment_items->lastPage(),$payment_items->currentPage());
 
     }
 
@@ -98,7 +98,7 @@ class PaymentItemService implements PaymentItemInterface {
         }
         $payment_items = $payment_items->orderBy('payment_items.name', 'DESC')->get();
 
-        return new PaymentItemCollection($payment_items, 0);
+        return new PaymentItemCollection($payment_items, 0, 1);
     }
 
     public function getPaymentItems() {

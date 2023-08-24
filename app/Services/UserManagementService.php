@@ -11,6 +11,7 @@ use App\Exceptions\EmailException;
 use App\Exceptions\UnAuthorizedException;
 use App\Http\Resources\PasswordResetResponse;
 use App\Http\Resources\TokenResource;
+use App\Http\Resources\UserCollection;
 use App\Http\Resources\UserResource;
 use App\Imports\UsersImport;
 use App\Interfaces\UserManagementInterface;
@@ -59,13 +60,22 @@ class UserManagementService implements UserManagementInterface
 
     public function getUsers($organisation_id)
     {
-          return User::join('organisations', 'organisations.id', '=', 'users.organisation_id')
-                 ->leftJoin('member_registrations', 'users.id', '=', 'member_registrations.user_id')
-                 ->where('organisations.id', $organisation_id)
-                 ->select('users.*', 'member_registrations.approve', 'member_registrations.session_id')
-                 ->distinct()
-                 ->orderBy('name')->get();
+        return User::join('organisations', 'organisations.id', '=', 'users.organisation_id')
+               ->leftJoin('member_registrations', 'users.id', '=', 'member_registrations.user_id')
+               ->where('organisations.id', $organisation_id)
+               ->select('users.*', 'member_registrations.approve', 'member_registrations.session_id')
+               ->distinct()
+               ->orderBy('name')->get();
+    }
 
+    public function getPaginatedUser($request){
+        $users = User::join('organisations', 'organisations.id', '=', 'users.organisation_id')
+            ->leftJoin('member_registrations', 'users.id', '=', 'member_registrations.user_id')
+            ->where('organisations.id', $request->organisation_id)
+            ->select('users.*', 'member_registrations.approve', 'member_registrations.session_id')
+            ->distinct()
+            ->orderBy($request->sort_by)->paginate($request->per_page);
+         return new UserCollection($users, $users->total(), $users->lastPage(), (int)$users->perPage(), $users->currentPage());
     }
 
     public function getTotalUsersByRegStatus($organisation_id)

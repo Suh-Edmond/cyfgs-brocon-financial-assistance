@@ -8,6 +8,8 @@ interface UserManagementInterface {
 
     public function getUsers($organisation_id);
 
+    public function getPaginatedUser($request);
+
     public function getTotalUsersByRegStatus($organisation_id);
 
     public function getRegMemberByMonths($organisation_id);
@@ -41,4 +43,5 @@ interface UserManagementInterface {
     public function resetPassword($request);
 
     public function getUserByPaymentItem($id, $request);
+
 }
