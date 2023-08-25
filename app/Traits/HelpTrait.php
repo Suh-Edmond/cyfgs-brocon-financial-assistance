@@ -157,14 +157,11 @@ trait HelpTrait {
 
     public function  calculateOrganisationTotalSavings($savings): int
     {
-        $total = 0;
-        foreach ($savings as $saving) {
-            if($saving->approve == PaymentStatus::APPROVED){
-                $total += $saving->total_amount;
-            }
-        }
-
-        return $total;
+        return collect($savings)->filter(function ($saving){
+           return $saving->approve == PaymentStatus::APPROVED;
+       })->map(function ($saving){
+           return $saving->total_amount;
+        })->sum();
     }
 
 

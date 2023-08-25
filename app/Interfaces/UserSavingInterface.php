@@ -16,7 +16,7 @@ interface UserSavingInterface {
 
     public function approveUserSaving($id, $type);
 
-    public function getAllUserSavingsByOrganisation($id, $session_id);
+    public function getAllUserSavingsByOrganisation($request);
 
     public function findUserSavingByStatus($status, $id);
 

@@ -35,7 +35,7 @@
                     <td style="padding: 5px;">{{ $key + 1 }}</td>
                     <td style="border: 1px solid black; padding: 11px;">{{  $user_saving->name }}</td>
                     <td style="border: 1px solid black; padding: 11px;">{{  $user_saving->telephone }}</td>
-                    <td style="border: 1px solid black; padding: 11px;">{{ number_format($user_saving->total_amount_deposited) }}
+                    <td style="border: 1px solid black; padding: 11px;">{{ number_format($user_saving->total_amount) }}
                     </td>
                 </tr>
             @endforeach

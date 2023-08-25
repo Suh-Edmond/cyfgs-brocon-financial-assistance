@@ -75,7 +75,7 @@ class UserSavingController extends Controller
 
     public function getAllUserSavingsByOrganisation(Request $request)
     {
-        $savings = $this->user_saving_service->getAllUserSavingsByOrganisation($request->organisation_id, $request->session_id);
+        $savings = $this->user_saving_service->getAllUserSavingsByOrganisation($request);
 
         return $this->sendResponse($savings, 200);
     }
@@ -136,7 +136,7 @@ class UserSavingController extends Controller
     {
         $organisation      = $request->user()->organisation;
 
-        $savings = $this->user_saving_service->getOrganisationSavingsForDownload($request->organisation_id, $request->session_id);
+        $savings = $this->user_saving_service->getOrganisationSavingsForDownload($request);
 
         $total = $this->user_saving_service->calculateOrganisationTotalSavings($savings);
 
@@ -144,7 +144,6 @@ class UserSavingController extends Controller
         $president         = $admins[0];
         $treasurer         = $admins[2];
         $fin_sec           = $admins[1];
-
 
         $data = [
             'title'               => 'Organisation Savings',
