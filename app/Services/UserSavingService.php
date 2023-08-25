@@ -49,16 +49,24 @@ class UserSavingService implements UserSavingInterface
         }
     }
 
-    public function getUserSavings($user_id)
+    public function getUserSavings($user_id, $request)
     {
 
-        $savings = UserSaving::select('user_savings.*', 'users.email', 'users.name', 'users.telephone')
-                        ->join('users', ['users.id' => 'user_savings.user_id'])
-                        ->where('user_id', $user_id)->get();
+        $savings = DB::table('user_savings')
+                    ->join('users', 'users.id', '=', 'user_savings.user_id')
+                    ->where('user_id', $user_id);
+        if(isset($request->month)){
+            $savings  = $savings->whereMonth('user_savings.created_at', $request->month);
+        }
+        if(isset($request->status) && $request->status != "ALL"){
+            $savings = $savings->where('user_savings.approve', $request->status);
+        }
+        $savings = $savings->select('user_savings.*', 'users.email', 'users.name', 'users.telephone');
+        $total = $this->calculateTotalSaving($savings->get());
+        $paginated_savings = $savings->orderBy('user_savings.created_at')->paginate($request->per_page);
 
-        $total = $this->calculateTotalSaving($savings);
-
-        return new UserSavingCollection($savings, $total);
+        return new UserSavingCollection($paginated_savings, $total, $paginated_savings->total(), $paginated_savings->lastPage(),
+            $paginated_savings->perPage(), $paginated_savings->currentPage());
     }
 
 
@@ -151,14 +159,9 @@ class UserSavingService implements UserSavingInterface
 
     public function calculateTotalSaving($savings)
     {
-        $total = 0;
-        $total_amount_used = 0;
-        foreach ($savings as $saving) {
-            $total += $saving->amount_deposited;
-            $total_amount_used += $saving->amount_used;
-        }
-
-        return $total - $total_amount_used;
+        return collect($savings)->map(function ($saving){
+            return ($saving->amount_deposited - $saving->amount_used);
+        })->sum();
     }
 
 
@@ -186,16 +189,20 @@ class UserSavingService implements UserSavingInterface
 
 
     public function getUserSavingsForDownload($request) {
-        $savings = DB::table('user_savings')->join('users', 'users.id', '=', 'user_savings.user_id')
-                    ->where('user_savings.user_id', $request->user_id);
-        if(!is_null($request->status)){
-            $savings = $savings->where('approve', $this->convertStatusToNumber($request->status));
+
+        $savings = DB::table('user_savings')
+            ->join('users', 'users.id', '=', 'user_savings.user_id')
+            ->where('user_id', $request->user_id);
+        if(isset($request->month)){
+            $savings  = $savings->whereMonth('user_savings.created_at', $request->month);
         }
-        $savings = $savings->selectRaw('SUM(user_savings.amount_deposited) as total_amount_deposited, user_savings.*, users.*');
+        if(isset($request->status) && $request->status != "ALL"){
+            $savings = $savings->where('user_savings.approve', $request->status);
+        }
+        $savings = $savings->select('user_savings.*', 'users.email', 'users.name', 'users.telephone')->orderBy('user_savings.created_at')->get();
+        $total = $this->calculateTotalSaving($savings);
 
-        $savings = $savings->orderBy('user_savings.created_at', 'DESC')->get();
-
-        return $savings;
+        return [$savings, $total];
     }
 
     public function getOrganisationSavingsForDownload($request)

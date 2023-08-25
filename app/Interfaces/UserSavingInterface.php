@@ -8,7 +8,7 @@ interface UserSavingInterface {
 
     public function updateUserSaving($request, $id, $user_id);
 
-    public function getUserSavings($user_id);
+    public function getUserSavings($user_id, $request);
 
     public function getUserSaving($id, $user_id);
 
