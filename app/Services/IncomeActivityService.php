@@ -3,6 +3,7 @@ namespace App\Services;
 
 use App\Constants\PaymentStatus;
 use App\Exceptions\BusinessValidationException;
+use App\Http\Resources\IncomeActivityCollection;
 use App\Interfaces\IncomeActivityInterface;
 use App\Models\IncomeActivity;
 use App\Models\Organisation;
@@ -59,11 +60,15 @@ class IncomeActivityService implements IncomeActivityInterface {
         }
     }
 
-    public function getIncomeActivities($organisation_id)
+    public function getIncomeActivities($organisation_id, $request)
     {
-        return $this->findIncomeActivities($organisation_id)
-                            ->orderBy('income_activities.name', 'ASC')
-                            ->get();
+        $incomes =  $this->findIncomeActivities($organisation_id)
+                            ->orderBy('income_activities.name', 'ASC');
+        $total_income = $this->computeTotalIncomeActivities($incomes->get());
+        $paginated_data = $incomes->paginate($request->per_page);
+
+        return new IncomeActivityCollection($paginated_data, $total_income, $paginated_data->total(),
+            $paginated_data->lastPage(), (int)$paginated_data->perPage(), $paginated_data->currentPage());
     }
 
     public function getIncomeActivity($id)
@@ -88,20 +93,20 @@ class IncomeActivityService implements IncomeActivityInterface {
     public function filterIncomeActivity($request)
     {
         $activities = $this->findIncomeActivities($request->organisation_id);
-        if(!is_null($request->payment_item_id)){
-            $activities = $activities->where('income_activities.payment_item_id', $request->payment_item_id);
-        }
-        if(!is_null($request->status)) {
-            if($request->status != "ALL"){
-                $activities = $activities->where('income_activities.approve', $request->status);
-            }
+        $activities = $activities->where('income_activities.payment_item_id', $request->payment_item_id);
+        if(!is_null($request->status) && $request->status != "ALL") {
+            $activities = $activities->where('income_activities.approve', $request->status);
         }
         if(!is_null($request->month)) {
-            $activities = $activities ->WhereMonth('income_activities.date', $this->convertMonthNameToNumber($request->month));
+            $activities = $activities ->whereMonth('income_activities.date', $request->month);
         }
-        $activities = $activities->orderBy('income_activities.name', 'ASC')->get();
+        $activities = $activities->orderBy('income_activities.name', 'ASC');
 
-        return $activities;
+        $total_income = $this->computeTotalIncomeActivities($activities->get());
+        $paginated_data = $activities->paginate($request->per_page);
+
+        return new IncomeActivityCollection($paginated_data, $total_income, $paginated_data->total(),
+            $paginated_data->lastPage(), (int)$paginated_data->perPage(), $paginated_data->currentPage());
     }
 
 

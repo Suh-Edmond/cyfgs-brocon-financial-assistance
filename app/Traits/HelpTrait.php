@@ -164,6 +164,14 @@ trait HelpTrait {
         })->sum();
     }
 
+    public function computeTotalIncomeActivities($incomeActivities){
+        return collect($incomeActivities)->filter(function ($income){
+            return ($income->approve == PaymentStatus::APPROVED) || ($income->approve == PaymentStatus::PENDING);
+        })->map(function ($approve_income){
+            return $approve_income->amount;
+        })->sum();
+    }
+
 
     private  function  months(): array
     {
