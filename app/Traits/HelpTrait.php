@@ -158,7 +158,7 @@ trait HelpTrait {
     public function  calculateOrganisationTotalSavings($savings): int
     {
         return collect($savings)->filter(function ($saving){
-           return $saving->approve == PaymentStatus::APPROVED;
+           return ($saving->approve == PaymentStatus::APPROVED) || ($saving->approve == PaymentStatus::PENDING);
        })->map(function ($saving){
            return $saving->total_amount;
         })->sum();
@@ -169,6 +169,14 @@ trait HelpTrait {
             return ($income->approve == PaymentStatus::APPROVED) || ($income->approve == PaymentStatus::PENDING);
         })->map(function ($approve_income){
             return $approve_income->amount;
+        })->sum();
+    }
+
+    public function computeTotalSponsorship($sponsorships){
+        return collect($sponsorships)->filter(function ($sponsorship){
+            return ($sponsorship->approve == PaymentStatus::APPROVED) || ($sponsorship->approve == PaymentStatus::PENDING);
+        })->map(function ($collected_sponsorship){
+            return $collected_sponsorship->amount_deposited;
         })->sum();
     }
 

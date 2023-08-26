@@ -5,6 +5,7 @@ namespace App\Services;
 
 
 use App\Constants\PaymentStatus;
+use App\Http\Resources\ActivitySupportCollection;
 use App\Interfaces\ActivitySupportInterface;
 use App\Models\ActivitySupport;
 use App\Models\PaymentItem;
@@ -82,10 +83,22 @@ class ActivitySupportService implements ActivitySupportInterface
         return $supports->orderBy('created_at', 'DESC')->get();
     }
 
-    public function fetchAllActivitySupport()
+    public function fetchAllActivitySupport($request)
     {
         $current_session = $this->sessionService->getCurrentSession();
-        return ActivitySupport::where('session_id',$current_session->id)->get();
+        $sponsorships =  ActivitySupport::where('session_id',$current_session->id);
+        if(!is_null($request->payment_item_id)){
+            $sponsorships = $sponsorships->where('payment_item_id', $request->payment_item_id);
+        }
+        if(!is_null($request->status) && $request->status != "ALL"){
+            $sponsorships = $sponsorships->where('approve', $request->status);
+        }
+        $sponsorships = $sponsorships->orderBy('created_at', 'DESC');
+        $total_sponsorship = $this->computeTotalSponsorship($sponsorships->get());
+        $paginated_data    = $sponsorships->paginate($request->per_page);
+
+        return new ActivitySupportCollection($paginated_data, $total_sponsorship, $paginated_data->total(),
+        $paginated_data->lastPage(), (int)$paginated_data->perPage(), $paginated_data->currentPage());
     }
 
     public function changeActivityState($id, $request)
