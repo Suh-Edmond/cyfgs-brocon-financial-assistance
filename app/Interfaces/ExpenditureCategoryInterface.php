@@ -8,7 +8,7 @@ interface ExpenditureCategoryInterface{
 
     public function updateExpenditureCategory($request, $id, $organisation_id);
 
-    public function getExpenditureCategories($organisation_id);
+    public function getExpenditureCategories($organisation_id, $request);
 
     public function getExpenditureCategory($id, $organisation_id);
 

@@ -24,11 +24,10 @@ class ExpenditureCategoryController extends Controller
 
 
 
-    public function getExpenditureCategories($organisation_id)
+    public function getExpenditureCategories($organisation_id, Request $request)
     {
-        $expenditure_categories = $this->expenditure_category_service->getExpenditureCategories($organisation_id);
-
-        return $this->sendResponse(ExpenditureCategoryResource::collection($expenditure_categories), 200);
+        $expenditure_categories = $this->expenditure_category_service->getExpenditureCategories($organisation_id, $request);
+        return $this->sendResponse(($expenditure_categories), 200);
     }
 
 
