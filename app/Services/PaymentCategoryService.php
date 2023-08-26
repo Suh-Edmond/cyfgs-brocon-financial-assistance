@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Http\Resources\PaymentCategoryCollection;
 use App\Interfaces\PaymentCategoryInterface;
 use App\Models\Organisation;
 use App\Models\PaymentCategory;
@@ -48,17 +49,20 @@ class PaymentCategoryService implements PaymentCategoryInterface {
         }
     }
 
-    public function getPaymentCategories($organisation_id, $year)
+    public function getPaymentCategories($request)
     {
-        $categories = PaymentCategory::where('organisation_id', $organisation_id);
-        if(!is_null($year)){
-            $categories = $categories->whereYear('created_at', $year);
+        $categories = PaymentCategory::where('organisation_id', $request->organisation_id);
+        if(!is_null($request->year)){
+            $categories = $categories->whereYear('created_at', $request->year);
         }
-        return $categories->orderBy('name')->get();
+        $paginated_data =  $categories->orderBy($request->sort_by)->paginate($request->per_page);
+
+        return new PaymentCategoryCollection($paginated_data, $paginated_data->total(), $paginated_data->lastPage(),
+            (int)$paginated_data->perPage(), $paginated_data->currentPage());
     }
 
     public function filterPaymentCategory($request){
-        return $this->getPaymentCategories($request->year, $request->organisation_id);
+        return $this->getPaymentCategories($request);
     }
 
     public function getPaymentCategory($id, $organisation_id)

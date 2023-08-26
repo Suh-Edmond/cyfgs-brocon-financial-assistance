@@ -96,9 +96,9 @@ class PaymentItemService implements PaymentItemInterface {
         if (isset($request->state) && $request->state == "expired" && $request->state !== 'ALL'){
             $payment_items = $payment_items->whereDate('deadline', '>=', Carbon::now()->toDateString());
         }
-        $payment_items = $payment_items->orderBy('payment_items.name', 'DESC')->get();
+        $paginated_data = $payment_items->orderBy('payment_items.name', 'DESC')->paginate($request->per_page);
 
-        return new PaymentItemCollection($payment_items, 0, 1);
+        return new PaymentItemCollection($paginated_data, $paginated_data->total(), $paginated_data->currentPage(), $paginated_data->perPage(), $paginated_data->lastPage());
     }
 
     public function getPaymentItems() {

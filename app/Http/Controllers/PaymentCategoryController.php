@@ -36,7 +36,7 @@ class PaymentCategoryController extends Controller
 
     public function getPaymentCategories(Request $request)
     {
-        $payment_categories = $this->payment_category_service->getPaymentCategories($request->organisation_id, $request->year);
+        $payment_categories = $this->payment_category_service->getPaymentCategories($request);
         return $this->sendResponse($payment_categories, 200);
     }
 
