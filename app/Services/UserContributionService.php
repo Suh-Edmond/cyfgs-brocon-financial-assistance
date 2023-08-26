@@ -127,8 +127,11 @@ class UserContributionService implements UserContributionInterface {
     {
         $contributions = $this->getUserContributions($request);
         $contributions = $contributions->selectRaw('SUM(user_contributions.amount_deposited) as total_amount_deposited, user_contributions.*')
-            ->groupBy('user_contributions.user_id')->orderBy('user_contributions.created_at', 'DESC')->get();
-        return  $contributions;
+            ->groupBy('user_id')->orderBy('user_contributions.created_at', 'DESC');
+        $total_contribution = $this->computeTotalOrganisationContribution($contributions);
+
+        $paginated_response = $contributions->paginate($request->per_page);
+        return  new UserContributionCollection($paginated_response, $total_contribution, $paginated_response->total(), $paginated_response->lastPage(), (int)$paginated_response->perPage(), $paginated_response->currentPage() );
     }
 
     public function getContribution($id)
@@ -421,7 +424,7 @@ class UserContributionService implements UserContributionInterface {
             }
         }
         if(!is_null($request->month)){
-            $contributions = $contributions->whereMonth('user_contributions.created_at', $this->convertMonthNameToNumber($request->month));
+            $contributions = $contributions->whereMonth('user_contributions.created_at', $request->month);
         }
 
         if(!is_null($request->date)){

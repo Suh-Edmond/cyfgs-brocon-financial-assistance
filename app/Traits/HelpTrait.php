@@ -119,6 +119,13 @@ trait HelpTrait {
         return $total;
     }
 
+    public function computeTotalOrganisationContribution($contributions){
+        $collected_contributions = $contributions->whereIn('approve', [PaymentStatus::PENDING, PaymentStatus::APPROVED])->get();
+        return collect($contributions->get())->map(function ($contribution) {
+            return $contribution->total_amount_deposited;
+        })->sum();
+    }
+
     public function  saveUserRole($user, $role, $updated_by)
     {
         DB::table('model_has_roles')->insert([

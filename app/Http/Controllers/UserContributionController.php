@@ -86,7 +86,7 @@ class UserContributionController extends Controller
     {
         $contributions = $this->userContributionService->filterContributions($request);
 
-        return $this->sendResponse(UserContributionResource::collection($contributions), 200);
+        return $this->sendResponse(($contributions), 200);
     }
 
 
