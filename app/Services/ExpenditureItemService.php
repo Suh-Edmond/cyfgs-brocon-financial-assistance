@@ -3,6 +3,7 @@ namespace App\Services;
 
 use App\Constants\PaymentStatus;
 use App\Exceptions\BusinessValidationException;
+use App\Http\Resources\ExpenditureItemCollection;
 use App\Http\Resources\ExpenditureItemResource;
 use App\Http\Resources\QuarterlyExpenditureResource;
 use App\Interfaces\ExpenditureItemInterface;
@@ -70,11 +71,10 @@ class ExpenditureItemService implements ExpenditureItemInterface {
     public function getExpenditureItem($id, $expenditure_category_id)
     {
         $expenditure_item = $this->findExpenditureItem($id, $expenditure_category_id);
-
-        return new ExpenditureItemResource($expenditure_item,
-                                        $this->calculateTotalAmountGiven($expenditure_item->expendiureDetails),
-                                        $this->calculateTotalAmountSpent($expenditure_item->expendiureDetails),
-                                        $this->calculateExpenditureBalanceByExpenditureItem($expenditure_item->expendiureDetails, $expenditure_item->amount));
+        $amount_given = $this->calculateTotalAmountGiven($expenditure_item->expenditureDetails);
+        $amount_spent =  $this->calculateTotalAmountSpent($expenditure_item->expenditureDetails);
+        $balance = $this->calculateExpenditureBalanceByExpenditureItem($amount_given, $amount_spent, $expenditure_item->amount);
+        return new ExpenditureItemResource($expenditure_item, $amount_given, $amount_spent, $balance);
     }
 
     public function deleteExpenditureItem($id, $expenditure_category_id)
@@ -121,16 +121,14 @@ class ExpenditureItemService implements ExpenditureItemInterface {
 
     private function generateExpenditureItemResponse($items)
     {
-        $response = array();
-        foreach($items as $item)
-        {
-            array_push($response, new ExpenditureItemResource($item, $this->calculateTotalAmountGiven($item->expenditureDetails),
-                                                                    $this->calculateTotalAmountSpent($item->expenditureDetails),
-                                                                    $this->calculateExpenditureBalanceByExpenditureItem($item->expenditureDetails,
-                                                                    $item->amount)));
+        $expenses = [];
+        foreach ($items as $item){
+            $amount_given = $this->calculateTotalAmountGiven($item->expenditureDetails);
+            $amount_spent =  $this->calculateTotalAmountSpent($item->expenditureDetails);
+            $balance = $this->calculateExpenditureBalanceByExpenditureItem($amount_given, $amount_spent, $item->amount);
+            array_push($expenses, new ExpenditureItemResource($item, $amount_given, $amount_spent, $balance));
         }
-
-        return $response;
+        return ($expenses);
     }
 
 
@@ -150,15 +148,23 @@ class ExpenditureItemService implements ExpenditureItemInterface {
         return ExpenditureItem::findOrFail($id);
     }
 
-    public function getExpenditureByCategory($expenditure_category_id)
+    public function getExpenditureByCategory($expenditure_category_id, $request)
     {
         $items = ExpenditureItem::select('expenditure_items.*')
             ->join('expenditure_categories', ['expenditure_categories.id' => 'expenditure_items.expenditure_category_id'])
+            ->join('sessions', ['sessions.id' => 'expenditure_items.session_id'])
             ->where('expenditure_items.expenditure_category_id', $expenditure_category_id)
-            ->orderBy('expenditure_items.name', 'ASC')
-            ->get();
-
-        return $this->generateExpenditureItemResponse($items);
+            ->where('expenditure_items.session_id', $request->session_id)
+            ->orderBy('expenditure_items.name', 'ASC');
+        if(isset($request->payment_item_id)){
+            $items = $items->where('expenditure_items.payment_item_id', $request->payment_item_id);
+        }
+        if(isset($request->status)  && $request->status != "ALL") {
+            $items = $items->where('expenditure_items.approve', $request->status);
+        }
+        $paginated_data  = $items->paginate($request->per_page);
+        return (new ExpenditureItemCollection($this->generateExpenditureItemResponse($paginated_data), $paginated_data->total(),
+            $paginated_data->lastPage(), (int)$paginated_data->perPage(), $paginated_data->currentPage()));
     }
 
     public function getExpenditureItemsByPaymentItem($item, $request)
@@ -175,23 +181,23 @@ class ExpenditureItemService implements ExpenditureItemInterface {
 
     public function filterExpenditureItems($request)
     {
-        $current_session = $this->session_service->getCurrentSession();
+
         $items = ExpenditureItem::select('expenditure_items.*')
             ->join('payment_items', ['payment_items.id' => 'expenditure_items.payment_item_id'])
             ->join('expenditure_categories', ['expenditure_categories.id' => 'expenditure_items.expenditure_category_id'])
-            ->join('sessions', ['sessions.id' => 'expenditure_items.session_id']);
-        $items = is_null($request->session_id) ? $items->where('expenditure_items.session_id', $current_session->id) : $items->where('expenditure_items.session_id', $request->session_id);
-        if(!is_null($request->expenditure_category_id)){
-            $items = $items->where('expenditure_items.expenditure_category_id', $request->expenditure_category_id);
-        }
+            ->join('sessions', ['sessions.id' => 'expenditure_items.session_id'])
+            ->where('expenditure_categories.id', $request->expenditure_category_id)
+            ->where('expenditure_items.session_id', $request->session_id);
         if(!is_null($request->payment_item_id)){
             $items = $items->where('expenditure_items.payment_item_id', $request->payment_item_id);
         }
         if(!is_null($request->status)  && $request->status != "ALL") {
             $items = $items->where('expenditure_items.approve', $request->status);
         }
-        $items = $items->orderBy('expenditure_items.name', 'ASC')->get();
-        return $this->generateExpenditureItemResponse($items);
+        $items = $items->orderBy('expenditure_items.name', 'ASC');
+        $paginated_data  = $items->paginate($request->per_page);
+        return (new ExpenditureItemCollection($this->generateExpenditureItemResponse($paginated_data), $paginated_data->total(),
+            $paginated_data->lastPage(), $paginated_data->perPage(), $paginated_data->currentPage()));
     }
 
     public function downloadExpenditureItems($request)

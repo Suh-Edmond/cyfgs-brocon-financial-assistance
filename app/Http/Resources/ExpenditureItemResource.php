@@ -35,7 +35,7 @@ class ExpenditureItemResource extends JsonResource
             'expenditure_category'          => $this->expenditureCategory,
             'created_at'                    => $this->created_at,
             'updated_at'                    => $this->updated_at,
-            'expenditure_details'            => $this->generateResponseForExpenditureDetails($this->expenditureDetails),
+//            'expenditure_details'            => ($this->expenditureDetails),
             'total_amount_given'            => $this->total_amount_given,
             'total_amount_spent'            => $this->total_amount_spent,
             'total_balance'                 => $this->balance,

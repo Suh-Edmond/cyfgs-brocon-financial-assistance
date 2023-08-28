@@ -49,38 +49,45 @@ trait HelpTrait {
         return $response;
     }
 
+    public static function computeTotalExpensesDetailsByExpenditureCategory($expenses){
+        $expenseCollection = collect($expenses);
+        $total_given = $expenseCollection->map(function ($expense) {
+            dd($expense);
+            return $expense->total_amount_given;
+        })->sum();
+        $total_spent = $expenseCollection->map(function ($expense) {
+            return $expense->total_amount_spent;
+        })->sum();
+        $total_balance = $expenseCollection->map(function ($expense) {
+            return $expense->total_balance;
+        })->sum();
+
+        return [$total_given, $total_spent, $total_balance];
+    }
+
 
     public static function calculateExpenditureBalance($expenditure_detail)
     {
         return $expenditure_detail->amount_given - $expenditure_detail->amount_spent;
     }
 
-    private function calculateExpenditureBalanceByExpenditureItem($expenditure_details, $total_item_amount): int
+    private function calculateExpenditureBalanceByExpenditureItem($amount_given, $total_amount_spent, $total_item_amount): int
     {
-        $total_amount_given = $total_item_amount - $this->calculateTotalAmountGiven($expenditure_details);
-        $total_balance = $this->calculateTotalAmountGiven($expenditure_details) - $this->calculateTotalAmountSpent($expenditure_details);
-        return ($total_amount_given + $total_balance);
+        return (($total_item_amount - $amount_given) + ($amount_given - $total_amount_spent));
     }
 
     private function calculateTotalAmountGiven($expenditure_details): int
     {
-
-        $total = 0;
-        foreach ($expenditure_details as $expenditure_detail) {
-            $total += $expenditure_detail->amount_given;
-        }
-
-        return $total;
+        return collect($expenditure_details)->map(function ($detail) {
+            return $detail->amount_given;
+        })->sum();
     }
 
     private function calculateTotalAmountSpent($expenditure_details): int
     {
-        $total = 0;
-        foreach ($expenditure_details as $expenditure_detail) {
-            $total += $expenditure_detail->amount_spent;
-        }
-
-        return $total;
+        return collect($expenditure_details)->map(function ($detail) {
+            return $detail->amount_spent;
+        })->sum();
     }
 
     public static function getAppName()

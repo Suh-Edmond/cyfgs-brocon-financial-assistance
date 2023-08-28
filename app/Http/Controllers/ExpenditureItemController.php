@@ -32,7 +32,7 @@ class ExpenditureItemController extends Controller
 
     public function getExpenditureItems($expenditure_category_id, Request $request)
     {
-        $items = $this->expenditure_item_service->getExpenditureItems($expenditure_category_id, $request);
+        $items = $this->expenditure_item_service->getExpenditureByCategory($expenditure_category_id, $request);
 
         return $this->sendResponse($items, 200);
     }
@@ -52,9 +52,10 @@ class ExpenditureItemController extends Controller
         return $this->sendResponse($item, 200);
     }
 
-    public function getExpenditureByCategory($expenditure_category_id)
+    public function getExpenditureByCategory($expenditure_category_id, Request $request)
     {
-        $data = $this->expenditure_item_service->getExpenditureByCategory($expenditure_category_id);
+
+        $data = $this->expenditure_item_service->getExpenditureByCategory($expenditure_category_id, $request);
 
         return $this->sendResponse($data, 200);
     }

@@ -17,7 +17,7 @@ interface ExpenditureItemInterface {
 
     public function getItem($id);
 
-    public function getExpenditureByCategory($expenditure_category_id);
+    public function getExpenditureByCategory($expenditure_category_id, $request);
 
     public function getExpenditureItemsByPaymentItem($item, $request);
 
