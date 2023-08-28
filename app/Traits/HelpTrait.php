@@ -37,16 +37,13 @@ trait HelpTrait {
     }
 
 
-    public static function generateResponseForExpenditureDetails($details): array
+    public static function generateResponseForExpenditureDetails($details)
     {
-        $response = [];
-
-        foreach ($details as $detail) {
-            $balance = HelpTrait::calculateExpenditureBalance($detail);
-            array_push($response, new ExpenditureDetailResource($detail, $balance));
+        $detail_response = array();
+        foreach ($details as $detail){
+            array_push($detail_response, new ExpenditureDetailResource($detail, ($detail->amount_given - $detail->amount_spent)));
         }
-
-        return $response;
+        return $detail_response;
     }
 
     public static function computeTotalExpensesDetailsByExpenditureCategory($expenses){
