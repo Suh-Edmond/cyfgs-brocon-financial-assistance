@@ -98,9 +98,8 @@ class UserSavingService implements UserSavingInterface
         $total_amount_deposited = $this->calculateOrganisationTotalSavings($savings->get());
         $paginated_savings = $savings->paginate($request->per_page);
 
-
         return new UserSavingCollection($savings->get(), $total_amount_deposited, $paginated_savings->total(), $paginated_savings->lastPage(),
-            $paginated_savings->perPage(), $paginated_savings->currentPage());
+            (int)$paginated_savings->perPage(), $paginated_savings->currentPage());
     }
 
 
@@ -225,9 +224,6 @@ class UserSavingService implements UserSavingInterface
         $data = $this->getMembersSavingsByOrganisation($request);
         $data = $data->where('user_savings.session_id', $request->session_id);
 
-        if (!is_null($request->user_id)) {
-            $data = $data->where('user_savings.user_id', $request->user_id);
-        }
         if(!is_null($request->name)){
             $data = $data->where('users.name', 'LIKE', '%'.$request->name.'%');
         }
@@ -241,14 +237,20 @@ class UserSavingService implements UserSavingInterface
             $data = $data->where('user_savings.approve', $request->status);
         }
         if (!is_null($request->month)) {
-            $data = $data->whereMonth('user_savings.created_at', $this->convertMonthNameToNumber($request->month));
+            $data = $data->whereMonth('user_savings.created_at', $request->month);
         }
 
-        $data = $data->select('user_savings.*', 'users.id as user_id',
-            'users.name as name', 'users.email as email', 'users.telephone as telephone', 'sessions.id as session_id', 'sessions.year as session_year', 'sessions.status as session_status')
-            ->orderBy('user_savings.created_at', 'ASC')
-            ->get();
-        return $data;
+        $savings = $data->selectRaw('(SUM(user_savings.amount_deposited) - SUM(user_savings.amount_used)) as total_amount, users.id as user_id,
+            users.name as name, users.email as email, users.telephone as telephone, sessions.id as session_id, sessions.year as session_year, sessions.status as session_status,
+            user_savings.id, user_savings.amount_deposited, user_savings.comment, user_savings.approve, user_savings.amount_used, user_savings.created_at,
+             user_savings.updated_at, user_savings.updated_by')
+            ->groupBy('user_id')
+            ->orderBy('users.name', 'ASC');
+        $total_amount_deposited = $this->calculateOrganisationTotalSavings($savings->get());
+        $paginated_savings = $savings->paginate($request->per_page);
+
+        return new UserSavingCollection($savings->get(), $total_amount_deposited, $paginated_savings->total(), $paginated_savings->lastPage(),
+            (int)$paginated_savings->perPage(), $paginated_savings->currentPage());
     }
 
     public function deductSavingAfterContribution($user_id, $amount)

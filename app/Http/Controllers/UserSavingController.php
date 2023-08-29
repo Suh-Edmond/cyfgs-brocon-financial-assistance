@@ -100,7 +100,7 @@ class UserSavingController extends Controller
     {
         $savings = $this->user_saving_service->filterSavings($request);
 
-        return $this->sendResponse(UserSavingResource::collection($savings), 200);
+        return $this->sendResponse($savings, 200);
     }
 
     public function download(Request $request)
