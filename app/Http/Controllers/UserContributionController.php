@@ -42,11 +42,11 @@ class UserContributionController extends Controller
     }
 
 
-    public function getUsersContributionsByItem($id, $user_id)
+    public function getUsersContributionsByItem($id, $user_id, Request $request)
     {
-        $contributions = $this->userContributionService->getContributionByUserAndItem($id, $user_id);
+        $contributions = $this->userContributionService->getContributionByUserAndItem($id, $user_id, $request);
 
-        return $this->sendResponse(UserContributionResource::collection($contributions), 200);
+        return $this->sendResponse(($contributions), 200);
     }
 
 

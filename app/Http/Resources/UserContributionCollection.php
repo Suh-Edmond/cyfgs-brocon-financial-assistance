@@ -11,8 +11,9 @@ class UserContributionCollection extends ResourceCollection
     private $perPage;
     private $currentPage;
     private $total;//the total number of records;
+    private $total_balance;
 
-    public function __construct($collection, $total_contribution, $total, $lastPage, $perPage, $currentPage)
+    public function __construct($collection, $total_contribution, $total_balance, $total, $lastPage, $perPage, $currentPage)
     {
         parent::__construct($collection);
         $this->total_contribution = $total_contribution;
@@ -20,6 +21,7 @@ class UserContributionCollection extends ResourceCollection
         $this->lastPage = $lastPage;
         $this->perPage = $perPage;
         $this->currentPage = $currentPage;
+        $this->total_balance = $total_balance;
     }
 
 
@@ -31,7 +33,8 @@ class UserContributionCollection extends ResourceCollection
             'total'          => $this->total,
             'last_page'      => $this->lastPage,
             'per_page'       => $this->perPage,
-            'current_page'   => $this->currentPage
+            'current_page'   => $this->currentPage,
+            'total_balance'  => $this->total_balance
         ];
     }
 }
