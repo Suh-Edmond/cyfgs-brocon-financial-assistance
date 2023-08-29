@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Constants\PaymentStatus;
 use App\Traits\HelpTrait;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -41,7 +42,8 @@ class ExpenditureItemResource extends JsonResource
             'total_balance'                 => $this->balance,
             'updated_by'                    => $this->updated_by,
             'payment_item'                  => $this->paymentItem,
-            'session'                       => $this->session
+            'session'                       => $this->session,
+            'has_no_pending_details'        => is_null($this->checkExpenditureItemCanBeApproveDeclined($this->expenditureDetails)),
         ];
     }
 }

@@ -10,6 +10,8 @@ interface ExpenditureCategoryInterface{
 
     public function getExpenditureCategories($organisation_id, $request);
 
+    public function getAllExpenditureCategories($organisation_id);
+
     public function getExpenditureCategory($id, $organisation_id);
 
     public function deleteExpenditureCategory($id, $organisation_id);

@@ -191,9 +191,7 @@ class ExpenditureItemService implements ExpenditureItemInterface {
         if(!is_null($request->payment_item_id)){
             $items = $items->where('expenditure_items.payment_item_id', $request->payment_item_id);
         }
-        if(!is_null($request->status)  && $request->status != "ALL") {
-            $items = $items->where('expenditure_items.approve', $request->status);
-        }
+
         $items = $items->orderBy('expenditure_items.name', 'ASC');
         $paginated_data  = $items->paginate($request->per_page);
         return (new ExpenditureItemCollection($this->generateExpenditureItemResponse($paginated_data), $paginated_data->total(),

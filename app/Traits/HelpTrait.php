@@ -46,10 +46,15 @@ trait HelpTrait {
         return $detail_response;
     }
 
+    public static function checkExpenditureItemCanBeApproveDeclined($details){
+        return collect($details)->filter(function ($detail){
+            return $detail -> approve == PaymentStatus::PENDING;
+        })->first();
+    }
+
     public static function computeTotalExpensesDetailsByExpenditureCategory($expenses){
         $expenseCollection = collect($expenses);
         $total_given = $expenseCollection->map(function ($expense) {
-            dd($expense);
             return $expense->total_amount_given;
         })->sum();
         $total_spent = $expenseCollection->map(function ($expense) {

@@ -82,6 +82,11 @@ class ExpenditureCategoryService implements ExpenditureCategoryInterface {
 
     public  function setDataForDownload($request)
     {
-        return $this->getExpenditureCategories($request);
+        return $this->getExpenditureCategories($request, $request);
+    }
+
+    public function getAllExpenditureCategories($organisation_id)
+    {
+        return ExpenditureCategory::where('organisation_id', $organisation_id)->orderBy('name')->get();
     }
 }
