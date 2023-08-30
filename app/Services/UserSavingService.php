@@ -177,6 +177,7 @@ class UserSavingService implements UserSavingInterface
         if(isset($month)){
             $savings = $savings->whereMonth('user_savings.created_at', $month);
         }
+
         $savings = $savings->selectRaw('(SUM(user_savings.amount_deposited) - SUM(user_savings.amount_used)) as total_amount, users.id as user_id,
             users.name as name, users.email as email, users.telephone as telephone, sessions.id as session_id, sessions.year as session_year, sessions.status as session_status,
             user_savings.id, user_savings.amount_deposited, user_savings.comment, user_savings.approve, user_savings.amount_used, user_savings.created_at, user_savings.updated_at, user_savings.updated_by')
@@ -247,7 +248,7 @@ class UserSavingService implements UserSavingInterface
             ->groupBy('user_id')
             ->orderBy('users.name', 'ASC');
         $total_amount_deposited = $this->calculateOrganisationTotalSavings($savings->get());
-        $paginated_savings = $savings->paginate($request->per_page);
+        $paginated_savings      = $savings->paginate($request->per_page);
 
         return new UserSavingCollection($savings->get(), $total_amount_deposited, $paginated_savings->total(), $paginated_savings->lastPage(),
             (int)$paginated_savings->perPage(), $paginated_savings->currentPage());
