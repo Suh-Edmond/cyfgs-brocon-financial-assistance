@@ -6,6 +6,7 @@ use App\Http\Requests\RegistrationFeeRequest;
 use App\Http\Resources\RegisterFeeResource;
 use App\Services\RegistrationFeeService;
 use App\Traits\ResponseTrait;
+use Illuminate\Http\Request;
 
 class RegistrationController extends Controller
 {
@@ -29,9 +30,9 @@ class RegistrationController extends Controller
         return $this->sendResponse('success', 'Registration fee created successfully');
     }
 
-    public function getAllRegistrationFee()
+    public function getAllRegistrationFee(Request $request)
     {
-        $data = $this->registration_fee_service->getAllRegistrationFee();
+        $data = $this->registration_fee_service->getAllRegistrationFee($request);
         return $this->sendResponse( $data, 200);
     }
 

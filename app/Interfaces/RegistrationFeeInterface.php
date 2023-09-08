@@ -10,7 +10,7 @@ interface RegistrationFeeInterface
 
     public function updateRegistrationFee($request, $id);
 
-    public function getAllRegistrationFee();
+    public function getAllRegistrationFee($request);
 
     public function getCurrentRegistrationFee();
 

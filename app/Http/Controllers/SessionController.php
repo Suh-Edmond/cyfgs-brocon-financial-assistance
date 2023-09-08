@@ -52,4 +52,10 @@ class SessionController extends Controller
 
         return $this->sendResponse('success', 'Session deleted successfully');
     }
+
+    public function getPaginatedSessions(Request $request)
+    {
+        $data = $this->sessionService->getPaginatedSessions($request);
+        return $this->sendResponse($data, 200);
+    }
 }
