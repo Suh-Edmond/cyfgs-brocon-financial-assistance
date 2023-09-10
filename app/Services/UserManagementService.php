@@ -206,7 +206,8 @@ class UserManagementService implements UserManagementInterface
     public function importUsers($organisation_id, $request)
     {
         $memberRole = CustomRole::findByName(Roles::MEMBER, 'api');
-        Excel::import(new UsersImport($organisation_id, $this->role_service, $request->user()->name, $memberRole), $request->file('file'));
+        $updated_by = ($request->user()->name);
+        return Excel::import(new UsersImport($organisation_id, $updated_by, $memberRole->id), $request->file('file'));
     }
 
     public function filterUsers($request)
@@ -231,6 +232,9 @@ class UserManagementService implements UserManagementInterface
         }
         if(isset($request->session_id)) {
             $filter_users = $filter_users->where('member_registrations.session_id', $request->session_id);
+        }
+        if(isset($request->filter)){
+            $filter_users = $filter_users->where('users.name','LIKE', '%'.$request->filter.'%');
         }
         $filter_users = $filter_users->select('users.*','member_registrations.approve','member_registrations.session_id')->distinct();
         $filter_users = $filter_users->orderBy('users.name')->paginate($request->per_page);

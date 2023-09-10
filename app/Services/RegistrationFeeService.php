@@ -46,8 +46,8 @@ class RegistrationFeeService implements RegistrationFeeInterface
 
     public function getAllRegistrationFee($request)
     {
-        $reg_fees = DB::table('registrations')->orderBy('created_at', 'ASC')->paginate($request->per_page);
-        return new RegistrationFeeResourceCollection($reg_fees, $reg_fees->total(), $reg_fees->lastPage(), $reg_fees->perPage(), $reg_fees->currentPage());
+        $reg_fees = DB::table('registrations')->orderBy('created_at', 'ASC')->get();
+        return RegisterFeeResource::collection($reg_fees);
     }
 
     public function getCurrentRegistrationFee()

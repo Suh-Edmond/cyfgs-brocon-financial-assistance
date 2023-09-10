@@ -91,6 +91,6 @@ class SessionService implements SessionInterface
     {
         $sessions = DB::table('sessions')->orderBy('year')->paginate($request->per_page);
 
-        return new SessionResourceCollection($sessions, $sessions->total(), $sessions->lastPage(), $sessions->perPage(), $sessions->currentPage());
+        return new SessionResourceCollection($sessions, $sessions->total(), $sessions->lastPage(), (int)$sessions->perPage(), $sessions->currentPage());
     }
 }
