@@ -2,6 +2,7 @@
 
 namespace App\Imports;
 
+use App\Constants\SessionStatus;
 use App\Models\User;
 use App\Traits\HelpTrait;
 use Illuminate\Support\Facades\DB;
@@ -52,7 +53,8 @@ class UsersImport implements ToModel, WithStartRow, WithCustomCsvSettings
             'occupation'      => $row[5],
             'organisation_id' => $this->organisation_id,
             'updated_by'      => $this->updated_by,
-            'password'        => ""
+            'password'        => "",
+            'status'          => SessionStatus::ACTIVE
         ]);
         $this->saveUserRole($saved->id, $this->assignRole, $this->updated_by);
     }

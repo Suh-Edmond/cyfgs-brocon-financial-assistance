@@ -6,6 +6,7 @@ use App\Constants\PaymentItemType;
 use App\Constants\PaymentStatus;
 use App\Constants\RegistrationStatus;
 use App\Constants\Roles;
+use App\Constants\SessionStatus;
 use App\Exceptions\EmailException;
 use App\Exceptions\UnAuthorizedException;
 use App\Http\Resources\PasswordResetResponse;
@@ -50,7 +51,8 @@ class UserManagementService implements UserManagementInterface
             'address'         => $request->address,
             'occupation'      => $request->occupation,
             'organisation_id' => $id,
-            'updated_by'      => $request->user()->name
+            'updated_by'      => $request->user()->name,
+            'status'          => SessionStatus::ACTIVE
         ]);
 
         $role = CustomRole::findByName(Roles::MEMBER, 'api');
@@ -60,9 +62,9 @@ class UserManagementService implements UserManagementInterface
     public function getUsers($organisation_id)
     {
         return User::join('organisations', 'organisations.id', '=', 'users.organisation_id')
-               ->leftJoin('member_registrations', 'users.id', '=', 'member_registrations.user_id')
                ->where('organisations.id', $organisation_id)
-               ->select('users.*', 'member_registrations.approve', 'member_registrations.session_id')
+               ->where('users.status', SessionStatus::ACTIVE)
+               ->select('users.*')
                ->distinct()
                ->orderBy('name')->get();
     }
@@ -226,6 +228,12 @@ class UserManagementService implements UserManagementInterface
         }
         if(isset($request->has_register) && $request->has_register == PaymentStatus::DECLINED && $request->has_register != "ALL"){
             $filter_users = $filter_users->where('member_registrations.approve', PaymentStatus::DECLINED);
+        }
+        if(isset($request->has_register) && $request->has_register == SessionStatus::ACTIVE && $request->has_register != "ALL"){
+            $filter_users = $filter_users->where('users.status', SessionStatus::ACTIVE);
+        }
+        if(isset($request->has_register) && $request->has_register == SessionStatus::IN_ACTIVE && $request->has_register != "ALL"){
+            $filter_users = $filter_users->where('users.status', SessionStatus::IN_ACTIVE);
         }
         if(isset($request->gender) && $request->gender != "ALL"){
            $filter_users = $filter_users->where('users.gender', $request->gender);

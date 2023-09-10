@@ -38,7 +38,8 @@ class User extends Authenticatable
         'occupation',
         'organisation_id',
         'updated_by',
-        'picture'
+        'picture',
+        'status'
     ];
 
     /**
