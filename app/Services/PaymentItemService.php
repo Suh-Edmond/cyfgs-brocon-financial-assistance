@@ -56,12 +56,12 @@ class PaymentItemService implements PaymentItemInterface {
         ]);
     }
 
-    public function getPaymentItemsByCategory($payment_category_id)
+    public function getPaymentItemsByCategory($payment_category_id, $request)
     {
         $payment_items = $this->fetchPaymentItems($payment_category_id)
                                 ->orderBy('payment_items.name', 'ASC')
-                                ->paginate(2);
-        return  new PaymentItemCollection($payment_items, $payment_items->lastPage(),$payment_items->currentPage());
+                                ->paginate($request->per_page);
+        return  new PaymentItemCollection($payment_items, $payment_items->total(), $payment_items->currentPage(), (int)$payment_items->perPage(), $payment_items->lastPage());
 
     }
 
@@ -90,11 +90,11 @@ class PaymentItemService implements PaymentItemInterface {
         if(isset($request->frequency) && $request->frequency !== "ALL"){
             $payment_items = $payment_items->where('frequency', $request->frequency);
         }
-        if(isset($request->state) && $request->state == "active" && $request->state !== 'ALL'){
-            $payment_items = $payment_items->whereDate('deadline', '<=', Carbon::now()->toDateString());
-        }
-        if (isset($request->state) && $request->state == "expired" && $request->state !== 'ALL'){
+        if(isset($request->state) && $request->state == "active"){
             $payment_items = $payment_items->whereDate('deadline', '>=', Carbon::now()->toDateString());
+        }
+        if (isset($request->state) && $request->state == "expired"){
+            $payment_items = $payment_items->whereDate('deadline', '<=', Carbon::now()->toDateString());
         }
         $paginated_data = $payment_items->orderBy('payment_items.name', 'DESC')->paginate($request->per_page);
 

@@ -11,7 +11,7 @@ class PaymentItemCollection extends ResourceCollection
     private $perPage;
     private $currentPage;
 
-    public function __construct($collection, $total,$currentPage, $perPage, $lastPage)
+    public function __construct($collection, $total, $currentPage, $perPage, $lastPage)
     {
       parent::__construct($collection);
         $this->total = $total;

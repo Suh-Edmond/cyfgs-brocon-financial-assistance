@@ -8,7 +8,7 @@ interface PaymentItemInterface
 
     public function updatePaymentItem($request, $payment_item_id, $payment_category_id);
 
-    public function getPaymentItemsByCategory($payment_category_id);
+    public function getPaymentItemsByCategory($payment_category_id, $request);
 
     public function getPaymentItem($id, $payment_category_id);
 
