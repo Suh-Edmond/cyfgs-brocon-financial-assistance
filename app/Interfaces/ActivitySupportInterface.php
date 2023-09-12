@@ -15,7 +15,7 @@ interface ActivitySupportInterface {
 
     public function filterActivitySupport($request);
 
-    public function fetchAllActivitySupport();
+    public function fetchAllActivitySupport($request);
 
     public function changeActivityState($id, $request);
 }

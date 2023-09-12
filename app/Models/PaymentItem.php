@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Http\Resources\ReferenceResource;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\GenerateUuid;
 
@@ -29,7 +28,8 @@ class PaymentItem extends Model
         'type',
         'frequency',
         'session_id',
-        'reference'
+        'reference',
+        'deadline'
     ];
 
     public function paymentCategory(){

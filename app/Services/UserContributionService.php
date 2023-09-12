@@ -92,12 +92,18 @@ class UserContributionService implements UserContributionInterface {
 
     }
 
-    public function getContributionByUserAndItem($payment_item_id, $user_id)
+    public function getContributionByUserAndItem($payment_item_id, $user_id, $request)
     {
-        return $this->getContributionByUserAndPaymentItem($payment_item_id, $user_id)
+        $payment_item = PaymentItem::find($payment_item_id);
+        $contributions =  $this->getContributionByUserAndPaymentItem($payment_item_id, $user_id)
                                     ->select(  'user_contributions.*')
-                                    ->orderBy('user_contributions.created_at', 'DESC')
-                                    ->get();
+                                    ->orderBy('user_contributions.created_at', 'DESC');
+        $total_contribution = collect($contributions)->sum('amount_deposited');
+        $total_balance = ($payment_item->amount - $total_contribution);
+        $paginated_contribution = $contributions->paginate($request->per_page);
+
+        return new UserContributionCollection($paginated_contribution, $total_contribution, $total_balance,  $paginated_contribution->total(), $paginated_contribution->lastPage(),
+            (int)$paginated_contribution->perPage(), $paginated_contribution->currentPage());
     }
 
     public function deleteUserContribution($id)
@@ -125,10 +131,16 @@ class UserContributionService implements UserContributionInterface {
 
     public function filterContributions($request)
     {
+        $payment_item = PaymentItem::find($request->payment_item_id);
         $contributions = $this->getUserContributions($request);
         $contributions = $contributions->selectRaw('SUM(user_contributions.amount_deposited) as total_amount_deposited, user_contributions.*')
-            ->groupBy('user_contributions.user_id')->orderBy('user_contributions.created_at', 'DESC')->get();
-        return  $contributions;
+            ->groupBy('user_id')->orderBy('user_contributions.created_at', 'DESC');
+        $total_contribution = $this->computeTotalOrganisationContribution($contributions);
+        $total_balance = ($payment_item->amount - $total_contribution);
+
+        $paginated_response = $contributions->paginate($request->per_page);
+        return  new UserContributionCollection($paginated_response, $total_contribution, $total_balance,  $paginated_response->total(),
+            $paginated_response->lastPage(), (int)$paginated_response->perPage(), $paginated_response->currentPage() );
     }
 
     public function getContribution($id)
@@ -414,16 +426,15 @@ class UserContributionService implements UserContributionInterface {
             ->where('user_contributions.session_id', $request->year);
 
         if(!is_null($request->status) && $request->status != "ALL"){
-            if($request->status == "PENDING" || "APPROVED" || "DECLINED"){
+            if($request->status == "PENDING" || $request->status == "APPROVED" || $request->status == "DECLINED"){
                 $contributions = $contributions->where('user_contributions.approve', $request->status);
             }else {
                 $contributions = $contributions->where('user_contributions.status', $request->status);
             }
         }
         if(!is_null($request->month)){
-            $contributions = $contributions->whereMonth('user_contributions.created_at', $this->convertMonthNameToNumber($request->month));
+            $contributions = $contributions->whereMonth('user_contributions.created_at', $request->month);
         }
-
         if(!is_null($request->date)){
             $contributions = $contributions->whereDate('user_contributions.created_at', $request->date);
         }

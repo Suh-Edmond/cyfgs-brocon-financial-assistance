@@ -3,6 +3,7 @@ namespace App\Services;
 
 use App\Constants\PaymentStatus;
 use App\Exceptions\BusinessValidationException;
+use App\Http\Resources\ExpenditureDetailCollection;
 use App\Http\Resources\ExpenditureDetailResource;
 use App\Interfaces\ExpenditureDetailInterface;
 use App\Models\ExpenditureDetail;
@@ -55,22 +56,19 @@ class ExpenditureDetailService implements ExpenditureDetailInterface {
         }
     }
 
-    public function getExpenditureDetails($expenditure_item_id)
+    public function getExpenditureDetails($expenditure_item_id, $request)
     {
-        $expenditure_item_name = null;
-        $expenditure_item_amount = 0;
-        $details            = $this->findExpenditureDetails($expenditure_item_id);
-        $response           = $this->generateResponseForExpenditureDetails($details);
-        if(count($details) > 0){
-            $expenditure_item_name = $details[0]->expenditureItem->name;
-            $expenditure_item_amount = $details[0]->expenditureItem->amount;
-        }
-        $total_amount_given = collect($details)->sum('amount_given');
-        $total_amount_spent = collect($details)->sum('amount_spent');
-        $balance            = ($expenditure_item_amount - $total_amount_given) + ($total_amount_given - $total_amount_spent);
+        $expenditure_item   = ExpenditureItem::findOrFail($expenditure_item_id);
+        $details            = $this->findExpenditureDetails($expenditure_item->id, $request->status);
+        $paginated_data     = $details->paginate($request->per_page);
+        $response           = $this->generateResponseForExpenditureDetails($paginated_data);
 
-        return  [$response, ['expenditure_item_name' => $expenditure_item_name], ['expenditure_item_amount' => $expenditure_item_amount],
-            ['total_amount_given' => $total_amount_given], ['total_amount_spent' => $total_amount_spent], ['balance' => $balance]];
+        $total_amount_given = collect($details->get())->sum('amount_given');
+        $total_amount_spent = collect($details->get())->sum('amount_spent');
+        $balance            = ($expenditure_item->amount - $total_amount_given) + ($total_amount_given - $total_amount_spent);
+
+        return  new ExpenditureDetailCollection($response, $expenditure_item->name, $expenditure_item->amount, $total_amount_given,
+            $total_amount_spent, $balance, $paginated_data->total(), $paginated_data->lastPage(), (int)$paginated_data->perPage(), $paginated_data->currentPage());
     }
 
     public function getExpenditureDetail($id)
@@ -191,13 +189,16 @@ class ExpenditureDetailService implements ExpenditureDetailInterface {
         return ExpenditureDetail::findOrFail($id);
     }
 
-    private function findExpenditureDetails($id)
+    private function findExpenditureDetails($id, $status)
     {
-        return ExpenditureDetail::select('expenditure_details.*', 'expenditure_items.amount as expenditure_item_amount')
+        $details = ExpenditureDetail::select('expenditure_details.*', 'expenditure_items.amount as expenditure_item_amount')
                                 ->join('expenditure_items', ['expenditure_items.id' => 'expenditure_details.expenditure_item_id'])
                                 ->where('expenditure_items.id', $id)
-                                ->orderBy('expenditure_details.name', 'ASC')
-                                ->get();
+                                ->orderBy('expenditure_details.name', 'ASC');
+        if(isset($status) && $status != "ALL"){
+            $details = $details->Where('expenditure_details.approve', $status);
+        }
+        return $details;
     }
 
     private function getMonthlyExpenditures($session_id)

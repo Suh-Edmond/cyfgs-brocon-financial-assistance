@@ -39,11 +39,11 @@ class IncomeActivityController extends Controller
     }
 
 
-    public function getIncomeActivitiesByOrganisation($id)
+    public function getIncomeActivitiesByOrganisation($id, Request $request)
     {
-        $income_activities = $this->income_activity_service->getIncomeActivities($id);
+        $income_activities = $this->income_activity_service->getIncomeActivities($id, $request);
 
-        return $this->sendResponse(IncomeActivityResource::collection($income_activities), 200);
+        return $this->sendResponse(($income_activities), 200);
     }
 
 
@@ -74,7 +74,7 @@ class IncomeActivityController extends Controller
     {
         $income_activities = $this->income_activity_service->filterIncomeActivity($request);
 
-        return $this->sendResponse(IncomeActivityResource::collection($income_activities), 200);
+        return $this->sendResponse(($income_activities), 200);
     }
 
     public function prepareData(Request $request) {

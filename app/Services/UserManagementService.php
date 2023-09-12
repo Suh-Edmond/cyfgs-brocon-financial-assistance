@@ -6,11 +6,12 @@ use App\Constants\PaymentItemType;
 use App\Constants\PaymentStatus;
 use App\Constants\RegistrationStatus;
 use App\Constants\Roles;
-use App\Exceptions\BusinessValidationException;
+use App\Constants\SessionStatus;
 use App\Exceptions\EmailException;
 use App\Exceptions\UnAuthorizedException;
 use App\Http\Resources\PasswordResetResponse;
 use App\Http\Resources\TokenResource;
+use App\Http\Resources\UserCollection;
 use App\Http\Resources\UserResource;
 use App\Imports\UsersImport;
 use App\Interfaces\UserManagementInterface;
@@ -50,7 +51,8 @@ class UserManagementService implements UserManagementInterface
             'address'         => $request->address,
             'occupation'      => $request->occupation,
             'organisation_id' => $id,
-            'updated_by'      => $request->user()->name
+            'updated_by'      => $request->user()->name,
+            'status'          => SessionStatus::ACTIVE
         ]);
 
         $role = CustomRole::findByName(Roles::MEMBER, 'api');
@@ -59,14 +61,14 @@ class UserManagementService implements UserManagementInterface
 
     public function getUsers($organisation_id)
     {
-          return User::join('organisations', 'organisations.id', '=', 'users.organisation_id')
-                 ->leftJoin('member_registrations', 'users.id', '=', 'member_registrations.user_id')
-                 ->where('organisations.id', $organisation_id)
-                 ->select('users.*', 'member_registrations.approve', 'member_registrations.session_id')
-                 ->distinct()
-                 ->orderBy('name')->get();
-
+        return User::join('organisations', 'organisations.id', '=', 'users.organisation_id')
+               ->where('organisations.id', $organisation_id)
+               ->where('users.status', SessionStatus::ACTIVE)
+               ->select('users.*')
+               ->distinct()
+               ->orderBy('name')->get();
     }
+
 
     public function getTotalUsersByRegStatus($organisation_id)
     {
@@ -141,7 +143,6 @@ class UserManagementService implements UserManagementInterface
         return new TokenResource(new UserResource($updated,$token, true), $currentSession);
     }
 
-
     public function deleteUser($user_id)
     {
         return User::findOrFail($user_id)->delete();
@@ -199,7 +200,6 @@ class UserManagementService implements UserManagementInterface
         $user->save();
     }
 
-
     public function checkUserExist($request)
     {
         return User::where('telephone', str_replace(" ", "", $request->credential))->orWhere('email', $request->credential)->firstOrFail();
@@ -208,27 +208,47 @@ class UserManagementService implements UserManagementInterface
     public function importUsers($organisation_id, $request)
     {
         $memberRole = CustomRole::findByName(Roles::MEMBER, 'api');
-        Excel::import(new UsersImport($organisation_id, $this->role_service, $request->user()->name, $memberRole), $request->file('file'));
+        $updated_by = ($request->user()->name);
+        return Excel::import(new UsersImport($organisation_id, $updated_by, $memberRole->id), $request->file('file'));
     }
 
     public function filterUsers($request)
     {
-        $filter_users = User::leftJoin('member_registrations', 'member_registrations.user_id', '=', 'users.id');
-        if($request->has_register == RegistrationStatus::REGISTERED){
+        $filter_users = User::join('organisations', 'organisations.id', '=', 'users.organisation_id')
+            ->leftJoin('member_registrations', 'users.id', '=', 'member_registrations.user_id')
+            ->where('organisations.id', $request->organisation_id);
+        if(isset($request->has_register) && $request->has_register == RegistrationStatus::REGISTERED && $request->has_register != "ALL"){
             $filter_users = $filter_users->where('member_registrations.approve', PaymentStatus::APPROVED);
         }
-        if(!is_null($request->gender) && $request->gender != "ALL"){
+        if(isset($request->has_register) && $request->has_register == RegistrationStatus::NOT_REGISTERED && $request->has_register != "ALL"){
+            $filter_users = $filter_users->whereNull('member_registrations.approve');
+        }
+        if(isset($request->has_register) && $request->has_register == PaymentStatus::PENDING && $request->has_register != "ALL"){
+            $filter_users = $filter_users->where('member_registrations.approve', PaymentStatus::PENDING);
+        }
+        if(isset($request->has_register) && $request->has_register == PaymentStatus::DECLINED && $request->has_register != "ALL"){
+            $filter_users = $filter_users->where('member_registrations.approve', PaymentStatus::DECLINED);
+        }
+        if(isset($request->has_register) && $request->has_register == SessionStatus::ACTIVE && $request->has_register != "ALL"){
+            $filter_users = $filter_users->where('users.status', SessionStatus::ACTIVE);
+        }
+        if(isset($request->has_register) && $request->has_register == SessionStatus::IN_ACTIVE && $request->has_register != "ALL"){
+            $filter_users = $filter_users->where('users.status', SessionStatus::IN_ACTIVE);
+        }
+        if(isset($request->gender) && $request->gender != "ALL"){
            $filter_users = $filter_users->where('users.gender', $request->gender);
         }
-        if(!is_null($request->session_id)) {
+        if(isset($request->session_id)) {
             $filter_users = $filter_users->where('member_registrations.session_id', $request->session_id);
         }
-        $filter_users = $filter_users->select('users.*','member_registrations.approve');
-        $filter_users = $filter_users->orderBy('users.name', 'DESC')->get();
+        if(isset($request->filter)){
+            $filter_users = $filter_users->where('users.name','LIKE', '%'.$request->filter.'%');
+        }
+        $filter_users = $filter_users->select('users.*','member_registrations.approve','member_registrations.session_id')->distinct();
+        $filter_users = $filter_users->orderBy('users.name')->paginate($request->per_page);
 
-        return $filter_users;
+        return new UserCollection($filter_users, $filter_users->total(), $filter_users->lastPage(), (int)$filter_users->perPage(), $filter_users->currentPage());
     }
-
 
     public function setPasswordResetToken($request)
     {
@@ -308,7 +328,6 @@ class UserManagementService implements UserManagementInterface
         }
         return $users;
     }
-
 
     private function generateToken($user)
     {

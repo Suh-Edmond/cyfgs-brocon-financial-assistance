@@ -6,14 +6,22 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class UserContributionCollection extends ResourceCollection
 {
-    private $total;
-    private $balance;
+    private $total_contribution;
+    private $lastPage;
+    private $perPage;
+    private $currentPage;
+    private $total;//the total number of records;
+    private $total_balance;
 
-    public function __construct($resource, $total = null, $balance = null)
+    public function __construct($collection, $total_contribution, $total_balance, $total, $lastPage, $perPage, $currentPage)
     {
-        parent::__construct($resource);
+        parent::__construct($collection);
+        $this->total_contribution = $total_contribution;
         $this->total   = $total;
-        $this->balance = $balance;
+        $this->lastPage = $lastPage;
+        $this->perPage = $perPage;
+        $this->currentPage = $currentPage;
+        $this->total_balance = $total_balance;
     }
 
 
@@ -21,8 +29,12 @@ class UserContributionCollection extends ResourceCollection
     {
         return [
             "data"         => $this->collection,
-            'total_amount' => $this->total,
-            'balance'      => $this->balance
+            'total_amount' => $this->total_contribution,
+            'total'          => $this->total,
+            'last_page'      => $this->lastPage,
+            'per_page'       => $this->perPage,
+            'current_page'   => $this->currentPage,
+            'total_balance'  => $this->total_balance
         ];
     }
 }

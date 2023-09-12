@@ -164,6 +164,7 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::prefix('protected')->middleware('isTreasurer')->group(function () {
+        Route::get('expenditure-categories-all', [ExpenditureCategoryController::class, 'getAllExpenditureCategories']);
         Route::put('expenditure-items/{id}/approve', [ExpenditureItemController::class, 'approveExpenditureItem']);
     });
 
@@ -315,6 +316,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('protected')->middleware('isTreasurerOrIsFinancialSecretaryOrIsPresident')->group(function (){
          Route::get('/sessions', [SessionController::class, 'getAllSessions']);
         Route::get('/sessions/current', [SessionController::class, 'getCurrentSession']);
+        Route::get('/paginated_sessions', [SessionController::class, 'getPaginatedSessions']);
     });
 
     Route::prefix('protected')->middleware('isPresidentOrIsFinancialSecretary')->group(function (){

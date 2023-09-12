@@ -6,7 +6,7 @@ use App\Http\Middleware\IsAdminMiddleware;
 use App\Http\Middleware\IsAuditorMiddleware;
 use App\Http\Middleware\IsFinancialSecretaryMiddleware;
 use App\Http\Middleware\isPresidentMiddleware;
-use App\Http\Middleware\IsPresidentOrIsFinancialSecretary;
+use App\Http\Middleware\isPresidentOrisFinancialSecretary;
 use App\Http\Middleware\IsTreasurerMiddleware;
 use App\Http\Middleware\IsTreasurerOrIsFinancialSecretary;
 use App\Http\Middleware\IsTreasurerOrIsFinancialSecretaryOrIsPresident;
@@ -84,7 +84,7 @@ class Kernel extends HttpKernel
         'isFinancialSecretary'  => IsFinancialSecretaryMiddleware::class,
         'isTreasurer'           => IsTreasurerMiddleware::class,
         'isUser'                => IsUserMiddleware::class,
-        'isPresidentOrIsFinancialSecretary' => IsPresidentOrIsFinancialSecretary::class,
+        'isPresidentOrIsFinancialSecretary' => isPresidentOrisFinancialSecretary::class,
         'isTreasurerOrIsFinancialSecretary' => IsTreasurerOrIsFinancialSecretary::class,
         'isTreasurerOrIsFinancialSecretaryOrIsPresident' => IsTreasurerOrIsFinancialSecretaryOrIsPresident::class,
 

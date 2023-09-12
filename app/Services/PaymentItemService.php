@@ -8,6 +8,7 @@ use App\Interfaces\PaymentItemInterface;
 use App\Models\PaymentCategory;
 use App\Models\PaymentItem;
 use App\Traits\HelpTrait;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class PaymentItemService implements PaymentItemInterface {
@@ -34,7 +35,8 @@ class PaymentItemService implements PaymentItemInterface {
             'type'                => $request->type,
             'frequency'           => $request->frequency,
             'session_id'          => $current_session->id,
-            'reference'           => $this->setPaymentItemReference($request->reference, $request->type)
+            'reference'           => $this->setPaymentItemReference($request->reference, $request->type),
+            'deadline'            => $request->deadline
         ]);
     }
 
@@ -49,16 +51,17 @@ class PaymentItemService implements PaymentItemInterface {
             'description'   => $request->description,
             'type'          => $request->type,
             'frequency'     => $request->frequency,
-            'reference'     => $this->setPaymentItemReference($request->reference, $request->type)
+            'reference'     => $this->setPaymentItemReference($request->reference, $request->type),
+            'deadline'      => $request->deadline
         ]);
     }
 
-    public function getPaymentItemsByCategory($payment_category_id)
+    public function getPaymentItemsByCategory($payment_category_id, $request)
     {
         $payment_items = $this->fetchPaymentItems($payment_category_id)
                                 ->orderBy('payment_items.name', 'ASC')
-                                ->get();
-        return new PaymentItemCollection($payment_items, 0);
+                                ->paginate($request->per_page);
+        return  new PaymentItemCollection($payment_items, $payment_items->total(), $payment_items->currentPage(), (int)$payment_items->perPage(), $payment_items->lastPage());
 
     }
 
@@ -76,19 +79,26 @@ class PaymentItemService implements PaymentItemInterface {
     }
 
     public function filterPaymentItems($request) {
+
         $payment_items = $this->fetchPaymentItems($request->payment_category_id);
-        if(!is_null($request->compulsory)){
-            $payment_items = $payment_items->where('compulsory', $request->compulsory);
+        if(isset($request->is_compulsory) && $request->is_compulsory !== "ALL"){
+             $payment_items = $payment_items->where('compulsory', $request->is_compulsory);
         }
-        if(!is_null($request->type) && $request->type !== "ALL"){
+        if(isset($request->type) && $request->type !== "ALL"){
             $payment_items = $payment_items->where('type', $request->type);
         }
-        if(!is_null($request->frequency) && $request->frequency !== "ALL"){
+        if(isset($request->frequency) && $request->frequency !== "ALL"){
             $payment_items = $payment_items->where('frequency', $request->frequency);
         }
-        $payment_items = $payment_items->orderBy('payment_items.name', 'DESC')->get();
+        if(isset($request->state) && $request->state == "active"){
+            $payment_items = $payment_items->whereDate('deadline', '>=', Carbon::now()->toDateString());
+        }
+        if (isset($request->state) && $request->state == "expired"){
+            $payment_items = $payment_items->whereDate('deadline', '<=', Carbon::now()->toDateString());
+        }
+        $paginated_data = $payment_items->orderBy('payment_items.name', 'DESC')->paginate($request->per_page);
 
-        return new PaymentItemCollection($payment_items, 0);
+        return new PaymentItemCollection($paginated_data, $paginated_data->total(), $paginated_data->currentPage(), $paginated_data->perPage(), $paginated_data->lastPage());
     }
 
     public function getPaymentItems() {

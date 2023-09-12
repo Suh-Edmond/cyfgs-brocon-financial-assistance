@@ -37,16 +37,34 @@ trait HelpTrait {
     }
 
 
-    public static function generateResponseForExpenditureDetails($details): array
+    public static function generateResponseForExpenditureDetails($details)
     {
-        $response = [];
-
-        foreach ($details as $detail) {
-            $balance = HelpTrait::calculateExpenditureBalance($detail);
-            array_push($response, new ExpenditureDetailResource($detail, $balance));
+        $detail_response = array();
+        foreach ($details as $detail){
+            array_push($detail_response, new ExpenditureDetailResource($detail, ($detail->amount_given - $detail->amount_spent)));
         }
+        return $detail_response;
+    }
 
-        return $response;
+    public static function checkExpenditureItemCanBeApproveDeclined($details){
+        return collect($details)->filter(function ($detail){
+            return $detail -> approve == PaymentStatus::PENDING;
+        })->first();
+    }
+
+    public static function computeTotalExpensesDetailsByExpenditureCategory($expenses){
+        $expenseCollection = collect($expenses);
+        $total_given = $expenseCollection->map(function ($expense) {
+            return $expense->total_amount_given;
+        })->sum();
+        $total_spent = $expenseCollection->map(function ($expense) {
+            return $expense->total_amount_spent;
+        })->sum();
+        $total_balance = $expenseCollection->map(function ($expense) {
+            return $expense->total_balance;
+        })->sum();
+
+        return [$total_given, $total_spent, $total_balance];
     }
 
 
@@ -55,32 +73,23 @@ trait HelpTrait {
         return $expenditure_detail->amount_given - $expenditure_detail->amount_spent;
     }
 
-    private function calculateExpenditureBalanceByExpenditureItem($expenditure_details, $total_item_amount): int
+    private function calculateExpenditureBalanceByExpenditureItem($amount_given, $total_amount_spent, $total_item_amount): int
     {
-        $total_amount_given = $total_item_amount - $this->calculateTotalAmountGiven($expenditure_details);
-        $total_balance = $this->calculateTotalAmountGiven($expenditure_details) - $this->calculateTotalAmountSpent($expenditure_details);
-        return ($total_amount_given + $total_balance);
+        return (($total_item_amount - $amount_given) + ($amount_given - $total_amount_spent));
     }
 
     private function calculateTotalAmountGiven($expenditure_details): int
     {
-
-        $total = 0;
-        foreach ($expenditure_details as $expenditure_detail) {
-            $total += $expenditure_detail->amount_given;
-        }
-
-        return $total;
+        return collect($expenditure_details)->map(function ($detail) {
+            return $detail->amount_given;
+        })->sum();
     }
 
     private function calculateTotalAmountSpent($expenditure_details): int
     {
-        $total = 0;
-        foreach ($expenditure_details as $expenditure_detail) {
-            $total += $expenditure_detail->amount_spent;
-        }
-
-        return $total;
+        return collect($expenditure_details)->map(function ($detail) {
+            return $detail->amount_spent;
+        })->sum();
     }
 
     public static function getAppName()
@@ -117,6 +126,13 @@ trait HelpTrait {
         }
 
         return $total;
+    }
+
+    public function computeTotalOrganisationContribution($contributions){
+        $collected_contributions = $contributions->whereIn('approve', [PaymentStatus::PENDING, PaymentStatus::APPROVED])->get();
+        return collect($contributions->get())->map(function ($contribution) {
+            return $contribution->total_amount_deposited;
+        })->sum();
     }
 
     public function  saveUserRole($user, $role, $updated_by)
@@ -157,14 +173,27 @@ trait HelpTrait {
 
     public function  calculateOrganisationTotalSavings($savings): int
     {
-        $total = 0;
-        foreach ($savings as $saving) {
-            if($saving->approve == PaymentStatus::APPROVED){
-                $total += $saving->total_amount;
-            }
-        }
+        return collect($savings)->filter(function ($saving){
+           return ($saving->approve == PaymentStatus::APPROVED) || ($saving->approve == PaymentStatus::PENDING);
+       })->map(function ($saving){
+           return $saving->total_amount;
+        })->sum();
+    }
 
-        return $total;
+    public function computeTotalIncomeActivities($incomeActivities){
+        return collect($incomeActivities)->filter(function ($income){
+            return ($income->approve == PaymentStatus::APPROVED) || ($income->approve == PaymentStatus::PENDING);
+        })->map(function ($approve_income){
+            return $approve_income->amount;
+        })->sum();
+    }
+
+    public function computeTotalSponsorship($sponsorships){
+        return collect($sponsorships)->filter(function ($sponsorship){
+            return ($sponsorship->approve == PaymentStatus::APPROVED) || ($sponsorship->approve == PaymentStatus::PENDING);
+        })->map(function ($collected_sponsorship){
+            return $collected_sponsorship->amount_deposited;
+        })->sum();
     }
 
 

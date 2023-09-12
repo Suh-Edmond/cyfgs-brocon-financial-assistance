@@ -4,26 +4,28 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class ExpenditureItemCollection extends ResourceCollection
+class PaymentCategoryCollection extends ResourceCollection
 {
     private $total;
     private $lastPage;
     private $perPage;
     private $currentPage;
 
-    public function __construct($collection, $total,$lastPage, $perPage, $currentPage)
+    public function __construct($collection,$total,$lastPage, $perPage, $currentPage)
     {
-      parent::__construct($collection);
+        parent::__construct($collection);
         $this->total = $total;
         $this->lastPage = $lastPage;
         $this->perPage = $perPage;
         $this->currentPage = $currentPage;
     }
 
+
+
     public function toArray($request)
     {
         return [
-            'data'          => $this->collection,
+            'data'           =>$this->collection,
             'total'          => $this->total,
             'last_page'      => $this->lastPage,
             'per_page'       => $this->perPage,

@@ -30,7 +30,8 @@ class PaymentItemRequest extends FormRequest
             'description'   => 'max:4000',
             'type'          => 'required|string',
             'frequency'     => 'required|string',
-            'reference'     => ''
+            'reference'     => '',
+            'deadline'      => 'required|date'
         ];
     }
 }

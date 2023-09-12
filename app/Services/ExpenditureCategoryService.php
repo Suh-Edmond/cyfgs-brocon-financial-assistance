@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Http\Resources\ExpenditureCategoryCollection;
 use App\Interfaces\ExpenditureCategoryInterface;
 use App\Models\ExpenditureCategory;
 use App\Models\Organisation;
@@ -40,9 +41,16 @@ class ExpenditureCategoryService implements ExpenditureCategoryInterface {
         ]);
     }
 
-    public function getExpenditureCategories($organisation_id)
+    public function getExpenditureCategories($organisation_id, $request)
     {
-        return ExpenditureCategory::where('organisation_id', $organisation_id)->orderBy('name', 'ASC')->get();
+        $categories = ExpenditureCategory::where('organisation_id', $organisation_id);
+        if(!is_null($request->year)){
+            $categories = $categories->whereYear('created_at', $request->year);
+        }
+        $paginated_data =  $categories->orderBy($request->sort_by)->paginate($request->per_page);
+
+        return new ExpenditureCategoryCollection($paginated_data, $paginated_data->total(), $paginated_data->lastPage(),
+            (int)$paginated_data->perPage(), $paginated_data->currentPage());
     }
 
     public function getExpenditureCategory($id, $organisation_id)
@@ -74,6 +82,11 @@ class ExpenditureCategoryService implements ExpenditureCategoryInterface {
 
     public  function setDataForDownload($request)
     {
-        return is_null($request->year) ? $this->getExpenditureCategories($request->organisation_id): $this->filterExpenditureCategory($request);
+        return $this->getExpenditureCategories($request, $request);
+    }
+
+    public function getAllExpenditureCategories($organisation_id)
+    {
+        return ExpenditureCategory::where('organisation_id', $organisation_id)->orderBy('name')->get();
     }
 }

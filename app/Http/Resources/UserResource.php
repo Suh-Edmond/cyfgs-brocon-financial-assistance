@@ -50,6 +50,7 @@ class UserResource extends JsonResource
             'approve'        => !is_null($this->approve)? $this->approve : '',
             'year'           => !is_null(Session::find($this->session_id)) ? Session::find($this->session_id)->year : null,
             'session_id'     => $this->session_id,
+            'status'         => $this->status,
           ];
     }
 }

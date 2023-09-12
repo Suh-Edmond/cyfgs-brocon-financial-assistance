@@ -17,4 +17,6 @@ interface SessionInterface
     public function deleteSession($id);
 
     public function getSessionByLabel($label);
+
+    public function getPaginatedSessions($request);
 }

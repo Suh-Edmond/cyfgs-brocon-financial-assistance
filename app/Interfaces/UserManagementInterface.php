@@ -41,4 +41,5 @@ interface UserManagementInterface {
     public function resetPassword($request);
 
     public function getUserByPaymentItem($id, $request);
+
 }

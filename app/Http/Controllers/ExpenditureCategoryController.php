@@ -22,15 +22,17 @@ class ExpenditureCategoryController extends Controller
         $this->expenditure_category_service = $expenditure_category_service;
     }
 
-
-
-    public function getExpenditureCategories($organisation_id)
+    public function getExpenditureCategories($organisation_id, Request $request)
     {
-        $expenditure_categories = $this->expenditure_category_service->getExpenditureCategories($organisation_id);
-
-        return $this->sendResponse(ExpenditureCategoryResource::collection($expenditure_categories), 200);
+        $expenditure_categories = $this->expenditure_category_service->getExpenditureCategories($organisation_id, $request);
+        return $this->sendResponse(($expenditure_categories), 200);
     }
 
+    public function getAllExpenditureCategories(Request $request)
+    {
+        $categories = $this->expenditure_category_service->getAllExpenditureCategories($request->organisation_id);
+        return $this->sendResponse(ExpenditureCategoryResource::collection($categories), "success");
+    }
 
     public function createExpenditureCategory(ExpenditureCategoryRequest $request, $organisation_id)
     {
@@ -76,7 +78,7 @@ class ExpenditureCategoryController extends Controller
     public function downloadExpenditureCategory(Request $request)
     {
         $organisation      = $request->user()->organisation;
-        $expenditure_categories = $this->expenditure_category_service->getExpenditureCategories($request->organisation_id);
+        $expenditure_categories = $this->expenditure_category_service->getExpenditureCategories($request->organisation_id, $request);
         $admins            = $this->getOrganisationAdministrators();
         $president         = $admins[0];
         $treasurer         = $admins[2];

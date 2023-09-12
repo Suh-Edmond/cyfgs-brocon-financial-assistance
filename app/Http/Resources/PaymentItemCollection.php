@@ -7,11 +7,17 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 class PaymentItemCollection extends ResourceCollection
 {
     private $total;
+    private $lastPage;
+    private $perPage;
+    private $currentPage;
 
-    public function __construct($collection, $total)
+    public function __construct($collection, $total, $currentPage, $perPage, $lastPage)
     {
       parent::__construct($collection);
-      $this->total = $total;
+        $this->total = $total;
+        $this->lastPage = $lastPage;
+        $this->perPage = $perPage;
+        $this->currentPage = $currentPage;
     }
 
 
@@ -20,7 +26,10 @@ class PaymentItemCollection extends ResourceCollection
     {
         return [
             "data"  =>$this->collection,
-            'total_amount' => $this->total
+            'total'          => $this->total,
+            'last_page'      => $this->lastPage,
+            'per_page'       => $this->perPage,
+            'current_page'   => $this->currentPage
         ];
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use App\Traits\HelpTrait;
 use App\Traits\ResponseTrait;
+use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class PaymentItemResource extends JsonResource
@@ -27,6 +28,8 @@ class PaymentItemResource extends JsonResource
             'updated_at'            => $this->updated_at,
             'session'               => $this->session,
             'references'            => collect($this->getReferenceResource($this->reference))->sortBy('name')->toArray(),
+            'deadline'              => $this->deadline,
+            'deadline_state'        => Carbon::now()->lessThan($this->deadline) ? "ACTIVE" : "EXPIRED"
         ];
     }
 

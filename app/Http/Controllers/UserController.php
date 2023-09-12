@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Constants\PaymentStatus;
 use App\Constants\RegistrationStatus;
 use App\Constants\Roles;
 use App\Http\Requests\CheckUserRequest;
@@ -140,7 +141,7 @@ class UserController extends Controller
         $fin_sec           = $admins[1];
 
         $data = [
-            'title'                      => $this->setTitle($request),
+            'title'                  => $this->setTitle($request),
             'date'                   => date('m/d/Y'),
             'organisation'           => $organisation,
             'organisation_telephone' => $this->setOrganisationTelephone($organisation->telephone),
@@ -161,7 +162,7 @@ class UserController extends Controller
     {
         $users = $this->user_management_service->filterUsers($request);
 
-        return $this->sendResponse(UserResource::collection($users), 'success');
+        return $this->sendResponse(($users), 'success');
     }
 
     public function updateProfile(UpdateProfileRequest $request){
@@ -198,11 +199,20 @@ class UserController extends Controller
     }
     private function setTitle(Request $request): string
     {
+        $title = "";
         if(isset($request->has_register)){
-            if($request->has_register == RegistrationStatus::REGISTERED){
-                $title = 'Registered Organisation Members';
-            }else {
-                $title = 'Non Registered Organisation Members';
+            switch ($request->has_register){
+                case RegistrationStatus::REGISTERED:
+                    $title = 'Registered Organisation Members';
+                break;
+                case RegistrationStatus::NOT_REGISTERED:
+                    $title = 'Non Registered Organisation Members';
+                break;
+                case PaymentStatus::PENDING:
+                    $title = "Pending Registration";
+                break;
+                case PaymentStatus::DECLINED:
+                    $title = "Declined Registrations";
             }
         }else {
             $title = "Organisation Members";

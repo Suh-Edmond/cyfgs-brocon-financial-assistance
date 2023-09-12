@@ -6,6 +6,7 @@ namespace App\Services;
 
 use App\Constants\SessionStatus;
 use App\Http\Resources\RegisterFeeResource;
+use App\Http\Resources\RegistrationFeeResourceCollection;
 use App\Interfaces\RegistrationFeeInterface;
 use App\Models\Registration;
 use Illuminate\Support\Facades\DB;
@@ -43,10 +44,10 @@ class RegistrationFeeService implements RegistrationFeeInterface
         ]);
     }
 
-    public function getAllRegistrationFee()
+    public function getAllRegistrationFee($request)
     {
         $reg_fees = DB::table('registrations')->orderBy('created_at', 'ASC')->get();
-        return RegisterFeeResource::collection($reg_fees->toArray());
+        return RegisterFeeResource::collection($reg_fees);
     }
 
     public function getCurrentRegistrationFee()
