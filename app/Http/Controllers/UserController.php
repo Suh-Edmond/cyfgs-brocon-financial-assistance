@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 use App\Constants\PaymentStatus;
 use App\Constants\RegistrationStatus;
 use App\Constants\Roles;
+use App\Exceptions\EmailException;
 use App\Http\Requests\CheckUserRequest;
 use App\Http\Requests\CreateAccountRequest;
 use App\Http\Requests\CreateUserRequest;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\PasswordResetRequest;
+use App\Http\Requests\SendInvitationRequest;
 use App\Http\Requests\SetPasswordRequest;
 use App\Http\Requests\UpdatePasswordRequest;
 use App\Http\Requests\UpdateProfileRequest;
@@ -196,6 +198,12 @@ class UserController extends Controller
         $data = $this->user_management_service->getUserByPaymentItem($id, $request);
 
         return $this->sendResponse($data, 'success');
+    }
+
+    public function sendInvitation(SendInvitationRequest $request){
+        $this->user_management_service->sendInvitation($request);
+
+        return $this->sendResponse("Invitation sent successfully", 'success');
     }
     private function setTitle(Request $request): string
     {
