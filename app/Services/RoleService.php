@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Exceptions\BusinessValidationException;
 use App\Http\Resources\RoleResource;
 use App\Models\User;
 use App\Interfaces\RoleInterface;
@@ -22,6 +23,8 @@ class RoleService implements RoleInterface {
         $role_exist = $this->checkIfAUserAlreadyHasTheRole($user, $role);
         if($role_exist){
             $this->saveUserRole($user, $assignRole, $updated_by);
+        }else {
+            throw new BusinessValidationException("Only one member of your organisation can have this role", 403);
         }
         return $role_exist;
     }

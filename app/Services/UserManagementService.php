@@ -7,6 +7,7 @@ use App\Constants\PaymentStatus;
 use App\Constants\RegistrationStatus;
 use App\Constants\Roles;
 use App\Constants\SessionStatus;
+use App\Exceptions\BusinessValidationException;
 use App\Exceptions\EmailException;
 use App\Exceptions\UnAuthorizedException;
 use App\Http\Resources\PasswordResetResponse;
@@ -15,8 +16,10 @@ use App\Http\Resources\UserCollection;
 use App\Http\Resources\UserResource;
 use App\Imports\UsersImport;
 use App\Interfaces\UserManagementInterface;
+use App\Mail\MemberInvitationMail;
 use App\Mail\PasswordResetMail;
 use App\Models\CustomRole;
+use App\Models\MemberInvitation;
 use App\Models\PasswordReset;
 use App\Models\PaymentItem;
 use App\Models\User;
@@ -57,6 +60,25 @@ class UserManagementService implements UserManagementInterface
 
         $role = CustomRole::findByName(Roles::MEMBER, 'api');
         $this->saveUserRole($created, $role,  $request->user()->name);
+    }
+
+    public function sendInvitation($request)
+    {
+        $request_user = User::find(auth()->user()->id);
+        $redirectLink = env('MEMBER_INVITATION_REDIRECT_LINK');
+        $organisation_logo = env('FILE_DOWNLOAD_URL_PATH').$request_user->organisation->logo;
+        try {
+            $this->role_service->addUserRole($request->user_id, $request->role, $request_user->name);
+            Mail::to($request->user_email)->send(new MemberInvitationMail($request->user_name, $request->user_email, $redirectLink,
+                $organisation_logo, $request_user->name, $request_user->organisation->name));
+            MemberInvitation::create([
+                'user_id' => $request->user_id,
+                'expire_at' => Carbon::now()->addDays(7)
+            ]);
+        }catch (Exception $exception){
+            $this->role_service->removeRole($request->user_id, $request->role);
+            throw new BusinessValidationException("Could not send member's invitation email", 404);
+        }
     }
 
     public function getUsers($organisation_id)
@@ -202,7 +224,17 @@ class UserManagementService implements UserManagementInterface
 
     public function checkUserExist($request)
     {
-        return User::where('telephone', str_replace(" ", "", $request->credential))->orWhere('email', $request->credential)->firstOrFail();
+        $user = User::where('telephone', str_replace(" ", "", $request->credential))->orWhere('email', $request->credential)->firstOrFail();
+        $member_invitation = MemberInvitation::where('user_id', $user->id)->first();
+        if(isset($member_invitation)){
+            if(Carbon::now()->greaterThan($member_invitation->expire_at)){
+                throw new UnAuthorizedException("Member's invitation link has expired. Please request for a nwe one", 403);
+            }
+        }else {
+            throw new UnAuthorizedException("Invalid Invitation Link", 403);
+        }
+
+        return $user;
     }
 
     public function importUsers($organisation_id, $request)
