@@ -157,12 +157,12 @@ class UserManagementService implements UserManagementInterface
             'address'       => $request->address,
             'occupation'    => $request->occupation,
             'gender'        => $request->gender,
+            'status'        => $request->status,
         ]);
         $updated = $user->refresh();
-        $token = $this->generateToken($updated);
         $currentSession = $this->session_service->getCurrentSession();
 
-        return new TokenResource(new UserResource($updated,$token, true), $currentSession);
+        return new TokenResource(new UserResource($updated,null, true), $currentSession);
     }
 
     public function deleteUser($user_id)
