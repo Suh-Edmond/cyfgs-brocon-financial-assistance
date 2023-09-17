@@ -19,8 +19,13 @@ class MemberContributedItemResource extends JsonResource
     private $frequency;
     private $month_name;
     private $quarterly_name;
+    private $created_by;
+    private $code;
+    private $comment;
+    private $is_compulsory;
     public function __construct($id, $payment_item_id, $payment_item_amount, $name, $amount_deposited,
-                                $balance, $status, $approve, $created_at, $year, $frequency, $month_name, $quarterly_name)
+                                $balance, $status, $approve, $created_at, $year, $frequency, $month_name, $quarterly_name,
+                                $created_by, $code, $comment, $is_compulsory)
     {
         parent::__construct(null);
         $this->id = $id;
@@ -36,6 +41,10 @@ class MemberContributedItemResource extends JsonResource
         $this->frequency = $frequency;
         $this->month_name = $month_name;
         $this->quarterly_name = $quarterly_name;
+        $this->created_by = $created_by;
+        $this->code = $code;
+        $this->comment = $comment;
+        $this->is_compulsory = $is_compulsory;
     }
 
     public function toArray($request)
@@ -53,7 +62,11 @@ class MemberContributedItemResource extends JsonResource
             'created_at'       => $this->created_at,
             'frequency'        => $this->frequency,
             'month_name'       => $this->month_name,
-            'quarterly_name'   => $this->quarterly_name
+            'quarterly_name'   => $this->quarterly_name,
+            'created_by'       => $this->created_by,
+            'code'             => $this->code,
+            'comment'          => $this->comment,
+            'is_compulsory'    => $this->is_compulsory
         ];
     }
 }

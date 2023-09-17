@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ApproveContributionRequest;
+use App\Http\Requests\BulkPaymentRequest;
 use App\Http\Requests\CreateUserContributionRequest;
 use App\Http\Requests\UpdateUserContributionRequest;
 use App\Http\Resources\UserContributionResource;
@@ -136,27 +137,16 @@ class UserContributionController extends Controller
     }
 
 
-    public function bulkPayment(Request $request){
-        $this->validate($request, [
-            'row.*.user_id'         => 'required|string',
-            'row.*.payment_item_id' => 'required|string',
-            'row.*.comment'         => 'string|required',
-            'row.*.year'            => 'required|string',
-            'row.*.amount_deposited'=> 'required|numeric',
-            'row.*.code'            => 'required|string',
-            'row.*.is_compulsory'   => 'required|string',
-            'row.*.month_name'      => '',
-            'row.*.quarterly_name'  => '',
-            'row.*.registration_id' => 'required|string'
-        ]);
-        $this->userContributionService->bulkPayment($request);
+    public function bulkPayment(BulkPaymentRequest $request){
+         $this->userContributionService->bulkPayment(json_decode(json_encode($request->all())), $request->user()->name);
+
         return $this->sendResponse("success", 200);
     }
 
 
     public function getMemberOweContributions(Request $request)
     {
-        $data = $this->userContributionService->getMemberDebt($request->user_id, $request->session_id);
+        $data = $this->userContributionService->getMemberDebt($request);
         return $this->sendResponse($data, 200);
     }
 

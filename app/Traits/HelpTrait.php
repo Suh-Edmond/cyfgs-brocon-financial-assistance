@@ -312,6 +312,32 @@ trait HelpTrait {
         return $quarter;
     }
 
+    public function getQuaters(){
+        return [
+            "January - March",
+            "April - June",
+            "July - September",
+            "October - December"
+        ];
+    }
+
+    public function getMonths(){
+        return [
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December",
+        ];
+    }
+
     public function checkMemberExistAsReference($user_id, $reference)
     {
         if (str_contains($reference, "/")){
