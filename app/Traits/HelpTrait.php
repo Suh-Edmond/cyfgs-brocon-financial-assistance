@@ -15,12 +15,9 @@ trait HelpTrait {
     public static function generateCode($size): string
     {
         $code  = "";
-        $current_year = date("Y");
         for($i = 0; $i < $size; $i++){
             $code = $code.rand(0, 9);
         }
-        $code = $code.$current_year;
-
         return $code;
     }
 
@@ -306,24 +303,31 @@ trait HelpTrait {
     {
         $quarter = null;
         if($item->frequency == PaymentItemFrequency::QUARTERLY){
-            $a = Carbon::parse(Carbon::now());
+            $a = Carbon::parse($item->created_at);
             $quarter = $this->convertNumberToQuarterName($a->quarter);
         }
         return $quarter;
     }
 
-    public function getQuaters(){
-        return [
-            "January - March",
+    public function getItemMonth($item)
+    {
+        $itemMonth= "";
+        if($item->frequency == PaymentItemFrequency::MONTHLY){
+            $itemMonth = Carbon::parse($item->created_at);
+        }
+        return $itemMonth;
+    }
+
+    public function getQuarters(){
+        return array("January - March",
             "April - June",
             "July - September",
-            "October - December"
-        ];
+            "October - December");
     }
 
     public function getMonths(){
-        return [
-            "January",
+        return
+            array("January",
             "February",
             "March",
             "April",
@@ -334,8 +338,7 @@ trait HelpTrait {
             "September",
             "October",
             "November",
-            "December",
-        ];
+            "December");
     }
 
     public function checkMemberExistAsReference($user_id, $reference)

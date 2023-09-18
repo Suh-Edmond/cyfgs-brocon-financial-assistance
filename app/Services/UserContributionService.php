@@ -98,8 +98,8 @@ class UserContributionService implements UserContributionInterface {
         $contributions =  $this->getContributionByUserAndPaymentItem($payment_item_id, $user_id)
                                     ->select(  'user_contributions.*')
                                     ->orderBy('user_contributions.created_at', 'DESC');
-        $total_contribution = collect($contributions)->sum('amount_deposited');
-        $total_balance = ($payment_item->amount - $total_contribution);
+        $total_contribution = collect($contributions->get())->sum('amount_deposited');
+        $total_balance = ($this->getTotalPaymentItemAmountByQuarters($payment_item) - $total_contribution);
         $paginated_contribution = $contributions->paginate($request->per_page);
 
         return new UserContributionCollection($paginated_contribution, $total_contribution, $total_balance,  $paginated_contribution->total(), $paginated_contribution->lastPage(),
@@ -203,7 +203,7 @@ class UserContributionService implements UserContributionInterface {
     {
         $user = User::findOrFail($request->user_id);
         $payload = collect($request);
-        for ($counter = 0; $counter <= $payload->count() - 2; $counter++){
+        for ($counter = 0; $counter < $payload->count() - 2; $counter++){
            $json_data = $payload[$counter];
             if($json_data->code == 'REGISTRATION'){
                 $this->saveRegistration($json_data, $user, $auth_user);
@@ -394,7 +394,7 @@ class UserContributionService implements UserContributionInterface {
                 'scan_picture'      => null,
                 'updated_by'        => $auth_user,
                 'balance'           => $balance_contribution,
-                'session_id'        => $current_session->id,
+                'session_id'        => $current_session,
                 'quarterly_name'    => !is_null($request->quarterly_name) ? ($request->quarterly_name) :"",
                 'month_name'        => $request->month_name
             ]);
@@ -413,7 +413,7 @@ class UserContributionService implements UserContributionInterface {
 
     private function validateAmountDeposited($payment_item_amount, $amount_deposited) {
         if($amount_deposited > $payment_item_amount) {
-            throw new BusinessValidationException("Amount Deposited must not be more than the amount for the payment item");
+            throw new BusinessValidationException("Amount Deposited must not be more than the amount for the payment item", 403);
         }
         return true;
     }
@@ -482,7 +482,7 @@ class UserContributionService implements UserContributionInterface {
                         break;
                 }
             }
-            if ($item->type == PaymentItemType::GROUPED_MEMBERS || PaymentItemType::A_MEMBER){
+            if ($item->type == PaymentItemType::GROUPED_MEMBERS || $item->type == PaymentItemType::A_MEMBER){
                 if($this->checkMemberExistAsReference($user_id, $item->reference)){
                     switch ($item->frequency){
                         case PaymentItemFrequency::YEARLY:
@@ -710,7 +710,8 @@ class UserContributionService implements UserContributionInterface {
     private function verifyQuarterlyPayment($item, $user_id, $current_session)
     {
         $debts = [];
-        foreach ($this->getQuaters() as $quarter){
+        $quarters = $this->getPaymentItemQuartersBySession($item);
+        foreach ($quarters as $quarter){
             if (count($this->verifyCompleteItemPaymentByQuarter($item->id, $user_id, $quarter)) == 0) {
                  $to_be_paid = new MemberPaymentItemResource($item->id, $item->name, $item->amount,$item->amount, $item->compulsory,
                     $item->type, $item->frequency,"CONTRIBUTION",$current_session, null, $quarter );
@@ -726,10 +727,18 @@ class UserContributionService implements UserContributionInterface {
         return $debts;
     }
 
+    private function getPaymentItemQuartersBySession($item)
+    {
+        $quarters = $this->getQuarters();
+        $current_quarter = $this->convertQuarterNameToNumber($this->getDateQuarter($item));
+        return array_splice($quarters, ($current_quarter - 1), count($quarters));
+    }
+
     private function verifyMonthlyPayment($item, $user_id, $current_session)
     {
         $debts = [];
-        foreach ($this->getMonths() as $month){
+        $month_list = $this->getPaymentItemMonthsBySession($item);
+        foreach ($month_list as $month){
             if (count($this->verifyCompleteItemPaymentByMonth($item->id, $user_id, $month)) == 0) {
                  $to_be_paid = new MemberPaymentItemResource($item->id, $item->name, $item->amount,$item->amount, $item->compulsory,
                     $item->type, $item->frequency,"CONTRIBUTION",$current_session, $month, null );
@@ -745,6 +754,14 @@ class UserContributionService implements UserContributionInterface {
 
         return $debts;
     }
+
+    private function getPaymentItemMonthsBySession($item)
+    {
+        $all_months = $this->getMonths();
+        $current_month_index = $this->getItemMonth($item)->month;
+        return array_splice($all_months, $current_month_index - 1, count($all_months));
+    }
+
 
     private function verifyOneTimePayment($item, $user_id, $current_session)
     {
@@ -854,6 +871,22 @@ class UserContributionService implements UserContributionInterface {
 
         return count($payment_items) > 0 ? round(collect($contributions_percentages)->sum('percentage') / count($payment_items), 2): 0;
 
+    }
+
+    private function getTotalPaymentItemAmountByQuarters($item)
+    {
+        if($item->frequency == PaymentItemFrequency::QUARTERLY){
+            $quarters = $this->getPaymentItemQuartersBySession($item);
+            $total_amount = count($quarters) * $item->amount;
+        }
+        else if($item->frequency == PaymentItemFrequency::MONTHLY){
+            $months = $this->getPaymentItemMonthsBySession($item);
+            $total_amount = count($months) * $item->amount;
+        }else {
+            $total_amount = $item->amount;
+        }
+
+        return $total_amount;
     }
 }
 
