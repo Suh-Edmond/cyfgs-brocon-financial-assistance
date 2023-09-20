@@ -406,18 +406,25 @@ trait HelpTrait {
 
     public static function getStartQuarter($year, $quarter)
     {
-        if($quarter == 1){
-            $start_date = Carbon::create($year, 2)->startOfQuarter();
-            $end_date = Carbon::create($year, 2)->endOfQuarter();
-        }elseif ($quarter == 2){
-            $start_date = Carbon::create($year, 5)->startOfQuarter();
-            $end_date = Carbon::create($year, 5)->endOfQuarter();
-        }elseif ($quarter = 4) {
-            $start_date = Carbon::create($year, 8)->startOfQuarter();
-            $end_date = Carbon::create($year, 8)->endOfQuarter();
-        }else {
-            $start_date = Carbon::create($year, 11)->startOfQuarter();
-            $end_date = Carbon::create($year, 11)->endOfQuarter();
+        $start_date = "";
+        $end_date = "";
+        switch ($quarter){
+            case 1:
+                $start_date = Carbon::create($year, 2)->startOfQuarter();
+                $end_date = Carbon::create($year, 2)->endOfQuarter();
+            break;
+            case 2:
+                $start_date = Carbon::create($year, 6)->startOfQuarter();
+                $end_date = Carbon::create($year, 6)->endOfQuarter();
+            break;
+            case 3:
+                $start_date = Carbon::create($year, 9)->startOfQuarter();
+                $end_date = Carbon::create($year, 9)->endOfQuarter();
+            break;
+            case 4:
+                $start_date = Carbon::create($year, 12)->startOfQuarter();
+                $end_date = Carbon::create($year, 12)->endOfQuarter();
+            break;
         }
 
         return [$start_date->toDateTimeString(),  $end_date->toDateTimeString()];

@@ -69,7 +69,6 @@ class GenerateReportController extends Controller
 
     public function generateQuarterlyReport(Request $request)//query param: ?quarter=example_quarter
     {
-
         $data = $this->report_generation_service->generateQuarterlyReport($request);
 
         return $this->sendResponse($data, 200);
