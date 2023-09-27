@@ -114,25 +114,30 @@ class UserContributionController extends Controller
 
         $admins            = $this->getOrganisationAdministrators();
         $president         = $admins[0];
-        $treasurer         = $admins[2];
-        $fin_sec           = $admins[1];
-        $total             = $this->computeTotalContribution($contributions);
+        $treasurer         = count($admins) == 3 ? $admins[2]: null;
+        $fin_sec           = count($admins) == 3 ? $admins[1] : null;
+        $total             = $this->computeTotalContribution($contributions->data);
 
         $data = [
             'title'             => "Member's Contribution for ".$request->payment_item_name,
             'date'              => date('m/d/Y'),
             'organisation'      => $organisation,
-            'contributions'     => $contributions,
+            'contributions'     => $contributions->data,
             'organisation_telephone'   => $this->setOrganisationTelephone($organisation->telephone),
             'president'         => $president,
             'treasurer'         => $treasurer,
             'fin_secretary'     => $fin_sec,
             'total'             => $total,
-            'balance'           => $contributions[0]->payment_item_amount - $total,
+//            'balance'           => $contributions->data[0]->payment_item_amount - $total,
             'organisation_logo' => env('FILE_DOWNLOAD_URL_PATH').$organisation->logo
         ];
 
         $pdf = PDF::loadView('Contribution.UsersContribution', $data);
+        $pdf->output();
+        $domPdf = $pdf->getDomPDF();
+        $canvas = $domPdf->getCanvas();
+        $canvas->page_text(10, $canvas->get_height() - 20, "Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, [0, 0, 0]);
+
         return $pdf->download('UsersContributions.pdf');
     }
 

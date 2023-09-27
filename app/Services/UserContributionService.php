@@ -138,9 +138,15 @@ class UserContributionService implements UserContributionInterface {
         $total_contribution = $this->computeTotalOrganisationContribution($contributions);
         $total_balance = ($payment_item->amount - $total_contribution);
 
-        $paginated_response = $contributions->paginate($request->per_page);
-        return  new UserContributionCollection($paginated_response, $total_contribution, $total_balance,  $paginated_response->total(),
-            $paginated_response->lastPage(), (int)$paginated_response->perPage(), $paginated_response->currentPage() );
+        $contributions = !is_null($request->per_page) ? $contributions->paginate($request->per_page): $contributions->get();
+
+        $total = !is_null($request->per_page) ? $contributions->total() : count($contributions);
+        $last_page = !is_null($request->per_page) ? $contributions->lastPage(): 0;
+        $per_page = !is_null($request->per_page) ? (int)$contributions->perPage() : 0;
+        $current_page = !is_null($request->per_page) ? $contributions->currentPage() : 0;
+
+        return new UserContributionCollection($contributions, $total_contribution, $total_balance, $total, $last_page,
+            $per_page, $current_page);
     }
 
     public function getContribution($id)
