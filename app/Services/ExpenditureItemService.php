@@ -5,8 +5,6 @@ use App\Constants\PaymentStatus;
 use App\Exceptions\BusinessValidationException;
 use App\Http\Resources\ExpenditureItemCollection;
 use App\Http\Resources\ExpenditureItemResource;
-use App\Http\Resources\PaymentCategoryCollection;
-use App\Http\Resources\QuarterlyExpenditureResource;
 use App\Interfaces\ExpenditureItemInterface;
 use App\Models\ExpenditureCategory;
 use App\Models\ExpenditureItem;

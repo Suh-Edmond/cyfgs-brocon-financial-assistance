@@ -90,20 +90,18 @@ class IncomeActivityController extends Controller
          $organisation      = $request->user()->organisation;
 
         $income_activities = $this->prepareData($request);
-
-        $total             = $this->income_activity_service->calculateTotal($income_activities);
+        $total             = $this->income_activity_service->calculateTotal($income_activities->data);
 
         $admins            = $this->getOrganisationAdministrators();
         $president         = $admins[0];
-        $treasurer         = $admins[2];
-        $fin_sec           = $admins[1];
-
+        $treasurer         = count($admins) == 3 ? $admins[2]: null;
+        $fin_sec           = count($admins) == 3 ? $admins[1] : null;
 
         $data = [
-            'title'               => 'Transaction Report For Income Activity',
+            'title'               => !is_null($request->payment_item_label)?'Income Activity Payment for '. $request->payment_item_name:'Income Activities for Year '.$request->year,
             'date'                => date('m/d/Y'),
             'organisation'        => $organisation,
-            'income_activities'   => $income_activities,
+            'income_activities'   => $income_activities->data,
             'total'               => $total,
             'president'           => $president,
             'treasurer'           => $treasurer,
@@ -113,6 +111,10 @@ class IncomeActivityController extends Controller
         ];
 
         $pdf = PDF::loadView('IncomeActivities.IncomeActivities', $data);
+        $pdf->output();
+        $domPdf = $pdf->getDomPDF();
+        $canvas = $domPdf->getCanvas();
+        $canvas->page_text(10, $canvas->get_height() - 20, "Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, [0, 0, 0]);
 
         return $pdf->download('IncomeActivities.pdf');
     }
