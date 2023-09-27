@@ -96,6 +96,7 @@ class PaymentCategoryController extends Controller
         $domPdf = $pdf->getDomPDF();
         $canvas = $domPdf->getCanvas();
         $canvas->page_text(10, $canvas->get_height() - 20, "Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, [0, 0, 0]);
+
         return $pdf->download('Payment_Categories.pdf');
     }
 }

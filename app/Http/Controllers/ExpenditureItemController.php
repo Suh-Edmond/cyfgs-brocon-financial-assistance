@@ -108,26 +108,29 @@ class ExpenditureItemController extends Controller
     {
         $organisation      = $request->user()->organisation;
         $expenditure_items = $this->prepareDataForDownload($request);
-
         $admins            = $this->getOrganisationAdministrators();
         $president         = $admins[0];
-        $treasurer         = $admins[2];
-        $fin_sec           = $admins[1];
-
+        $treasurer         = count($admins) == 3 ? $admins[2]: null;
+        $fin_sec           = count($admins) == 3 ? $admins[1] : null;
         $data = [
-            'title'               => 'Expenditure Activities',
+            'title'               => 'Expenditure Items under '.$request->category_name,
             'date'                => date('m/d/Y'),
             'organisation'        => $organisation,
-            'expenditure_items'   => $expenditure_items,
+            'expenditure_items'   => $expenditure_items->data,
             'president'           => $president,
             'organisation_telephone'   => $this->setOrganisationTelephone($organisation->telephone),
             'treasurer'           => $treasurer,
             'fin_secretary'       => $fin_sec,
-            'total'               => $this->expenditure_item_service->calculateTotal($expenditure_items),
+            'total'               => $this->computeTotalAmountByPaymentCategory($expenditure_items->data),
             'organisation_logo'   => env('FILE_DOWNLOAD_URL_PATH').$organisation->logo
         ];
 
         $pdf = PDF::loadView('ExpenditureItem.ExpenditureItems', $data);
+        $pdf->output();
+        $domPdf = $pdf->getDomPDF();
+        $canvas = $domPdf->getCanvas();
+        $canvas->page_text(10, $canvas->get_height() - 20, "Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, [0, 0, 0]);
+
 
         return $pdf->download('Expenditure_items.pdf');
     }

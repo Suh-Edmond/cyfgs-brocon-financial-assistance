@@ -18,11 +18,11 @@
             <label style="font-size: small;">Printed date: {{ $date }}</label>
         </div>
     </div>
-    <div>
-        <h3 style="font-weight: bold;font-size: medium; text-align:center;text-transform: uppercase;">{{ $title }}
+    <div style="margin-bottom: 2rem;">
+        <h3 style="font-weight: bold;font-size: medium; text-align:center;text-transform: capitalize;border-bottom: 1px solid black;">{{ $title }}
         </h3>
     </div>
-    <div>
+    <div class="page-break">
         <table style="border: 1px solid black; border-collapse: collapse;width: 100%">
             <tr style="border: 1px solid black; font-size: smaller;">
                 <th style="border: 1px solid black;">S/N</th>
@@ -40,12 +40,10 @@
                     <td style="border: 1px solid black; padding: 11px;">{{ $item->venue }}</td>
                 </tr>
             @endforeach
-            <tr style="padding: 12px; border: 1px solid black; font-size: smaller">
-                <td style="padding: 15px; font-weight: 200" colspan="2"> Total Amount: {{ number_format($total) }} FCFA
-                </td>
-                <td style="padding: 15px;font-weight: 200"> </td>
-                <td style="padding: 15px;font-weight: 200"> </td>
-                <td style="padding: 15px;font-weight: 200"> </td>
+            <tr style="border: 1px solid black; font-size: smaller">
+                <td style="border: 1px solid black; padding: 11px;font-weight: bold"  colspan="1"> Total Amount:</td>
+                <td style="border: 1px solid black; padding: 11px;font-weight: bold" colspan="4">{{ number_format($total) }} XAF</td>
+
             </tr>
         </table>
     </div>

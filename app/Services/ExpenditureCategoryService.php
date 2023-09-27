@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Http\Resources\ExpenditureCategoryCollection;
-use App\Http\Resources\PaymentCategoryCollection;
 use App\Interfaces\ExpenditureCategoryInterface;
 use App\Models\ExpenditureCategory;
 use App\Models\Organisation;
@@ -55,7 +54,7 @@ class ExpenditureCategoryService implements ExpenditureCategoryInterface {
         $per_page = !is_null($request->per_page) ? (int)$expenditure_categories->perPage() : 0;
         $current_page = !is_null($request->per_page) ? $expenditure_categories->currentPage() : 0;
 
-        return new PaymentCategoryCollection($expenditure_categories, $total, $last_page,
+        return new ExpenditureCategoryCollection($expenditure_categories, $total, $last_page,
             $per_page, $current_page);
 
     }
