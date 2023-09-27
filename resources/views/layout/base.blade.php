@@ -214,6 +214,12 @@
         min-width: 30%;
         margin-left: 270px;
     }
+
+    .page-break {
+        page-break-inside: auto;
+        page-break-after: always;
+
+    }
 </style>
 <body>
     @yield('section')

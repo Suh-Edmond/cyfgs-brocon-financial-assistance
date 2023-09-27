@@ -23,7 +23,7 @@
         <h3 style="font-weight: bold;font-size: medium; text-align:center;text-transform: capitalize;">{{ $title }}
         </h3>
     </div>
-    <div>
+    <div class="page-break">
         <table style="border: 1px solid black; border-collapse: collapse;width: 100%">
             <tr style="padding: 13px;border: 1px solid black; font-size: smaller;">
                 <th style="padding: 1px; border: 1px solid black;">S/N</th>

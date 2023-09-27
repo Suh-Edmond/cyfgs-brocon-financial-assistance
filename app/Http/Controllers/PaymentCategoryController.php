@@ -76,8 +76,8 @@ class PaymentCategoryController extends Controller
         $organisation      = $request->user()->organisation;
         $admins            = $this->getOrganisationAdministrators();
         $president         = $admins[0];
-        $treasurer         = $admins[2];
-        $fin_sec           = $admins[1];
+        $treasurer         = count($admins) == 3 ? $admins[2]: null;
+        $fin_sec           = count($admins) == 3 ? $admins[1] : null;
 
         $data = [
             'title'             =>'Payment Categories',
@@ -92,7 +92,10 @@ class PaymentCategoryController extends Controller
         ];
 
         $pdf = PDF::loadView('PaymentCategory.PaymentCategories', $data);
-
+        $pdf->output();
+        $domPdf = $pdf->getDomPDF();
+        $canvas = $domPdf->getCanvas();
+        $canvas->page_text(10, $canvas->get_height() - 20, "Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, [0, 0, 0]);
         return $pdf->download('Payment_Categories.pdf');
     }
 }

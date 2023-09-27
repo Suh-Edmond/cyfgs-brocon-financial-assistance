@@ -3,6 +3,7 @@ namespace App\Services;
 
 use App\Constants\PaymentItemFrequency;
 use App\Constants\PaymentItemType;
+use App\Http\Resources\PaymentCategoryCollection;
 use App\Http\Resources\PaymentItemCollection;
 use App\Interfaces\PaymentItemInterface;
 use App\Models\PaymentCategory;
@@ -96,9 +97,15 @@ class PaymentItemService implements PaymentItemInterface {
         if (isset($request->state) && $request->state == "expired"){
             $payment_items = $payment_items->whereDate('deadline', '<=', Carbon::now()->toDateString());
         }
-        $paginated_data = $payment_items->orderBy('payment_items.name', 'DESC')->paginate($request->per_page);
 
-        return new PaymentItemCollection($paginated_data, $paginated_data->total(), $paginated_data->currentPage(), $paginated_data->perPage(), $paginated_data->lastPage());
+        $payment_items = !is_null($request->per_page) ? $payment_items->orderBy('payment_items.name')->paginate($request->per_page): $payment_items->orderBy('payment_items.name')->get();
+        $total = !is_null($request->per_page) ? $payment_items->total() : count($payment_items);
+        $last_page = !is_null($request->per_page) ? $payment_items->lastPage(): 0;
+        $per_page = !is_null($request->per_page) ? (int)$payment_items->perPage() : 0;
+        $current_page = !is_null($request->per_page) ? $payment_items->currentPage() : 0;
+
+        return new PaymentCategoryCollection($payment_items, $total, $last_page,
+            $per_page, $current_page);
     }
 
     public function getPaymentItems() {

@@ -87,12 +87,12 @@ class PaymentItemController extends Controller
         $items             = $this->payment_item_service->filterPaymentItems($request);
         $admins            = $this->getOrganisationAdministrators();
         $president         = $admins[0];
-        $treasurer         = $admins[2];
-        $fin_sec           = $admins[1];
+        $treasurer         = count($admins) == 3 ? $admins[2]: null;
+        $fin_sec           = count($admins) == 3 ? $admins[1] : null;
 
 
         $data = [
-            'title'               => 'Payment Items for '.$items[0]->paymentCategory->name,
+            'title'               => 'Payment Items for '.$request->category_name,
             'date'                => date('m/d/Y'),
             'organisation'        => $organisation,
             'payment_items'       => $items,
@@ -104,7 +104,10 @@ class PaymentItemController extends Controller
         ];
 
         $pdf = PDF::loadView('PaymentItem.PaymentItems', $data);
-
+        $pdf->output();
+        $domPdf = $pdf->getDomPDF();
+        $canvas = $domPdf->getCanvas();
+        $canvas->page_text(10, $canvas->get_height() - 20, "Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, [0, 0, 0]);
         return $pdf->download('Payment_items.pdf');
     }
 

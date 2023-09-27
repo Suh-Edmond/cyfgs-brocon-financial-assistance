@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Http\Resources\ExpenditureCategoryCollection;
+use App\Http\Resources\PaymentCategoryCollection;
 use App\Interfaces\ExpenditureCategoryInterface;
 use App\Models\ExpenditureCategory;
 use App\Models\Organisation;
@@ -47,10 +48,16 @@ class ExpenditureCategoryService implements ExpenditureCategoryInterface {
         if(!is_null($request->year)){
             $categories = $categories->whereYear('created_at', $request->year);
         }
-        $paginated_data =  $categories->orderBy($request->sort_by)->paginate($request->per_page);
+        $expenditure_categories = !is_null($request->per_page) ? $categories->orderBy($request->sort_by)->paginate($request->per_page): $categories->orderBy($request->sort_by)->get();
 
-        return new ExpenditureCategoryCollection($paginated_data, $paginated_data->total(), $paginated_data->lastPage(),
-            (int)$paginated_data->perPage(), $paginated_data->currentPage());
+        $total = !is_null($request->per_page) ? $expenditure_categories->total() : count($expenditure_categories);
+        $last_page = !is_null($request->per_page) ? $expenditure_categories->lastPage(): 0;
+        $per_page = !is_null($request->per_page) ? (int)$expenditure_categories->perPage() : 0;
+        $current_page = !is_null($request->per_page) ? $expenditure_categories->currentPage() : 0;
+
+        return new PaymentCategoryCollection($expenditure_categories, $total, $last_page,
+            $per_page, $current_page);
+
     }
 
     public function getExpenditureCategoriesByOrganisationYear($organisation_id, $year)
