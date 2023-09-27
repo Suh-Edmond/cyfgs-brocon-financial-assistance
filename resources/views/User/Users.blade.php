@@ -45,9 +45,13 @@
                     <td style="border: 1px solid black; padding: 5px;">{{ $user->telephone }}</td>
                     @if(!is_null($user->address))
                         <td style="border: 1px solid black; padding: 5px;">{{ $user->address }}</td>
+                    @else
+                        <td style="border: 1px solid black; padding: 5px;"></td>
                     @endif
                     @if(!is_null($user->occupation))
                         <td style="border: 1px solid black; padding: 5px;">{{ $user->occupation }}</td>
+                    @else
+                        <td style="border: 1px solid black; padding: 5px;"></td>
                     @endif
                 </tr>
             @endforeach

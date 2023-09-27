@@ -181,7 +181,6 @@ class UserManagementService implements UserManagementInterface
             $token = $this->generateToken($user);
             $hasLoginBefore = $this->checkIfUserHasLogin($user);
             $currentSession = $this->session_service->getCurrentSession();
-
             return new TokenResource(new UserResource($user, $token, $hasLoginBefore), $currentSession);
         }
 
@@ -363,22 +362,12 @@ class UserManagementService implements UserManagementInterface
 
     private function generateToken($user)
     {
-        $token = "";
-        if (!is_null($user)) {
-            $token = $user->createToken('access-token', $user->roles->toArray())->plainTextToken;
-        }
-
-        return $token;
+        return !is_null($user) ? $user->createToken('access-token', $user->roles->toArray())->plainTextToken : "";
     }
 
     private function checkIfUserHasLogin($user)
     {
-        $hasLoginBefore = false;
-        if (!is_null($user->password)) {
-            $hasLoginBefore = true;
-        }
-
-        return $hasLoginBefore;
+        return !is_null($user->password);
     }
 
     private function validateIfUserCanLogin($user)
