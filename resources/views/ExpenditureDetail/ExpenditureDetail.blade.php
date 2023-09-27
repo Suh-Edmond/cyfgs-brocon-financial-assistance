@@ -27,8 +27,8 @@
             <tr style="border: 1px solid black; font-size: smaller;">
                 <th style="border: 1px solid black;" style="width: 5%">S/N</th>
                 <th style="padding: 12px; border: 1px solid black;">Name</th>
-                <th style="padding: 12px; border: 1px solid black;">Amount Given(FCFA)</th>
-                <th style="padding: 12px; border: 1px solid black;">Amount Given(FCFA)</th>
+                <th style="padding: 12px; border: 1px solid black;">Amount Given(XAF)</th>
+                <th style="padding: 12px; border: 1px solid black;">Amount Given(XAF)</th>
                 <th style="padding: 12px; border: 1px solid black;">Balance</th>
                 <th style="padding: 12px; border: 1px solid black;">Transaction Status</th>
             </tr>

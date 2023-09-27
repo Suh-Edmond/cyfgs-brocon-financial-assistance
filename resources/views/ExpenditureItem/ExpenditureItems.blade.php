@@ -27,7 +27,7 @@
             <tr style="border: 1px solid black; font-size: smaller;">
                 <th style="border: 1px solid black;">S/N</th>
                 <th style="padding: 12px; border: 1px solid black;">Name</th>
-                <th style="padding: 12px; border: 1px solid black;">Amount (FCFA)</th>
+                <th style="padding: 12px; border: 1px solid black;">Amount (XAF)</th>
                 <th style="padding: 12px; border: 1px solid black;">Date</th>
                 <th style="padding: 12px; border: 1px solid black;">Venue</th>
             </tr>

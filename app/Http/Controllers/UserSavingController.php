@@ -111,12 +111,10 @@ class UserSavingController extends Controller
 
         $admins            = $this->getOrganisationAdministrators();
         $president         = $admins[0];
-        $treasurer         = $admins[2];
-        $fin_sec           = $admins[1];
-
-
+        $treasurer         = count($admins) == 3 ? $admins[2]: null;
+        $fin_sec           = count($admins) == 3 ? $admins[1] : null;
         $data = [
-            'title'               => $savings[0][0]->name.' Savings',
+            'title'               => $request->name. ' Savings',
             'date'                => date('m/d/Y'),
             'organisation'        => $organisation,
             'user_savings'        => $savings[0],
@@ -128,6 +126,10 @@ class UserSavingController extends Controller
             'organisation_logo'   => env('FILE_DOWNLOAD_URL_PATH').$organisation->logo
         ];
         $pdf = PDF::loadView('UserSaving.Usersaving', $data);
+        $pdf->output();
+        $domPdf = $pdf->getDomPDF();
+        $canvas = $domPdf->getCanvas();
+        $canvas->page_text(10, $canvas->get_height() - 20, "Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, [0, 0, 0]);
 
         return $pdf->download('User_Saving.pdf');
     }
@@ -142,8 +144,8 @@ class UserSavingController extends Controller
 
         $admins            = $this->getOrganisationAdministrators();
         $president         = $admins[0];
-        $treasurer         = $admins[2];
-        $fin_sec           = $admins[1];
+        $treasurer         = count($admins) == 3 ? $admins[2]: null;
+        $fin_sec           = count($admins) == 3 ? $admins[1] : null;
 
         $data = [
             'title'               => 'Organisation Savings',
@@ -158,6 +160,10 @@ class UserSavingController extends Controller
             'organisation_logo'   => env('FILE_DOWNLOAD_URL_PATH').$organisation->logo
         ];
         $pdf = PDF::loadView('UserSaving.OrganisationSavings', $data);
+        $pdf->output();
+        $domPdf = $pdf->getDomPDF();
+        $canvas = $domPdf->getCanvas();
+        $canvas->page_text(10, $canvas->get_height() - 20, "Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, [0, 0, 0]);
 
         return $pdf->download('Organisation_Saving.pdf');
     }
