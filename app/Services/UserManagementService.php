@@ -276,9 +276,14 @@ class UserManagementService implements UserManagementInterface
             $filter_users = $filter_users->where('users.name','LIKE', '%'.$request->filter.'%');
         }
         $filter_users = $filter_users->select('users.*','member_registrations.approve','member_registrations.session_id')->distinct();
-        $filter_users = $filter_users->orderBy('users.name')->paginate($request->per_page);
 
-        return new UserCollection($filter_users, $filter_users->total(), $filter_users->lastPage(), (int)$filter_users->perPage(), $filter_users->currentPage());
+        $filter_users = !is_null($request->per_page) ? $filter_users->orderBy('users.name')->paginate($request->per_page): $filter_users->orderBy('users.name')->get();
+        $total = !is_null($request->per_page) ? $filter_users->total() : count($filter_users);
+        $last_page = !is_null($request->per_page) ? $filter_users->lastPage(): 0;
+        $per_page = !is_null($request->per_page) ? (int)$filter_users->perPage() : 0;
+        $current_page = !is_null($request->per_page) ? $filter_users->currentPage() : 0;
+
+        return new UserCollection($filter_users, $total, $last_page, $per_page, $current_page);
     }
 
     public function setPasswordResetToken($request)

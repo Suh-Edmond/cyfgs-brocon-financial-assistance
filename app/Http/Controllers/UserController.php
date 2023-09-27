@@ -138,8 +138,8 @@ class UserController extends Controller
         $users             = $this->user_management_service->filterUsers($request);
         $admins            = $this->getOrganisationAdministrators();
         $president         = $admins[0];
-        $treasurer         = $admins[2];
-        $fin_sec           = $admins[1];
+        $treasurer         = count($admins) == 3 ? $admins[2]: null;
+        $fin_sec           = count($admins) == 3 ? $admins[1] : null;
 
         $data = [
             'title'                  => $this->setTitle($request),
