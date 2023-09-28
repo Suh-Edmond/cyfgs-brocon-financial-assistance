@@ -29,6 +29,7 @@ class UserContributionResource extends JsonResource
             'payment_item_name'        => $payment_item->name,
             'payment_item_amount'      => $payment_item->amount,
             'payment_item_frequency'   => $payment_item->frequency,
+            'payment_item_created_at'  => $payment_item->created_at,
             'payment_category'         => $payment_item->paymentCategory,
             'payment_item_compulsory'  => $payment_item->compulsory == 0? false : true,
             'balance'                  => $this->total_amount_deposited == null ? $this->balance :($payment_item->amount - $this->total_amount_deposited),

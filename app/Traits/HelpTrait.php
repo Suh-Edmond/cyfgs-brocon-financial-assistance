@@ -299,21 +299,21 @@ trait HelpTrait {
         return $data;
     }
 
-    public function getDateQuarter($item)
+    public function getDateQuarter($item_frequency, $item_created_at)
     {
         $quarter = null;
-        if($item->frequency == PaymentItemFrequency::QUARTERLY){
-            $a = Carbon::parse($item->created_at);
+        if($item_frequency == PaymentItemFrequency::QUARTERLY){
+            $a = Carbon::parse($item_created_at);
             $quarter = $this->convertNumberToQuarterName($a->quarter);
         }
         return $quarter;
     }
 
-    public function getItemMonth($item)
+    public function getItemMonth($item_frequency, $item_created_at)
     {
         $itemMonth= "";
-        if($item->frequency == PaymentItemFrequency::MONTHLY){
-            $itemMonth = Carbon::parse($item->created_at);
+        if($item_frequency == PaymentItemFrequency::MONTHLY){
+            $itemMonth = Carbon::parse($item_created_at);
         }
         return $itemMonth;
     }

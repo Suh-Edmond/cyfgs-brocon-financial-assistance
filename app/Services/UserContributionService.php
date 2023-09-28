@@ -16,7 +16,6 @@ use App\Models\Registration;
 use App\Models\User;
 use App\Models\UserContribution;
 use App\Traits\HelpTrait;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use App\Constants\PaymentStatus;
 use App\Http\Resources\UserContributionCollection;
@@ -100,10 +99,19 @@ class UserContributionService implements UserContributionInterface {
                                     ->orderBy('user_contributions.created_at', 'DESC');
         $total_contribution = collect($contributions->get())->sum('amount_deposited');
         $total_balance = ($this->getTotalPaymentItemAmountByQuarters($payment_item) - $total_contribution);
-        $paginated_contribution = $contributions->paginate($request->per_page);
+        $unpaid_durations = $payment_item->frequency == PaymentItemFrequency::QUARTERLY ? $this->getMemberUnPayQuarters($payment_item->frequency, $payment_item->created_at, $contributions->get()):
+            $this->getMemberUnPayMonths($payment_item->frequency, $payment_item->created_at, $contributions->get());
 
-        return new UserContributionCollection($paginated_contribution, $total_contribution, $total_balance,  $paginated_contribution->total(), $paginated_contribution->lastPage(),
-            (int)$paginated_contribution->perPage(), $paginated_contribution->currentPage());
+        $paginated_contribution = !is_null($request->per_page) ? $contributions->paginate($request->per_page): $contributions->get();
+
+        $total = !is_null($request->per_page) ? $paginated_contribution->total() : count($paginated_contribution);
+        $last_page = !is_null($request->per_page) ? $paginated_contribution->lastPage(): 0;
+        $per_page = !is_null($request->per_page) ? (int)$paginated_contribution->perPage() : 0;
+        $current_page = !is_null($request->per_page) ? $paginated_contribution->currentPage() : 0;
+
+
+        return new UserContributionCollection($paginated_contribution, $total_contribution, $total_balance, $unpaid_durations,  $total, $last_page,
+            $per_page, $current_page);
     }
 
     public function deleteUserContribution($id)
@@ -144,8 +152,10 @@ class UserContributionService implements UserContributionInterface {
         $last_page = !is_null($request->per_page) ? $contributions->lastPage(): 0;
         $per_page = !is_null($request->per_page) ? (int)$contributions->perPage() : 0;
         $current_page = !is_null($request->per_page) ? $contributions->currentPage() : 0;
+        $unpaid_durations = $payment_item->frequency == PaymentItemFrequency::QUARTERLY ? $this->getMemberUnPayQuarters($payment_item->frequency, $payment_item->created_at, $contributions->get()):
+            $this->getMemberUnPayMonths($payment_item->frequency, $payment_item->created_at, $contributions->get());
 
-        return new UserContributionCollection($contributions, $total_contribution, $total_balance, $total, $last_page,
+        return new UserContributionCollection($contributions, $total_contribution, $total_balance, $unpaid_durations, $total, $last_page,
             $per_page, $current_page);
     }
 
@@ -199,8 +209,10 @@ class UserContributionService implements UserContributionInterface {
         $total = isset($user_contributions) ? collect($user_contributions->get())->sum('amount_deposited'):0;
         $balance = $total != 0 ? $total - $payment_item->amount:0;
         $paginated_data = $user_contributions->paginate(7);
+        $unpaid_durations = $payment_item->frequency == PaymentItemFrequency::QUARTERLY ? $this->getMemberUnPayQuarters($payment_item->frequency, $payment_item->created_at, $user_contributions->get()):
+            $this->getMemberUnPayMonths($payment_item->frequency, $payment_item->created_at, $user_contributions->get());
 
-        return new UserContributionCollection($user_contributions, $total, $balance, $paginated_data->total(), $paginated_data->lastPage()
+        return new UserContributionCollection($user_contributions, $total, $balance, $unpaid_durations, $paginated_data->total(), $paginated_data->lastPage()
             , (int)$paginated_data->perPage(), $paginated_data->currentPage());
     }
 
@@ -304,6 +316,7 @@ class UserContributionService implements UserContributionInterface {
 
          return [["percentages_data" =>$percentage_contributions], ["avg_by_frequency" => $average_contributions_by_frequency], ["avg_by_type" => $average_contributions_by_type]];
     }
+
     private function getMemberRegistration($user_id)
     {
         $reg_debts = [];
@@ -716,7 +729,7 @@ class UserContributionService implements UserContributionInterface {
     private function verifyQuarterlyPayment($item, $user_id, $current_session)
     {
         $debts = [];
-        $quarters = $this->getPaymentItemQuartersBySession($item);
+        $quarters = $this->getPaymentItemQuartersBySession($item->frequency, $item->created_at);
         foreach ($quarters as $quarter){
             if (count($this->verifyCompleteItemPaymentByQuarter($item->id, $user_id, $quarter)) == 0) {
                  $to_be_paid = new MemberPaymentItemResource($item->id, $item->name, $item->amount,$item->amount, $item->compulsory,
@@ -733,17 +746,17 @@ class UserContributionService implements UserContributionInterface {
         return $debts;
     }
 
-    private function getPaymentItemQuartersBySession($item)
+    public function getPaymentItemQuartersBySession($item_frequency, $item_created_at)
     {
         $quarters = $this->getQuarters();
-        $current_quarter = $this->convertQuarterNameToNumber($this->getDateQuarter($item));
+        $current_quarter = $this->convertQuarterNameToNumber($this->getDateQuarter($item_frequency, $item_created_at));
         return array_splice($quarters, ($current_quarter - 1), count($quarters));
     }
 
     private function verifyMonthlyPayment($item, $user_id, $current_session)
     {
         $debts = [];
-        $month_list = $this->getPaymentItemMonthsBySession($item);
+        $month_list = $this->getPaymentItemMonthsBySession($item->frequency, $item->created_at);
         foreach ($month_list as $month){
             if (count($this->verifyCompleteItemPaymentByMonth($item->id, $user_id, $month)) == 0) {
                  $to_be_paid = new MemberPaymentItemResource($item->id, $item->name, $item->amount,$item->amount, $item->compulsory,
@@ -761,10 +774,10 @@ class UserContributionService implements UserContributionInterface {
         return $debts;
     }
 
-    private function getPaymentItemMonthsBySession($item)
+    public function getPaymentItemMonthsBySession($item_frequency, $item_created_at)
     {
         $all_months = $this->getMonths();
-        $current_month_index = $this->getItemMonth($item)->month;
+        $current_month_index = $this->getItemMonth($item_frequency, $item_created_at)->month;
         return array_splice($all_months, $current_month_index - 1, count($all_months));
     }
 
@@ -882,17 +895,50 @@ class UserContributionService implements UserContributionInterface {
     private function getTotalPaymentItemAmountByQuarters($item)
     {
         if($item->frequency == PaymentItemFrequency::QUARTERLY){
-            $quarters = $this->getPaymentItemQuartersBySession($item);
+            $quarters = $this->getPaymentItemQuartersBySession($item->frequency, $item->created_at);
             $total_amount = count($quarters) * $item->amount;
         }
         else if($item->frequency == PaymentItemFrequency::MONTHLY){
-            $months = $this->getPaymentItemMonthsBySession($item);
+            $months = $this->getPaymentItemMonthsBySession($item->frequency, $item->created_at);
             $total_amount = count($months) * $item->amount;
         }else {
             $total_amount = $item->amount;
         }
 
         return $total_amount;
+    }
+
+    private function getPaidQuartersName($contributions)
+    {
+        return collect($contributions)->map(function ($contribution) {
+            return $contribution->quarterly_name;
+        })->toArray();
+    }
+
+    private function getPaidMonthNames($contributions)
+    {
+        return collect($contributions)->map(function ($contribution) {
+            return $contribution->month_name;
+        })->toArray();
+    }
+
+
+    private function getMemberUnPayQuarters($payment_item_frequency, $payment_item_created_at, $contributions)
+    {
+        $payable_quarters = $this->getPaymentItemQuartersBySession($payment_item_frequency, $payment_item_created_at);
+        $paid_quarters = $this->getPaidQuartersName($contributions);
+        return collect($payable_quarters)->filter(function ($quarter) use ($paid_quarters){
+            return !in_array($quarter, $paid_quarters);
+        })->toArray();
+    }
+
+    private function getMemberUnPayMonths($payment_item_frequency, $payment_item_created_at, $contributions)
+    {
+        $payable_months = $this->getPaymentItemMonthsBySession($payment_item_frequency, $payment_item_created_at);
+        $paid_months = $this->getPaidMonthNames($contributions);
+        return collect($payable_months)->filter(function ($month) use ($paid_months){
+            return !in_array($month, $paid_months);
+        })->toArray();
     }
 }
 
