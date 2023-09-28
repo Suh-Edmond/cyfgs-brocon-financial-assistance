@@ -110,14 +110,12 @@ class UserContributionController extends Controller
     public function downloadFilteredContributions(Request $request) {
         $contributions     = $this->filterContributions($request);
         $contributions     = json_decode(json_encode($contributions))->original->data;
-
         $organisation      = $request->user()->organisation;
 
         $admins            = $this->getOrganisationAdministrators();
         $president         = $admins[0];
         $treasurer         = count($admins) == 3 ? $admins[2]: null;
         $fin_sec           = count($admins) == 3 ? $admins[1] : null;
-        $total             = $this->computeTotalContribution($contributions->data);
 
         $data = [
             'title'             => "Member's Contribution for ".$request->payment_item_name,
@@ -128,7 +126,7 @@ class UserContributionController extends Controller
             'president'         => $president,
             'treasurer'         => $treasurer,
             'fin_secretary'     => $fin_sec,
-            'total'             => $total,
+            'total'             => $contributions->total_amount,
 //            'balance'           => $contributions->data[0]->payment_item_amount - $total,
             'organisation_logo' => env('FILE_DOWNLOAD_URL_PATH').$organisation->logo
         ];

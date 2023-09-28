@@ -97,10 +97,8 @@ class ActivitySupportController extends Controller
         $admins            = $this->getOrganisationAdministrators();
         $president         = $admins[0];
 
-        $treasurer         = $admins[2];
-
-        $fin_sec           = $admins[1];
-
+        $treasurer         = count($admins) == 3 ? $admins[2]: null;
+        $fin_sec           = count($admins) == 3 ? $admins[1] : null;
         $data = [
             'title'               => $this->setTitle($request),
             'date'                => date('m/d/Y'),
@@ -114,6 +112,10 @@ class ActivitySupportController extends Controller
             'organisation_logo'    => env('FILE_DOWNLOAD_URL_PATH').$organisation->logo
         ];
         $pdf = PDF::loadView('ActivitySupport.Support', $data);
+        $pdf->output();
+        $domPdf = $pdf->getDomPDF();
+        $canvas = $domPdf->getCanvas();
+        $canvas->page_text(10, $canvas->get_height() - 20, "Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, [0, 0, 0]);
 
         return $pdf->download('ActivitySupport.pdf');
     }
