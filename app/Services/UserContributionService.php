@@ -98,7 +98,8 @@ class UserContributionService implements UserContributionInterface {
                                     ->select(  'user_contributions.*')
                                     ->orderBy('user_contributions.created_at', 'DESC');
         $total_contribution = collect($contributions->get())->sum('amount_deposited');
-        $total_balance = ($this->getTotalPaymentItemAmountByQuarters($payment_item) - $total_contribution);
+        $total_amount_payable = $this->getTotalPaymentItemAmountByQuarters($payment_item);
+        $total_balance = ($total_amount_payable - $total_contribution);
         $unpaid_durations = $payment_item->frequency == PaymentItemFrequency::QUARTERLY ? $this->getMemberUnPayQuarters($payment_item->frequency, $payment_item->created_at, $contributions->get()):
             $this->getMemberUnPayMonths($payment_item->frequency, $payment_item->created_at, $contributions->get());
 
@@ -110,7 +111,7 @@ class UserContributionService implements UserContributionInterface {
         $current_page = !is_null($request->per_page) ? $paginated_contribution->currentPage() : 0;
 
 
-        return new UserContributionCollection($paginated_contribution, $total_contribution, $total_balance, $unpaid_durations,  $total, $last_page,
+        return new UserContributionCollection($paginated_contribution, $total_contribution, $total_balance, $unpaid_durations, $total_amount_payable,  $total, $last_page,
             $per_page, $current_page);
     }
 
@@ -145,6 +146,10 @@ class UserContributionService implements UserContributionInterface {
             ->groupBy('user_id')->orderBy('user_contributions.created_at', 'DESC');
         $total_contribution = $this->computeTotalOrganisationContribution($contributions);
         $total_balance = ($payment_item->amount - $total_contribution);
+        $total_amount_payable = $this->getTotalPaymentItemAmountByQuarters($payment_item);
+
+        $unpaid_durations = $payment_item->frequency == PaymentItemFrequency::QUARTERLY ? $this->getMemberUnPayQuarters($payment_item->frequency, $payment_item->created_at, $contributions->get()):
+            $this->getMemberUnPayMonths($payment_item->frequency, $payment_item->created_at, $contributions->get());
 
         $contributions = !is_null($request->per_page) ? $contributions->paginate($request->per_page): $contributions->get();
 
@@ -152,10 +157,9 @@ class UserContributionService implements UserContributionInterface {
         $last_page = !is_null($request->per_page) ? $contributions->lastPage(): 0;
         $per_page = !is_null($request->per_page) ? (int)$contributions->perPage() : 0;
         $current_page = !is_null($request->per_page) ? $contributions->currentPage() : 0;
-        $unpaid_durations = $payment_item->frequency == PaymentItemFrequency::QUARTERLY ? $this->getMemberUnPayQuarters($payment_item->frequency, $payment_item->created_at, $contributions->get()):
-            $this->getMemberUnPayMonths($payment_item->frequency, $payment_item->created_at, $contributions->get());
 
-        return new UserContributionCollection($contributions, $total_contribution, $total_balance, $unpaid_durations, $total, $last_page,
+
+        return new UserContributionCollection($contributions, $total_contribution, $total_balance, $unpaid_durations, $total_amount_payable, $total, $last_page,
             $per_page, $current_page);
     }
 
@@ -209,10 +213,11 @@ class UserContributionService implements UserContributionInterface {
         $total = isset($user_contributions) ? collect($user_contributions->get())->sum('amount_deposited'):0;
         $balance = $total != 0 ? $total - $payment_item->amount:0;
         $paginated_data = $user_contributions->paginate(7);
+        $total_amount_payable = $this->getTotalPaymentItemAmountByQuarters($payment_item);
         $unpaid_durations = $payment_item->frequency == PaymentItemFrequency::QUARTERLY ? $this->getMemberUnPayQuarters($payment_item->frequency, $payment_item->created_at, $user_contributions->get()):
             $this->getMemberUnPayMonths($payment_item->frequency, $payment_item->created_at, $user_contributions->get());
 
-        return new UserContributionCollection($user_contributions, $total, $balance, $unpaid_durations, $paginated_data->total(), $paginated_data->lastPage()
+        return new UserContributionCollection($user_contributions, $total, $balance, $unpaid_durations, $total_amount_payable, $paginated_data->total(), $paginated_data->lastPage()
             , (int)$paginated_data->perPage(), $paginated_data->currentPage());
     }
 

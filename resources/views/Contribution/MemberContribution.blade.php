@@ -141,11 +141,14 @@
         </div>
         @if($payment_item_frequency == \App\Constants\PaymentItemFrequency::QUARTERLY)
         <div class="row" style="margin-top: 20px">
-            <label style="font-style: italic; color: lightskyblue;font-weight: bold">NB: For Quarterly Contributions, Total Amount Payable equals the Payment Item Amount multiply by the SUM of the number of Quarters from when the Payment Item was created. </label>
+            <label style="font-style: italic; color: lightskyblue;font-weight: bold">
+                NB: For Quarterly Contributions, Total Amount Payable equals the Payment Item Amount multiply by
+                the SUM of the number of Quarters from when the Payment Item was created. </label>
         </div>
         @elseif($payment_item_frequency == \App\Constants\PaymentItemFrequency::MONTHLY)
         <div class="row" style="margin-top: 20px">
-            <label style="font-style: italic; color: lightskyblue;font-weight: bold">NB: For Monthly Contributions, Total Amount Payable equals the Payment Item Amount multiply by the SUM of the number of Months from when the Payment Item was created. </label>
+            <label style="font-style: italic; color: lightskyblue;font-weight: bold">
+                NB: For Monthly Contributions, Total Amount Payable equals the Payment Item Amount multiply by the SUM of the number of Months from when the Payment Item was created. </label>
         </div>
         @endif
     </div>
