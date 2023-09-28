@@ -68,11 +68,7 @@ class PaymentCategoryService implements PaymentCategoryInterface {
     public function getPaymentCategoriesByOrganisationAndYear($organisation_id, $year)
     {
         $categories = PaymentCategory::where('organisation_id', $organisation_id);
-        if(!is_null($year)){
-            $categories = $categories->whereYear('created_at', $year);
-        }
         $categories =  $categories->orderBy('name')->get();
-
         return $categories;
     }
 

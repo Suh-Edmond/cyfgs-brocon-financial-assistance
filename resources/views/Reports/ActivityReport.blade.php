@@ -18,15 +18,15 @@
             <label style="font-size: small;">Printed date: {{ $date }}</label>
         </div>
     </div>
-    <div>
-        <h3 style="font-weight: bold;font-size: medium; text-align:center;text-transform: uppercase;">{{ $title }}
+    <div style="margin-bottom: 2rem;">
+        <h3 style="font-weight: bold;font-size: medium; text-align:center;text-transform: capitalize;border-bottom: 1px solid black;">{{ $title }}
         </h3>
     </div>
 
     <!----------------------------------------------------------START OF INCOME------------------------------------------------------------------------------------------>
-    <div>
+    <div class="page-break">
         <div style="margin-bottom: 20px;margin-top: 20px">
-            <h3 style="font-weight: bold;font-size: small; text-align:center;text-transform: uppercase;padding-bottom: 20px;text-decoration: underline"><span style="padding-right: 5px;"></span> Income (F CFA)
+            <h3 style="font-weight: bold;font-size: small; text-align:center;text-transform: uppercase;padding-bottom: 20px;text-decoration: underline"><span style="padding-right: 5px;"></span> Income (XAF)
             </h3>
         </div>
         <table style="border: 1px solid black; border-collapse: collapse;width: 100%">
@@ -54,10 +54,10 @@
 
 
     <!----------------------------------------------------------START OF EXPENDITURES------------------------------------------------------------------------------------------>
-    <div style="margin-top: 20px;">
+    <div style="margin-top: 20px;" class="page-break">
         <div style="margin-bottom: 20px;margin-top: 20px">
             <h3 style="font-weight: bold;font-size: small; text-align:center;text-transform: uppercase;padding-bottom: 20px;text-decoration: underline"><span style="padding-right: 5px;"></span>
-                Expenditures/Disbursements (F CFA)
+                Expenditures/Disbursements
             </h3>
         </div>
         <table style="border: 1px solid black; border-collapse: collapse;width: 100%">

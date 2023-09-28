@@ -10,7 +10,6 @@ use App\Http\Resources\QuarterlyExpenditureResourceCollection;
 use App\Http\Resources\QuarterlyIncomeResource;
 use App\Interfaces\ReportGenerationInterface;
 use App\Traits\HelpTrait;
-use Carbon\Carbon;
 
 class ReportGenerationService implements ReportGenerationInterface
 {
@@ -80,8 +79,8 @@ class ReportGenerationService implements ReportGenerationInterface
         $total_balance += $balance > 0 ? ($total_income - $total_amount_spent)  + $balance: ($total_income - $total_amount_spent);
         $admins            = $this->getOrganisationAdministrators();
         $president         = $admins[0];
-        $treasurer         = $admins[2];
-        $fin_sec           = $admins[1];
+        $treasurer         = count($admins) == 3 ? $admins[2]: null;
+        $fin_sec           = count($admins) == 3 ? $admins[1] : null;
 
         return [$income_list, $expenditures, ["total_income" => $total_income], ["total_amount_given" => $total_amount_given],
             ["total_amount_spent" => $total_amount_spent], ["balance" => $balance], ["total_balance" => $total_balance],
@@ -100,8 +99,8 @@ class ReportGenerationService implements ReportGenerationInterface
         $balance_bf = $this->computeBalanceBroughtForwardByQuarter($request, $current_year);
         $admins            = $this->getOrganisationAdministrators();
         $president         = $admins[0];
-        $treasurer         = $admins[2];
-        $fin_sec           = $admins[1];
+        $treasurer         = count($admins) == 3 ? $admins[2]: null;
+        $fin_sec           = count($admins) == 3 ? $admins[1] : null;
         return [$income_elements, $expenditures_elements, ["total_income" => $total_income], ["total_expenditure" => $total_expenditures],
             ["balance_brought_forward" => $balance_bf], ["president" => $president], ["treasurer" => $treasurer], ["fin_sec" => $fin_sec]];
     }
@@ -139,8 +138,8 @@ class ReportGenerationService implements ReportGenerationInterface
 
         $admins            = $this->getOrganisationAdministrators();
         $president         = $admins[0];
-        $treasurer         = $admins[2];
-        $fin_sec           = $admins[1];
+        $treasurer         = count($admins) == 3 ? $admins[2]: null;
+        $fin_sec           = count($admins) == 3 ? $admins[1] : null;
         $income_list = $income[0];
         $total_income = $income[1];
         $expenditure_list = $expenditures[0];
@@ -209,6 +208,7 @@ class ReportGenerationService implements ReportGenerationInterface
                 array_push($payment_activities, json_decode($payment_activity));
 
                 $payment_category_total += $total;
+
             }
             $payment_category_income = json_encode(new IncomeResource($payment_category->code, $payment_activities,  $payment_category->name, $payment_category_total));
             array_push($incomes, json_decode($payment_category_income));
@@ -223,7 +223,6 @@ class ReportGenerationService implements ReportGenerationInterface
         $payment_categories = $this->paymentCategoryService->getPaymentCategoriesByOrganisationAndYear($organisation_id, $year_label);
         $incomes = array();
         $total_reg_saving = 0;
-        $total_income = 0;
         $year_incomes = array();
         $member_reg = $this->registrationService->getMemberRegistrationPerYear($year_id, "MR");
         $savings = $this->userSavingService->getMemberSavingPerYear($year_id, "MS");

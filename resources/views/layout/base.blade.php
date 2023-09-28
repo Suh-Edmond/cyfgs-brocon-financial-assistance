@@ -51,6 +51,10 @@
         padding: 4px;
         min-height: 25px;
     }
+
+    .activity_row {
+        border-top: .8px solid black;
+    }
     .column2 {
         float: left;
         width: 50%;
