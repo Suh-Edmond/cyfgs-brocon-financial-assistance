@@ -17,18 +17,18 @@
             <label style="font-size: small;">Email: {{ $organisation->email }}</label><br /><br />
         </div>
     </div>
-    <div class="title">
-        <h3 style="font-weight: bold;font-size: medium; text-align:center;text-transform: uppercase;text-decoration: underline">{{ $title }}
+    <div style="margin-bottom: 2rem;">
+        <h3 style="font-weight: bold;font-size: medium; text-align:center;text-transform: capitalize;border-bottom: 1px solid black;">{{ $title }}
         </h3>
     </div>
 
     <!-------------------------------------------------------------------income details------------------------------------------------------------------>
     <div>
-        <h3 style="font-weight: bold;font-size: small; text-align:center;text-transform: uppercase;padding-bottom: 20px;text-decoration: underline"><span style="padding-right: 5px;"></span> Income (F CFA)
+        <h3 style="font-weight: bold;font-size: small; text-align:center;text-transform: uppercase;padding-bottom: 20px;text-decoration: underline"><span style="padding-right: 5px;"></span> Income (XAF)
         </h3>
     </div>
 
-    <div class="activity">
+    <div class="activity page-break" >
         <!---start of title-->
         <div class="row quarter_row">
             <div class="column1" style="font-weight: bold">
@@ -52,7 +52,7 @@
         <!---start of balance brought forward-->
         <div class="row amount_brought_forward">
             <div class="column1">
-                I1
+                BBF
             </div>
             <div class="column2" style="font-weight: bold; text-align: center">
                 Balance Brought-Forward
@@ -139,7 +139,7 @@
                                 {{$income->code}}.{{$value->code}}
                             </div>
                             <div class="column2" style="font-weight: bold">
-                                Sub-Total
+
                             </div>
                             <div class="column3"></div>
                             <div class="column4"> {{number_format($value->total)}}</div>
@@ -184,11 +184,11 @@
 
     <!------------------------------------------------------------expenditures----------------------------------------------------------------------------------------------->
     <div style="margin-top: 30px;margin-bottom: 20px;">
-        <h3 style="font-weight: bold;font-size: small; text-align:center;text-transform: uppercase;padding-bottom: 20px;text-decoration: underline"><span style="padding-right: 5px"></span> Expenditures (F CFA)
+        <h3 style="font-weight: bold;font-size: small; text-align:center;text-transform: uppercase;padding-bottom: 20px;text-decoration: underline"><span style="padding-right: 5px"></span> Expenditures (XAF)
         </h3>
     </div>
 
-    <div class="activity">
+    <div class="activity page-break" >
         <!---start of title-->
         <div class="row quarter_row">
             <div class="column1" style="font-weight: bold">
@@ -275,7 +275,7 @@
                                 {{$expenditure->code}}.{{$value->code}}
                             </div>
                             <div class="column2" style="font-weight: bold">
-                                Sub-Total
+
                             </div>
                             <div class="column3"></div>
                             <div class="column4">{{$value->total}}</div>
@@ -319,7 +319,7 @@
     <!----------------------------------------------------------summary of report-------------------------------------------------------------------------------------------->
 
     <div style="margin-top: 20px;">
-        <h3 style="font-weight: bold;font-size: small; text-align:center;text-transform: uppercase;padding-bottom: 20px;text-decoration: underline"><span style="padding-right: 5px"></span> Summary (F CFA)
+        <h3 style="font-weight: bold;font-size: small; text-align:center;text-transform: uppercase;padding-bottom: 20px;text-decoration: underline"><span style="padding-right: 5px"></span> Summary (XAF)
         </h3>
     </div>
 

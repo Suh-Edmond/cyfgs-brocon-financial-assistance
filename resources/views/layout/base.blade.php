@@ -51,6 +51,10 @@
         padding: 4px;
         min-height: 25px;
     }
+
+    .activity_row {
+        border-top: .8px solid black;
+    }
     .column2 {
         float: left;
         width: 50%;
@@ -170,7 +174,27 @@
         padding: 10px;
         min-height: 15px;
         font-weight: bolder;
-        text-transform: uppercase;
+        text-transform: capitalize;
+        border-right: .8px solid black;
+        font-size: small;
+    }
+    .activity_summary_num_contribution {
+        float: left;
+        width: 2%;
+        padding: 10px;
+        min-height: 15px;
+        font-weight: bolder;
+        text-transform: capitalize;
+        border-right: .8px solid black;
+        font-size: small;
+    }
+    .activity_summary_label {
+        float: left;
+        width: 30%;
+        padding: 10px;
+        min-height: 15px;
+        font-weight: bolder;
+        text-transform: capitalize;
         border-right: .8px solid black;
         font-size: small;
     }
@@ -180,7 +204,7 @@
         padding: 10px;
         min-height: 15px;
         font-weight: bolder;
-        text-transform: uppercase;
+        text-transform: capitalize;
         border-right: .8px solid black;
         font-size: small;
     }
@@ -190,7 +214,7 @@
         padding: 10px;
         min-height: 15px;
         font-weight: bolder;
-        text-transform: uppercase;
+        text-transform: capitalize;
         font-size: medium;
     }
     .totals {
@@ -199,7 +223,7 @@
         padding: 4px;
         font-weight: bolder;
         min-height: 25px;
-        text-transform: uppercase;
+        text-transform: capitalize;
         font-size: medium;
     }
 
@@ -213,6 +237,12 @@
         width: 30px;
         min-width: 30%;
         margin-left: 270px;
+    }
+
+    .page-break {
+        page-break-inside: auto;
+        page-break-after: always;
+
     }
 </style>
 <body>

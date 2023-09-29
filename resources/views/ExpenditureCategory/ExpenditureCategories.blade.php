@@ -18,11 +18,11 @@
             <label style="font-size: small;">Printed date: {{ $date }}</label>
         </div>
     </div>
-    <div>
-        <h3 style="font-weight: bold;font-size: medium; text-align:center;text-transform: uppercase;">{{ $title }}
+    <div style="margin-bottom: 2rem;">
+        <h3 style="font-weight: bold;font-size: medium; text-align:center;text-transform: capitalize;border-bottom: 1px solid black;">{{ $title }}
         </h3>
     </div>
-    <div>
+    <div  class="page-break">
         <table style="border: 1px solid black; border-collapse: collapse;width: 100%">
             <tr style="padding: 13px;border: 1px solid black; font-size: smaller;">
                 <th style="padding: 1px; border: 1px solid black;">S/N</th>
@@ -30,8 +30,8 @@
             </tr>
             @foreach ($expenditure_categories as $key => $category)
                 <tr style="border: 1px solid black; font-size: smaller">
-                    <td style="padding: 5px;">{{ $key + 1 }}</td>
-                    <td style="border: 1px solid black; padding: 11px;">{{ $category->name }}</td>
+                    <td style="padding: 5px;width:5%">{{ $key + 1 }}</td>
+                    <td style="border: 1px solid black; padding: 11px;text-align: center">{{ $category->name }}</td>
                 </tr>
             @endforeach
         </table>

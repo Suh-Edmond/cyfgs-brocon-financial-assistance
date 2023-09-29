@@ -18,18 +18,19 @@
             <label style="font-size: small;">Printed date: {{ $date }}</label>
         </div>
     </div>
-    <div style="margin-bottom: 20px">
-        <h3 style="font-weight: bold;font-size: medium; text-align:center;text-transform: uppercase;text-decoration: underline">{{ $title }}
+    <div style="margin-bottom: 2rem;">
+        <h3 style="font-weight: bold;font-size: medium; text-align:center;text-transform: capitalize;border-bottom: 1px solid black;">{{ $title }}
         </h3>
     </div>
-    <div>
+    <div class="page-break">
         <table style="border: 1px solid black; border-collapse: collapse;width: 100%">
             <tr style="border: 1px solid black; font-size: smaller;">
                 <th style="border: 1px solid black;" style="width: 5%">S/N</th>
                 <th style="padding: 12px; border: 1px solid black;">Name</th>
-                <th style="padding: 12px; border: 1px solid black;">Amount Given(FCFA)</th>
-                <th style="padding: 12px; border: 1px solid black;">Amount Given(FCFA)</th>
+                <th style="padding: 12px; border: 1px solid black;">Amount Given(XAF)</th>
+                <th style="padding: 12px; border: 1px solid black;">Amount Given(XAF)</th>
                 <th style="padding: 12px; border: 1px solid black;">Balance</th>
+                <th style="padding: 12px; border: 1px solid black;">Transaction Status</th>
             </tr>
             @foreach ($expenditure_details as $key => $value)
                 <tr style="border: 1px solid black; font-size: medium">
@@ -39,7 +40,7 @@
                     <td style="border: 1px solid black; padding: 11px;">{{ number_format($value->amount_spent) }}</td>
                     <td style="border: 1px solid black; padding: 11px;">
                         {{ number_format($value->amount_given - $value->amount_spent) }}</td>
-
+                    <td style="border: 1px solid black; padding: 11px;">{{($value->approve) }}</td>
                 </tr>
             @endforeach
         </table>
@@ -94,6 +95,17 @@
             </div>
             <div class="activity_summary_end">
                 {{number_format($balance)}}
+            </div>
+        </div>
+        <div class="row" style="border: 1px solid black">
+            <div class="activity_summary_num">
+                S5
+            </div>
+            <div class="activity_summary">
+                Net Balance
+            </div>
+            <div class="activity_summary_end">
+                {{number_format($net_balance)}}
             </div>
         </div>
     </div>

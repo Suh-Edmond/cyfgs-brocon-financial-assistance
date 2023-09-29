@@ -15,12 +15,9 @@ trait HelpTrait {
     public static function generateCode($size): string
     {
         $code  = "";
-        $current_year = date("Y");
         for($i = 0; $i < $size; $i++){
             $code = $code.rand(0, 9);
         }
-        $code = $code.$current_year;
-
         return $code;
     }
 
@@ -302,14 +299,46 @@ trait HelpTrait {
         return $data;
     }
 
-    public function getDateQuarter($item)
+    public function getDateQuarter($item_frequency, $item_created_at)
     {
         $quarter = null;
-        if($item->frequency == PaymentItemFrequency::QUARTERLY){
-            $a = Carbon::parse(Carbon::now());
+        if($item_frequency == PaymentItemFrequency::QUARTERLY){
+            $a = Carbon::parse($item_created_at);
             $quarter = $this->convertNumberToQuarterName($a->quarter);
         }
         return $quarter;
+    }
+
+    public function getItemMonth($item_frequency, $item_created_at)
+    {
+        $itemMonth= "";
+        if($item_frequency == PaymentItemFrequency::MONTHLY){
+            $itemMonth = Carbon::parse($item_created_at);
+        }
+        return $itemMonth;
+    }
+
+    public function getQuarters(){
+        return array("January - March",
+            "April - June",
+            "July - September",
+            "October - December");
+    }
+
+    public function getMonths(){
+        return
+            array("January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December");
     }
 
     public function checkMemberExistAsReference($user_id, $reference)
@@ -377,18 +406,25 @@ trait HelpTrait {
 
     public static function getStartQuarter($year, $quarter)
     {
-        if($quarter == 1){
-            $start_date = Carbon::create($year, 2)->startOfQuarter();
-            $end_date = Carbon::create($year, 2)->endOfQuarter();
-        }elseif ($quarter == 2){
-            $start_date = Carbon::create($year, 5)->startOfQuarter();
-            $end_date = Carbon::create($year, 5)->endOfQuarter();
-        }elseif ($quarter = 4) {
-            $start_date = Carbon::create($year, 8)->startOfQuarter();
-            $end_date = Carbon::create($year, 8)->endOfQuarter();
-        }else {
-            $start_date = Carbon::create($year, 11)->startOfQuarter();
-            $end_date = Carbon::create($year, 11)->endOfQuarter();
+        $start_date = "";
+        $end_date = "";
+        switch ($quarter){
+            case 1:
+                $start_date = Carbon::create($year, 2)->startOfQuarter();
+                $end_date = Carbon::create($year, 2)->endOfQuarter();
+            break;
+            case 2:
+                $start_date = Carbon::create($year, 6)->startOfQuarter();
+                $end_date = Carbon::create($year, 6)->endOfQuarter();
+            break;
+            case 3:
+                $start_date = Carbon::create($year, 9)->startOfQuarter();
+                $end_date = Carbon::create($year, 9)->endOfQuarter();
+            break;
+            case 4:
+                $start_date = Carbon::create($year, 12)->startOfQuarter();
+                $end_date = Carbon::create($year, 12)->endOfQuarter();
+            break;
         }
 
         return [$start_date->toDateTimeString(),  $end_date->toDateTimeString()];

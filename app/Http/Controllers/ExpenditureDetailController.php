@@ -81,19 +81,19 @@ class ExpenditureDetailController extends Controller
         $organisation      = $request->user()->organisation;
 
         $expenditure_details = $this->expenditure_detail_service->setDataForDownload($request);
+
         $admins            = $this->getOrganisationAdministrators();
         $president         = $admins[0];
-        $treasurer         = $admins[2];
-        $fin_sec           = $admins[1];
+        $treasurer         = count($admins) == 3 ? $admins[2]: null;
+        $fin_sec           = count($admins) == 3 ? $admins[1] : null;
 
         $total_amount_given = $expenditure_details[3]['total_amount_given'];
 
         $total_amount_spent = $expenditure_details[4]['total_amount_spent'];
 
         $balance            = $expenditure_details[5]['balance'];
-
         $data = [
-            'title'                 => $expenditure_details[1]['expenditure_item_name'],
+            'title'                 => 'Detail Expenses for '.$request->expenditure_item_name,
             'date'                  => date('m/d/Y'),
             'organisation'          => $organisation,
             'expenditure_details'   => $expenditure_details[0],
@@ -103,13 +103,18 @@ class ExpenditureDetailController extends Controller
             'organisation_telephone'   => $this->setOrganisationTelephone($organisation->telephone),
             'total_amount_given'    => $total_amount_given,
             'total_amount_spent'    => $total_amount_spent,
-            'balance'               => $balance,
+            'balance'               => $total_amount_given - $total_amount_spent,
+            'net_balance'            => $balance,
             'item_name'             => $expenditure_details[1]['expenditure_item_name'],
             'item_amount'           => $expenditure_details[2]['expenditure_item_amount'],
             'organisation_logo'     => env('FILE_DOWNLOAD_URL_PATH').$organisation->logo
         ];
 
         $pdf = PDF::loadView('ExpenditureDetail.ExpenditureDetail', $data);
+        $pdf->output();
+        $domPdf = $pdf->getDomPDF();
+        $canvas = $domPdf->getCanvas();
+        $canvas->page_text(10, $canvas->get_height() - 20, "Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, [0, 0, 0]);
 
         return $pdf->download('Expenditure_Details.pdf');
     }

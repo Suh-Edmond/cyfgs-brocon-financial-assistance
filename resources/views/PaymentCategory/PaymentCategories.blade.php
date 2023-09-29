@@ -17,19 +17,19 @@
             <label style="font-size: small;">Printed date: {{ $date }}</label>
         </div>
     </div>
-    <div>
-        <h3 style="font-weight: bold;font-size: medium; text-align:center;text-transform: uppercase;">{{ $title }}
+    <div style="margin-bottom: 2rem;">
+        <h3 style="font-weight: bold;font-size: medium; text-align:center;text-transform: capitalize;border-bottom: 1px solid black;">{{ $title }}
         </h3>
     </div>
-    <div>
-        <table style="border: 1px solid black; border-collapse: collapse;width: 100%">
+    <div class="page-break">
+        <table style="border: 1px solid black; border-collapse: collapse;width: 100%" >
             <tr style="border: 1px solid black; font-size: smaller;">
                 <th style="border: 1px solid black;">S/N</th>
                 <th style="padding: 12px; border: 1px solid black;">Name</th>
             </tr>
             @foreach ($categories as $key => $value)
                 <tr style="border: 1px solid black; font-size: smaller">
-                    <td style="padding: 5px; text-align: center">{{ $key + 1 }}</td>
+                    <td style="padding: 5px; text-align: center; width:5%">{{ $key + 1 }}</td>
                     <td style="border: 1px solid black; padding: 11px; text-align: center">{{ $value->name }}</td>
                 </tr>
             @endforeach

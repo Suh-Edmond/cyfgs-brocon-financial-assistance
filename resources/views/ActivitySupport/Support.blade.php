@@ -18,31 +18,35 @@
             <label style="font-size: small;">Printed date: {{ $date }}</label>
         </div>
     </div>
-    <div>
-        <h3 style="font-weight: bold;font-size: medium; text-align:center;text-transform: uppercase;">{{ $title }}
+    <div style="margin-bottom: 2rem;">
+        <h3 style="font-weight: bold;font-size: medium; text-align:center;text-transform: capitalize;border-bottom: 1px solid black;">{{ $title }}
         </h3>
     </div>
-    <div>
+    <div class="page-break">
         <table style="border: 1px solid black; border-collapse: collapse;width: 100%">
             <tr style="border: 1px solid black; font-size: smaller;">
                 <th style="border: 1px solid black;">S/N</th>
-                <th style="padding: 12px; border: 1px solid black;">Name</th>
-                <th style="padding: 12px; border: 1px solid black;">Amount Deposited(F CFA)</th>
+                <th style="padding: 12px; border: 1px solid black;">Sponsor's Name</th>
+                <th style="padding: 12px; border: 1px solid black;">Amount Deposited</th>
+                <th style="padding: 12px; border: 1px solid black;">Date</th>
+                <th style="padding: 12px; border: 1px solid black;">Payment Status</th>
+                <th style="padding: 12px; border: 1px solid black;">Transaction Code</th>
             </tr>
             @foreach ($supports as $key => $value)
                 <tr style="border: 1px solid black; font-size: smaller">
                     <td style="padding: 5px;">{{ $key + 1 }}</td>
                     <td style="border: 1px solid black; padding: 11px;">{{ $value->supporter }}</td>
-                    <td style="border: 1px solid black; padding: 11px;">{{ number_format($value->amount_deposited) }}
+                    <td style="border: 1px solid black; padding: 11px;">{{ number_format($value->amount_deposited) }} XAF
                     </td>
+                    <td style="border: 1px solid black; padding: 11px;">{{ date('j F, Y', strtotime($value->created_at)) }}</td>
+                    <td style="border: 1px solid black; padding: 11px;">{{ $value->approve }}</td>
+                    <td style="border: 1px solid black; padding: 11px;">{{ $value->code }}</td>
                 </tr>
             @endforeach
             <tr style="padding: 12px; border: 1px solid black; font-size: smaller">
-                <td style="padding: 15px; font-weight: 200" colspan="2"> Total Amount: {{ number_format($total) }} XAF
+                <td style="border: 1px solid black; padding: 11px;font-weight: bold" colspan="2"> Total Amount
                 </td>
-                <td style="padding: 15px;font-weight: 200"> </td>
-                <td style="padding: 15px;font-weight: 200"> </td>
-                <td style="padding: 15px;font-weight: 200"> </td>
+                <td style="padding: 15px;font-weight: 200" colspan="4">{{ number_format($total) }} XAF </td>
             </tr>
         </table>
     </div>

@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Constants\PaymentStatus;
 use App\Constants\RegistrationStatus;
 use App\Constants\Roles;
-use App\Exceptions\EmailException;
 use App\Http\Requests\CheckUserRequest;
 use App\Http\Requests\CreateAccountRequest;
 use App\Http\Requests\CreateUserRequest;
@@ -139,8 +138,8 @@ class UserController extends Controller
         $users             = $this->user_management_service->filterUsers($request);
         $admins            = $this->getOrganisationAdministrators();
         $president         = $admins[0];
-        $treasurer         = $admins[2];
-        $fin_sec           = $admins[1];
+        $treasurer         = count($admins) == 3 ? $admins[2]: null;
+        $fin_sec           = count($admins) == 3 ? $admins[1] : null;
 
         $data = [
             'title'                  => $this->setTitle($request),
@@ -155,7 +154,10 @@ class UserController extends Controller
         ];
 
         $pdf = PDF::loadView('User.Users', $data);
-
+        $pdf->output();
+        $domPdf = $pdf->getDomPDF();
+        $canvas = $domPdf->getCanvas();
+        $canvas->page_text(10, $canvas->get_height() - 20, "Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, [0, 0, 0]);
         return $pdf->download('Organisation_Users.pdf');
     }
 

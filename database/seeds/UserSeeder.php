@@ -1,12 +1,13 @@
 <?php
 
 use App\Constants\Roles;
+use App\Constants\SessionStatus;
 use App\Models\CustomRole;
 use Illuminate\Database\Seeder;
 use Faker\Generator as Faker;
 use App\Models\Organisation;
 use App\Models\User;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 
 class UserSeeder extends Seeder
 {
@@ -28,45 +29,30 @@ class UserSeeder extends Seeder
     public function run(Faker $faker)
     {
         for($i = 0; $i < 100; $i++){
-            $saved = User::create([
-                    'name'            => $faker->name,
-                    'email'           => $faker->email(),
-                    'telephone'       => $faker->phoneNumber,
-                    'password'        => $faker->password(6),
-                    'address'         => $faker->address(),
-                    'occupation'      => $faker->sentence(5),
-                    'gender'          => $faker->randomElement(['MALE', 'FEMALE']),
-                    'organisation_id' => $this->organisation[0],
-                    'updated_by'      => $faker->name
-                ]);
-            $saved->assignRole($this->role_user);
+            $created =  User::create([
+                'name'            => $faker->name,
+                'email'           => $faker->email,
+                'telephone'       => $faker->phoneNumber,
+                'gender'          => $faker->randomElement(['MALE', 'FEMALE']),
+                'address'         => $faker->address,
+                'occupation'      => $faker->randomElement(['Teacher', 'Accountant', 'Software Engineer', 'Banker', 'Devops Engineer', 'Nurse', 'Electrician', 'Plumber']),
+                'organisation_id' => $this->organisation[0],
+                'updated_by'      => "James Mark",
+                'status'          => SessionStatus::ACTIVE
+            ]);
+
+            $role = CustomRole::findByName(Roles::MEMBER, 'api');
+            $this->saveUserRole($created, $role,  "James Mark");
         }
+    }
 
-        $system_user = User::create([
-            'name'              => "Suh Edmond",
-            'email'             => 'email@gmail.com',
-            'telephone'         => '237671809232',
-            'password'          => Hash::make('password'),
-            'address'           => $faker->address(),
-            'occupation'        => $faker->sentence(5),
-            'gender'            => $faker->randomElement(['MALE', 'FEMALE']),
-            'organisation_id'   => $this->organisation[0],
-            'updated_by'        => $faker->name
+    public function  saveUserRole($user, $role, $updated_by)
+    {
+        DB::table('model_has_roles')->insert([
+            'role_id'       => $role->id,
+            'model_id'      => $user->id,
+            'model_type'    => 'App\Models\User',
+            'updated_by'    => $updated_by
         ]);
-
-        $role_admin     = CustomRole::findByName(Roles::ADMIN, 'api');
-        $role_auditor   = CustomRole::findByName(Roles::AUDITOR, 'api');
-        $role_president = CustomRole::findByName(Roles::PRESIDENT, 'api');
-        $role_fin_sec   = CustomRole::findByName(Roles::FINANCIAL_SECRETARY, 'api');
-        $role_treasurer = CustomRole::findByName(Roles::TREASURER, 'api');
-
-
-        $system_user->assignRole($this->role_user);
-        // $system_user->assignRole($role_admin);
-        // $system_user->assignRole($role_auditor);
-        $system_user->assignRole($role_president);
-        // $system_user->assignRole($role_fin_sec);
-        // $system_user->assignRole($role_treasurer);
-
     }
 }

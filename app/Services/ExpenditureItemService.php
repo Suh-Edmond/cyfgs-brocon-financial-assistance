@@ -5,7 +5,6 @@ use App\Constants\PaymentStatus;
 use App\Exceptions\BusinessValidationException;
 use App\Http\Resources\ExpenditureItemCollection;
 use App\Http\Resources\ExpenditureItemResource;
-use App\Http\Resources\QuarterlyExpenditureResource;
 use App\Interfaces\ExpenditureItemInterface;
 use App\Models\ExpenditureCategory;
 use App\Models\ExpenditureItem;
@@ -193,9 +192,15 @@ class ExpenditureItemService implements ExpenditureItemInterface {
         }
 
         $items = $items->orderBy('expenditure_items.name', 'ASC');
-        $paginated_data  = $items->paginate($request->per_page);
-        return (new ExpenditureItemCollection($this->generateExpenditureItemResponse($paginated_data), $paginated_data->total(),
-            $paginated_data->lastPage(), $paginated_data->perPage(), $paginated_data->currentPage()));
+        $expenditure_items  =!is_null($request->per_page)? $items->paginate($request->per_page) : $items->get();
+
+        $total = !is_null($request->per_page) ? $expenditure_items->total() : count($expenditure_items);
+        $last_page = !is_null($request->per_page) ? $expenditure_items->lastPage(): 0;
+        $per_page = !is_null($request->per_page) ? (int)$expenditure_items->perPage() : 0;
+        $current_page = !is_null($request->per_page) ? $expenditure_items->currentPage() : 0;
+
+        return new ExpenditureItemCollection($this->generateExpenditureItemResponse($expenditure_items), $total, $last_page,
+            $per_page, $current_page);
     }
 
     public function downloadExpenditureItems($request)

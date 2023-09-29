@@ -93,7 +93,9 @@ class IncomeActivityService implements IncomeActivityInterface {
     public function filterIncomeActivity($request)
     {
         $activities = $this->findIncomeActivities($request->organisation_id);
-        $activities = $activities->where('income_activities.payment_item_id', $request->payment_item_id);
+        if(!is_null($request->payment_item_id)) {
+            $activities = $activities->where('income_activities.payment_item_id', $request->payment_item_id);
+        }
         if(!is_null($request->status) && $request->status != "ALL") {
             $activities = $activities->where('income_activities.approve', $request->status);
         }
@@ -103,10 +105,15 @@ class IncomeActivityService implements IncomeActivityInterface {
         $activities = $activities->orderBy('income_activities.name', 'ASC');
 
         $total_income = $this->computeTotalIncomeActivities($activities->get());
-        $paginated_data = $activities->paginate($request->per_page);
+        $paginated_data = !is_null($request->per_page) ? $activities->paginate($request->per_page) : $activities->get();
 
-        return new IncomeActivityCollection($paginated_data, $total_income, $paginated_data->total(),
-            $paginated_data->lastPage(), (int)$paginated_data->perPage(), $paginated_data->currentPage());
+        $total = !is_null($request->per_page) ? $paginated_data->total() : count($paginated_data);
+        $last_page = !is_null($request->per_page) ? $paginated_data->lastPage(): 0;
+        $per_page = !is_null($request->per_page) ? (int)$paginated_data->perPage() : 0;
+        $current_page = !is_null($request->per_page) ? $paginated_data->currentPage() : 0;
+
+        return new IncomeActivityCollection($paginated_data,$total_income, $total, $last_page,
+            $per_page, $current_page);
     }
 
 

@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Constants\PaymentItemFrequency;
 use App\Http\Requests\ApproveContributionRequest;
+use App\Http\Requests\BulkPaymentRequest;
 use App\Http\Requests\CreateUserContributionRequest;
 use App\Http\Requests\UpdateUserContributionRequest;
 use App\Http\Resources\UserContributionResource;
@@ -108,55 +110,47 @@ class UserContributionController extends Controller
     public function downloadFilteredContributions(Request $request) {
         $contributions     = $this->filterContributions($request);
         $contributions     = json_decode(json_encode($contributions))->original->data;
-
         $organisation      = $request->user()->organisation;
 
         $admins            = $this->getOrganisationAdministrators();
         $president         = $admins[0];
-        $treasurer         = $admins[2];
-        $fin_sec           = $admins[1];
-        $total             = $this->computeTotalContribution($contributions);
+        $treasurer         = count($admins) == 3 ? $admins[2]: null;
+        $fin_sec           = count($admins) == 3 ? $admins[1] : null;
 
         $data = [
             'title'             => "Member's Contribution for ".$request->payment_item_name,
             'date'              => date('m/d/Y'),
             'organisation'      => $organisation,
-            'contributions'     => $contributions,
+            'contributions'     => $contributions->data,
             'organisation_telephone'   => $this->setOrganisationTelephone($organisation->telephone),
             'president'         => $president,
             'treasurer'         => $treasurer,
             'fin_secretary'     => $fin_sec,
-            'total'             => $total,
-            'balance'           => $contributions[0]->payment_item_amount - $total,
+            'total'             => $contributions->total_amount,
+//            'balance'           => $contributions->data[0]->payment_item_amount - $total,
             'organisation_logo' => env('FILE_DOWNLOAD_URL_PATH').$organisation->logo
         ];
 
         $pdf = PDF::loadView('Contribution.UsersContribution', $data);
+        $pdf->output();
+        $domPdf = $pdf->getDomPDF();
+        $canvas = $domPdf->getCanvas();
+        $canvas->page_text(10, $canvas->get_height() - 20, "Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, [0, 0, 0]);
+
         return $pdf->download('UsersContributions.pdf');
     }
 
 
-    public function bulkPayment(Request $request){
-        $this->validate($request, [
-            'row.*.user_id'         => 'required|string',
-            'row.*.payment_item_id' => 'required|string',
-            'row.*.comment'         => 'string|required',
-            'row.*.year'            => 'required|string',
-            'row.*.amount_deposited'=> 'required|numeric',
-            'row.*.code'            => 'required|string',
-            'row.*.is_compulsory'   => 'required|string',
-            'row.*.month_name'      => '',
-            'row.*.quarterly_name'  => '',
-            'row.*.registration_id' => 'required|string'
-        ]);
-        $this->userContributionService->bulkPayment($request);
+    public function bulkPayment(BulkPaymentRequest $request){
+         $this->userContributionService->bulkPayment(json_decode(json_encode($request->all())), $request->user()->name);
+
         return $this->sendResponse("success", 200);
     }
 
 
     public function getMemberOweContributions(Request $request)
     {
-        $data = $this->userContributionService->getMemberDebt($request->user_id, $request->session_id);
+        $data = $this->userContributionService->getMemberDebt($request);
         return $this->sendResponse($data, 200);
     }
 
@@ -168,30 +162,40 @@ class UserContributionController extends Controller
     }
 
     public function downloadUserContributions(Request $request) {
-        $contributions      = $this->getUsersContributionsByItem($request->payment_item_id, $request->user_id);
+        $contributions      = $this->getUsersContributionsByItem($request->payment_item_id, $request->user_id, $request);
         $contributions      = json_decode(json_encode($contributions))->original->data;
         $organisation      = $request->user()->organisation;
 
         $admins            = $this->getOrganisationAdministrators();
         $president         = $admins[0];
-        $treasurer         = $admins[2];
-        $fin_sec           = $admins[1];
-        $total             = $this->computeTotalContribution($contributions);
+        $treasurer         = count($admins) == 3 ? $admins[2]: null;
+        $fin_sec           = count($admins) == 3 ? $admins[1] : null;
 
         $data = [
             'title'             => $request->user_name." Contributions for ".$request->payment_item_name,
             'date'              => date('m/d/Y'),
             'organisation'      => $organisation,
-            'contributions'     => $contributions,
+            'contributions'     => $contributions->data,
             'organisation_telephone'   => $this->setOrganisationTelephone($organisation->telephone),
             'president'         => $president,
             'treasurer'         => $treasurer,
             'fin_secretary'     => $fin_sec,
-            'total'             => $total,
-            'balance'           => $contributions[0]->payment_item_amount - $total
+            'total'             => $contributions->total_amount,
+            'balance'           => $contributions->total_balance,
+            'payment_item_name' => $request->payment_item_name,
+            'payment_item_amount' => $request->payment_item_amount,
+            'payment_item_frequency'   => $request->payment_item_frequency,
+            'organisation_logo' => env('FILE_DOWNLOAD_URL_PATH').$organisation->logo,
+            'unpaid_durations'    => $contributions->unpaid_durations
         ];
 
         $pdf = PDF::loadView('Contribution.MemberContribution', $data);
+
+        $pdf->output();
+        $domPdf = $pdf->getDomPDF();
+        $canvas = $domPdf->getCanvas();
+        $canvas->page_text(10, $canvas->get_height() - 20, "Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, [0, 0, 0]);
+
         return $pdf->download('MemberContributions.pdf');
     }
 
@@ -208,4 +212,5 @@ class UserContributionController extends Controller
         $data = $this->userContributionService->getContributionStatistics($request);
         return $this->sendResponse($data, 200);
     }
+
 }

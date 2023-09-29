@@ -60,15 +60,21 @@ class ExpenditureDetailService implements ExpenditureDetailInterface {
     {
         $expenditure_item   = ExpenditureItem::findOrFail($expenditure_item_id);
         $details            = $this->findExpenditureDetails($expenditure_item->id, $request->status);
-        $paginated_data     = $details->paginate($request->per_page);
-        $response           = $this->generateResponseForExpenditureDetails($paginated_data);
+        $expenditure_items  = !is_null($request->per_page) ? $details->paginate($request->per_page) : $details->get();
+        $response           = $this->generateResponseForExpenditureDetails($expenditure_items);
 
         $total_amount_given = collect($details->get())->sum('amount_given');
         $total_amount_spent = collect($details->get())->sum('amount_spent');
         $balance            = ($expenditure_item->amount - $total_amount_given) + ($total_amount_given - $total_amount_spent);
 
-        return  new ExpenditureDetailCollection($response, $expenditure_item->name, $expenditure_item->amount, $total_amount_given,
-            $total_amount_spent, $balance, $paginated_data->total(), $paginated_data->lastPage(), (int)$paginated_data->perPage(), $paginated_data->currentPage());
+        $total = !is_null($request->per_page) ? $expenditure_items->total() : count($expenditure_items);
+        $last_page = !is_null($request->per_page) ? $expenditure_items->lastPage(): 0;
+        $per_page = !is_null($request->per_page) ? (int)$expenditure_items->perPage() : 0;
+        $current_page = !is_null($request->per_page) ? $expenditure_items->currentPage() : 0;
+
+        return new ExpenditureDetailCollection($response, $expenditure_item->name, $expenditure_item->amount, $total_amount_given,
+            $total_amount_spent, $balance, $total, $last_page,
+            $per_page, $current_page);
     }
 
     public function getExpenditureDetail($id)
@@ -100,11 +106,10 @@ class ExpenditureDetailService implements ExpenditureDetailInterface {
         $details = ExpenditureDetail::select('expenditure_details.*', 'expenditure_items.amount as expenditure_item_amount')
                                     ->join('expenditure_items', ['expenditure_items.id' => 'expenditure_details.expenditure_item_id'])
                                     ->where('expenditure_items.id', $id);
-        if($status != "ALL"){
+        if(!is_null($status) && $status != "ALL"){
             $details = $details->Where('expenditure_details.approve', $status);
         }
         $details = $details ->orderBy('expenditure_details.name', 'ASC')->get();
-
         $detail_response           = $this->generateResponseForExpenditureDetails($details);
         if(count($details) > 0){
             $expenditure_item_name = $details[0]->expenditureItem->name;
@@ -119,12 +124,7 @@ class ExpenditureDetailService implements ExpenditureDetailInterface {
     }
 
     public function setDataForDownload($request) {
-        if(is_null($request->status)) {
-            return $this->getExpenditureDetails($request->expenditure_item_id);
-        }
-        else {
-            return $this->filterExpenditureDetail($request->expenditure_item_id, $request->status);
-        }
+        return $this->filterExpenditureDetail($request->expenditure_item_id, $request->status);
     }
 
     public function findExpenditureDetailsByItemAndQuarter($item, $start_quarter, $end_quarter){

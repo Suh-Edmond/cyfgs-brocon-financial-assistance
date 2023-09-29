@@ -157,12 +157,12 @@ class UserManagementService implements UserManagementInterface
             'address'       => $request->address,
             'occupation'    => $request->occupation,
             'gender'        => $request->gender,
+            'status'        => $request->status,
         ]);
         $updated = $user->refresh();
-        $token = $this->generateToken($updated);
         $currentSession = $this->session_service->getCurrentSession();
 
-        return new TokenResource(new UserResource($updated,$token, true), $currentSession);
+        return new TokenResource(new UserResource($updated,null, true), $currentSession);
     }
 
     public function deleteUser($user_id)
@@ -181,7 +181,6 @@ class UserManagementService implements UserManagementInterface
             $token = $this->generateToken($user);
             $hasLoginBefore = $this->checkIfUserHasLogin($user);
             $currentSession = $this->session_service->getCurrentSession();
-
             return new TokenResource(new UserResource($user, $token, $hasLoginBefore), $currentSession);
         }
 
@@ -277,9 +276,14 @@ class UserManagementService implements UserManagementInterface
             $filter_users = $filter_users->where('users.name','LIKE', '%'.$request->filter.'%');
         }
         $filter_users = $filter_users->select('users.*','member_registrations.approve','member_registrations.session_id')->distinct();
-        $filter_users = $filter_users->orderBy('users.name')->paginate($request->per_page);
 
-        return new UserCollection($filter_users, $filter_users->total(), $filter_users->lastPage(), (int)$filter_users->perPage(), $filter_users->currentPage());
+        $filter_users = !is_null($request->per_page) ? $filter_users->orderBy('users.name')->paginate($request->per_page): $filter_users->orderBy('users.name')->get();
+        $total = !is_null($request->per_page) ? $filter_users->total() : count($filter_users);
+        $last_page = !is_null($request->per_page) ? $filter_users->lastPage(): 0;
+        $per_page = !is_null($request->per_page) ? (int)$filter_users->perPage() : 0;
+        $current_page = !is_null($request->per_page) ? $filter_users->currentPage() : 0;
+
+        return new UserCollection($filter_users, $total, $last_page, $per_page, $current_page);
     }
 
     public function setPasswordResetToken($request)
@@ -363,22 +367,12 @@ class UserManagementService implements UserManagementInterface
 
     private function generateToken($user)
     {
-        $token = "";
-        if (!is_null($user)) {
-            $token = $user->createToken('access-token', $user->roles->toArray())->plainTextToken;
-        }
-
-        return $token;
+        return !is_null($user) ? $user->createToken('access-token', $user->roles->toArray())->plainTextToken : "";
     }
 
     private function checkIfUserHasLogin($user)
     {
-        $hasLoginBefore = false;
-        if (!is_null($user->password)) {
-            $hasLoginBefore = true;
-        }
-
-        return $hasLoginBefore;
+        return !is_null($user->password);
     }
 
     private function validateIfUserCanLogin($user)

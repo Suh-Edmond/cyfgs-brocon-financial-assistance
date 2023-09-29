@@ -24,7 +24,16 @@ class BulkPaymentRequest extends FormRequest
     public function rules()
     {
         return [
-
+                'row.*.user_id'         => 'required|string',
+                'row.*.payment_item_id' => 'required|string',
+                'row.*.comment'         => 'string|required',
+                'row.*.year'            => 'required|string',
+                'row.*.amount_deposited'=> 'required|numeric',
+                'row.*.code'            => 'required|string',
+                'row.*.is_compulsory'   => 'required|string',
+                'row.*.month_name'      => '',
+                'row.*.quarterly_name'  => '',
+                'row.*.registration_id' => 'required|string'
         ];
     }
 }
