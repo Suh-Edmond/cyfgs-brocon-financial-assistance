@@ -11,7 +11,7 @@ class PaymentCategoryCollection extends ResourceCollection
     private $perPage;
     private $currentPage;
 
-    public function __construct($collection,$total,$lastPage, $perPage, $currentPage)
+    public function __construct($collection, $total, $lastPage, $perPage, $currentPage)
     {
         parent::__construct($collection);
         $this->total = $total;
@@ -25,7 +25,7 @@ class PaymentCategoryCollection extends ResourceCollection
     public function toArray($request)
     {
         return [
-            'data'           =>$this->collection,
+            'data'           => $this->collection,
             'total'          => $this->total,
             'last_page'      => $this->lastPage,
             'per_page'       => $this->perPage,

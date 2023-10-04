@@ -107,7 +107,7 @@ class UserManagementService implements UserManagementInterface
              $total_declined = isset($group_users['DECLINED']) ? count($group_users['DECLINED']): 0;
              $total_unregistered = isset($group_users['']) ? count($group_users['']): 0;
          }
-        return [$total_approved_record, $total_pending,$total_declined, $total_unregistered];
+        return [$total_approved_record, $total_pending, $total_declined, $total_unregistered];
     }
 
     public function getRegMemberByMonths($organisation_id)
