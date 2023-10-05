@@ -243,4 +243,15 @@ class ExpenditureDetailService implements ExpenditureDetailInterface {
         return count($data->toArray()) == 0 ? 0: $data[0]->expenditure_item_amount;
     }
 
+
+    public function approveBulkExpenditureItem($request)
+    {
+        foreach (json_decode(json_encode($request->all())) as $data){
+            $detail = ExpenditureDetail::find($data->id);
+            if($detail->approve == PaymentStatus::PENDING){
+                $detail->approve = $data->type;
+                $detail->save();
+            }
+        }
+    }
 }

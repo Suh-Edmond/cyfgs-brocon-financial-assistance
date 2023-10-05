@@ -241,6 +241,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::prefix('protected')->middleware('isTreasurer')->group(function () {
         Route::put('expenditure-details/{id}/approve', [ExpenditureDetailController::class, 'approveExpenditureDetail']);
+        Route::put('/expenditure-details/bulk_approve', [ExpenditureDetailController::class, 'approveBulkItemsDetails']);
     });
 
 

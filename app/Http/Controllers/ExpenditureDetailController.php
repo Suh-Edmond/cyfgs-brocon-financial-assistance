@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ApproveBulkExpenditureItemDetailRequest;
 use App\Http\Requests\ExpenditureDetailRequest;
 use App\Services\ExpenditureDetailService;
 use App\Traits\HelpTrait;
@@ -133,5 +134,12 @@ class ExpenditureDetailController extends Controller
         $data = $this->expenditure_detail_service->getExpenditureStatistics($request);
 
         return $this->sendResponse($data, 200);
+    }
+
+    public function approveBulkItemsDetails(ApproveBulkExpenditureItemDetailRequest $request)
+    {
+        $this->expenditure_detail_service->approveBulkExpenditureItem($request);
+
+        return $this->sendResponse("success", 200);
     }
 }
