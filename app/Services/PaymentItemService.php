@@ -5,6 +5,7 @@ use App\Constants\PaymentItemFrequency;
 use App\Constants\PaymentItemType;
 use App\Http\Resources\PaymentCategoryCollection;
 use App\Http\Resources\PaymentItemCollection;
+use App\Http\Resources\PaymentItemResource;
 use App\Interfaces\PaymentItemInterface;
 use App\Models\PaymentCategory;
 use App\Models\PaymentItem;
@@ -83,7 +84,7 @@ class PaymentItemService implements PaymentItemInterface {
 
         $payment_items = $this->fetchPaymentItems($request->payment_category_id);
         if(isset($request->is_compulsory) && $request->is_compulsory !== "ALL"){
-             $payment_items = $payment_items->where('compulsory', $request->is_compulsory);
+            $payment_items = $payment_items->where('compulsory', $request->is_compulsory);
         }
         if(isset($request->type) && $request->type !== "ALL"){
             $payment_items = $payment_items->where('type', $request->type);
@@ -98,13 +99,13 @@ class PaymentItemService implements PaymentItemInterface {
             $payment_items = $payment_items->whereDate('deadline', '<=', Carbon::now()->toDateString());
         }
 
-        $payment_items = !is_null($request->per_page) ? $payment_items->orderBy('payment_items.name')->paginate($request->per_page): $payment_items->orderBy('payment_items.name')->get();
-        $total = !is_null($request->per_page) ? $payment_items->total() : count($payment_items);
-        $last_page = !is_null($request->per_page) ? $payment_items->lastPage(): 0;
-        $per_page = !is_null($request->per_page) ? (int)$payment_items->perPage() : 0;
-        $current_page = !is_null($request->per_page) ? $payment_items->currentPage() : 0;
+        $payment_items_response =   !is_null($request->per_page) ? $payment_items->orderBy('payment_items.name')->paginate($request->per_page): $payment_items->orderBy('payment_items.name')->get();
+        $total         =   !is_null($request->per_page) ? $payment_items_response->total()         : count($payment_items_response);
+        $last_page     =   !is_null($request->per_page) ? $payment_items_response->lastPage()      : 0;
+        $per_page      =   !is_null($request->per_page) ? (int) $payment_items_response->perPage() : 0;
+        $current_page  =   !is_null($request->per_page) ? $payment_items_response->currentPage()   : 0;
 
-        return new PaymentCategoryCollection($payment_items, $total, $last_page,
+        return new PaymentCategoryCollection($payment_items_response, $total, $last_page,
             $per_page, $current_page);
     }
 

@@ -264,9 +264,9 @@ class UserSavingService implements UserSavingInterface
 
     public function getSavingsStatistics($request)
     {
-        $monthly_stat = $this->getTotalMonthlySavings($request);
-        $yearly_stat = $this->getTotalYearlySavings();
-        $status_stat =  $this->getSavingsStatByStatus();
+         $monthly_stat = $this->getTotalMonthlySavings($request);
+         $yearly_stat = $this->getTotalYearlySavings();
+         $status_stat =  $this->getSavingsStatByStatus($request->session_id);
 
         return ['monthly_stat' => $monthly_stat, 'yearly_stat' => $yearly_stat, 'status_stat' => $status_stat];
     }
@@ -301,13 +301,12 @@ class UserSavingService implements UserSavingInterface
         return $total_yearly_savings;
     }
 
-    private function getSavingsStatByStatus()
+    private function getSavingsStatByStatus($current_session)
     {
         $savings_by_status = [];
-        $current_session = $this->sessionService->getCurrentSession();
         $savings = DB::table('user_savings')
             ->join('sessions', 'sessions.id', '=', 'user_savings.session_id')
-            ->where('sessions.id', $current_session->id)
+            ->where('sessions.id', $current_session)
             ->select('user_savings.*')
             ->get();
         $saving_collect = collect($savings)->groupBy('approve')->toArray();

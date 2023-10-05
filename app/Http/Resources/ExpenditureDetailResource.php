@@ -32,7 +32,8 @@ class ExpenditureDetailResource extends JsonResource
             'updated_at'                    => $this->updated_at,
             'balance'                       => $this->balance,
             'updated_by'                    => $this->updated_by,
-            'expenditure_item_id'           => $this->expenditure_item_id
+            'expenditure_item_id'           => $this->expenditure_item_id,
+            'is_selected'                   => false,
         ];
     }
 }

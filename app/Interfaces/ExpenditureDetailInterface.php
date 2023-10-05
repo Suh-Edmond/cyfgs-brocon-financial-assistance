@@ -20,4 +20,6 @@ interface ExpenditureDetailInterface {
     public function computeTotalExpendituresByYearly($request);
 
     public function getExpenditureStatistics($request);
+
+    public function approveBulkExpenditureItem($request);
 }

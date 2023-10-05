@@ -71,7 +71,6 @@ class PaymentItemController extends Controller
     public function filterPaymentItems(Request $request)
     {
         $data = $this->payment_item_service->filterPaymentItems($request);
-
         return $this->sendResponse($data, 200);
     }
 
