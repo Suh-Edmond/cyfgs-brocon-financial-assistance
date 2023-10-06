@@ -44,11 +44,10 @@ Route::prefix('public/auth')->group(function () {
 Route::middleware('auth:sanctum')->group(function () {
 
     Route::prefix('protected/roles')->group(function () {
-        Route::post('', [RoleController::class, 'addUserRole'])->middleware('isPresident');
+        Route::post('', [RoleController::class, 'addUserRole'])->middleware('isElectionAdmin');
         Route::get('', [RoleController::class, 'getAllRoles'])->middleware('isUser');
         Route::get('/users/{user_id}', [RoleController::class, 'getUserRoles'])->middleware('isUser');
-//        Route::delete('/users/{user_id}', [RoleController::class, 'removeUserRole'])->middleware('isElectionAdmin');
-        Route::delete('/users/{user_id}', [RoleController::class, 'removeUserRole']);
+        Route::delete('/users/{user_id}', [RoleController::class, 'removeUserRole'])->middleware('isElectionAdmin');
     });
 
 

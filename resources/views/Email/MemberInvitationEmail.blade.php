@@ -19,7 +19,8 @@
         <p>
             {{$sender}} has invited you to join <span style="font-weight: bold">{{$organisation_name}}</span> on <span style="font-weight: bold">QuickRecords</span>
             in order to better manage your Financial Transactions<br>
-            Your email:<span style="color: blue">{{$user_email}}</span>
+            Your role:  <span style="color: blue">{{$role}}</span><br>
+            Your email: <span style="color: blue">{{$user_email}}</span>
         </p>
     </div>
     <div>

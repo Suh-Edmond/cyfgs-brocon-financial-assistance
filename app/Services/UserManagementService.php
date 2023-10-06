@@ -64,13 +64,13 @@ class UserManagementService implements UserManagementInterface
 
     public function sendInvitation($request)
     {
-        $request_user = User::find(auth()->user()->id);
+        $auth_user = $request->user();
         $redirectLink = env('MEMBER_INVITATION_REDIRECT_LINK');
-        $organisation_logo = env('FILE_DOWNLOAD_URL_PATH').$request_user->organisation->logo;
+        $organisation_logo = env('FILE_DOWNLOAD_URL_PATH').$auth_user->organisation->logo;
         try {
-            $this->role_service->addUserRole($request->user_id, $request->role, $request_user->name);
+            $this->role_service->addUserRole($request->user_id, $request->role, $auth_user->name);
             Mail::to($request->user_email)->send(new MemberInvitationMail($request->user_name, $request->user_email, $redirectLink,
-                $organisation_logo, $request_user->name, $request_user->organisation->name));
+                $organisation_logo, $auth_user->name, $auth_user->organisation->name, $request->role));
             MemberInvitation::create([
                 'user_id' => $request->user_id,
                 'expire_at' => Carbon::now()->addDays(7)
@@ -172,6 +172,7 @@ class UserManagementService implements UserManagementInterface
 
     public function loginUser($request)
     {
+
         $telephone = str_replace(" ", "", $request->telephone);
         $user = User::where('telephone', $telephone)->firstOrFail();
         if (!Hash::check($request->password, $user->password)) {
