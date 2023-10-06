@@ -20,7 +20,7 @@ class RoleService implements RoleInterface {
         $user = User::findOrFail($user_id);
         $assignRole = CustomRole::findByName($role, 'api');
 
-        $role_exist = $this->checkIfAUserAlreadyHasTheRole($user, $role);
+        $role_exist = $this->checkIfAUserAlreadyHasTheRole($role);
         if($role_exist){
             $this->saveUserRole($user, $assignRole, $updated_by);
         }else {
@@ -33,6 +33,7 @@ class RoleService implements RoleInterface {
     {
         $user = User::findOrFail($user_id);
         $user_role = CustomRole::findByName($role, 'api');
+        dd($user->roles);
         $user->removeRole($user_role);
 
     }
@@ -65,10 +66,9 @@ class RoleService implements RoleInterface {
         return $role;
     }
 
-    private function checkIfAUserAlreadyHasTheRole($user, $role): bool
+    private function checkIfAUserAlreadyHasTheRole($role): bool
     {
-        $max_num_users_with_same_role = 1;
-
+        $assign_role = CustomRole::findByName($role, 'api');
         $users = DB::table('users')
             ->join('model_has_roles', 'users.id', '=', 'model_has_roles.model_id')
             ->join('roles', 'roles.id', '=', 'model_has_roles.role_id')
@@ -76,6 +76,6 @@ class RoleService implements RoleInterface {
             ->where('roles.name', $role)
             ->count();
 
-        return $max_num_users_with_same_role > $users;
+        return $assign_role->number_of_members > $users;
     }
 }

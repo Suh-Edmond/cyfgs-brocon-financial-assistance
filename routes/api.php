@@ -47,7 +47,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('', [RoleController::class, 'addUserRole'])->middleware('isPresident');
         Route::get('', [RoleController::class, 'getAllRoles'])->middleware('isUser');
         Route::get('/users/{user_id}', [RoleController::class, 'getUserRoles'])->middleware('isUser');
-        Route::delete('/users/{user_id}', [RoleController::class, 'removeUserRole'])->middleware('isPresident');
+//        Route::delete('/users/{user_id}', [RoleController::class, 'removeUserRole'])->middleware('isElectionAdmin');
+        Route::delete('/users/{user_id}', [RoleController::class, 'removeUserRole']);
     });
 
 
