@@ -13,6 +13,6 @@ interface RoleInterface {
 
     public function findRole($role_name);
 
-
+    public function updateRole($request);
 
 }

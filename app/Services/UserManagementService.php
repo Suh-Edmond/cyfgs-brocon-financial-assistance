@@ -378,7 +378,7 @@ class UserManagementService implements UserManagementInterface
 
     private function validateIfUserCanLogin($user)
     {
-        if(empty(collect($user->roles)->whereIn('name', [Roles::TREASURER, Roles::FINANCIAL_SECRETARY, Roles::PRESIDENT, Roles::AUDITOR, Roles::SYSTEM_ADMIN])->toArray())){
+        if(empty(collect($user->roles)->whereIn('name', [Roles::TREASURER, Roles::FINANCIAL_SECRETARY, Roles::PRESIDENT, Roles::ELECTION_ADMIN, Roles::SYSTEM_ADMIN, Roles::AUDITOR, Roles::ADMIN])->toArray())){
             throw new UnAuthorizedException("User does not have any Administrator role", 403);
         }
     }

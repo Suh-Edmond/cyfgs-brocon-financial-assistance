@@ -30,7 +30,8 @@ class RoleResource extends JsonResource
             'updated_at'    => $this->updated_at,
             'updated_by'    => $this->updated_by,
             'term'          => $this->term,
-            'number_of_members' => $this->number_of_members
+            'number_of_members' => $this->number_of_members,
+            'permissions'    => $this->permissions
         ];
     }
 }

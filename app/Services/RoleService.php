@@ -63,7 +63,7 @@ class RoleService implements RoleInterface {
 
 
     public function getAllRoles() {
-        return CustomRole::all();
+        return RoleResource::collection(CustomRole::all());
     }
 
 
@@ -73,6 +73,16 @@ class RoleService implements RoleInterface {
             return $this->sendError('Role not found', 'The role to be assigned does not exist', 404);
         }
 
+        return $role;
+    }
+
+    public function updateRole($request)
+    {
+        $role = $this->findRole($request->name);
+        $role->update([
+            'term' => $request->term,
+            'number_of_members' => $request->number_of_members
+        ]);
         return $role;
     }
 
