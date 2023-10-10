@@ -18,7 +18,7 @@ class IsPresidentIsFinancialSecerataryIsTreasurerIsElectionAdmin
      */
     public function handle(Request $request, Closure $next)
     {
-        if(count(collect($request->user()->roles->toArray())->whereIn('name', [Roles::MEMBER, Roles::PRESIDENT, Roles::FINANCIAL_SECRETARY, Roles::TREASURER, Roles::ELECTION_ADMIN])->toArray()) < 2){
+        if(count(collect($request->user()->roles->toArray())->whereIn('name', [Roles::MEMBER, Roles::PRESIDENT, Roles::FINANCIAL_SECRETARY, Roles::TREASURER, Roles::ADMIN])->toArray()) < 2){
             return ResponseTrait::sendError('Access denied', 'You dont have the role to access this route', 403);
         }
         return $next($request);
