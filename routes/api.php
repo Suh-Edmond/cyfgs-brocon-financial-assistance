@@ -44,14 +44,15 @@ Route::prefix('public/auth')->group(function () {
 Route::middleware('auth:sanctum')->group(function () {
 
     Route::prefix('protected/roles')->group(function () {
-        Route::post('', [RoleController::class, 'addUserRole'])->middleware('isPresident');
-        Route::get('', [RoleController::class, 'getAllRoles'])->middleware('isUser');
+        Route::post('', [RoleController::class, 'addUserRole'])->middleware('isAdmin');
+        Route::get('', [RoleController::class, 'getAllRoles'])->middleware('isAdmin');
         Route::get('/users/{user_id}', [RoleController::class, 'getUserRoles'])->middleware('isUser');
-        Route::delete('/users/{user_id}', [RoleController::class, 'removeUserRole'])->middleware('isPresident');
+        Route::delete('/users/{user_id}', [RoleController::class, 'removeUserRole'])->middleware('isAdmin');
+        Route::put('/update', [RoleController::class, 'updateRole'])->middleware('isAdmin');
     });
 
 
-    Route::prefix('protected/organisations')->middleware('isTreasurerOrIsFinancialSecretaryOrIsPresident')->group(function () {
+    Route::prefix('protected/organisations')->middleware('isPresidentOrIsFinancialSecretaryOrIsTreasurerOrIsAdmin')->group(function () {
         Route::get('/{id}/users', [UserController::class, 'getUsers']);
         Route::get('/users/{id}', [UserController::class, 'getUser']);
         Route::get('download-users', [UserController::class, 'downloadUsers']);
@@ -59,6 +60,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/users', [UserController::class, 'getTotalUsersByRegStatus']);
         Route::get('registered_users', [UserController::class, 'getRegMemberByMonths']);
         Route::get('/payment_items/{id}/users', [UserController::class, 'getUserByPaymentItem']);
+    });
+
+    Route::prefix('protected/organisations')->middleware('isPresidentOrIsElectionAdmin')->group(function (){
         Route::post('/members/send_invitation', [UserController::class, 'sendInvitation']);
     });
 
@@ -76,13 +80,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/protected/users/{id}', [UserController::class, 'deleteUser'])->middleware('isPresident');
 
 
-    Route::prefix('protected')->middleware('isPresident')->group(function () {
+    Route::prefix('protected')->middleware('isPresidentOrIsElectionAdmin')->group(function () {
         Route::post('/organisations', [OrganisationController::class, 'createOrganisation']);
         Route::get('/organisations/{id}', [OrganisationController::class, 'getOrganisation']);
         Route::put('/organisations/{id}', [OrganisationController::class, 'updateOrganisation']);
     });
 
-    Route::prefix('protected')->middleware('isTreasurerOrIsFinancialSecretaryOrIsPresident')->group(function () {
+    Route::prefix('protected')->middleware('isPresidentIsFinancialSecretaryIsTreasurerIsElectionAdmin')->group(function () {
         Route::get('/organisation-info', [OrganisationController::class, 'getOrganisationInfo']);
     });
     Route::delete('protected/organisations/{id}', [OrganisationController::class, 'deleteOrganisation'])->middleware('isAdmin');

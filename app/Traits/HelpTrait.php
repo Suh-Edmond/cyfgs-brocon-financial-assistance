@@ -138,7 +138,9 @@ trait HelpTrait {
             'role_id'       => $role->id,
             'model_id'      => $user->id,
             'model_type'    => 'App\Models\User',
-            'updated_by'    => $updated_by
+            'updated_by'    => $updated_by,
+            'created_at'    => Carbon::now(),
+            'updated_at'    => Carbon::now()
         ]);
     }
 

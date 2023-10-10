@@ -19,9 +19,9 @@ class IsUserMiddleware
      */
     public function handle($request, Closure $next)
     {
-//        if(count(collect($request->user()->roles->toArray())->whereIn('name', [Roles::MEMBER])->toArray()) < 1){
-//            return ResponseTrait::sendError('Access denied', 'You dont have the role to access this route', 403);
-//        }
+        if(count(collect($request->user()->roles->toArray())->whereIn('name', [Roles::MEMBER])->toArray()) < 1){
+            return ResponseTrait::sendError('Access denied', 'You dont have the role to access this route', 403);
+        }
         return $next($request);
     }
 }
