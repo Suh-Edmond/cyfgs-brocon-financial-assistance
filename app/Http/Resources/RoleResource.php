@@ -7,12 +7,10 @@ use Ramsey\Uuid\Uuid;
 
 class RoleResource extends JsonResource
 {
-    private string $updated_by;
 
-    public function __construct($resource, $updated_by)
+    public function __construct($resource)
     {
         parent::__construct($resource);
-        $this->updated_by = $updated_by;
     }
     /**
      * Transform the resource into an array.
@@ -31,7 +29,7 @@ class RoleResource extends JsonResource
             'updated_by'    => $this->updated_by,
             'term'          => $this->term,
             'number_of_members' => $this->number_of_members,
-            'permissions'    => $this->permissions
+            'permissions'    => isset($this->permissions) ? $this->permissions:[]
         ];
     }
 }

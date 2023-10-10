@@ -40,7 +40,7 @@ class RoleService implements RoleInterface {
             if(Carbon::now()->greaterThanOrEqualTo($role_end_term)){
                 $user->removeRole($user_role);
             }else {
-                throw new BusinessValidationException("This User has not reach the Expiration Term. Term: ". $user_role->term, 403);
+                throw new BusinessValidationException("This User has not reach the Expiration Term. Term: ". $user_role->term, 427);
             }
         }else {
             throw new BusinessValidationException("User does not have this role: ".$role);
@@ -50,15 +50,12 @@ class RoleService implements RoleInterface {
 
     public function getUserRoles($user_id)
     {
-        $user = User::findOrFail($user_id);
-        $roles = [];
-
-        $user_roles = DB::table('model_has_roles')->where('model_id', $user->id)->get();
-        foreach ($user_roles as $role) {
-            $assignedRole = DB::table('roles')->where('id', $role->role_id)->first();
-            array_push($roles, new RoleResource($assignedRole, $role->updated_by));
-        }
-        return $roles;
+        $user_roles = DB::table('model_has_roles')
+            ->join('users', 'users.id', '=', 'model_has_roles.model_id')
+            ->join('roles', 'roles.id', '=', 'model_has_roles.role_id')
+            ->where('model_id', $user_id)
+            ->select('roles.*')->get();
+        return RoleResource::collection($user_roles);
     }
 
 
