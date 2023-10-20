@@ -2,13 +2,14 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\IsAdminIsPresidentIsFinancialSecretary;
 use App\Http\Middleware\IsAdminMiddleware;
 use App\Http\Middleware\IsAuditorMiddleware;
 use App\Http\Middleware\IsElectionAdmin;
 use App\Http\Middleware\IsFinancialSecretaryMiddleware;
-use App\Http\Middleware\IsPresidentIsFinancialSecerataryIsTreasurerIsElectionAdmin;
+use App\Http\Middleware\IsPresidentIsFinancialSecretaryIsTreasurerIsAdmin;
 use App\Http\Middleware\isPresidentMiddleware;
-use App\Http\Middleware\IsPresidentOrIsElectionAdmin;
+use App\Http\Middleware\IsPresidentOrIsAdmin;
 use App\Http\Middleware\isPresidentOrisFinancialSecretary;
 use App\Http\Middleware\IsPresidentOrIsFinancialSecretaryOrIsTreasurerOrIsAdmin;
 use App\Http\Middleware\IsTreasurerMiddleware;
@@ -92,9 +93,10 @@ class Kernel extends HttpKernel
         'isTreasurerOrIsFinancialSecretary' => IsTreasurerOrIsFinancialSecretary::class,
         'isTreasurerOrIsFinancialSecretaryOrIsPresident' => IsTreasurerOrIsFinancialSecretaryOrIsPresident::class,
         'isElectionAdmin' => IsElectionAdmin::class,
-        'isPresidentIsFinancialSecretaryIsTreasurerIsElectionAdmin' => IsPresidentIsFinancialSecerataryIsTreasurerIsElectionAdmin::class,
-        'isPresidentOrIsElectionAdmin' => IsPresidentOrIsElectionAdmin::class,
+        'isPresidentIsFinancialSecretaryIsTreasurerIsElectionAdmin' => IsPresidentIsFinancialSecretaryIsTreasurerIsAdmin::class,
+        'isPresidentOrIsAdmin' => IsPresidentOrIsAdmin::class,
         'isPresidentOrIsFinancialSecretaryOrIsTreasurerOrIsAdmin' => IsPresidentOrIsFinancialSecretaryOrIsTreasurerOrIsAdmin::class,
+        'isAdminIsPresidentIsFinancialSecretary' => IsAdminIsPresidentIsFinancialSecretary::class
 
     ];
 }
