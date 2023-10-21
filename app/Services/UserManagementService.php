@@ -149,6 +149,8 @@ class UserManagementService implements UserManagementInterface
         ]);
     }
 
+
+
     public function updateProfile($request) {
         $user = User::findOrFail($request->user_id);
         $user->update([
@@ -161,8 +163,9 @@ class UserManagementService implements UserManagementInterface
         ]);
         $updated = $user->refresh();
         $currentSession = $this->session_service->getCurrentSession();
+        $token = $this->generateToken($user);
 
-        return new TokenResource(new UserResource($updated,null, true), $currentSession);
+        return new TokenResource(new UserResource($updated,$token, true), $currentSession);
     }
 
     public function deleteUser($user_id)

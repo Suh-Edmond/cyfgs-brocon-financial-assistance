@@ -42,4 +42,6 @@ interface UserManagementInterface {
 
     public function getUserByPaymentItem($id, $request);
 
+//    public function getCurrentAuthUser();
+
 }
