@@ -22,8 +22,8 @@ class SessionService implements SessionInterface
     }
     public function getCurrentSession()
     {
-        $session = Session::where('status', SessionStatus::ACTIVE)->firstOrFail();
-        return new  SessionResource($session);
+        $session = Session::where('status', SessionStatus::ACTIVE)->first();
+        return new SessionResource($session);
     }
 
     public function createSession($request)

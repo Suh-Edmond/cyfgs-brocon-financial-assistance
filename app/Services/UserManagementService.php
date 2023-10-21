@@ -173,7 +173,7 @@ class UserManagementService implements UserManagementInterface
     public function loginUser($request)
     {
 
-        $telephone = str_replace(" ", "", $request->telephone);
+        $telephone = $request->telephone;
         $user = User::where('telephone', $telephone)->firstOrFail();
         if (!Hash::check($request->password, $user->password)) {
             throw new UnAuthorizedException('Bad Credentials', 403);
@@ -378,7 +378,7 @@ class UserManagementService implements UserManagementInterface
 
     private function validateIfUserCanLogin($user)
     {
-        if(empty(collect($user->roles)->whereIn('name', [Roles::TREASURER, Roles::FINANCIAL_SECRETARY, Roles::PRESIDENT, Roles::ELECTION_ADMIN, Roles::SYSTEM_ADMIN, Roles::AUDITOR, Roles::ADMIN])->toArray())){
+        if(empty(collect($user->roles)->whereIn('name', [Roles::TREASURER, Roles::FINANCIAL_SECRETARY, Roles::PRESIDENT, Roles::ADMIN])->toArray())){
             throw new UnAuthorizedException("User does not have any Administrator role", 403);
         }
     }

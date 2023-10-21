@@ -2,18 +2,12 @@
 namespace App\Models;
 
 use App\Traits\GenerateUuid;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 use Laravel\Sanctum\HasApiTokens;
 
-/**
- * @method static find(mixed $user_id)
- * @method static findOrFail($user_id)
- * @method static where(string $string, $organisation_id)
- * @method static create(array $array)
- */
+
 class User extends Authenticatable
 {
     use HasRoles, Notifiable, HasApiTokens;
