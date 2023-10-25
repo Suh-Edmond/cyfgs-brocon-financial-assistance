@@ -2,10 +2,8 @@
 
 use App\Constants\Permissions;
 use App\Constants\Roles;
-use App\Constants\SessionStatus;
 use App\Models\CustomPermission;
 use App\Models\CustomRole;
-use App\Models\Session;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Illuminate\Database\Seeder;
@@ -375,6 +373,89 @@ class RoleAndPermissionSeeder extends Seeder
            'updated_by' => 'admin@admin.com'
         ]);
 
+       Permission::create([
+           'name' => Permissions::CAN_COLLECT_USER_CONTRIBUTIONS,
+           'guard_name' => 'api',
+           'id' => Str::uuid()->toString(),
+            'updated_by' => 'admin@admin.com'
+       ]);
+
+       Permission::create([
+           'name' => Permissions::CAN_GET_EXPENDITURE_STATISTICS,
+           'guard_name' => 'api',
+           'id' => Str::uuid()->toString(),
+           'updated_by' => 'admin@admin.com'
+       ]);
+
+        Permission::create([
+            'name' => Permissions::CAN_GET_CONTRIBUTION_STATISTICS,
+            'guard_name' => 'api',
+            'id' => Str::uuid()->toString(),
+            'updated_by' => 'admin@admin.com'
+        ]);
+
+        Permission::create([
+            'name' => Permissions::CAN_CREATE_SPONSORSHIPS,
+            'guard_name' => 'api',
+            'id' => Str::uuid()->toString(),
+            'updated_by' => 'admin@admin.com'
+        ]);
+
+        Permission::create([
+            'name' => Permissions::CAN_UPDATE_SPONSORSHIPS,
+            'guard_name' => 'api',
+            'id' => Str::uuid()->toString(),
+            'updated_by' => 'admin@admin.com'
+        ]);
+
+        Permission::create([
+            'name' => Permissions::CAN_GET_SPONSORSHIPS,
+            'guard_name' => 'api',
+            'id' => Str::uuid()->toString(),
+            'updated_by' => 'admin@admin.com'
+        ]);
+
+        Permission::create([
+            'name' => Permissions::CAN_GET_SPONSORSHIP,
+            'guard_name' => 'api',
+            'id' => Str::uuid()->toString(),
+            'updated_by' => 'admin@admin.com'
+        ]);
+
+        Permission::create([
+            'name' => Permissions::CAN_DELETE_SPONSORSHIP,
+            'guard_name' => 'api',
+            'id' => Str::uuid()->toString(),
+            'updated_by' => 'admin@admin.com'
+        ]);
+
+        Permission::create([
+            'name' => Permissions::CAN_GENERATE_REPORTS,
+            'guard_name' => 'api',
+            'id' => Str::uuid()->toString(),
+            'updated_by' => 'admin@admin.com'
+        ]);
+
+        Permission::create([
+            'name' => Permissions::CAN_GET_SAVINGS_STATISTICS,
+            'guard_name' => 'api',
+            'id' => Str::uuid()->toString(),
+            'updated_by' => 'admin@admin.com'
+        ]);
+
+        Permission::create([
+            'name' => Permissions::CAN_GET_USER_ROLES,
+            'guard_name' => 'api',
+            'id' => Str::uuid()->toString(),
+            'updated_by' => 'admin@admin.com'
+        ]);
+
+        Permission::create([
+            'name' => Permissions::CAN_GET_ROLES,
+            'guard_name' => 'api',
+            'id' => Str::uuid()->toString(),
+            'updated_by' => 'admin@admin.com'
+        ]);
 
         Role::create([
             'name'       => Roles::ADMIN,
@@ -383,6 +464,12 @@ class RoleAndPermissionSeeder extends Seeder
             'updated_by' => 'admin@admin.com'
         ]);
         Role::create([
+            'name'       => Roles::PRESIDENT,
+            'guard_name' => 'api',
+            'id'         => Str::uuid()->toString(),
+            'updated_by' => 'admin@admin.com'
+        ]);
+       Role::create([
             'name'          => Roles::FINANCIAL_SECRETARY,
             'guard_name'    => 'api',
             'id'            => Str::uuid()->toString(),
@@ -394,19 +481,6 @@ class RoleAndPermissionSeeder extends Seeder
             'id'         => Str::uuid()->toString(),
            'updated_by' => 'admin@admin.com'
         ]);
-        Role::create([
-            'name'       => Roles::AUDITOR,
-            'guard_name' => 'api',
-            'id'         => Str::uuid()->toString(),
-            'updated_by' => 'admin@admin.com'
-        ]);
-       Role::create([
-            'name'       => Roles::PRESIDENT,
-            'guard_name' => 'api',
-            'id'         => Str::uuid()->toString(),
-           'updated_by' => 'admin@admin.com'
-        ]);
-
        Role::create([
             'name'       => Roles::MEMBER,
             'guard_name' => 'api',
@@ -414,28 +488,130 @@ class RoleAndPermissionSeeder extends Seeder
            'updated_by' => 'admin@admin.com'
         ]);
 
-        Role::create([
-            'name'       => Roles::SYSTEM_ADMIN,
-            'guard_name' => 'api',
-            'id'         => Str::uuid()->toString(),
-            'updated_by' => 'admin@admin.com'
-        ]);
 
 
         $role_admin     = CustomRole::findByName(Roles::ADMIN, 'api');
-        $role_auditor   = CustomRole::findByName(Roles::AUDITOR, 'api');
         $role_president = CustomRole::findByName(Roles::PRESIDENT, 'api');
         $role_fin_sec   = CustomRole::findByName(Roles::FINANCIAL_SECRETARY, 'api');
         $role_treasurer = CustomRole::findByName(Roles::TREASURER, 'api');
-        $system_admin = CustomRole::findByName(Roles::SYSTEM_ADMIN, 'api');
 
 
         $role_admin->givePermissionTo([
+            CustomPermission::findByName(Permissions::CAN_GET_EXPENDITURE_STATISTICS, 'api'),
+            CustomPermission::findByName(Permissions::CAN_GET_CONTRIBUTION_STATISTICS, 'api'),
+            CustomPermission::findByName(Permissions::CAN_CREATE_SPONSORSHIPS, 'api'),
+            CustomPermission::findByName(Permissions::CAN_UPDATE_SPONSORSHIPS, 'api'),
+            CustomPermission::findByName(Permissions::CAN_GET_SPONSORSHIPS, 'api'),
+            CustomPermission::findByName(Permissions::CAN_GET_SPONSORSHIP, 'api'),
+            CustomPermission::findByName(Permissions::CAN_DELETE_SPONSORSHIP, 'api'),
+            CustomPermission::findByName(Permissions::CAN_GENERATE_REPORTS, 'api'),
+            CustomPermission::findByName(Permissions::CAN_GET_SAVINGS_STATISTICS, 'api'),
+            CustomPermission::findByName(Permissions::CAN_GET_USER_ROLES, 'api'),
+            CustomPermission::findByName(Permissions::CAN_GET_ROLES, 'api'),
+            CustomPermission::findByName(Permissions::CAN_COLLECT_USER_CONTRIBUTIONS, 'api'),
             CustomPermission::findByName(Permissions::CAN_DELETE_ORGANISATION, 'api'),
-            CustomPermission::findByName(Permissions::CAN_DELETE_ROLE, 'api')
+            CustomPermission::findByName(Permissions::CAN_DELETE_ROLE, 'api'),
+            CustomPermission::findByName(Permissions::CAN_CREATE_ORGANISATION, 'api'),
+            CustomPermission::findByName(Permissions::CAN_GET_ORGANISATION, 'api'),
+            CustomPermission::findByName(Permissions::CAN_UPDATE_ORGANISATION, 'api'),
+            CustomPermission::findByName(Permissions::CAN_CREATE_USER, 'api'),
+            CustomPermission::findByName(Permissions::CAN_ASSIGN_USER_ROLE, 'api'),
+            CustomPermission::findByName(Permissions::CAN_REMOVE_USER_ROLE, 'api'),
+            CustomPermission::findByName(Permissions::CAN_CREATE_INCOME_ACTIVITY, 'api'),
+            CustomPermission::findByName(Permissions::CAN_GET_USER_SAVINGS, 'api'),
+            CustomPermission::findByName(Permissions::CAN_CREATE_PAYMENT_CATEGORY, 'api'),
+            CustomPermission::findByName(Permissions::CAN_CREATE_EXPENDITURE_CATEGORY, 'api'),
+            CustomPermission::findByName(Permissions::CAN_UPDATE_USER, 'api'),
+            CustomPermission::findByName(Permissions::CAN_DELETE_USER, 'api'),
+            CustomPermission::findByName(Permissions::CAN_GET_PAYMENT_CATEGORIES, 'api'),
+            CustomPermission::findByName(Permissions::CAN_GET_PAYMENT_CATEGORY, 'api'),
+            CustomPermission::findByName(Permissions::CAN_UPDATE_PAYMENT_CATEGORY, 'api'),
+            CustomPermission::findByName(Permissions::CAN_DELETE_EXPENDITURE_CATEGORY, 'api'),
+            CustomPermission::findByName(Permissions::CAN_DELETE_EXPENDITURE_DETAIL, 'api'),
+            CustomPermission::findByName(Permissions::CAN_DELETE_EXPENDITURE_ITEM, 'api'),
+            CustomPermission::findByName(Permissions::CAN_DELETE_INCOME_ACTIVITY, 'api'),
+            CustomPermission::findByName(Permissions::CAN_DELETE_PAYMENT_CATEGORY, 'api'),
+            CustomPermission::findByName(Permissions::CAN_DELETE_PAYMENT_ITEM, 'api'),
+            CustomPermission::findByName(Permissions::CAN_DELETE_USER_PAYMENT, 'api'),
+            CustomPermission::findByName(Permissions::CAN_DELETE_USER_SAVING, 'api'),
+            CustomPermission::findByName(Permissions::CAN_GET_USER_CONTRIBUTIONS, 'api'),
+            CustomPermission::findByName(Permissions::CAN_GET_USER_CONTRIBUTION, 'api'),
+            CustomPermission::findByName(Permissions::CAN_CREATE_EXPENDITURE_CATEGORY, 'api'),
+            CustomPermission::findByName(Permissions::CAN_CREATE_EXPENDITURE_DETAIL, 'api'),
+            CustomPermission::findByName(Permissions::CAN_CREATE_EXPENDITURE_ITEM, 'api'),
+            CustomPermission::findByName(Permissions::CAN_CREATE_INCOME_ACTIVITY ,'api'),
+            CustomPermission::findByName(Permissions::CAN_CREATE_PAYMENT_CATEGORY ,'api'),
+            CustomPermission::findByName(Permissions::CAN_CREATE_PAYMENT_ITEM ,'api'),
+            CustomPermission::findByName(Permissions::CAN_CREATE_USER_PAYMENT ,'api'),
+            CustomPermission::findByName(Permissions::CAN_CREATE_USER_SAVING ,'api'),
+            CustomPermission::findByName(Permissions::CAN_CREATE_USER ,'api'),
+            CustomPermission::findByName(Permissions::CAN_UPDATE_EXPENDITURE_CATEGORY ,'api'),
+            CustomPermission::findByName(Permissions::CAN_UPDATE_EXPENDITURE_DETAIL ,'api'),
+            CustomPermission::findByName(Permissions::CAN_UPDATE_EXPENDITURE_ITEM ,'api'),
+            CustomPermission::findByName(Permissions::CAN_UPDATE_INCOME_ACTIVITY ,'api'),
+            CustomPermission::findByName(Permissions::CAN_UPDATE_PAYMENT_CATEGORY ,'api'),
+            CustomPermission::findByName(Permissions::CAN_UPDATE_PAYMENT_ITEM ,'api'),
+            CustomPermission::findByName(Permissions::CAN_UPDATE_USER_PAYMENT ,'api'),
+            CustomPermission::findByName(Permissions::CAN_UPDATE_USER_SAVING ,'api'),
+            CustomPermission::findByName(Permissions::CAN_GET_EXPENDITURE_CATEGORIES ,'api'),
+            CustomPermission::findByName(Permissions::CAN_GET_EXPENDITURE_CATEGORY ,'api'),
+            CustomPermission::findByName(Permissions::CAN_GET_EXPENDITURE_DETAIL ,'api'),
+            CustomPermission::findByName(Permissions::CAN_GET_EXPENDITURE_DETAILS ,'api'),
+            CustomPermission::findByName(Permissions::CAN_GET_EXPENDITURE_ITEM ,'api'),
+            CustomPermission::findByName(Permissions::CAN_GET_EXPENDITURE_ITEMS ,'api'),
+            CustomPermission::findByName(Permissions::CAN_GET_PAYMENT_CATEGORIES ,'api'),
+            CustomPermission::findByName(Permissions::CAN_GET_PAYMENT_CATEGORY ,'api'),
+            CustomPermission::findByName(Permissions::CAN_GET_PAYMENT_ITEM ,'api'),
+            CustomPermission::findByName(Permissions::CAN_GET_PAYMENT_ITEMS ,'api'),
+            CustomPermission::findByName(Permissions::CAN_GET_USER_PAYMENT ,'api'),
+            CustomPermission::findByName(Permissions::CAN_GET_USER_PAYMENTS ,'api'),
+            CustomPermission::findByName(Permissions::CAN_GET_USER_SAVING ,'api'),
+            CustomPermission::findByName(Permissions::CAN_GET_USER_SAVINGS ,'api'),
+            CustomPermission::findByName(Permissions::CAN_GET_INCOME_ACTIVITIES ,'api'),
+            CustomPermission::findByName(Permissions::CAN_GET_INCOME_ACTIVITY ,'api'),
+            CustomPermission::findByName(Permissions::CAN_GET_USERS ,'api'),
+            CustomPermission::findByName(Permissions::CAN_GET_USER_CONTRIBUTIONS,'api'),
+            CustomPermission::findByName(Permissions::CAN_GET_USER_CONTRIBUTION,'api'),
+            CustomPermission::findByName(Permissions::CAN_APPROVE_INCOME_FOR_EXPENDITURE_ITEM,'api'),
+            CustomPermission::findByName(Permissions::CAN_APPROVE_INCOME_FOR_INCOME_ACTIVITY,'api'),
+            CustomPermission::findByName(Permissions::CAN_APPROVE_USER_PAYMENT,'api'),
+            CustomPermission::findByName(Permissions::CAN_APPROVE_USER_SAVING,'api'),
+            CustomPermission::findByName(Permissions::CAN_GET_EXPENDITURE_CATEGORIES,'api'),
+            CustomPermission::findByName(Permissions::CAN_GET_EXPENDITURE_CATEGORY,'api'),
+            CustomPermission::findByName(Permissions::CAN_GET_EXPENDITURE_DETAIL,'api'),
+            CustomPermission::findByName(Permissions::CAN_GET_EXPENDITURE_DETAILS,'api'),
+            CustomPermission::findByName(Permissions::CAN_GET_EXPENDITURE_ITEM,'api'),
+            CustomPermission::findByName(Permissions::CAN_GET_EXPENDITURE_ITEMS,'api'),
+            CustomPermission::findByName(Permissions::CAN_GET_PAYMENT_CATEGORIES,'api'),
+            CustomPermission::findByName(Permissions::CAN_GET_PAYMENT_CATEGORY,'api'),
+            CustomPermission::findByName(Permissions::CAN_GET_PAYMENT_ITEM,'api'),
+            CustomPermission::findByName(Permissions::CAN_GET_PAYMENT_ITEMS,'api'),
+            CustomPermission::findByName(Permissions::CAN_GET_USER_PAYMENT,'api'),
+            CustomPermission::findByName(Permissions::CAN_GET_USER_PAYMENTS,'api'),
+            CustomPermission::findByName(Permissions::CAN_GET_USER_SAVING,'api'),
+            CustomPermission::findByName(Permissions::CAN_GET_USER_SAVINGS,'api'),
+            CustomPermission::findByName(Permissions::CAN_GET_INCOME_ACTIVITIES,'api'),
+            CustomPermission::findByName(Permissions::CAN_GET_INCOME_ACTIVITY,'api'),
+            CustomPermission::findByName(Permissions::CAN_GET_USERS,'api'),
+            CustomPermission::findByName(Permissions::CAN_GET_USERS,'api'),
+            CustomPermission::findByName(Permissions::CAN_GET_USER_PAYMENTS,'api'),
+            CustomPermission::findByName(Permissions::CAN_GET_USER_SAVINGS,'api'),
+            CustomPermission::findByName(Permissions::CAN_GET_INCOME_ACTIVITIES,'api'),
         ]);
 
         $role_president->givePermissionTo([
+            CustomPermission::findByName(Permissions::CAN_GET_EXPENDITURE_STATISTICS, 'api'),
+            CustomPermission::findByName(Permissions::CAN_GET_CONTRIBUTION_STATISTICS, 'api'),
+            CustomPermission::findByName(Permissions::CAN_CREATE_SPONSORSHIPS, 'api'),
+            CustomPermission::findByName(Permissions::CAN_UPDATE_SPONSORSHIPS, 'api'),
+            CustomPermission::findByName(Permissions::CAN_GET_SPONSORSHIPS, 'api'),
+            CustomPermission::findByName(Permissions::CAN_GET_SPONSORSHIP, 'api'),
+            CustomPermission::findByName(Permissions::CAN_DELETE_SPONSORSHIP, 'api'),
+            CustomPermission::findByName(Permissions::CAN_GENERATE_REPORTS, 'api'),
+            CustomPermission::findByName(Permissions::CAN_GET_SAVINGS_STATISTICS, 'api'),
+            CustomPermission::findByName(Permissions::CAN_GET_USER_ROLES, 'api'),
+            CustomPermission::findByName(Permissions::CAN_GET_ROLES, 'api'),
+            CustomPermission::findByName(Permissions::CAN_COLLECT_USER_CONTRIBUTIONS, 'api'),
              CustomPermission::findByName(Permissions::CAN_CREATE_ORGANISATION, 'api'),
              CustomPermission::findByName(Permissions::CAN_GET_ORGANISATION, 'api'),
              CustomPermission::findByName(Permissions::CAN_UPDATE_ORGANISATION, 'api'),
@@ -462,6 +638,17 @@ class RoleAndPermissionSeeder extends Seeder
         ]);
 
         $role_fin_sec->givePermissionTo([
+            CustomPermission::findByName(Permissions::CAN_GET_EXPENDITURE_STATISTICS, 'api'),
+            CustomPermission::findByName(Permissions::CAN_GET_CONTRIBUTION_STATISTICS, 'api'),
+            CustomPermission::findByName(Permissions::CAN_CREATE_SPONSORSHIPS, 'api'),
+            CustomPermission::findByName(Permissions::CAN_UPDATE_SPONSORSHIPS, 'api'),
+            CustomPermission::findByName(Permissions::CAN_GET_SPONSORSHIPS, 'api'),
+            CustomPermission::findByName(Permissions::CAN_GET_SPONSORSHIP, 'api'),
+            CustomPermission::findByName(Permissions::CAN_DELETE_SPONSORSHIP, 'api'),
+            CustomPermission::findByName(Permissions::CAN_GENERATE_REPORTS, 'api'),
+            CustomPermission::findByName(Permissions::CAN_GET_SAVINGS_STATISTICS, 'api'),
+            CustomPermission::findByName(Permissions::CAN_COLLECT_USER_CONTRIBUTIONS, 'api'),
+            /////
             CustomPermission::findByName(Permissions::CAN_GET_USER_CONTRIBUTIONS, 'api'),
             CustomPermission::findByName(Permissions::CAN_GET_USER_CONTRIBUTION, 'api'),
             CustomPermission::findByName(Permissions::CAN_CREATE_EXPENDITURE_CATEGORY, 'api'),
@@ -502,6 +689,11 @@ class RoleAndPermissionSeeder extends Seeder
         ]);
 
         $role_treasurer->givePermissionTo([
+            CustomPermission::findByName(Permissions::CAN_GET_SAVINGS_STATISTICS, 'api'),
+            CustomPermission::findByName(Permissions::CAN_GET_SPONSORSHIPS, 'api'),
+            CustomPermission::findByName(Permissions::CAN_GET_SPONSORSHIP, 'api'),
+            CustomPermission::findByName(Permissions::CAN_GET_EXPENDITURE_STATISTICS, 'api'),
+            CustomPermission::findByName(Permissions::CAN_GET_CONTRIBUTION_STATISTICS, 'api'),
             CustomPermission::findByName(Permissions::CAN_GET_USER_CONTRIBUTIONS,'api'),
             CustomPermission::findByName(Permissions::CAN_GET_USER_CONTRIBUTION,'api'),
             CustomPermission::findByName(Permissions::CAN_APPROVE_INCOME_FOR_EXPENDITURE_ITEM,'api'),
@@ -527,11 +719,11 @@ class RoleAndPermissionSeeder extends Seeder
             CustomPermission::findByName(Permissions::CAN_GET_USERS,'api'),
         ]);
 
-        $role_auditor->givePermissionTo([
-           CustomPermission::findByName(Permissions::CAN_GET_USERS,'api'),
-           CustomPermission::findByName(Permissions::CAN_GET_USER_PAYMENTS,'api'),
-           CustomPermission::findByName(Permissions::CAN_GET_USER_SAVINGS,'api'),
-           CustomPermission::findByName(Permissions::CAN_GET_INCOME_ACTIVITIES,'api'),
-        ]);
+//        $role_auditor->givePermissionTo([
+//           CustomPermission::findByName(Permissions::CAN_GET_USERS,'api'),
+//           CustomPermission::findByName(Permissions::CAN_GET_USER_PAYMENTS,'api'),
+//           CustomPermission::findByName(Permissions::CAN_GET_USER_SAVINGS,'api'),
+//           CustomPermission::findByName(Permissions::CAN_GET_INCOME_ACTIVITIES,'api'),
+//        ]);
     }
 }

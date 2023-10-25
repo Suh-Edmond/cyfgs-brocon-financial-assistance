@@ -7,7 +7,7 @@ use App\Traits\ResponseTrait;
 use Closure;
 use Illuminate\Http\Request;
 
-class IsPresidentIsFinancialSecerataryIsTreasurerIsElectionAdmin
+class IsPresidentIsFinancialSecretaryIsTreasurerIsAdmin
 {
     /**
      * Handle an incoming request.

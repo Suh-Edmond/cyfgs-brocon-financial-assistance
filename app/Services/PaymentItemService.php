@@ -45,7 +45,6 @@ class PaymentItemService implements PaymentItemInterface {
     public function updatePaymentItem($request, $payment_item_id, $payment_category_id)
     {
         $updated =  $this->findPaymentItem($payment_item_id, $payment_category_id);
-
         $updated->update([
             'name'          => $request->name,
             'amount'        => $request->amount,
@@ -100,12 +99,12 @@ class PaymentItemService implements PaymentItemInterface {
         }
 
         $payment_items_response =   !is_null($request->per_page) ? $payment_items->orderBy('payment_items.name')->paginate($request->per_page): $payment_items->orderBy('payment_items.name')->get();
+
         $total         =   !is_null($request->per_page) ? $payment_items_response->total()         : count($payment_items_response);
         $last_page     =   !is_null($request->per_page) ? $payment_items_response->lastPage()      : 0;
         $per_page      =   !is_null($request->per_page) ? (int) $payment_items_response->perPage() : 0;
         $current_page  =   !is_null($request->per_page) ? $payment_items_response->currentPage()   : 0;
-
-        return new PaymentCategoryCollection($payment_items_response, $total, $last_page,
+        return new PaymentItemCollection($payment_items_response, $total, $last_page,
             $per_page, $current_page);
     }
 

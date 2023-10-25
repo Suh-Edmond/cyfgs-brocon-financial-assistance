@@ -76,7 +76,6 @@ class UserManagementService implements UserManagementInterface
                 'expire_at' => Carbon::now()->addDays(7)
             ]);
         }catch (Exception $exception){
-            $this->role_service->removeRole($request->user_id, $request->role);
             throw new BusinessValidationException("Could not send member's invitation email", 404);
         }
     }
@@ -149,6 +148,8 @@ class UserManagementService implements UserManagementInterface
         ]);
     }
 
+
+
     public function updateProfile($request) {
         $user = User::findOrFail($request->user_id);
         $user->update([
@@ -161,8 +162,9 @@ class UserManagementService implements UserManagementInterface
         ]);
         $updated = $user->refresh();
         $currentSession = $this->session_service->getCurrentSession();
+        $token = $this->generateToken($user);
 
-        return new TokenResource(new UserResource($updated,null, true), $currentSession);
+        return new TokenResource(new UserResource($updated,$token, true), $currentSession);
     }
 
     public function deleteUser($user_id)
@@ -173,7 +175,7 @@ class UserManagementService implements UserManagementInterface
     public function loginUser($request)
     {
 
-        $telephone = str_replace(" ", "", $request->telephone);
+        $telephone = $request->telephone;
         $user = User::where('telephone', $telephone)->firstOrFail();
         if (!Hash::check($request->password, $user->password)) {
             throw new UnAuthorizedException('Bad Credentials', 403);
@@ -378,8 +380,12 @@ class UserManagementService implements UserManagementInterface
 
     private function validateIfUserCanLogin($user)
     {
-        if(empty(collect($user->roles)->whereIn('name', [Roles::TREASURER, Roles::FINANCIAL_SECRETARY, Roles::PRESIDENT, Roles::ELECTION_ADMIN, Roles::SYSTEM_ADMIN, Roles::AUDITOR, Roles::ADMIN])->toArray())){
+        if(empty(collect($user->roles)->whereIn('name', [Roles::TREASURER, Roles::FINANCIAL_SECRETARY,
+            Roles::PRESIDENT, Roles::ADMIN])->toArray())){
             throw new UnAuthorizedException("User does not have any Administrator role", 403);
+        }
+        if($user->status === SessionStatus::IN_ACTIVE){
+            throw new UnAuthorizedException("User's Account has been deactivated! Please contact the ADMIN or President", 401);
         }
     }
 

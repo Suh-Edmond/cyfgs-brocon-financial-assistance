@@ -20,7 +20,6 @@ class RoleService implements RoleInterface {
     {
         $user = User::findOrFail($user_id);
         $assignRole = CustomRole::findByName($role, 'api');
-
         $member_has_role = $this->checkIfRoleCanBeAdded($assignRole);
         if($member_has_role){
             $this->saveUserRole($user, $assignRole, $updated_by);
@@ -43,7 +42,7 @@ class RoleService implements RoleInterface {
                 throw new BusinessValidationException("This User has not reach the Expiration Term. Term: ". $user_role->term, 427);
             }
         }else {
-            throw new BusinessValidationException("User does not have this role: ".$role);
+            throw new BusinessValidationException("User does not have this role: ".$role, 404);
         }
 
     }
