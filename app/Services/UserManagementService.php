@@ -76,7 +76,6 @@ class UserManagementService implements UserManagementInterface
                 'expire_at' => Carbon::now()->addDays(7)
             ]);
         }catch (Exception $exception){
-            $this->role_service->removeRole($request->user_id, $request->role);
             throw new BusinessValidationException("Could not send member's invitation email", 404);
         }
     }
