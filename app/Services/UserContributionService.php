@@ -37,8 +37,7 @@ class UserContributionService implements UserContributionInterface {
 
     public function createUserContribution($request)
     {
-        $this->saveContribution($request, $request->user_id, $request->user()->name, $this->sessionService->getCurrentSession());
-
+        $this->saveContribution($request, $request->user_id, $request->user()->name, $this->sessionService->getCurrentSession()->id);
     }
 
     public function updateUserContribution($request, $id)
