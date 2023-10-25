@@ -51,6 +51,7 @@ class UserResource extends JsonResource
             'year'           => !is_null(Session::find($this->session_id)) ? Session::find($this->session_id)->year : null,
             'session_id'     => $this->session_id,
             'status'         => $this->status,
+            'organisation_id' => $this->organisation_id
           ];
     }
 }
