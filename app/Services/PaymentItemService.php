@@ -45,7 +45,6 @@ class PaymentItemService implements PaymentItemInterface {
     public function updatePaymentItem($request, $payment_item_id, $payment_category_id)
     {
         $updated =  $this->findPaymentItem($payment_item_id, $payment_category_id);
-
         $updated->update([
             'name'          => $request->name,
             'amount'        => $request->amount,
