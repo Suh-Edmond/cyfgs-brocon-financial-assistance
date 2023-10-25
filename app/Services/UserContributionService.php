@@ -92,6 +92,7 @@ class UserContributionService implements UserContributionInterface {
 
     public function getContributionByUserAndItem($payment_item_id, $user_id, $request)
     {
+        $unpaid_durations = array();
         $payment_item = PaymentItem::find($payment_item_id);
         $contributions =  $this->getContributionByUserAndPaymentItem($payment_item_id, $user_id)
                                     ->select(  'user_contributions.*')
@@ -99,8 +100,6 @@ class UserContributionService implements UserContributionInterface {
         $total_contribution = collect($contributions->get())->sum('amount_deposited');
         $total_amount_payable = $this->getTotalPaymentItemAmountByQuarters($payment_item);
         $total_balance = ($total_amount_payable - $total_contribution);
-        $unpaid_durations = $payment_item->frequency == PaymentItemFrequency::QUARTERLY ? $this->getMemberUnPayQuarters($payment_item->frequency, $payment_item->created_at, $contributions->get()):
-            $this->getMemberUnPayMonths($payment_item->frequency, $payment_item->created_at, $contributions->get());
 
         $paginated_contribution = !is_null($request->per_page) ? $contributions->paginate($request->per_page): $contributions->get();
 
@@ -139,6 +138,7 @@ class UserContributionService implements UserContributionInterface {
 
     public function filterContributions($request)
     {
+        $unpaid_durations = array();
         $payment_item = PaymentItem::find($request->payment_item_id);
         $contributions = $this->getUserContributions($request);
         $contributions = $contributions->selectRaw('SUM(user_contributions.amount_deposited) as total_amount_deposited, user_contributions.*')
@@ -147,9 +147,12 @@ class UserContributionService implements UserContributionInterface {
         $total_balance = ($payment_item->amount - $total_contribution);
         $total_amount_payable = $this->getTotalPaymentItemAmountByQuarters($payment_item);
 
-        $unpaid_durations = $payment_item->frequency == PaymentItemFrequency::QUARTERLY ? $this->getMemberUnPayQuarters($payment_item->frequency, $payment_item->created_at, $contributions->get()):
-            $this->getMemberUnPayMonths($payment_item->frequency, $payment_item->created_at, $contributions->get());
-
+        if($payment_item->frequency == PaymentItemFrequency::QUARTERLY){
+            $unpaid_durations = $this->getMemberUnPayQuarters($payment_item->frequency, $payment_item->created_at, $contributions->get());
+        }
+        if ($payment_item->frequency == PaymentItemFrequency::MONTHLY) {
+            $unpaid_durations = $this->getMemberUnPayMonths($payment_item->frequency, $payment_item->created_at, $contributions->get());
+        }
         $contributions = !is_null($request->per_page) ? $contributions->paginate($request->per_page): $contributions->get();
 
         $total = !is_null($request->per_page) ? $contributions->total() : count($contributions);
