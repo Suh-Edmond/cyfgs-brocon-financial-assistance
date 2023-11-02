@@ -23,7 +23,8 @@
         <h3 style="font-weight: bold;font-size: medium; text-align:center;text-transform: capitalize;border-bottom: 1px solid black;">{{ $title }}
         </h3>
     </div>
-    <div class="page-break">
+    <?php $n=1 ?>
+    <div>
         <table style="border: 1px solid black; border-collapse: collapse;width: 100%">
             <tr style="padding: 13px;border: 1px solid black; font-size: smaller;">
                 <th style="padding: 1px; border: 1px solid black;">S/N</th>
@@ -53,6 +54,12 @@
                     <td style="border: 1px solid black; padding: 11px; text-align: center" >{{ $contribution->approve }}</td>
                     <td style="border: 1px solid black; padding: 11px; text-align: center" >{{ date('d-m-Y', strtotime($contribution->created_at)) }}</td>
                     <td style="border: 1px solid black; padding: 11px; text-align: center" >{{ $contribution->code }}</td>
+
+                    @if ( $n % 25 == 0 )
+                        <div style="page-break-before:always;page-break-inside: auto;"> </div>
+                    @endif
+                    <?php $n++ ?>
+
                 </tr>
             @endforeach
         </table>

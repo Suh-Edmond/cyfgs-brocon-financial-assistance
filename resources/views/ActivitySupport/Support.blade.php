@@ -22,7 +22,8 @@
         <h3 style="font-weight: bold;font-size: medium; text-align:center;text-transform: capitalize;border-bottom: 1px solid black;">{{ $title }}
         </h3>
     </div>
-    <div class="page-break">
+    <?php $n=1 ?>
+    <div>
         <table style="border: 1px solid black; border-collapse: collapse;width: 100%">
             <tr style="border: 1px solid black; font-size: smaller;">
                 <th style="border: 1px solid black;">S/N</th>
@@ -42,6 +43,10 @@
                     <td style="border: 1px solid black; padding: 11px;">{{ $value->approve }}</td>
                     <td style="border: 1px solid black; padding: 11px;">{{ $value->code }}</td>
                 </tr>
+                @if ( $n % 25 == 0 )
+                    <div style="page-break-before:always;page-break-inside: auto;"> </div>
+                @endif
+                <?php $n++ ?>
             @endforeach
             <tr style="padding: 12px; border: 1px solid black; font-size: smaller">
                 <td style="border: 1px solid black; padding: 11px;font-weight: bold" colspan="2"> Total Amount

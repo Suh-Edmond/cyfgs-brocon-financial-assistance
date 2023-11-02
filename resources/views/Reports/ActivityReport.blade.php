@@ -24,7 +24,8 @@
     </div>
 
     <!----------------------------------------------------------START OF INCOME------------------------------------------------------------------------------------------>
-    <div class="page-break">
+    <?php $n=1 ?>
+    <div>
         <div style="margin-bottom: 20px;margin-top: 20px">
             <h3 style="font-weight: bold;font-size: small; text-align:center;text-transform: uppercase;padding-bottom: 20px;text-decoration: underline"><span style="padding-right: 5px;"></span> Income (XAF)
             </h3>
@@ -42,6 +43,10 @@
                     <td style="border: 1px solid black; padding: 11px;">{{ number_format($value->amount) }}
                     </td>
                 </tr>
+                @if ( $n % 25 == 0 )
+                    <div style="page-break-before:always;page-break-inside: auto;"> </div>
+                @endif
+                <?php $n++ ?>
             @endforeach
             <tr style="border: 1px solid black; font-size: smaller;">
                 <td style="padding: 5px;font-weight: bold;"></td>
@@ -54,7 +59,8 @@
 
 
     <!----------------------------------------------------------START OF EXPENDITURES------------------------------------------------------------------------------------------>
-    <div style="margin-top: 20px;" class="page-break">
+    <?php $n=1 ?>
+    <div style="margin-top: 20px;" >
         <div style="margin-bottom: 20px;margin-top: 20px">
             <h3 style="font-weight: bold;font-size: small; text-align:center;text-transform: uppercase;padding-bottom: 20px;text-decoration: underline"><span style="padding-right: 5px;"></span>
                 Expenditures/Disbursements
@@ -79,6 +85,11 @@
                     <td style="border: 1px solid black; padding: 11px;">{{ number_format($value->balance) }}
                     </td>
                 </tr>
+
+                @if ( $n % 25 == 0 )
+                    <div style="page-break-before:always;page-break-inside: auto;"> </div>
+                @endif
+                <?php $n++ ?>
             @endforeach
             <tr style="border: 1px solid black; font-size: smaller;">
                 <td style="padding: 5px;font-weight: bold;border-right: 1px solid black;"></td>
