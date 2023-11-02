@@ -21,7 +21,8 @@
         <h3 style="font-weight: bold;font-size: medium; text-align:center;text-transform: capitalize;border-bottom: 1px solid black;">{{ $title }}
         </h3>
     </div>
-    <div class="page-break">
+    <?php $n=1 ?>
+    <div>
         <table style="border: 1px solid black; border-collapse: collapse;width: 100%" >
             <tr style="border: 1px solid black; font-size: smaller;">
                 <th style="border: 1px solid black;">S/N</th>
@@ -32,6 +33,10 @@
                     <td style="padding: 5px; text-align: center; width:5%">{{ $key + 1 }}</td>
                     <td style="border: 1px solid black; padding: 11px; text-align: center">{{ $value->name }}</td>
                 </tr>
+                @if ( $n % 25 == 0 )
+                    <div style="page-break-before:always;page-break-inside: auto;"> </div>
+                @endif
+                <?php $n++ ?>
             @endforeach
         </table>
     </div>

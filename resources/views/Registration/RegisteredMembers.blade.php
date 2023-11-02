@@ -22,6 +22,7 @@
     <h3 style="font-weight: bold;font-size: medium; text-align:center;text-transform: uppercase;">{{ $title }}
     </h3>
 </div>
+<?php $n=1 ?>
 <div>
     <table style="border: 1px solid black; border-collapse: collapse;width: 100%">
         <tr style="border: 1px solid black; font-size: smaller;">
@@ -36,6 +37,10 @@
             <td style="border: 1px solid black; padding: 11px;">{{ $value->user->telephone }}
             </td>
         </tr>
+        @if ( $n % 25 == 0 )
+            <div style="page-break-before:always;page-break-inside: auto;"> </div>
+        @endif
+        <?php $n++ ?>
         @endforeach
     </table>
 </div>

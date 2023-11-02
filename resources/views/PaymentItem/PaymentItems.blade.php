@@ -22,31 +22,36 @@
         <h3 style="font-weight: bold;font-size: medium; text-align:center;text-transform: capitalize;border-bottom: 1px solid black;">{{ $title }}
         </h3>
     </div>
-    <div class="page-break">
+    <?php $n=1 ?>
+    <div>
         <table style="border: 1px solid black; border-collapse: collapse;width: 100%">
             <tr style="padding: 13px;border: 1px solid black; font-size: smaller;">
                 <th style="padding: 3px; border: 1px solid black;width:5%">S/N</th>
-                <th style="padding: 12px; border: 1px solid black; width:50%">Name</th>
-                <th style="padding: 12px; border: 1px solid black;">Amount (XAF)</th>
-                <th style="padding: 12px; border: 1px solid black;">Compulsory</th>
-                <th style="padding: 12px; border: 1px solid black;">Frequency</th>
-                <th style="padding: 12px; border: 1px solid black;">Type</th>
-                <th style="padding: 12px; border: 1px solid black;">Deadline</th>
+                <th style="padding: 10px; border: 1px solid black; width:50%">Name</th>
+                <th style="padding: 10px; border: 1px solid black;">Amount (XAF)</th>
+                <th style="padding: 10px; border: 1px solid black;">Compulsory</th>
+                <th style="padding: 10px; border: 1px solid black;">Frequency</th>
+                <th style="padding: 10px; border: 1px solid black;">Type</th>
+                <th style="padding: 10px; border: 1px solid black;">Deadline</th>
             </tr>
             @foreach ($payment_items as $key => $value)
                 <tr style="border: 1px solid black; font-size: smaller">
-                    <td style="padding: 5px; width:3%">{{ $key + 1 }}</td>
-                    <td style="border: 1px solid black; padding: 9px;">{{ $value->name }}</td>
-                    <td style="border: 1px solid black; padding: 9px;">{{ number_format($value->amount) }}</td>
+                    <td style="padding: 3px; width:1%">{{ $key + 1 }}</td>
+                    <td style="border: 1px solid black; padding: 7px;">{{ $value->name }}</td>
+                    <td style="border: 1px solid black; padding: 7px;">{{ number_format($value->amount) }}</td>
                    @if ($value->compulsory == 1)
-                   <td style="border: 1px solid black; padding: 9px;">YES</td>
+                   <td style="border: 1px solid black; padding: 5px;">YES</td>
                    @else
-                   <td style="border: 1px solid black; padding: 9px;">NO</td>
+                   <td style="border: 1px solid black; padding: 7px;">NO</td>
                    @endif
-                    <td style="border: 1px solid black; padding: 9px;font-size: smaller">{{ $value->frequency }}</td>
-                    <td style="border: 1px solid black; padding: 9px;font-size: smaller">{{ $value->type }}</td>
-                    <td style="border: 1px solid black; padding: 9px;">{{  date('j F, Y', strtotime($value->deadline)) }}</td>
+                    <td style="border: 1px solid black; padding: 7px;font-size: smaller">{{ $value->frequency }}</td>
+                    <td style="border: 1px solid black; padding: 7px;font-size: smaller">{{ $value->type }}</td>
+                    <td style="border: 1px solid black; padding: 7px;">{{  date('d-m-Y', strtotime($value->deadline)) }}</td>
                 </tr>
+                @if ( $n % 25 == 0 )
+                    <div style="page-break-before:always;page-break-inside: auto;"> </div>
+                @endif
+                <?php $n++ ?>
             @endforeach
             <tr style="border: 1px solid black; font-size: smaller">
                 <td style="border: 1px solid black; padding: 11px;font-weight: bold"  colspan="2"> Total Amount:</td>

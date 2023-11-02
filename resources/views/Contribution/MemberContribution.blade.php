@@ -23,13 +23,14 @@
         <h3 style="font-weight: bold;font-size: medium; text-align:center;text-transform: capitalize;border-bottom: 1px solid black;">{{ $title }}
         </h3>
     </div>
-    <div class="page-break">
+    <?php $n=1 ?>
+    <div>
         <table style="border: 1px solid black; border-collapse: collapse;width: 100%">
             <tr style="padding: 13px;border: 1px solid black; font-size: smaller;">
                 <th style="padding: 1px; border: 1px solid black;">S/N</th>
                 <th style="padding: 12px; border: 1px solid black;">Quarter/Month</th>
-                <th style="padding: 12px; border: 1px solid black;">Amount Deposited</th>
-                <th style="padding: 12px; border: 1px solid black;">Balance</th>
+                <th style="padding: 12px; border: 1px solid black;">Amount Deposited(XAF)</th>
+                <th style="padding: 12px; border: 1px solid black;">Balance(XAF)</th>
                 <th style="padding: 12px; border: 1px solid black;">Payment Status</th>
                 <th style="padding: 12px; border: 1px solid black;">Transaction Status</th>
                 <th style="padding: 12px; border: 1px solid black;">Payment Date</th>
@@ -46,13 +47,19 @@
                         <td style="border: 1px solid black; padding: 11px; text-align: center" >{{ $contribution->payment_item_frequency }}</td>
                     @endif
                     <td style="border: 1px solid black; padding: 11px; text-align: center">
-                        {{ number_format($contribution->amount_deposited) }} XAF</td>
+                        {{ number_format($contribution->amount_deposited) }}</td>
                     <td style="border: 1px solid black; padding: 11px; text-align: center">
-                        {{ number_format($contribution->balance) }} XAF</td>
+                        {{ number_format($contribution->balance) }}</td>
                     <td style="border: 1px solid black; padding: 11px; text-align: center" >{{ $contribution->status }}</td>
                     <td style="border: 1px solid black; padding: 11px; text-align: center" >{{ $contribution->approve }}</td>
-                    <td style="border: 1px solid black; padding: 11px; text-align: center" >{{ date('j F, Y', strtotime($contribution->created_at)) }}</td>
+                    <td style="border: 1px solid black; padding: 11px; text-align: center" >{{ date('d-m-Y', strtotime($contribution->created_at)) }}</td>
                     <td style="border: 1px solid black; padding: 11px; text-align: center" >{{ $contribution->code }}</td>
+
+                    @if ( $n % 25 == 0 )
+                        <div style="page-break-before:always;page-break-inside: auto;"> </div>
+                    @endif
+                    <?php $n++ ?>
+
                 </tr>
             @endforeach
         </table>
@@ -109,6 +116,7 @@
                 {{number_format($total)}}
             </div>
         </div>
+        @if($payment_item_frequency == \App\Constants\PaymentItemFrequency::QUARTERLY || $payment_item_frequency == \App\Constants\PaymentItemFrequency::MONTHLY)
         <div class="row" style="border: 1px solid black">
             <div class="activity_summary_num_contribution">
                 5
@@ -128,10 +136,16 @@
                 @endforeach
             </div>
         </div>
+        @endif
         <div class="row" style="border: 1px solid black">
+            @if($payment_item_frequency == \App\Constants\PaymentItemFrequency::QUARTERLY || $payment_item_frequency == \App\Constants\PaymentItemFrequency::MONTHLY)
             <div class="activity_summary_num_contribution">
                 6
             </div>
+            @endif
+            @if($payment_item_frequency == \App\Constants\PaymentItemFrequency::ONE_TIME || $payment_item_frequency == \App\Constants\PaymentItemFrequency::YEARLY)
+                5
+                @endif
             <div class="activity_summary_label">
                 Total Balance
             </div>

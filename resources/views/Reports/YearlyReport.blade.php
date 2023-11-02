@@ -27,7 +27,8 @@
         </h3>
     </div>
 
-    <div class="activity page-break">
+    <?php $n=1 ?>
+    <div class="activity">
         <!---start of title-->
         <div class="row quarter_row">
             <div class="column1" style="font-weight: bold">
@@ -161,8 +162,12 @@
                     <div class="column4">{{number_format($income->total)}}</div>
                     <div class="column5">{{number_format($income->total)}}</div>
                 </div>
-        @endif
-    @endforeach
+            @endif
+            @if ( $n % 25 == 0 )
+                <div style="page-break-before:always;page-break-inside: auto;"> </div>
+            @endif
+            <?php $n++ ?>
+        @endforeach
     <!------total of incomes------------------------->
         <div class="row quarter_row">
             <div class="column1">
@@ -187,7 +192,7 @@
         </h3>
     </div>
 
-    <div class="activity page-break">
+     <div class="activity">
         <!---start of title-->
         <div class="row quarter_row">
             <div class="column1" style="font-weight: bold">
@@ -209,6 +214,7 @@
         <!---end of title-->
 
         <!---start of expenditure categories-->
+        <?php $p=1 ?>
         @foreach($expenditures as $key => $expenditure)
             <div>
                 <div class="row quarter_row">
@@ -225,6 +231,7 @@
                     </div>
                 </div>
                 <!------list of activities under the category--->
+                <?php $a=1 ?>
                 @foreach($expenditure->items as $k => $value)
                     <div class="row activity_row">
                         <div class="column1">
@@ -240,6 +247,7 @@
                         <div class="column5"></div>
 
                         <!-------------items under an activity------------>
+                        <?php $n=1 ?>
                         <div class="row item_row">
                             <div class="column1">
                                 {{$expenditure->code}}.{{$k + 1}}.{{array_key_first($value->items) + 1}}
@@ -265,6 +273,10 @@
                                     <div class="column5" ></div>
                                 </div>
                             </div>
+                        @if ( $n % 25 == 0 )
+                                <div style="page-break-before:always;page-break-inside: auto;"> </div>
+                        @endif
+                        <?php $n++ ?>
                     @endfor
                     <!-------------end of items----------------------->
 
@@ -282,6 +294,10 @@
                         </div>
                         <!---------end of activity sub total and total--------------->
                     </div>
+                    @if ( $a % 25 == 0 )
+                        <div style="page-break-before:always;page-break-inside: auto;"> </div>
+                    @endif
+                    <?php $a++ ?>
             @endforeach
 
             <!------end of activities------------------------>
@@ -297,7 +313,12 @@
                 <div class="column4">{{number_format($total_expenditure)}}</div>
                 <div class="column5">{{number_format($total_expenditure)}}</div>
             </div>
-    @endforeach
+
+            @if ( $p % 25 == 0 )
+                <div style="page-break-before:always;page-break-inside: auto;"> </div>
+            @endif
+            <?php $p++ ?>
+        @endforeach
     <!------total of expenditures------------------------->
         <div class="row quarter_row">
             <div class="column1">

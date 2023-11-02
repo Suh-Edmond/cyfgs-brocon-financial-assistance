@@ -22,10 +22,11 @@
         <h3 style="font-weight: bold;font-size: medium; text-align:center;text-transform: uppercase;border-bottom: 1px solid black;">{{ $title }}
         </h3>
     </div>
-    <div class="page-break">
+    <?php $n=1 ?>
+    <div>
         <table style="border: 1px solid black; border-collapse: collapse;width: 100%">
             <tr style="border: 1px solid black; font-size: smaller;">
-                <th style="border: 1px solid black;">S/N</th>
+                <th style="border: 1px solid black;width: 3%">S/N</th>
                 <th style="padding: 12px; border: 1px solid black;">Name</th>
                 <th style="padding: 12px; border: 1px solid black;">Email</th>
                 <th style="padding: 12px; border: 1px solid black;">Telephone</th>
@@ -33,17 +34,21 @@
             </tr>
             @foreach ($user_savings as $key => $user_saving)
                 <tr style="border: 1px solid black; font-size: smaller">
-                    <td style="padding: 5px;">{{ $key + 1 }}</td>
+                    <td style="padding: 5px;width: 3%">{{ $key + 1 }}</td>
                     <td style="border: 1px solid black; padding: 11px;">{{  $user_saving->name }}</td>
                     <td style="border: 1px solid black; padding: 11px;">{{  $user_saving->email }}</td>
                     <td style="border: 1px solid black; padding: 11px;">{{  $user_saving->telephone }}</td>
                     <td style="border: 1px solid black; padding: 11px;">{{ number_format($user_saving->total_amount) }}
                     </td>
                 </tr>
+                @if ( $n % 25 == 0 )
+                    <div style="page-break-before:always;page-break-inside: auto;"> </div>
+                @endif
+                <?php $n++ ?>
             @endforeach
             <tr style="border: 1px solid black; font-size: smaller">
-                <td style="border: 1px solid black; padding: 11px;font-weight: bold"  colspan="1"> Total Amount:</td>
-                <td style="border: 1px solid black; padding: 11px;font-weight: bold" colspan="4">{{ number_format($total) }} XAF</td>
+                <td style="border: 1px solid black; padding: 11px;font-weight: bold"  colspan="2"> Total Amount</td>
+                <td style="border: 1px solid black; padding: 11px;font-weight: bold" colspan="3">{{ number_format($total) }} XAF</td>
 
             </tr>
         </table>

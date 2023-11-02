@@ -98,7 +98,7 @@ class IncomeActivityController extends Controller
         $fin_sec           = count($admins) == 3 ? $admins[1] : null;
 
         $data = [
-            'title'               => !is_null($request->payment_item_label)?'Income Activity Payment for '. $request->payment_item_name:'Income Activities for Year '.$request->year,
+            'title'               => !is_null($request->payment_item_name)?'Income Activities for '. $request->payment_item_name:'Income Activities for Year '.$request->year,
             'date'                => date('m/d/Y'),
             'organisation'        => $organisation,
             'income_activities'   => $income_activities->data,
