@@ -93,9 +93,8 @@ class Kernel extends HttpKernel
         'isTreasurerOrIsFinancialSecretary' => IsTreasurerOrIsFinancialSecretary::class,
         'isTreasurerOrIsFinancialSecretaryOrIsPresident' => IsTreasurerOrIsFinancialSecretaryOrIsPresident::class,
         'isElectionAdmin' => IsElectionAdmin::class,
-        'isPresidentIsFinancialSecretaryIsTreasurerIsElectionAdmin' => IsPresidentIsFinancialSecretaryIsTreasurerIsAdmin::class,
+        'IsPresidentIsFinancialSecretaryIsTreasurerIsAdmin' => IsPresidentIsFinancialSecretaryIsTreasurerIsAdmin::class,
         'isPresidentOrIsAdmin' => IsPresidentOrIsAdmin::class,
-        'isPresidentOrIsFinancialSecretaryOrIsTreasurerOrIsAdmin' => IsPresidentOrIsFinancialSecretaryOrIsTreasurerOrIsAdmin::class,
         'isAdminIsPresidentIsFinancialSecretary' => IsAdminIsPresidentIsFinancialSecretary::class
 
     ];

@@ -29,7 +29,7 @@
                 <th style="padding: 12px; border: 1px solid black;">Name</th>
                 <th style="padding: 12px; border: 1px solid black;">Amount Given(XAF)</th>
                 <th style="padding: 12px; border: 1px solid black;">Amount Given(XAF)</th>
-                <th style="padding: 12px; border: 1px solid black;">Balance</th>
+                <th style="padding: 12px; border: 1px solid black;">Balance(XAF)</th>
                 <th style="padding: 12px; border: 1px solid black;">Transaction Status</th>
             </tr>
             @foreach ($expenditure_details as $key => $value)

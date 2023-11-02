@@ -19,7 +19,7 @@
         </div>
     </div>
     <div style="margin-bottom: 2rem;">
-        <h3 style="font-weight: bold;font-size: medium; text-align:center;text-transform: capitalize;border-bottom: 1px solid black;">{{$title}}</h3>
+        <h3 style="font-weight: bold;font-size: medium; text-align:center;text-transform: capitalize;border-bottom:1px solid black;">{{$title}}</h3>
     </div>
     <div class="page-break">
         <table style="border: 1px solid black; border-collapse: collapse;width: 100%">
@@ -38,7 +38,7 @@
                     <td style="border: 1px solid black; padding: 11px;text-align: center">{{ number_format($user_saving->amount_used) }}
                     </td>
                     <td style="border: 1px solid black; padding: 11px;text-align: center">{{ $user_saving->approve }}</td>
-                    <td style="border: 1px solid black; padding: 11px;text-align: center">{{ date('j F, Y', strtotime($user_saving->created_at)) }}</td>
+                    <td style="border: 1px solid black; padding: 11px;text-align: center">{{ date('d-m-Y', strtotime($user_saving->created_at)) }}</td>
 
                 </tr>
             @endforeach

@@ -82,6 +82,7 @@ class PaymentItemController extends Controller
 
     public function downloadPaymentItem(Request $request)
     {
+
         $organisation      = $request->user()->organisation;
         $items             = $this->payment_item_service->filterPaymentItems($request);
         $admins            = $this->getOrganisationAdministrators();
@@ -91,7 +92,7 @@ class PaymentItemController extends Controller
 
 
         $data = [
-            'title'               => 'Payment Items for '.$request->category_name,
+            'title'               => 'Payment Items under '.$request->category_name. ' Category',
             'date'                => date('m/d/Y'),
             'organisation'        => $organisation,
             'payment_items'       => $items,

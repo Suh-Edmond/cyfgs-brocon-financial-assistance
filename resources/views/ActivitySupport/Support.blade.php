@@ -38,7 +38,7 @@
                     <td style="border: 1px solid black; padding: 11px;">{{ $value->supporter }}</td>
                     <td style="border: 1px solid black; padding: 11px;">{{ number_format($value->amount_deposited) }} XAF
                     </td>
-                    <td style="border: 1px solid black; padding: 11px;">{{ date('j F, Y', strtotime($value->created_at)) }}</td>
+                    <td style="border: 1px solid black; padding: 11px;">{{ date('d-m-Y', strtotime($value->created_at)) }}</td>
                     <td style="border: 1px solid black; padding: 11px;">{{ $value->approve }}</td>
                     <td style="border: 1px solid black; padding: 11px;">{{ $value->code }}</td>
                 </tr>

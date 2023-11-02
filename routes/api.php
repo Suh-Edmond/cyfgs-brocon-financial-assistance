@@ -52,7 +52,7 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
 
-    Route::prefix('protected/organisations')->middleware('isPresidentOrIsFinancialSecretaryOrIsTreasurerOrIsAdmin')->group(function () {
+    Route::prefix('protected/organisations')->middleware('IsPresidentIsFinancialSecretaryIsTreasurerIsAdmin')->group(function () {
         Route::get('/{id}/users', [UserController::class, 'getUsers']);
         Route::get('/users/{id}', [UserController::class, 'getUser']);
         Route::get('download-users', [UserController::class, 'downloadUsers']);
@@ -86,7 +86,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('/organisations/{id}', [OrganisationController::class, 'updateOrganisation']);
     });
 
-    Route::prefix('protected')->middleware('isPresidentOrIsFinancialSecretaryOrIsTreasurerOrIsAdmin')->group(function () {
+    Route::prefix('protected')->middleware('IsPresidentIsFinancialSecretaryIsTreasurerIsAdmin')->group(function () {
         Route::get('/organisation-info', [OrganisationController::class, 'getOrganisationInfo']);
     });
     Route::delete('protected/organisations/{id}', [OrganisationController::class, 'deleteOrganisation'])->middleware('isAdmin');
@@ -98,7 +98,7 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
 
-    Route::prefix('protected')->middleware('isPresidentOrIsFinancialSecretaryOrIsTreasurerOrIsAdmin')->group(function () {
+    Route::prefix('protected')->middleware('IsPresidentIsFinancialSecretaryIsTreasurerIsAdmin')->group(function () {
         Route::get('/organisation/payment-categories', [PaymentCategoryController::class, 'getPaymentCategories']);
         Route::get('/organisations/{organisation_id}/payment-categories/{id}', [PaymentCategoryController::class, 'getPaymentCategory']);
         Route::get('/download-payment-categories', [PaymentCategoryController::class, 'downloadPaymentCategory']);
@@ -116,7 +116,7 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
 
-    Route::prefix('protected')->middleware('isPresidentOrIsFinancialSecretaryOrIsTreasurerOrIsAdmin')->group(function () {
+    Route::prefix('protected')->middleware('IsPresidentIsFinancialSecretaryIsTreasurerIsAdmin')->group(function () {
         Route::get('/payment-items', [PaymentItemController::class, 'getAllPaymentItems']);
         Route::get('/payment-categories/{payment_category_id}/payment-items', [PaymentItemController::class, 'getPaymentItemsByCategory']);
         Route::get('/payment-categories/{payment_category_id}/payment-items/{id}', [PaymentItemController::class, 'getPaymentItem']);
@@ -132,7 +132,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/payment-categories/{payment_category_id}/payment-items/{id}', [PaymentItemController::class, 'deletePaymentItem']);
     });
 
-    Route::prefix('protected')->middleware('isPresidentOrIsFinancialSecretaryOrIsTreasurerOrIsAdmin')->group(function () {
+    Route::prefix('protected')->middleware('IsPresidentIsFinancialSecretaryIsTreasurerIsAdmin')->group(function () {
         Route::get('/organisations/{organisation_id}/expenditure-categories', [ExpenditureCategoryController::class, 'getExpenditureCategories']);
         Route::get('/organisations/{organisation_id}/expenditure-categories/{id}', [ExpenditureCategoryController::class, 'getExpenditureCategory']);
         Route::get('expenditure-categories/download', [ExpenditureCategoryController::class, 'downloadExpenditureCategory']);
@@ -154,7 +154,7 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
 
-    Route::prefix('protected')->middleware('isPresidentOrIsFinancialSecretaryOrIsTreasurerOrIsAdmin')->group(function () {
+    Route::prefix('protected')->middleware('IsPresidentIsFinancialSecretaryIsTreasurerIsAdmin')->group(function () {
         Route::get('/expenditure-categories/{expenditure_category_id}/expenditure-items', [ExpenditureItemController::class, 'getExpenditureItems']);
         Route::get('/expenditure-categories/{expenditure_category_id}/expenditures', [ExpenditureItemController::class, 'getExpenditureByCategory']);
         Route::get('/expenditure-categories/{expenditure_category_id}/expenditure-items/{id}', [ExpenditureItemController::class, 'getExpenditureItem']);
@@ -178,7 +178,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('/user-savings/{user_id}/{id}', [UserSavingController::class, 'updateUserSaving']);
     });
 
-    Route::prefix('protected')->middleware('isPresidentOrIsFinancialSecretaryOrIsTreasurerOrIsAdmin')->group(function () {
+    Route::prefix('protected')->middleware('IsPresidentIsFinancialSecretaryIsTreasurerIsAdmin')->group(function () {
         Route::get('/user-savings/{user_id}', [UserSavingController::class, 'getUserSavings']);
         Route::get('/user-savings/{user_id}/{id}', [UserSavingController::class, 'getUserSaving']);
         Route::get('savings/download', [UserSavingController::class, 'download']);
@@ -195,7 +195,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('/user-savings/{id}', [UserSavingController::class, 'approveUserSaving']);
     });
 
-    Route::prefix('protected')->middleware('isPresidentOrIsFinancialSecretaryOrIsTreasurerOrIsAdmin')->group(function () {
+    Route::prefix('protected')->middleware('IsPresidentIsFinancialSecretaryIsTreasurerIsAdmin')->group(function () {
         Route::get('/savings', [UserSavingController::class, 'getAllUserSavingsByOrganisation']);
         Route::get('/organisations/{id}/user-savings/approve', [UserSavingController::class, 'getUserSavingsByStatusAndOrganisation']);
         Route::get('/user-savings', [UserSavingController::class, 'filterSavings']);
@@ -207,12 +207,12 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('/income-activities/{id}/update', [IncomeActivityController::class, 'updateIncomeActivity']);
     });
 
-    Route::prefix('protected')->middleware('isPresidentOrIsFinancialSecretaryOrIsTreasurerOrIsAdmin')->group(function () {
+    Route::prefix('protected')->middleware('IsPresidentIsFinancialSecretaryIsTreasurerIsAdmin')->group(function () {
         Route::get('organisations/{id}/income-activities', [IncomeActivityController::class, 'getIncomeActivitiesByOrganisation']);
         Route::get('income-activities/{id}', [IncomeActivityController::class, 'getIncomeActivity']);
         Route::get('organisations/income-activities/search', [IncomeActivityController::class, 'filterIncomeActivity']);
     });
-    Route::prefix('protected')->middleware('isPresidentOrIsFinancialSecretaryOrIsTreasurerOrIsAdmin')->group(function () {
+    Route::prefix('protected')->middleware('IsPresidentIsFinancialSecretaryIsTreasurerIsAdmin')->group(function () {
         Route::get('organisations/income-activities/generate-pdf', [IncomeActivityController::class, 'generateIncomeActivityPDF']);
     });
 
@@ -230,7 +230,7 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
 
-    Route::prefix('protected')->middleware('isPresidentOrIsFinancialSecretaryOrIsTreasurerOrIsAdmin')->group(function () {
+    Route::prefix('protected')->middleware('IsPresidentIsFinancialSecretaryIsTreasurerIsAdmin')->group(function () {
         Route::get('expenditure-items/{id}/details', [ExpenditureDetailController::class, 'getExpenditureDetails']);
         Route::get('expenditure-details/{id}', [ExpenditureDetailController::class, 'getExpenditureDetail']);
         Route::get('expenditure-details', [ExpenditureDetailController::class, 'filterExpenditureDetails']);
@@ -255,7 +255,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('contributions/bulk-payments', [UserContributionController::class, 'bulkPayment']);
     });
 
-    Route::prefix('protected')->middleware('isPresidentOrIsFinancialSecretaryOrIsTreasurerOrIsAdmin')->group(function () {
+    Route::prefix('protected')->middleware('IsPresidentIsFinancialSecretaryIsTreasurerIsAdmin')->group(function () {
         Route::get('contributions/payment-items/{id}/users/{user_id}', [UserContributionController::class, 'getUsersContributionsByItem']);
         Route::get('contributions/payment-items/{id}', [UserContributionController::class, 'getContributionsByPaymentItem']);
         Route::get('contributions/users/{id}', [UserContributionController::class, 'getContributionByUser']);
@@ -283,7 +283,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/activity-supports', [ActivitySupportController::class, 'createActivitySupport']);
         Route::put('activity-supports/{id}', [ActivitySupportController::class, 'updateActivitySupport']);
     });
-    Route::prefix('protected')->middleware('isPresidentOrIsFinancialSecretaryOrIsTreasurerOrIsAdmin')->group(function () {
+    Route::prefix('protected')->middleware('IsPresidentIsFinancialSecretaryIsTreasurerIsAdmin')->group(function () {
         Route::get('sponsorships', [ActivitySupportController::class, 'fetchAll']);
         Route::get('/activity-supports/{id}', [ActivitySupportController::class, 'fetchActivitySupport']);
         Route::get('/activity-supports/payment-items/{id}', [ActivitySupportController::class, 'getActivitySupportsByPaymentItem']);
@@ -308,7 +308,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('/members-registration/update', [MemberRegistrationController::class, 'updateRegistration']);
         Route::delete('/registered-members/{id}', [MemberRegistrationController::class, 'deleteRegistration']);
     });
-    Route::prefix('protected')->middleware('isPresidentOrIsFinancialSecretaryOrIsTreasurerOrIsAdmin')->group(function() {
+    Route::prefix('protected')->middleware('IsPresidentIsFinancialSecretaryIsTreasurerIsAdmin')->group(function() {
         Route::get('/registered-members', [MemberRegistrationController::class, 'getRegistrations']);
         Route::get('/registered-members/download', [MemberRegistrationController::class, 'downloadRegisteredMembers']);
     });
@@ -319,7 +319,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('/sessions/update', [SessionController::class, 'updateSession']);
         Route::delete('/sessions/{id}', [SessionController::class, 'deleteSession']);
     });
-    Route::prefix('protected')->middleware('isPresidentOrIsFinancialSecretaryOrIsTreasurerOrIsAdmin')->group(function (){
+    Route::prefix('protected')->middleware('IsPresidentIsFinancialSecretaryIsTreasurerIsAdmin')->group(function (){
          Route::get('/sessions', [SessionController::class, 'getAllSessions']);
         Route::get('/sessions/current', [SessionController::class, 'getCurrentSession']);
         Route::get('/paginated_sessions', [SessionController::class, 'getPaginatedSessions']);
@@ -331,7 +331,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('/registration_fees/{id}/set', [RegistrationController::class, 'setNewFee']);
         Route::delete('/registration_fees/{id}', [RegistrationController::class, 'deleteRegistrationFee']);
     });
-    Route::prefix('protected')->middleware('isPresidentOrIsFinancialSecretaryOrIsTreasurerOrIsAdmin')->group(function() {
+    Route::prefix('protected')->middleware('IsPresidentIsFinancialSecretaryIsTreasurerIsAdmin')->group(function() {
         Route::get('/registration_fees', [RegistrationController::class, 'getAllRegistrationFee']);
         Route::get('/registration_fees/current', [RegistrationController::class, 'getCurrentRegistrationFee']);
     });
