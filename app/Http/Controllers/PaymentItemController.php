@@ -26,7 +26,7 @@ class PaymentItemController extends Controller
     public function getAllPaymentItems() {
         $data = $this->payment_item_service->getPaymentItems();
 
-        return $this->sendResponse(PaymentItemResource::collection($data), 200);
+        return $this->sendResponse($data, 200);
     }
 
     public function getPaymentItemsByCategory($payment_category_id, Request $request)

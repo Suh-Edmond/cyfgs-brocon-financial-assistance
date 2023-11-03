@@ -198,7 +198,6 @@ class UserController extends Controller
     public function getUserByPaymentItem($id, Request $request)
     {
         $data = $this->user_management_service->getUserByPaymentItem($id, $request);
-
         return $this->sendResponse($data, 'success');
     }
 
