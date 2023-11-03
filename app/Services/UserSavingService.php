@@ -63,9 +63,9 @@ class UserSavingService implements UserSavingInterface
         }
         $savings = $savings->select('user_savings.*', 'users.email', 'users.name', 'users.telephone');
         $total = $this->calculateTotalSaving($savings->get());
-        $paginated_savings = $savings->orderBy('user_savings.created_at')->paginate($request->per_page);
 
-        return new UserSavingCollection($paginated_savings, $total, $paginated_savings->total(), $paginated_savings->lastPage(),
+        $paginated_savings = $savings->orderBy('user_savings.created_at')->paginate($request->per_page);
+         return new UserSavingCollection($paginated_savings, $total, $paginated_savings->total(), $paginated_savings->lastPage(),
             $paginated_savings->perPage(), $paginated_savings->currentPage());
     }
 

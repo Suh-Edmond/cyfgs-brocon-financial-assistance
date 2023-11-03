@@ -10,7 +10,14 @@ use Illuminate\Http\Resources\Json\JsonResource;
 class PaymentItemResource extends JsonResource
 {
     use ResponseTrait, HelpTrait;
-
+    private $paymentItemQuarters;
+    private $paymentItemMonths;
+    public function __construct($resource, $paymentItemQuarters = [], $paymentItemMonths = [])
+    {
+        parent::__construct($resource);
+        $this->paymentItemMonths = $paymentItemMonths;
+        $this->paymentItemQuarters = $paymentItemQuarters;
+    }
 
     public function toArray($request)
     {
@@ -29,7 +36,9 @@ class PaymentItemResource extends JsonResource
             'session'               => $this->session,
             'references'            => collect($this->getReferenceResource($this->reference))->sortBy('name')->toArray(),
             'deadline'              => $this->deadline,
-            'deadline_state'        => Carbon::now()->lessThan($this->deadline) ? "ACTIVE" : "EXPIRED"
+            'deadline_state'        => Carbon::now()->lessThan($this->deadline) ? "ACTIVE" : "EXPIRED",
+            'payment_item_months'   => $this->paymentItemMonths,
+            'payment_item_quarters'  => $this->paymentItemQuarters
         ];
     }
 

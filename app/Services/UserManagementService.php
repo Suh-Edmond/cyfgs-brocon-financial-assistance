@@ -90,11 +90,21 @@ class UserManagementService implements UserManagementInterface
                ->orderBy('name')->get();
     }
 
+    public function getUsersRegistrationStatus($organisation_id)
+    {
+        return User::join('organisations', 'organisations.id', '=', 'users.organisation_id')
+            ->leftJoin('member_registrations', 'users.id', '=', 'member_registrations.user_id')
+            ->where('organisations.id', $organisation_id)
+            ->where('users.status', SessionStatus::ACTIVE)
+            ->select('users.*', 'member_registrations.approve')
+            ->distinct()
+            ->orderBy('name')->get();
+    }
 
     public function getTotalUsersByRegStatus($organisation_id)
     {
 
-        $users = $this->getUsers($organisation_id);
+        $users = $this->getUsersRegistrationStatus($organisation_id);
         $group_users = collect($users)->groupBy('approve')->toArray();
         $total_approved_record = 0;
         $total_pending = 0;
@@ -357,15 +367,13 @@ class UserManagementService implements UserManagementInterface
         $paymentItem = PaymentItem::findOrFail($id);
         switch ($paymentItem->type){
             case PaymentItemType::ALL_MEMBERS:
-                $users = UserResource::collection($this->getUsers($request->organisation_id));
+                $paymentItemMembers = UserResource::collection($this->getUsers($request->organisation_id));
             break;
             default:
-                $users = $this->getReferenceResource($paymentItem->reference);
+                $paymentItemMembers = $this->getReferenceResource($paymentItem->reference);
             break;
-
-
         }
-        return $users;
+        return $paymentItemMembers;
     }
 
     private function generateToken($user)

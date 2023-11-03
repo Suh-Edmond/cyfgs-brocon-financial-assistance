@@ -3,7 +3,6 @@ namespace App\Services;
 
 use App\Constants\PaymentItemFrequency;
 use App\Constants\PaymentItemType;
-use App\Http\Resources\PaymentCategoryCollection;
 use App\Http\Resources\PaymentItemCollection;
 use App\Http\Resources\PaymentItemResource;
 use App\Interfaces\PaymentItemInterface;
@@ -109,8 +108,22 @@ class PaymentItemService implements PaymentItemInterface {
     }
 
     public function getPaymentItems() {
+        $payment_items = array();
         $current_session = $this->session_service->getCurrentSession();
-        return PaymentItem::where('session_id', $current_session->id)->get();
+        $session_payment_items =  PaymentItem::where('session_id', $current_session->id)->get();
+        foreach ($session_payment_items as $payment_item){
+            if($payment_item->frequency == PaymentItemFrequency::QUARTERLY){
+                $quarters = $this->getPaymentItemQuartersBySession($payment_item->frequency, $payment_item->created_at);
+                array_push($payment_items, new PaymentItemResource($payment_item, $quarters, []));
+            }elseif ($payment_item->frequency == PaymentItemFrequency::MONTHLY) {
+                $months = $this->getPaymentItemMonthsBySession($payment_item->frequency, $payment_item->created_at);
+                array_push($payment_items, new PaymentItemResource($payment_item, [], $months));
+            }else {
+                array_push($payment_items, new PaymentItemResource($payment_item, [], []));
+            }
+        }
+
+        return $payment_items;
     }
 
     public function getPaymentItemByType($type)
@@ -214,5 +227,19 @@ class PaymentItemService implements PaymentItemInterface {
             $reference = $this->getAllNoAdminsId();
         }
         return $reference;
+    }
+
+    private function getPaymentItemQuartersBySession($item_frequency, $item_created_at)
+    {
+        $quarters = $this->getQuarters();
+        $current_quarter = $this->convertQuarterNameToNumber($this->getDateQuarter($item_frequency, $item_created_at));
+        return array_splice($quarters, ($current_quarter - 1), count($quarters));
+    }
+
+    private function getPaymentItemMonthsBySession($item_frequency, $item_created_at)
+    {
+        $all_months = $this->getMonths();
+        $current_month_index = $this->getItemMonth($item_frequency, $item_created_at)->month;
+        return array_splice($all_months, $current_month_index - 1, count($all_months));
     }
 }
