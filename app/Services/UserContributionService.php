@@ -101,6 +101,12 @@ class UserContributionService implements UserContributionInterface {
         $total_amount_payable = $this->getTotalPaymentItemAmountByQuarters($payment_item);
         $total_balance = ($total_amount_payable - $total_contribution);
 
+        if($payment_item->frequency == PaymentItemFrequency::MONTHLY){
+            $unpaid_durations = $this->getMemberUnPayMonths($payment_item->frequency, $payment_item->created_at, $contributions->get());
+        }elseif ($payment_item->frequency == PaymentItemFrequency::QUARTERLY){
+            $unpaid_durations = $this->getMemberUnPayQuarters($payment_item->frequency, $payment_item->created_at, $contributions->get());
+        }
+
         $paginated_contribution = !is_null($request->per_page) ? $contributions->paginate($request->per_page): $contributions->get();
 
         $total = !is_null($request->per_page) ? $paginated_contribution->total() : count($paginated_contribution);
