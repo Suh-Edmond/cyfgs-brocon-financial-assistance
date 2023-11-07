@@ -36,7 +36,6 @@ class ExpenditureCategoryService implements ExpenditureCategoryInterface {
         $update_expenditure_category = $this->findExpenditureCategory($id, $organisation_id);
         $update_expenditure_category->update([
             'name'              => $request->name,
-            'code'              => $request->code,
             'description'       => $request->description,
         ]);
     }

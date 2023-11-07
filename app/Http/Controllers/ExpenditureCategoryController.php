@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ExpenditureCategoryRequest;
+use App\Http\Requests\UpdateExpenditureCategoryRequest;
 use App\Http\Resources\ExpenditureCategoryResource;
 use App\Services\ExpenditureCategoryService;
 use App\Traits\HelpTrait;
@@ -52,7 +53,7 @@ class ExpenditureCategoryController extends Controller
 
 
 
-    public function updateExpenditureCategory(ExpenditureCategoryRequest $request, $organisation_id, $id)
+    public function updateExpenditureCategory(UpdateExpenditureCategoryRequest $request, $organisation_id, $id)
     {
         $this->expenditure_category_service->updateExpenditureCategory($request, $id, $organisation_id);
 
