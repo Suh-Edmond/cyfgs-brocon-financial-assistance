@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\PaymentCategoryRequest;
+use App\Http\Requests\UpdatePaymentCategoryRequest;
 use App\Http\Resources\PaymentCategoryResource;
 use App\Services\PaymentCategoryService;
 use App\Traits\HelpTrait;
@@ -49,7 +50,7 @@ class PaymentCategoryController extends Controller
     }
 
 
-    public function updatePaymentCategory(PaymentCategoryRequest $request, $organisation_id, $id)
+    public function updatePaymentCategory(UpdatePaymentCategoryRequest $request, $organisation_id, $id)
     {
         $this->payment_category_service->updatePaymentCategory($request, $id,  $organisation_id);
 

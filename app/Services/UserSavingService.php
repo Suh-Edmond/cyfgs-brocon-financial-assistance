@@ -38,14 +38,14 @@ class UserSavingService implements UserSavingInterface
 
     public function updateUserSaving($request, $id, $user_id)
     {
-        $user = $this->findUserSaving($id, $user_id);
-        if($user->approve == PaymentStatus::PENDING){
-            $user->update([
+        $saving = $this->findUserSaving($id, $user_id);
+        if($saving->approve == PaymentStatus::PENDING){
+            $saving->update([
                 'amount_deposited'      => $request->amount_deposited,
                 'comment'               => $request->comment,
             ]);
         }else {
-            throw new BusinessValidationException("Saving cannot be updated after been approved or declined");
+            throw new BusinessValidationException("Saving cannot be updated after been ". $saving->approve, 403);
         }
     }
 
