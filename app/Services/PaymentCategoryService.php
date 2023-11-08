@@ -26,7 +26,6 @@ class PaymentCategoryService implements PaymentCategoryInterface {
             ]);
         }else{
             $payment_category->update([
-                'code'  => $request->code,
                 'name' => $request->name,
                 'description' => $request->description,
                 'updated_by'        =>$request->user()->name,
@@ -36,17 +35,10 @@ class PaymentCategoryService implements PaymentCategoryInterface {
 
     public function updatePaymentCategory($request, $id, $organisation_id)
     {
-        $updated = DB::table('payment_categories')
-                            ->join('organisations', 'payment_categories.organisation_id' ,'=', 'organisations.id')
-                            ->where('organisations.id', $organisation_id)
-                            ->where('payment_categories.id', $id)
-                            ->first();
-
-        if(!is_null($updated)){
-            $updated->name          = $request->name;
-            $updated->description   = $request->description;
-            $updated->save();
-        }
+        $updated = PaymentCategory::findOrFail($id);
+        $updated->name          = $request->name;
+        $updated->description   = $request->description;
+        $updated->save();
     }
 
     public function getPaymentCategories($request)

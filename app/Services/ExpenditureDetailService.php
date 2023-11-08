@@ -52,7 +52,7 @@ class ExpenditureDetailService implements ExpenditureDetailInterface {
                 'scan_picture'          => $request->scan_picture
             ]);
         }else {
-            throw new BusinessValidationException("Expenditure Item cannot be updated after been approved or declined");
+            throw new BusinessValidationException("Expenditure Item cannot be updated after been approved or declined", 403);
         }
     }
 

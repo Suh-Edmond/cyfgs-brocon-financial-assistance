@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateUserSavingRequest extends FormRequest
+class UpdateExpenditureCategoryRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,8 +24,8 @@ class UpdateUserSavingRequest extends FormRequest
     public function rules()
     {
         return [
-            'amount_deposited'      =>'required|min:1',
-            'comment'               =>'max:5000',
+            'name'          => 'required|max:255',
+            'description'   => 'required|max:5000',
         ];
     }
 }
