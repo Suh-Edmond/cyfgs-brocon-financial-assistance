@@ -158,7 +158,9 @@ class UserSavingService implements UserSavingInterface
 
     public function calculateTotalSaving($savings)
     {
-        return collect($savings)->map(function ($saving){
+        return collect($savings)->filter(function ($record) {
+            return $record->approve !== PaymentStatus::DECLINED;
+        })->map(function ($saving){
             return ($saving->amount_deposited - $saving->amount_used);
         })->sum();
     }
