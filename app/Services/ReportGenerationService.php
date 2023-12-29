@@ -197,8 +197,8 @@ class ReportGenerationService implements ReportGenerationInterface
             $payment_category_total = 0;
             foreach ($payment_items as $payment_item_key => $payment_item){
                 $payment_incomes = array();
-                $supports = $this->activitySupportService->getSponsorshipIncomePerQuarterly($quarter, $current_year);
-                $activities = $this->incomeActivityService->getQuarterlyIncomeActivities($quarter, $current_year);
+                $supports = $this->activitySupportService->getSponsorshipIncomePerQuarterly($quarter, $current_year, $payment_item);
+                $activities = $this->incomeActivityService->getQuarterlyIncomeActivities($quarter, $current_year, $payment_item);
                 $user_contribution = $this->userContributionService->getContributionsByItemAndSession($payment_item->id, $start_quarter, $end_quarter);
                 $payment_incomes = array_merge($user_contribution, $payment_incomes, $supports, $activities);
                 $total = $this->calculateTotal($payment_incomes);
@@ -234,8 +234,8 @@ class ReportGenerationService implements ReportGenerationInterface
             $payment_category_total = 0;
             foreach ($payment_items as $payment_item_key => $payment_item){
                 $payment_incomes = array();
-                $supports = $this->activitySupportService->getSponsorshipIncomePerYear($year_id);
-                $activities = $this->incomeActivityService->getYearIncomeActivities($year_id);
+                $supports = $this->activitySupportService->getSponsorshipIncomePerYear($year_id, $payment_item);
+                $activities = $this->incomeActivityService->getYearIncomeActivities($year_id, $payment_item);
                 $user_contribution = $this->userContributionService->getContributionsByItemAndYear($payment_item->id, $year_id);
                 $payment_incomes = array_merge($user_contribution, $payment_incomes, $supports, $activities);
                 $total = $this->calculateTotal($payment_incomes);
