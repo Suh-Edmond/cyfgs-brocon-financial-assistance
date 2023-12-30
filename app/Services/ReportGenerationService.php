@@ -158,12 +158,12 @@ class ReportGenerationService implements ReportGenerationInterface
         $start_quarter = $this->getStartQuarter($current_year->year, $quarter)[0];
         $end_quarter = $this->getStartQuarter($current_year->year, $quarter)[1];
         $expenses = [];
-        $total = 0;
+        $exp_total = 0;
         $expenditure_categories = $this->expenditureCategoryService->getExpenditureCategoriesByOrganisationYear($organisation_id, $current_year->year);
         foreach ($expenditure_categories as $key => $expenditure_category){
             $expenditures_by_cat = array();
             $expenditure_items = $this->expenditureItemService->getExpensesByCategoryAndQuarter($expenditure_category->id, $start_quarter, $end_quarter);
-            $sub_total = 0;
+            $total = 0;
             foreach ($expenditure_items as $expenditure_item) {
                 $details = $this->expenditureDetailService->findExpenditureDetailsByItemAndQuarter($expenditure_item->id, $start_quarter, $end_quarter);
                 $sub_total = collect($details)->sum('amount_spent');
@@ -172,9 +172,10 @@ class ReportGenerationService implements ReportGenerationInterface
                 $total += $sub_total;
              }
             array_push($expenses, json_decode(json_encode(new QuarterlyExpenditureResourceCollection($expenditure_category->code, $expenditure_category->name,
-                $expenditures_by_cat, $sub_total))));
+                $expenditures_by_cat, $total))));
+            $exp_total += $total;
         }
-        return [$expenses, $total];
+        return [$expenses, $exp_total];
     }
 
 
@@ -197,8 +198,8 @@ class ReportGenerationService implements ReportGenerationInterface
             $payment_category_total = 0;
             foreach ($payment_items as $payment_item_key => $payment_item){
                 $payment_incomes = array();
-                $supports = $this->activitySupportService->getSponsorshipIncomePerQuarterly($quarter, $current_year);
-                $activities = $this->incomeActivityService->getQuarterlyIncomeActivities($quarter, $current_year);
+                $supports = $this->activitySupportService->getSponsorshipIncomePerQuarterly($quarter, $current_year, $payment_item);
+                $activities = $this->incomeActivityService->getQuarterlyIncomeActivities($quarter, $current_year, $payment_item);
                 $user_contribution = $this->userContributionService->getContributionsByItemAndSession($payment_item->id, $start_quarter, $end_quarter);
                 $payment_incomes = array_merge($user_contribution, $payment_incomes, $supports, $activities);
                 $total = $this->calculateTotal($payment_incomes);
@@ -234,8 +235,8 @@ class ReportGenerationService implements ReportGenerationInterface
             $payment_category_total = 0;
             foreach ($payment_items as $payment_item_key => $payment_item){
                 $payment_incomes = array();
-                $supports = $this->activitySupportService->getSponsorshipIncomePerYear($year_id);
-                $activities = $this->incomeActivityService->getYearIncomeActivities($year_id);
+                $supports = $this->activitySupportService->getSponsorshipIncomePerYear($year_id, $payment_item);
+                $activities = $this->incomeActivityService->getYearIncomeActivities($year_id, $payment_item);
                 $user_contribution = $this->userContributionService->getContributionsByItemAndYear($payment_item->id, $year_id);
                 $payment_incomes = array_merge($user_contribution, $payment_incomes, $supports, $activities);
                 $total = $this->calculateTotal($payment_incomes);
@@ -257,12 +258,12 @@ class ReportGenerationService implements ReportGenerationInterface
     private function fetchYearlyExpenditures($year_id, $organisation_id): array
     {
         $expenses = [];
-        $total = 0;
+        $exp_total = 0;
         $expenditure_categories = $this->expenditureCategoryService->getExpenditureCategoriesByOrganisationYear($organisation_id, null);
         foreach ($expenditure_categories as $key => $expenditure_category){
             $expenditures_by_cat = array();
             $expenditure_items = $this->expenditureItemService->getExpensesByCategoryAndYear($expenditure_category->id, $year_id);
-            $sub_total = 0;
+            $total = 0;
             foreach ($expenditure_items as $expenditure_item) {
                 $details = $this->expenditureDetailService->findExpenditureDetailsByItemAndYear($expenditure_item->id, $year_id);
                 $sub_total = collect($details)->sum('amount_spent');
@@ -271,8 +272,9 @@ class ReportGenerationService implements ReportGenerationInterface
                 $total += $sub_total;
             }
             array_push($expenses, json_decode(json_encode(new QuarterlyExpenditureResourceCollection($expenditure_category->code, $expenditure_category->name,
-                $expenditures_by_cat, $sub_total))));
+                $expenditures_by_cat, $total))));
+            $exp_total += $total;
         }
-        return [$expenses, $total];
+        return [$expenses, $exp_total];
     }
 }

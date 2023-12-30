@@ -141,7 +141,6 @@ class UserContributionService implements UserContributionInterface {
           }
     }
 
-
     public function filterContributions($request)
     {
         $unpaid_durations = array();
@@ -757,13 +756,6 @@ class UserContributionService implements UserContributionInterface {
             }
         }
         return $debts;
-    }
-
-    public function getPaymentItemQuartersBySession($item_frequency, $item_created_at)
-    {
-        $quarters = $this->getQuarters();
-        $current_quarter = $this->convertQuarterNameToNumber($this->getDateQuarter($item_frequency, $item_created_at));
-        return array_splice($quarters, ($current_quarter - 1), count($quarters));
     }
 
     private function verifyMonthlyPayment($item, $user_id, $current_session)

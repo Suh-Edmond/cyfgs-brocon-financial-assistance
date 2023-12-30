@@ -236,10 +236,4 @@ class PaymentItemService implements PaymentItemInterface {
         return array_splice($quarters, ($current_quarter - 1), count($quarters));
     }
 
-    private function getPaymentItemMonthsBySession($item_frequency, $item_created_at)
-    {
-        $all_months = $this->getMonths();
-        $current_month_index = $this->getItemMonth($item_frequency, $item_created_at)->month;
-        return array_splice($all_months, $current_month_index - 1, count($all_months));
-    }
 }

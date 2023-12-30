@@ -84,9 +84,9 @@ class ExpenditureDetailController extends Controller
         $expenditure_details = $this->expenditure_detail_service->setDataForDownload($request);
 
         $admins            = $this->getOrganisationAdministrators();
-        $president         = $admins[0];
+        $president         = count($admins) == 3 ? $admins[1] : null;
         $treasurer         = count($admins) == 3 ? $admins[2]: null;
-        $fin_sec           = count($admins) == 3 ? $admins[1] : null;
+        $fin_sec           = count($admins) == 3 ? $admins[0] : null;
 
         $total_amount_given = $expenditure_details[3]['total_amount_given'];
 

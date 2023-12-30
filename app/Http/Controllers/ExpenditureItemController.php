@@ -109,9 +109,9 @@ class ExpenditureItemController extends Controller
         $organisation      = $request->user()->organisation;
         $expenditure_items = $this->prepareDataForDownload($request);
         $admins            = $this->getOrganisationAdministrators();
-        $president         = $admins[0];
+        $president         = count($admins) == 3 ? $admins[1] : null;
         $treasurer         = count($admins) == 3 ? $admins[2]: null;
-        $fin_sec           = count($admins) == 3 ? $admins[1] : null;
+        $fin_sec           = count($admins) == 3 ? $admins[0] : null;
         $data = [
             'title'               => 'Expenditure Items under '.$request->category_name,
             'date'                => date('m/d/Y'),

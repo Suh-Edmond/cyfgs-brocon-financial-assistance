@@ -430,4 +430,29 @@ trait HelpTrait {
 
         return [$start_date->toDateTimeString(),  $end_date->toDateTimeString()];
     }
+
+    public function getPaymentItemQuartersBySession($item_frequency, $item_created_at)
+    {
+        $quarters = $this->getQuarters();
+        $current_quarter = $this->convertQuarterNameToNumber($this->getDateQuarter($item_frequency, $item_created_at));
+        return array_splice($quarters, ($current_quarter - 1), count($quarters));
+    }
+
+    private function getPaymentItemMonthsBySession($item_frequency, $item_created_at)
+    {
+        $all_months = $this->getMonths();
+        $current_month_index = $this->getItemMonth($item_frequency, $item_created_at)->month;
+        return array_splice($all_months, $current_month_index - 1, count($all_months));
+    }
+
+    public function computeTotalPaymentItemAmount($payment_item){
+        $total_payment_item_amount = $payment_item->amount;
+        if($payment_item->frequency == PaymentItemFrequency::QUARTERLY){
+            $total_payment_item_amount *= count($this->getPaymentItemQuartersBySession($payment_item->frequency, $payment_item->created_at));
+        }
+        if($payment_item->frequency == PaymentItemFrequency::MONTHLY){
+            $total_payment_item_amount *= count($this->getPaymentItemMonthsBySession($payment_item->frequency, $payment_item->created_at));
+        }
+        return $total_payment_item_amount;
+    }
 }

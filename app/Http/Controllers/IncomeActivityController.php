@@ -93,9 +93,9 @@ class IncomeActivityController extends Controller
         $total             = $this->income_activity_service->calculateTotal($income_activities->data);
 
         $admins            = $this->getOrganisationAdministrators();
-        $president         = $admins[0];
+        $president         = count($admins) == 3 ? $admins[1] : null;
         $treasurer         = count($admins) == 3 ? $admins[2]: null;
-        $fin_sec           = count($admins) == 3 ? $admins[1] : null;
+        $fin_sec           = count($admins) == 3 ? $admins[0] : null;
 
         $data = [
             'title'               => !is_null($request->payment_item_name)?'Income Activities for '. $request->payment_item_name:'Income Activities for Year '.$request->year,

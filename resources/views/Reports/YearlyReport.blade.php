@@ -159,7 +159,7 @@
                         Total
                     </div>
                     <div class="column3"></div>
-                    <div class="column4">{{number_format($income->total)}}</div>
+                    <div class="column4"></div>
                     <div class="column5">{{number_format($income->total)}}</div>
                 </div>
             @endif
@@ -310,8 +310,8 @@
                     Total
                 </div>
                 <div class="column3"></div>
-                <div class="column4">{{number_format($total_expenditure)}}</div>
-                <div class="column5">{{number_format($total_expenditure)}}</div>
+                <div class="column4"></div>
+                <div class="column5">{{number_format($expenditure->total)}}</div>
             </div>
 
             @if ( $p % 25 == 0 )
@@ -327,7 +327,7 @@
                 Total Expenditure
             </div>
             <div class="column3"></div>
-            <div class="column4">{{number_format($total_expenditure)}}</div>
+            <div class="column4"></div>
             <div class="column5">{{number_format($total_expenditure)}}</div>
         </div>
         <!------end of total of expenditures------------------->
