@@ -4,12 +4,13 @@ namespace App\Http\Resources;
 
 use App\Models\PaymentItem;
 use App\Models\User;
+use App\Traits\HelpTrait;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class UserContributionResource extends JsonResource
 {
 
-
+    use HelpTrait;
     public function toArray($request)
     {
         $payment_item = PaymentItem::find($this->payment_item_id);
@@ -32,7 +33,7 @@ class UserContributionResource extends JsonResource
             'payment_item_created_at'  => $payment_item->created_at,
             'payment_category'         => $payment_item->paymentCategory,
             'payment_item_compulsory'  => $payment_item->compulsory == 0? false : true,
-            'balance'                  => $this->total_amount_deposited == null ? $this->balance :($payment_item->amount - $this->total_amount_deposited),
+            'balance'                  => $this->total_amount_deposited == null ? $this->balance :($this->computeTotalPaymentItemAmount($payment_item) - $this->total_amount_deposited),
             'updated_by'               => $this->updated_by,
             'created_at'               => $this->created_at,
             'total_amount_deposited'   => $this->total_amount_deposited == null ? 0: $this->total_amount_deposited,
