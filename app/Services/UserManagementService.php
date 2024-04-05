@@ -10,6 +10,7 @@ use App\Constants\SessionStatus;
 use App\Exceptions\BusinessValidationException;
 use App\Exceptions\EmailException;
 use App\Exceptions\UnAuthorizedException;
+use App\Http\Resources\MemberInviteNotification;
 use App\Http\Resources\PasswordResetResponse;
 use App\Http\Resources\TokenResource;
 use App\Http\Resources\UserCollection;
@@ -27,6 +28,8 @@ use App\Traits\HelpTrait;
 use App\Traits\ResponseTrait;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
@@ -65,15 +68,17 @@ class UserManagementService implements UserManagementInterface
     public function sendInvitation($request)
     {
         $auth_user = $request->user();
-        $redirectLink = env('MEMBER_INVITATION_REDIRECT_LINK');
+        $redirectLink = env('MEMBER_INVITATION_REDIRECT_LINK').$request->role;
         $organisation_logo = env('FILE_DOWNLOAD_URL_PATH').$auth_user->organisation->logo;
         try {
-            $this->role_service->addUserRole($request->user_id, $request->role, $auth_user->name);
             Mail::to($request->user_email)->send(new MemberInvitationMail($request->user_name, $request->user_email, $redirectLink,
                 $organisation_logo, $auth_user->name, $auth_user->organisation->name, $request->role));
+            $assignedRole = $this->getAssignedRole($request->role);
             MemberInvitation::create([
-                'user_id' => $request->user_id,
-                'expire_at' => Carbon::now()->addDays(7)
+                'user_id'               => $request->user_id,
+                'expire_at'             => Carbon::now()->addDays(7),
+                'has_seen_notification' => false,
+                'role_id'               => $assignedRole->id
             ]);
         }catch (Exception $exception){
             throw new BusinessValidationException("Could not send member's invitation email", 404);
@@ -213,9 +218,11 @@ class UserManagementService implements UserManagementInterface
     {
 
         $user = $this->checkUserExist($request);
-        $this->validateIfUserCanLogin($user);
         $user->password = Hash::make($request->password);
+        $user->email_verified_at = Carbon::now()->setTimezone('Africa/Douala')->toDateTimeString();
         $user->save();
+
+        $this->role_service->addUserRole($user->id, $request->role, 'Default');
 
         $token = $this->generateToken($user);
         $hasLoginBefore = $this->checkIfUserHasLogin($user);
@@ -376,6 +383,27 @@ class UserManagementService implements UserManagementInterface
         return $paymentItemMembers;
     }
 
+    public function getAdminNotifications()
+    {
+        $notifications = DB::table('users')
+            ->join('member_invitations', 'users.id', '=', 'member_invitations.user_id')
+            ->join('roles', 'roles.id', '=', 'member_invitations.role_id')
+            ->whereNotNull('users.email_verified_at')
+            ->where('member_invitations.has_seen_notification', '=', false)
+            ->select('users.name', 'users.updated_at', 'roles.name as role_name', 'member_invitations.id')
+            ->orderBy('member_invitations.created_at','DESC')
+            ->get();
+        return collect($notifications)->map(function ($notification){
+            return new MemberInviteNotification($notification->id, $notification->name, $notification->role_name, $notification->updated_at);
+        })->toArray();
+    }
+
+    public function markNotificationRead($id)
+    {
+        return MemberInvitation::findOrFail($id)->update([
+            'has_seen_notification' => true
+        ]);
+    }
     private function generateToken($user)
     {
         return !is_null($user) ? $user->createToken('access-token', $user->roles->toArray())->plainTextToken : "";
@@ -396,5 +424,11 @@ class UserManagementService implements UserManagementInterface
             throw new UnAuthorizedException("User's Account has been deactivated! Please contact the ADMIN or President", 401);
         }
     }
+
+    private function getAssignedRole($role)
+    {
+        return CustomRole::findByName($role, 'api');
+    }
+
 
 }
