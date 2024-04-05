@@ -14,7 +14,7 @@ class AddPaymentItemDeadline extends Migration
     public function up()
     {
         Schema::table('payment_items', function (Blueprint $table) {
-            $table->timestamp('deadline')->nullable(true);
+            $table->timestamp('deadline')->nullable();
         });
     }
 
