@@ -17,7 +17,7 @@ class SessionService implements SessionInterface
 
     public function getAllSessions()
     {
-        $sessions = DB::table('sessions')->orderBy('year', 'asc')->get();
+        $sessions = DB::table('sessions')->orderBy('year', 'DESC')->get();
         return SessionResource::collection($sessions->toArray());
     }
     public function getCurrentSession()
@@ -29,29 +29,15 @@ class SessionService implements SessionInterface
     public function createSession($request)
     {
         $previousSession =  Session::where('status', SessionStatus::ACTIVE)->first();
-        if(is_null($previousSession)){
-            Session::create([
-                'year'          => $request->year,
-                'status'        => $request->status,
-                'updated_by'    => $request->user()->name
-            ]);
-        }else{
-            if(SessionStatus::ACTIVE == $request->status){
-                $previousSession->status = SessionStatus::IN_ACTIVE;
-                $previousSession->save();
-                Session::create([
-                    'year'          => $request->year,
-                    'status'        => $request->status,
-                    'updated_by'    => $request->user()->name
-                ]);
-            }else {
-                Session::create([
-                    'year'          => $request->year,
-                    'status'        => $request->status,
-                    'updated_by'    => $request->user()->name
-                ]);
-            }
+        if(isset($previousSession)) {
+            $previousSession->status = SessionStatus::IN_ACTIVE;
+            $previousSession->save();
         }
+        Session::create([
+            'year'          => $request->year,
+            'status'        => SessionStatus::ACTIVE,
+            'updated_by'    => $request->user()->name
+        ]);
     }
 
     public function updateSession($request, $id)
@@ -63,16 +49,10 @@ class SessionService implements SessionInterface
             $currentSession->status = SessionStatus::IN_ACTIVE;
             $currentSession->save();
 
-            $updatedSession->update([
-                'status' => $request->status
-            ]);
-        }else {
-            $updatedSession->update([
-                'status' => $request->status
-            ]);
         }
-
-
+        $updatedSession->update([
+            'status' => $request->status
+        ]);
 
 
     }

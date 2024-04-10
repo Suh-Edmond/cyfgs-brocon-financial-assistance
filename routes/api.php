@@ -64,6 +64,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::prefix('protected/organisations')->middleware('isPresidentOrIsAdmin')->group(function (){
         Route::post('/members/send_invitation', [UserController::class, 'sendInvitation']);
+        Route::get('/members/get_invitation_notifications', [UserController::class, 'getInvitationNotifications']);
+        Route::put('/members/get_invitation_notifications/{id}/mark_as_read', [UserController::class, 'markNotificationRead']);
+        Route::put('/members/get_invitation_notifications/mark_all_as_read', [UserController::class, 'markAllNotificationsAsRead']);
     });
 
     Route::prefix('protected/organisations')->middleware('isAdminIsPresidentIsFinancialSecretary')->group(function (){
@@ -84,6 +87,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/organisations', [OrganisationController::class, 'createOrganisation']);
         Route::get('/organisations/{id}', [OrganisationController::class, 'getOrganisation']);
         Route::put('/organisations/{id}', [OrganisationController::class, 'updateOrganisation']);
+        Route::put('/organisations/{id}/update_telephone', [OrganisationController::class, 'updateTelephoneNumber']);
     });
 
     Route::prefix('protected')->middleware('IsPresidentIsFinancialSecretaryIsTreasurerIsAdmin')->group(function () {

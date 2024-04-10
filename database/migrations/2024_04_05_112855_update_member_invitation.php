@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateMemberInvitationsTable extends Migration
+class UpdateMemberInvitation extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,8 @@ class CreateMemberInvitationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('member_invitations', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->timestamp('expire_at');
-            $table->timestamps();
-            $table->uuid('user_id');
+        Schema::table('member_invitations', function (Blueprint $blueprint){
+           $blueprint->boolean('has_seen_notification')->default(false);
         });
     }
 
@@ -28,6 +25,6 @@ class CreateMemberInvitationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('member_invitations');
+        //
     }
 }

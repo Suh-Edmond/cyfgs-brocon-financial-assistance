@@ -81,6 +81,9 @@ class PaymentItemService implements PaymentItemInterface {
     public function filterPaymentItems($request) {
 
         $payment_items = $this->fetchPaymentItems($request->payment_category_id);
+        if(isset($request->session_id)){
+            $payment_items = $payment_items->where('session_id', $request->session_id);
+        }
         if(isset($request->is_compulsory) && $request->is_compulsory !== "ALL"){
             $payment_items = $payment_items->where('compulsory', $request->is_compulsory);
         }
@@ -97,12 +100,12 @@ class PaymentItemService implements PaymentItemInterface {
             $payment_items = $payment_items->whereDate('deadline', '<=', Carbon::now()->toDateString());
         }
 
-        $payment_items_response =   !is_null($request->per_page) ? $payment_items->orderBy('payment_items.name')->paginate($request->per_page): $payment_items->orderBy('payment_items.name')->get();
+        $payment_items_response =   isset($request->per_page) ? $payment_items->orderBy('payment_items.name')->paginate($request->per_page): $payment_items->orderBy('payment_items.name')->get();
 
-        $total         =   !is_null($request->per_page) ? $payment_items_response->total()         : count($payment_items_response);
-        $last_page     =   !is_null($request->per_page) ? $payment_items_response->lastPage()      : 0;
-        $per_page      =   !is_null($request->per_page) ? (int) $payment_items_response->perPage() : 0;
-        $current_page  =   !is_null($request->per_page) ? $payment_items_response->currentPage()   : 0;
+        $total         =   isset($request->per_page) ? $payment_items_response->total()         : count($payment_items_response);
+        $last_page     =   isset($request->per_page) ? $payment_items_response->lastPage()      : 0;
+        $per_page      =   isset($request->per_page) ? (int) $payment_items_response->perPage() : 0;
+        $current_page  =   isset($request->per_page) ? $payment_items_response->currentPage()   : 0;
         return new PaymentItemCollection($payment_items_response, $total, $last_page,
             $per_page, $current_page);
     }
@@ -210,12 +213,9 @@ class PaymentItemService implements PaymentItemInterface {
     }
 
     private  function fetchPaymentItems($payment_category_id) {
-        $current_session = $this->session_service->getCurrentSession();
         return PaymentItem::select('payment_items.*')
             ->join('payment_categories', ['payment_categories.id'  => 'payment_items.payment_category_id'])
-            ->where('payment_items.payment_category_id', $payment_category_id)
-            ->where('session_id', $current_session->id);
-
+            ->where('payment_items.payment_category_id', $payment_category_id);
     }
 
     private function setPaymentItemReference($reference, $type)

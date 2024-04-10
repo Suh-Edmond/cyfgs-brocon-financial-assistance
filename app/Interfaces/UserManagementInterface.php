@@ -42,6 +42,8 @@ interface UserManagementInterface {
 
     public function getUserByPaymentItem($id, $request);
 
-//    public function getCurrentAuthUser();
+    public function getAdminNotifications();
+
+    public function markAllNotificationsAsRead($request);
 
 }

@@ -33,7 +33,8 @@ class User extends Authenticatable
         'organisation_id',
         'updated_by',
         'picture',
-        'status'
+        'status',
+        'email_verified_at'
     ];
 
     /**

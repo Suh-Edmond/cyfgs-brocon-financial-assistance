@@ -206,6 +206,25 @@ class UserController extends Controller
 
         return $this->sendResponse("Invitation sent successfully", 'success');
     }
+
+    public function getInvitationNotifications(){
+        $data = $this->user_management_service->getAdminNotifications();
+
+        return $this->sendResponse($data, 'success');
+    }
+
+    public function markNotificationRead($id)
+    {
+        $this->user_management_service->markNotificationRead($id);
+
+        return $this->sendResponse("Notification mark as read","success");
+    }
+
+    public function markAllNotificationsAsRead(Request  $request){
+        $this->user_management_service->markAllNotificationsAsRead($request);
+
+        return $this->sendResponse("All notification mark as read","success");
+    }
     private function setTitle(Request $request): string
     {
         $title = "";

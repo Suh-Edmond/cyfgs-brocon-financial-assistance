@@ -185,19 +185,21 @@ class ExpenditureItemService implements ExpenditureItemInterface {
             ->join('payment_items', ['payment_items.id' => 'expenditure_items.payment_item_id'])
             ->join('expenditure_categories', ['expenditure_categories.id' => 'expenditure_items.expenditure_category_id'])
             ->join('sessions', ['sessions.id' => 'expenditure_items.session_id'])
-            ->where('expenditure_categories.id', $request->expenditure_category_id)
-            ->where('expenditure_items.session_id', $request->session_id);
-        if(!is_null($request->payment_item_id)){
+            ->where('expenditure_categories.id', $request->expenditure_category_id);
+        if(isset($request->session_id)){
+            $items = $items->where('expenditure_items.session_id', $request->session_id);
+        }
+        if(isset($request->payment_item_id)){
             $items = $items->where('expenditure_items.payment_item_id', $request->payment_item_id);
         }
 
         $items = $items->orderBy('expenditure_items.name', 'ASC');
-        $expenditure_items  =!is_null($request->per_page)? $items->paginate($request->per_page) : $items->get();
+        $expenditure_items  =isset($request->per_page)? $items->paginate($request->per_page) : $items->get();
 
-        $total = !is_null($request->per_page) ? $expenditure_items->total() : count($expenditure_items);
-        $last_page = !is_null($request->per_page) ? $expenditure_items->lastPage(): 0;
-        $per_page = !is_null($request->per_page) ? (int)$expenditure_items->perPage() : 0;
-        $current_page = !is_null($request->per_page) ? $expenditure_items->currentPage() : 0;
+        $total = isset($request->per_page) ? $expenditure_items->total() : count($expenditure_items);
+        $last_page = isset($request->per_page) ? $expenditure_items->lastPage(): 0;
+        $per_page = isset($request->per_page) ? (int)$expenditure_items->perPage() : 0;
+        $current_page = isset($request->per_page) ? $expenditure_items->currentPage() : 0;
 
         return new ExpenditureItemCollection($this->generateExpenditureItemResponse($expenditure_items), $total, $last_page,
             $per_page, $current_page);
