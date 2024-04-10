@@ -22,31 +22,40 @@ class RegistrationFeeService implements RegistrationFeeInterface
                 'is_compulsory' => $request->is_compulsory,
                 'amount'        => $request->amount,
                 'status'        => SessionStatus::ACTIVE,
-                'frequency'     => $request->frequency
+                'frequency'     => $request->frequency,
+                'updated_by'    => $request->user()->name
             ]);
         }else {
             Registration::create([
                 'is_compulsory' => $request->is_compulsory,
                 'amount'        => $request->amount,
                 'status'        => SessionStatus::IN_ACTIVE,
-                'frequency'     => $request->frequency
+                'frequency'     => $request->frequency,
+                'updated_by'    => $request->user()->name
             ]);
         }
     }
 
     public function updateRegistrationFee($request, $id)
     {
+        $activeRegFee = Registration::where('status', SessionStatus::ACTIVE)->first();
+        if(SessionStatus::ACTIVE == $request->status){
+            $activeRegFee->update([
+                'status' => SessionStatus::IN_ACTIVE
+            ]);
+        }
         $updated = Registration::findOrFail($id);
         $updated->update([
             'is_compulsory' => $request->is_compulsory,
             'amount'        => $request->amount,
-            'frequency'     => $request->frequency
+            'frequency'     => $request->frequency,
+            'status'        => $request->status
         ]);
     }
 
     public function getAllRegistrationFee($request)
     {
-        $reg_fees = DB::table('registrations')->orderBy('created_at', 'ASC')->get();
+        $reg_fees = DB::table('registrations')->orderBy('updated_at', 'DESC')->get();
         return RegisterFeeResource::collection($reg_fees);
     }
 
