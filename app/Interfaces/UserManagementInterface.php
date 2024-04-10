@@ -44,4 +44,6 @@ interface UserManagementInterface {
 
     public function getAdminNotifications();
 
+    public function markAllNotificationsAsRead($request);
+
 }

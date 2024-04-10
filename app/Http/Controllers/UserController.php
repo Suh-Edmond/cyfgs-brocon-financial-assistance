@@ -219,6 +219,12 @@ class UserController extends Controller
 
         return $this->sendResponse("Notification mark as read","success");
     }
+
+    public function markAllNotificationsAsRead(Request  $request){
+        $this->user_management_service->markAllNotificationsAsRead($request);
+
+        return $this->sendResponse("All notification mark as read","success");
+    }
     private function setTitle(Request $request): string
     {
         $title = "";

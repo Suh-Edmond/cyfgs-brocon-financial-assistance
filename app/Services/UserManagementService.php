@@ -389,12 +389,11 @@ class UserManagementService implements UserManagementInterface
             ->join('member_invitations', 'users.id', '=', 'member_invitations.user_id')
             ->join('roles', 'roles.id', '=', 'member_invitations.role_id')
             ->whereNotNull('users.email_verified_at')
-            ->where('member_invitations.has_seen_notification', '=', false)
-            ->select('users.name', 'users.updated_at', 'roles.name as role_name', 'member_invitations.id')
+            ->select('users.name', 'users.updated_at', 'roles.name as role_name', 'member_invitations.id', 'member_invitations.has_seen_notification')
             ->orderBy('member_invitations.created_at','DESC')
             ->get();
         return collect($notifications)->map(function ($notification){
-            return new MemberInviteNotification($notification->id, $notification->name, $notification->role_name, $notification->updated_at);
+            return new MemberInviteNotification($notification->id, $notification->name, $notification->role_name, $notification->updated_at, $notification->has_seen_notification);
         })->toArray();
     }
 
@@ -403,6 +402,12 @@ class UserManagementService implements UserManagementInterface
         return MemberInvitation::findOrFail($id)->update([
             'has_seen_notification' => true
         ]);
+    }
+    public function markAllNotificationsAsRead($request)
+    {
+        foreach ($request->all() as $key => $value){
+            MemberInvitation::findOrFail($value['id'])->update(['has_seen_notification' => true]);
+        }
     }
     private function generateToken($user)
     {

@@ -11,12 +11,15 @@ class MemberInviteNotification extends JsonResource
     private $role;
     private $date;
 
-    public function __construct($id, $name, $role, $date)
+    private $has_seen_notification;
+
+    public function __construct($id, $name, $role, $date, $has_seen_notification)
     {
         $this->id   = $id;
         $this->role = $role;
         $this->date = $date;
         $this->name = $name;
+        $this->has_seen_notification = $has_seen_notification;
     }
 
     public function toArray($request)
@@ -25,7 +28,8 @@ class MemberInviteNotification extends JsonResource
             'id'    => $this->id,
             'name'  => $this->name,
             'role'  => $this->role,
-            'date'  => $this->date
+            'date'  => $this->date,
+            'has_seen_notification' => $this->has_seen_notification
         ];
     }
 }

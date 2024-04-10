@@ -66,6 +66,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/members/send_invitation', [UserController::class, 'sendInvitation']);
         Route::get('/members/get_invitation_notifications', [UserController::class, 'getInvitationNotifications']);
         Route::put('/members/get_invitation_notifications/{id}/mark_as_read', [UserController::class, 'markNotificationRead']);
+        Route::put('/members/get_invitation_notifications/mark_all_as_read', [UserController::class, 'markAllNotificationsAsRead']);
     });
 
     Route::prefix('protected/organisations')->middleware('isAdminIsPresidentIsFinancialSecretary')->group(function (){
