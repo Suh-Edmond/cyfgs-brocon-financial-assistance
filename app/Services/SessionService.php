@@ -17,7 +17,7 @@ class SessionService implements SessionInterface
 
     public function getAllSessions()
     {
-        $sessions = DB::table('sessions')->orderBy('year', 'DESC')->get();
+        $sessions = DB::table('sessions')->orderBy('created_at', 'DESC')->get();
         return SessionResource::collection($sessions->toArray());
     }
     public function getCurrentSession()

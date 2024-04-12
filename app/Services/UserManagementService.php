@@ -268,6 +268,10 @@ class UserManagementService implements UserManagementInterface
         $filter_users = User::join('organisations', 'organisations.id', '=', 'users.organisation_id')
             ->leftJoin('member_registrations', 'users.id', '=', 'member_registrations.user_id')
             ->where('organisations.id', $request->organisation_id);
+
+        if(isset($request->year)) {
+            $filter_users = $filter_users->where('member_registrations.session_id', $request->year);
+        }
         if(isset($request->has_register) && $request->has_register == RegistrationStatus::REGISTERED && $request->has_register != "ALL"){
             $filter_users = $filter_users->where('member_registrations.approve', PaymentStatus::APPROVED);
         }
@@ -288,9 +292,6 @@ class UserManagementService implements UserManagementInterface
         }
         if(isset($request->gender) && $request->gender != "ALL"){
            $filter_users = $filter_users->where('users.gender', $request->gender);
-        }
-        if(isset($request->session_id)) {
-            $filter_users = $filter_users->where('member_registrations.session_id', $request->session_id);
         }
         if(isset($request->filter)){
             $filter_users = $filter_users->where('users.name','LIKE', '%'.$request->filter.'%');

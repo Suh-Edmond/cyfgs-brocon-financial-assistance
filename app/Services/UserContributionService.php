@@ -346,7 +346,7 @@ class UserContributionService implements UserContributionInterface {
                         ->select('users.id as user_id', 'sessions.*')->first();
                     if (is_null($reg_session)){
                         $session_resource = new SessionResource($session);
-                        array_push($reg_debts, new MemberPaymentItemResource($reg->id, 'Members Registration',
+                        array_push($reg_debts, new MemberPaymentItemResource($reg->id, 'Registration',
                             $reg->amount, $reg->amount, $reg->is_compulsory, null, $reg->frequency, 'REGISTRATION', $session_resource, null, null));
                     }
                 }
@@ -360,7 +360,7 @@ class UserContributionService implements UserContributionInterface {
                         ->whereIn('member_registrations.approve', [PaymentStatus::PENDING, PaymentStatus::APPROVED])
                         ->select( 'member_registrations.*')->first();
                     if (is_null($reg_session)){
-                        array_push($reg_debts, new MemberPaymentItemResource($reg->id, 'Members Registration',
+                        array_push($reg_debts, new MemberPaymentItemResource($reg->id, 'Registration',
                             $reg->amount, $reg->amount,  $reg->is_compulsory, null, $reg->frequency, 'REGISTRATION', null, $month, null));
                     }
                 }
@@ -619,7 +619,7 @@ class UserContributionService implements UserContributionInterface {
             ->select('sessions.year as year', 'member_registrations.*', 'registrations.amount', 'registrations.frequency','registrations.is_compulsory')
             ->orderBy('member_registrations.created_at', 'DESC')->get();
         foreach ($reg as $value){
-           array_push($registrations,  new MemberContributedItemResource($value->id, $value->registration_id,   $value->amount, "Member's Registration", $value->amount,0.0,
+           array_push($registrations,  new MemberContributedItemResource($value->id, $value->registration_id,   $value->amount, "Registration", $value->amount,0.0,
                PaymentStatus::COMPLETE, $value->approve, $value->created_at, $value->year, $value->frequency, null, null, $value->updated_by, null, "", $value->is_compulsory));
         }
         return $registrations;
@@ -731,7 +731,7 @@ class UserContributionService implements UserContributionInterface {
         $last_payment = $this->verifyIncompleteItemPaymentsByYear($item->id, $user_id, $current_session->id);
         if(!is_null($last_payment) && $last_payment->status != PaymentStatus::COMPLETE){
              $to_be_paid = new MemberPaymentItemResource($item->id, $item->name, $last_payment->balance,$item->amount, $item->compulsory,
-                $item->type, $item->frequency,"CONTRIBUTION",$current_session, null, null );
+                $item->type, $item->frequency,"CONTRIBUTION", $current_session, null, null );
             array_push($debts, $to_be_paid);
         }
 

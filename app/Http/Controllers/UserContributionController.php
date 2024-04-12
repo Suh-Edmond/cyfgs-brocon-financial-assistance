@@ -8,6 +8,7 @@ use App\Http\Requests\BulkPaymentRequest;
 use App\Http\Requests\CreateUserContributionRequest;
 use App\Http\Requests\UpdateUserContributionRequest;
 use App\Http\Resources\UserContributionResource;
+use App\Models\User;
 use App\Services\UserContributionService;
 use App\Traits\HelpTrait;
 use App\Traits\ResponseTrait;
@@ -92,8 +93,6 @@ class UserContributionController extends Controller
     }
 
 
-
-
     public function getContribution($id)
     {
         $contribution = $this->userContributionService->getContribution($id);
@@ -154,7 +153,72 @@ class UserContributionController extends Controller
         return $this->sendResponse($data, 200);
     }
 
+    public function downloadMemberDebts(Request $request)
+    {
+        $organisation      = $request->user()->organisation;
+        $debts             = json_decode(json_encode($this->userContributionService->getMemberDebt($request)));
+        $admins            = $this->getOrganisationAdministrators();
+        $president         = count($admins) >= 3 ? $admins[1] : null;
+        $treasurer         = count($admins) >= 3 ? $admins[2]: null;
+        $fin_sec           = count($admins) >= 3 ? $admins[0] : null;
+        $member            = User::findOrFail($request->user_id);
 
+        $data = [
+            'title'             => $member->name . " Unpaid Payment Items",
+            'date'              => date('m/d/Y'),
+            'organisation'      => $organisation,
+            'contributions'     => $debts,
+            'organisation_telephone'   => $this->setOrganisationTelephone($organisation->telephone),
+            'president'         => $president,
+            'treasurer'         => $treasurer,
+            'fin_secretary'     => $fin_sec,
+            'total'             => $this->computeTotal($debts, "DEBTS"),
+            'balance'           => 0,
+            'organisation_logo' => env('FILE_DOWNLOAD_URL_PATH').$organisation->logo,
+        ];
+
+        $pdf = PDF::loadView('Contribution.MemberDebts', $data);
+
+        $pdf->output();
+        $domPdf = $pdf->getDomPDF();
+        $canvas = $domPdf->getCanvas();
+        $canvas->page_text(10, $canvas->get_height() - 20, "Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, [0, 0, 0]);
+
+        return $pdf->download('MemberDebts.pdf');
+    }
+
+    public function downloadMemberPaidItems(Request $request) {
+        $organisation      = $request->user()->organisation;
+        $debts             = json_decode(json_encode($this->userContributionService->getMemberContributedItems($request->user_id, $request->session_id)));
+        $admins            = $this->getOrganisationAdministrators();
+        $president         = count($admins) >= 3 ? $admins[1] : null;
+        $treasurer         = count($admins) >= 3 ? $admins[2]: null;
+        $fin_sec           = count($admins) >= 3 ? $admins[0] : null;
+        $member            = User::findOrFail($request->user_id);
+
+        $data = [
+            'title'             => $member->name . " Paid Payment Items",
+            'date'              => date('m/d/Y'),
+            'organisation'      => $organisation,
+            'contributions'     => $debts,
+            'organisation_telephone'   => $this->setOrganisationTelephone($organisation->telephone),
+            'president'         => $president,
+            'treasurer'         => $treasurer,
+            'fin_secretary'     => $fin_sec,
+            'total'             => $this->computeTotal($debts, "PAID"),
+            'balance'           => 0,
+            'organisation_logo' => env('FILE_DOWNLOAD_URL_PATH').$organisation->logo,
+        ];
+
+        $pdf = PDF::loadView('Contribution.MemberPaidItems', $data);
+
+        $pdf->output();
+        $domPdf = $pdf->getDomPDF();
+        $canvas = $domPdf->getCanvas();
+        $canvas->page_text(10, $canvas->get_height() - 20, "Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, [0, 0, 0]);
+
+        return $pdf->download('MemberPaidItems.pdf');
+    }
     public function getAllMemberContributions(Request $request)
     {
         $data = $this->userContributionService->getMemberContributedItems($request->user_id, $request->session_id);
@@ -213,4 +277,10 @@ class UserContributionController extends Controller
         return $this->sendResponse($data, 200);
     }
 
+    private function computeTotal($contributions, $type)
+    {
+        return collect($contributions)->map(function ($contribution) use ($type) {
+            return $type == "DEBTS"? $contribution->item_amount: $contribution->payment_item_amount;
+        })->sum();
+    }
 }
