@@ -97,6 +97,12 @@ class UserContributionService implements UserContributionInterface {
         $contributions =  $this->getContributionByUserAndPaymentItem($payment_item_id, $user_id)
                                     ->select(  'user_contributions.*')
                                     ->orderBy('user_contributions.created_at', 'DESC');
+        if(!is_null($request->transaction_status) && $request->transaction_status !== "ALL"){
+            $contributions = $contributions->where('user_contributions.status', $request->transaction_status);
+        }
+        if(!is_null($request->payment_status) && $request->payment_status !== "ALL"){
+            $contributions = $contributions->where('user_contributions.approve', $request->payment_status);
+        }
         $total_contribution = collect($contributions->get())->sum('amount_deposited');
         $total_amount_payable = $this->getTotalPaymentItemAmountByQuarters($payment_item);
         $total_balance = ($total_amount_payable - $total_contribution);
@@ -107,12 +113,12 @@ class UserContributionService implements UserContributionInterface {
             $unpaid_durations = $this->getMemberUnPayQuarters($payment_item->frequency, $payment_item->created_at, $contributions->get());
         }
 
-        $paginated_contribution = !is_null($request->per_page) ? $contributions->paginate($request->per_page): $contributions->get();
+        $paginated_contribution = isset($request->per_page) ? $contributions->paginate($request->per_page): $contributions->get();
 
-        $total = !is_null($request->per_page) ? $paginated_contribution->total() : count($paginated_contribution);
-        $last_page = !is_null($request->per_page) ? $paginated_contribution->lastPage(): 0;
-        $per_page = !is_null($request->per_page) ? (int)$paginated_contribution->perPage() : 0;
-        $current_page = !is_null($request->per_page) ? $paginated_contribution->currentPage() : 0;
+        $total = isset($request->per_page) ? $paginated_contribution->total() : count($paginated_contribution);
+        $last_page = isset($request->per_page) ? $paginated_contribution->lastPage(): 0;
+        $per_page = isset($request->per_page) ? (int)$paginated_contribution->perPage() : 0;
+        $current_page = isset($request->per_page) ? $paginated_contribution->currentPage() : 0;
 
 
         return new UserContributionCollection($paginated_contribution, $total_contribution, $total_balance, $unpaid_durations, $total_amount_payable,  $total, $last_page,

@@ -73,7 +73,7 @@
             <div style="font-weight: bold;text-transform: uppercase;font-size: small; margin-top: 20px;text-align: center">
                 SIGN
             </div>
-            <div  style="border-bottom: 1px solid black; margin-top: 40px">
+            <div  style="border-bottom: 1px solid black; margin-top: 5px">
             </div>
         </div>
 
@@ -89,7 +89,7 @@
             <div style="font-weight: bold;text-transform: uppercase;font-size: small; margin-top: 20px;text-align: center">
                 SIGN
             </div>
-            <div  style="border-bottom: 1px solid black; margin-top: 40px">
+            <div  style="border-bottom: 1px solid black; margin-top: 5px">
             </div>
         </div>
         <!------------------------------End of presenters-------------------------------------->
@@ -107,7 +107,7 @@
             <div style="font-weight: bold;text-transform: uppercase;font-size: small; margin-top: 20px">
                 SIGN
             </div>
-            <div class="border_line" style="border-bottom: 1px solid black; margin-top: 40px;text-align: center">
+            <div class="border_line" style="border-bottom: 1px solid black; margin-top: 5px;text-align: center">
             </div>
         </div>
     </div>

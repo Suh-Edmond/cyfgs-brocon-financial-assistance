@@ -28,7 +28,7 @@
             <tr style="border: 1px solid black; font-size: smaller;">
                 <th style="border: 1px solid black;">S/N</th>
                 <th style="padding: 12px; border: 1px solid black;">Sponsor's Name</th>
-                <th style="padding: 12px; border: 1px solid black;">Amount Deposited</th>
+                <th style="padding: 12px; border: 1px solid black;">Amount Deposited (XAF)</th>
                 <th style="padding: 12px; border: 1px solid black;">Date</th>
                 <th style="padding: 12px; border: 1px solid black;">Payment Status</th>
                 <th style="padding: 12px; border: 1px solid black;">Transaction Code</th>
@@ -36,12 +36,12 @@
             @foreach ($supports as $key => $value)
                 <tr style="border: 1px solid black; font-size: smaller">
                     <td style="padding: 5px;">{{ $key + 1 }}</td>
-                    <td style="border: 1px solid black; padding: 11px;">{{ $value->supporter }}</td>
-                    <td style="border: 1px solid black; padding: 11px;">{{ number_format($value->amount_deposited) }} XAF
+                    <td style="border: 1px solid black; padding: 3px;">{{ $value->supporter }}</td>
+                    <td style="border: 1px solid black; padding: 3px;text-align: center">{{ number_format($value->amount_deposited) }}
                     </td>
-                    <td style="border: 1px solid black; padding: 11px;">{{ date('d-m-Y', strtotime($value->created_at)) }}</td>
-                    <td style="border: 1px solid black; padding: 11px;">{{ $value->approve }}</td>
-                    <td style="border: 1px solid black; padding: 11px;">{{ $value->code }}</td>
+                    <td style="border: 1px solid black; padding: 3px;">{{ date('d-m-Y', strtotime($value->created_at)) }}</td>
+                    <td style="border: 1px solid black; padding: 3px;">{{ $value->approve }}</td>
+                    <td style="border: 1px solid black; padding: 3px;">{{ $value->code }}</td>
                 </tr>
                 @if ( $n % 25 == 0 )
                     <div style="page-break-before:always;page-break-inside: auto;"> </div>
@@ -75,7 +75,7 @@
             <div style="font-weight: bold;text-transform: uppercase;font-size: small; margin-top: 20px;text-align: center">
                 SIGN
             </div>
-            <div  style="border-bottom: 1px solid black; margin-top: 40px">
+            <div  style="border-bottom: 1px solid black; margin-top: 5x">
             </div>
         </div>
 
@@ -91,7 +91,7 @@
             <div style="font-weight: bold;text-transform: uppercase;font-size: small; margin-top: 20px;text-align: center">
                 SIGN
             </div>
-            <div  style="border-bottom: 1px solid black; margin-top: 40px">
+            <div  style="border-bottom: 1px solid black; margin-top: 5px">
             </div>
         </div>
         <!------------------------------End of presenters-------------------------------------->
@@ -109,7 +109,7 @@
             <div style="font-weight: bold;text-transform: uppercase;font-size: small; margin-top: 20px">
                 SIGN
             </div>
-            <div class="border_line" style="border-bottom: 1px solid black; margin-top: 40px;text-align: center">
+            <div class="border_line" style="border-bottom: 1px solid black; margin-top: 5px;text-align: center">
             </div>
         </div>
     </div>
