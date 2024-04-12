@@ -35,11 +35,11 @@
             @foreach ($income_activities as $key => $income_activity)
                 <tr style="border: 1px solid black; font-size: smaller">
                     <td style="padding: 5px;">{{ $key + 1 }}</td>
-                    <td style="border: 1px solid black; padding: 11px;">{{ $income_activity->name }}</td>
-                    <td style="border: 1px solid black; padding: 11px;">{{ number_format($income_activity->amount) }}</td>
-                    <td style="border: 1px solid black; padding: 11px;">{{ date('j F, Y', strtotime($income_activity->date)) }}</td>
-                    <td style="border: 1px solid black; padding: 11px;">{{ $income_activity->venue }}</td>
-                    <td style="border: 1px solid black; padding: 11px;">{{ $income_activity->approve }}</td>
+                    <td style="border: 1px solid black; padding: 3px;">{{ $income_activity->name }}</td>
+                    <td style="border: 1px solid black; padding: 3px;">{{ number_format($income_activity->amount) }}</td>
+                    <td style="border: 1px solid black; padding: 3px;">{{ date('j F, Y', strtotime($income_activity->date)) }}</td>
+                    <td style="border: 1px solid black; padding: 3px;">{{ $income_activity->venue }}</td>
+                    <td style="border: 1px solid black; padding: 3px;">{{ $income_activity->approve }}</td>
                 </tr>
                 @if ( $n % 25 == 0 )
                     <div style="page-break-before:always;page-break-inside: auto;"> </div>
