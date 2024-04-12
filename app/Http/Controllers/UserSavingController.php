@@ -110,9 +110,9 @@ class UserSavingController extends Controller
         $savings           = $this->user_saving_service->getUserSavingsForDownload($request);
 
         $admins            = $this->getOrganisationAdministrators();
-        $president         = count($admins) == 3 ? $admins[1] : null;
-        $treasurer         = count($admins) == 3 ? $admins[2]: null;
-        $fin_sec           = count($admins) == 3 ? $admins[0] : null;
+        $president         = count($admins) >= 3 ? $admins[1] : null;
+        $treasurer         = count($admins) >= 3 ? $admins[2]: null;
+        $fin_sec           = count($admins) >= 3 ? $admins[0] : null;
         $data = [
             'title'               => $request->name. ' Savings',
             'date'                => date('m/d/Y'),
@@ -144,9 +144,9 @@ class UserSavingController extends Controller
 
         $admins            = $this->getOrganisationAdministrators();
 
-        $president         = count($admins) == 3 ? $admins[1] : null;
-        $treasurer         = count($admins) == 3 ? $admins[2]: null;
-        $fin_sec           = count($admins) == 3 ? $admins[0] : null;
+        $president         = count($admins) >= 3 ? $admins[1] : null;
+        $treasurer         = count($admins) >= 3 ? $admins[2]: null;
+        $fin_sec           = count($admins) >= 3 ? $admins[0] : null;
         $data = [
             'title'               => 'Organisation Savings',
             'date'                => date('m/d/Y'),

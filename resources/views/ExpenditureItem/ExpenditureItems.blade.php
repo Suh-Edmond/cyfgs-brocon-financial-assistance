@@ -36,11 +36,11 @@
             @foreach ($expenditure_items as $key => $item)
                 <tr style="border: 1px solid black; font-size: smaller">
                     <td style="padding: 3px; width:1%">{{ $key + 1 }}</td>
-                    <td style="border: 1px solid black; padding: 7px; width: 30%">{{ $item->name }}</td>
-                    <td style="border: 1px solid black; padding: 7px;">{{ number_format($item->amount) }} </td>
-                    <td style="border: 1px solid black; padding: 7px;">{{ $item->date }}</td>
-                    <td style="border: 1px solid black; padding: 7px;">{{ $item->venue }}</td>
-                    <td style="border: 1px solid black; padding: 7px;">{{ $item->approve }}</td>
+                    <td style="border: 1px solid black; padding: 3px; width: 30%">{{ $item->name }}</td>
+                    <td style="border: 1px solid black; padding: 3px;">{{ number_format($item->amount) }} </td>
+                    <td style="border: 1px solid black; padding: 3px;">{{ $item->date }}</td>
+                    <td style="border: 1px solid black; padding: 3px;">{{ $item->venue }}</td>
+                    <td style="border: 1px solid black; padding: 3px;">{{ $item->approve }}</td>
                 </tr>
                 @if ( $n % 25 == 0 )
                     <div style="page-break-before:always;page-break-inside: auto;"> </div>

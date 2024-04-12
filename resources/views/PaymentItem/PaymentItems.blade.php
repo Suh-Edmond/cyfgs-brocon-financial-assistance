@@ -37,16 +37,16 @@
             @foreach ($payment_items as $key => $value)
                 <tr style="border: 1px solid black; font-size: smaller">
                     <td style="padding: 3px; width:1%">{{ $key + 1 }}</td>
-                    <td style="border: 1px solid black; padding: 7px;">{{ $value->name }}</td>
-                    <td style="border: 1px solid black; padding: 7px;">{{ number_format($value->amount) }}</td>
+                    <td style="border: 1px solid black; padding: 3px;">{{ $value->name }}</td>
+                    <td style="border: 1px solid black; padding: 3px;">{{ number_format($value->amount) }}</td>
                    @if ($value->compulsory == 1)
-                   <td style="border: 1px solid black; padding: 5px;">YES</td>
+                   <td style="border: 1px solid black; padding: 3px; width:5%">YES</td>
                    @else
-                   <td style="border: 1px solid black; padding: 7px;">NO</td>
+                   <td style="border: 1px solid black; padding: 3px; width:5%">NO</td>
                    @endif
-                    <td style="border: 1px solid black; padding: 7px;font-size: smaller">{{ $value->frequency }}</td>
-                    <td style="border: 1px solid black; padding: 7px;font-size: smaller">{{ $value->type }}</td>
-                    <td style="border: 1px solid black; padding: 7px;">{{  date('d-m-Y', strtotime($value->deadline)) }}</td>
+                    <td style="border: 1px solid black; padding: 3px;font-size: smaller">{{ $value->frequency }}</td>
+                    <td style="border: 1px solid black; padding: 3px;font-size: smaller">{{ $value->type }}</td>
+                    <td style="border: 1px solid black; padding: 3px;">{{  date('d-m-Y', strtotime($value->deadline)) }}</td>
                 </tr>
                 @if ( $n % 25 == 0 )
                     <div style="page-break-before:always;page-break-inside: auto;"> </div>
@@ -63,13 +63,13 @@
 
 
     <!------------------------------------------------------DETAILS OF PRESENTERS--------------------------------------------------------------------------------------------->
-    <div style="margin-top: 40px;">
+    <div style="margin-top: 40px; margin-bottom: 20px">
         <h3 style="font-weight: bold;font-size: small; text-align:center;text-transform: uppercase;text-decoration: underline"><span style="padding-right: 5px"></span> Prepared By:
         </h3>
     </div>
-    <div class="detail" style="margin-top: 30px;margin-bottom: 150px">
+    <div class="detail" style="margin-top: 5px;">
         <!------------------------------Names of presenters------------------------------------>
-        <div style="float: left" class="fin_sec">
+        <div style="float: left;" class="fin_sec">
             <div class=" " style="font-weight: bold;font-size: small;text-transform: uppercase; margin-bottom: 5px;text-align: center">
                 FINANCIAL SECRETARY
             </div>
@@ -78,10 +78,10 @@
                     <span>{{$fin_secretary->name}}</span>
                 @endisset
             </div>
-            <div style="font-weight: bold;text-transform: uppercase;font-size: small; margin-top: 20px;text-align: center">
+            <div style="font-weight: bold;text-transform: uppercase;font-size: small; margin-top: 10px;text-align: center">
                 SIGN
             </div>
-            <div  style="border-bottom: 1px solid black; margin-top: 40px">
+            <div  style="border-bottom: 1px solid black; margin-top: 5px">
             </div>
         </div>
 
@@ -94,15 +94,15 @@
                     <span>{{$treasurer->name}}</span>
                 @endisset
             </div>
-            <div style="font-weight: bold;text-transform: uppercase;font-size: small; margin-top: 20px;text-align: center">
+            <div style="font-weight: bold;text-transform: uppercase;font-size: small; margin-top: 10px;text-align: center">
                 SIGN
             </div>
-            <div  style="border-bottom: 1px solid black; margin-top: 40px">
+            <div  style="border-bottom: 1px solid black; margin-top: 5px">
             </div>
         </div>
         <!------------------------------End of presenters-------------------------------------->
     </div>
-    <div class="president" style="text-align: center">
+    <div class="president" style="text-align: center;margin-top: 100px">
         <div>
             <div class=" " style="font-weight: bold;font-size: small;text-transform: uppercase; margin-bottom: 5px">
                 President
@@ -112,10 +112,10 @@
                     <span>{{$president->name}}</span>
                 @endisset
             </div>
-            <div style="font-weight: bold;text-transform: uppercase;font-size: small; margin-top: 20px">
+            <div style="font-weight: bold;text-transform: uppercase;font-size: small; margin-top: 10px">
                 SIGN
             </div>
-            <div class="border_line" style="border-bottom: 1px solid black; margin-top: 40px;text-align: center">
+            <div class="border_line" style="border-bottom: 1px solid black; margin-top: 5px;text-align: center">
             </div>
         </div>
     </div>
