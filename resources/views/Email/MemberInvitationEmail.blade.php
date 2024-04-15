@@ -36,7 +36,7 @@
     <br>
 
     <div>If you don't recognise the sender, please ignore this email, and nothing will happen. <br>
-        <span style="color: red">This Invitation link will expire within 7 days</span>.
+        <span style="color: red">This Invitation link will expire within 24 hours</span>.
     </div><br>
 
     <p>Copyright &copy; 2023 <span style="font-weight: bold">QuickRecords.</span> All Rights Reserved.</p>

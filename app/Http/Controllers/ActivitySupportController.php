@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateUpdateActivitySupportRequest;
 use App\Http\Resources\ActivitySupportResource;
-use App\Models\User;
 use App\Services\ActivitySupportService;
 use App\Traits\HelpTrait;
 use App\Traits\ResponseTrait;
