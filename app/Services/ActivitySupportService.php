@@ -86,7 +86,10 @@ class ActivitySupportService implements ActivitySupportInterface
     public function fetchAllActivitySupport($request)
     {
         $current_session = $this->sessionService->getCurrentSession();
-        $sponsorships =  ActivitySupport::where('session_id',$current_session->id);
+        $sponsorships =  !isset($request->session_id) ? ActivitySupport::where('session_id',$current_session->id): null;
+        if(isset($request->session_id)){
+            $sponsorships = ActivitySupport::where('session_id', $request->session_id);
+        }
         if(!is_null($request->payment_item_id)){
             $sponsorships = $sponsorships->where('payment_item_id', $request->payment_item_id);
         }

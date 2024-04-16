@@ -93,6 +93,9 @@ class IncomeActivityService implements IncomeActivityInterface {
     public function filterIncomeActivity($request)
     {
         $activities = $this->findIncomeActivities($request->organisation_id);
+        if(isset($request->session_id)){
+            $activities = $activities->where('income_activities.session_id', $request->session_id);
+        }
         if(!is_null($request->payment_item_id)) {
             $activities = $activities->where('income_activities.payment_item_id', $request->payment_item_id);
         }

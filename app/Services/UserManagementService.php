@@ -76,7 +76,7 @@ class UserManagementService implements UserManagementInterface
             $assignedRole = $this->getAssignedRole($request->role);
             MemberInvitation::create([
                 'user_id'               => $request->user_id,
-                'expire_at'             => Carbon::now()->addDays(7),
+                'expire_at'             => Carbon::now()->addHours(24),
                 'has_seen_notification' => false,
                 'role_id'               => $assignedRole->id
             ]);
