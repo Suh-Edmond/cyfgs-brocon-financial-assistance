@@ -19,10 +19,9 @@ class IsTreasurerMiddleware
      */
     public function handle($request, Closure $next)
     {
-        if($request->user()->hasRole(CustomRole::findByName(Roles::TREASURER, 'api'))){
-            return $next($request);
+        if(count(collect($request->user()->roles->toArray())->whereIn('name', [Roles::MEMBER, Roles::TREASURER])->toArray()) < 2){
+            return ResponseTrait::sendError('Access denied', 'You dont have the role to access this route', 403);
         }
-        return ResponseTrait::sendError('Access denied', 'You dont have the role to access this route', 403);
-
+        return $next($request);
     }
 }

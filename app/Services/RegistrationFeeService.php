@@ -5,8 +5,11 @@ namespace App\Services;
 
 
 use App\Constants\SessionStatus;
+use App\Http\Resources\RegisterFeeResource;
+use App\Http\Resources\RegistrationFeeResourceCollection;
 use App\Interfaces\RegistrationFeeInterface;
 use App\Models\Registration;
+use Illuminate\Support\Facades\DB;
 
 class RegistrationFeeService implements RegistrationFeeInterface
 {
@@ -16,39 +19,49 @@ class RegistrationFeeService implements RegistrationFeeInterface
         $exist_fees = Registration::all()->toArray();
         if(count($exist_fees) == 0){
             Registration::create([
-                'motive'    => $request->motive,
                 'is_compulsory' => $request->is_compulsory,
                 'amount'        => $request->amount,
-                'status'        => SessionStatus::ACTIVE
+                'status'        => SessionStatus::ACTIVE,
+                'frequency'     => $request->frequency,
+                'updated_by'    => $request->user()->name
             ]);
         }else {
             Registration::create([
-                'motive'    => $request->motive,
                 'is_compulsory' => $request->is_compulsory,
                 'amount'        => $request->amount,
-                'status'        => SessionStatus::IN_ACTIVE
+                'status'        => SessionStatus::IN_ACTIVE,
+                'frequency'     => $request->frequency,
+                'updated_by'    => $request->user()->name
             ]);
         }
     }
 
     public function updateRegistrationFee($request, $id)
     {
+        $activeRegFee = Registration::where('status', SessionStatus::ACTIVE)->first();
+        if(SessionStatus::ACTIVE == $request->status){
+            $activeRegFee->update([
+                'status' => SessionStatus::IN_ACTIVE
+            ]);
+        }
         $updated = Registration::findOrFail($id);
         $updated->update([
-            'motive'    => $request->motive,
             'is_compulsory' => $request->is_compulsory,
-            'amount'        => $request->amount
+            'amount'        => $request->amount,
+            'frequency'     => $request->frequency,
+            'status'        => $request->status
         ]);
     }
 
-    public function getAllRegistrationFee()
+    public function getAllRegistrationFee($request)
     {
-        return Registration::all();
+        $reg_fees = DB::table('registrations')->orderBy('updated_at', 'DESC')->get();
+        return RegisterFeeResource::collection($reg_fees);
     }
 
     public function getCurrentRegistrationFee()
     {
-        return Registration::where('status', SessionStatus::ACTIVE)->get();
+        return Registration::where('status', SessionStatus::ACTIVE)->firstOrFail();
     }
 
     public function deleteRegistrationFee($id)

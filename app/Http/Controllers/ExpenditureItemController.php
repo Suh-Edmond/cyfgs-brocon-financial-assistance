@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Constants\Roles;
-use App\Http\Requests\ExpenditureItemRequest;
-use App\Models\User;
-use App\Services\ExpenditureItemService;
+ use App\Http\Requests\ExpenditureItemRequest;
+ use App\Services\ExpenditureItemService;
 use App\Traits\HelpTrait;
 use App\Traits\ResponseTrait;
 use Illuminate\Http\Request;
@@ -34,7 +32,7 @@ class ExpenditureItemController extends Controller
 
     public function getExpenditureItems($expenditure_category_id, Request $request)
     {
-        $items = $this->expenditure_item_service->getExpenditureItems($expenditure_category_id, $request->status);
+        $items = $this->expenditure_item_service->getExpenditureByCategory($expenditure_category_id, $request);
 
         return $this->sendResponse($items, 200);
     }
@@ -54,9 +52,10 @@ class ExpenditureItemController extends Controller
         return $this->sendResponse($item, 200);
     }
 
-    public function getExpenditureByCategory($expenditure_category_id)
+    public function getExpenditureByCategory($expenditure_category_id, Request $request)
     {
-        $data = $this->expenditure_item_service->getExpenditureByCategory($expenditure_category_id);
+
+        $data = $this->expenditure_item_service->getExpenditureByCategory($expenditure_category_id, $request);
 
         return $this->sendResponse($data, 200);
     }
@@ -91,6 +90,14 @@ class ExpenditureItemController extends Controller
         return $this->sendResponse($data, 200);
     }
 
+    public function filterExpenditureItems(Request $request)
+    {
+
+        $data = $this->expenditure_item_service->filterExpenditureItems($request);
+
+        return $this->sendResponse($data, 200);
+    }
+
     public function prepareDataForDownload(Request $request){
         $data = $this->expenditure_item_service->downloadExpenditureItems($request);
         $data      = json_decode(json_encode($data));
@@ -99,28 +106,31 @@ class ExpenditureItemController extends Controller
 
     public function downloadExpenditureItems(Request $request)
     {
-        $auth_user         = auth()->user();
-        $organisation      = User::find($auth_user['id'])->organisation;
+        $organisation      = $request->user()->organisation;
         $expenditure_items = $this->prepareDataForDownload($request);
-
-        $president         = $this->getOrganisationAdministrators(Roles::PRESIDENT);
-        $treasurer         = $this->getOrganisationAdministrators(Roles::TREASURER);
-        $fin_sec           = $this->getOrganisationAdministrators(Roles::FINANCIAL_SECRETARY);
-
-
+        $admins            = $this->getOrganisationAdministrators();
+        $president         = count($admins) >= 3 ? $admins[1] : null;
+        $treasurer         = count($admins) >= 3 ? $admins[2]: null;
+        $fin_sec           = count($admins) >= 3 ? $admins[0] : null;
         $data = [
-            'title'               => 'Expenditure Activities',
+            'title'               => 'Expenditure Items under '.$request->category_name,
             'date'                => date('m/d/Y'),
             'organisation'        => $organisation,
-            'expenditure_items'   => $expenditure_items,
+            'expenditure_items'   => $expenditure_items->data,
             'president'           => $president,
             'organisation_telephone'   => $this->setOrganisationTelephone($organisation->telephone),
             'treasurer'           => $treasurer,
             'fin_secretary'       => $fin_sec,
-            'total'               => $this->expenditure_item_service->calculateTotal($expenditure_items)
+            'total'               => $this->computeTotalAmountByPaymentCategory($expenditure_items->data),
+            'organisation_logo'   => env('FILE_DOWNLOAD_URL_PATH').$organisation->logo
         ];
 
         $pdf = PDF::loadView('ExpenditureItem.ExpenditureItems', $data);
+        $pdf->output();
+        $domPdf = $pdf->getDomPDF();
+        $canvas = $domPdf->getCanvas();
+        $canvas->page_text(10, $canvas->get_height() - 20, "Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, [0, 0, 0]);
+
 
         return $pdf->download('Expenditure_items.pdf');
     }

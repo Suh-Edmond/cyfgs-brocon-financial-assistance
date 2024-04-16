@@ -17,9 +17,14 @@ class Registration extends Model
 
     protected $fillable = [
         'amount',
-        'motive',
         'status',
         'updated_by',
-        'is_compulsory'
+        'is_compulsory',
+        'frequency'
     ];
+
+    public function memberRegistrations()
+    {
+        return $this->hasMany(MemberRegistration::class);
+    }
 }

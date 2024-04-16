@@ -6,6 +6,7 @@ use App\Http\Requests\CreateOrganisationRequest;
 use App\Http\Requests\UpdateOrganisationRequest;
 use App\Http\Resources\OrganisationResource;
 use App\Services\OrganisationService;
+use Illuminate\Http\Request;
 
 class OrganisationController extends Controller
 {
@@ -16,15 +17,12 @@ class OrganisationController extends Controller
         $this->organisation_service = $organisation_service;
     }
 
-
-
     public function createOrganisation(CreateOrganisationRequest $request)
     {
-        $this->organisation_service->createOrganisation($request);
+        $data = $this->organisation_service->createOrganisation($request);
 
-        return $this->sendResponse('success', 'Organisation created successfully' );
+        return $this->sendResponse($data, 'Organisation created successfully' );
     }
-
 
     public function getOrganisation($id)
     {
@@ -33,16 +31,12 @@ class OrganisationController extends Controller
         return $this->sendResponse(new OrganisationResource($organisation), 'success');
     }
 
-
-
-
     public function getOrganisationInfo()
     {
         $organisation = $this->organisation_service->getOrganisationInfo();
 
         return $this->sendResponse(new OrganisationResource($organisation), 'success');
     }
-
 
     public function getOrganisations()
     {
@@ -51,19 +45,24 @@ class OrganisationController extends Controller
         return $this->sendResponse(OrganisationResource::collection($organisations), 'success');
     }
 
-
     public function updateOrganisation(UpdateOrganisationRequest $request, $id)
     {
-        $this->organisation_service->updatedOrganisation($request, $id);
+        $data = $this->organisation_service->updatedOrganisation($request, $id);
 
-        return $this->sendResponse( 'success', 'successfully updated organisation');
+        return $this->sendResponse( $data, 'successfully updated organisation');
     }
-
 
     public function deleteOrganisation($id)
     {
         $this->organisation_service->deleteOgranisation($id);
 
         return $this->sendResponse('success','successfully deleted organisation');
+    }
+
+    public function updateTelephoneNumber(Request  $request, $id)
+    {
+        $this->organisation_service->updateTelephoneNumber($request, $id);
+
+        return $this->sendResponse('success','successfully updated organisation telephone');
     }
 }

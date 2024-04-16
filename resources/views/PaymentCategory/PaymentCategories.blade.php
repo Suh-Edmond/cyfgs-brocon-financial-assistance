@@ -3,7 +3,7 @@
 @section('section')
     <div style="margin-bottom: 220px;">
         <div style="float: left;">
-            <img src="{{ $organisation->logo }}" alt="organisation logo" width="100px;" height="100px;"
+            <img src="{{url($organisation_logo)}}" alt="organisation logo" width="100px;" height="100px;"
                 style="border-radius: 2px">
         </div>
         <div style="float: right">
@@ -17,47 +17,88 @@
             <label style="font-size: small;">Printed date: {{ $date }}</label>
         </div>
     </div>
-    <div>
-        <h3 style="font-weight: bold;font-size: medium; text-align:center;text-transform: uppercase;">{{ $title }}
+    <div style="margin-bottom: 2rem;">
+        <h3 style="font-weight: bold;font-size: medium; text-align:center;text-transform: capitalize;border-bottom: 1px solid black;">{{ $title }}
         </h3>
     </div>
+    <?php $n=1 ?>
     <div>
-        <table style="border: 1px solid black; border-collapse: collapse;width: 100%">
+        <table style="border: 1px solid black; border-collapse: collapse;width: 100%" >
             <tr style="border: 1px solid black; font-size: smaller;">
                 <th style="border: 1px solid black;">S/N</th>
                 <th style="padding: 12px; border: 1px solid black;">Name</th>
             </tr>
             @foreach ($categories as $key => $value)
                 <tr style="border: 1px solid black; font-size: smaller">
-                    <td style="padding: 5px;">{{ $key + 1 }}</td>
-                    <td style="border: 1px solid black; padding: 11px;">{{ $value->name }}</td>
+                    <td style="padding: 5px; text-align: center; width:5%">{{ $key + 1 }}</td>
+                    <td style="border: 1px solid black; padding: 11px; text-align: center">{{ $value->name }}</td>
                 </tr>
+                @if ( $n % 25 == 0 )
+                    <div style="page-break-before:always;page-break-inside: auto;"> </div>
+                @endif
+                <?php $n++ ?>
             @endforeach
         </table>
     </div>
-    <div style="margin-top: 100px;">
-        <div style="float: left;">
-            <label for="organisation"style="font-weight: 400; text-transform: uppercase; font-size: smaller;">Financial
-                Secretary <br />
-                @if(!is_null($fin_secretary))
-                    {{ $fin_secretary->name }}
-                @endif
-            </label><br /><br />
+
+
+    <!------------------------------------------------------DETAILS OF PRESENTERS--------------------------------------------------------------------------------------------->
+    <div style="margin-top: 40px;">
+        <h3 style="font-weight: bold;font-size: small; text-align:center;text-transform: uppercase;text-decoration: underline"><span style="padding-right: 5px"></span> Prepared By:
+        </h3>
+    </div>
+    <div class="detail" style="margin-top: 30px;margin-bottom: 150px">
+        <!------------------------------Names of presenters------------------------------------>
+        <div style="float: left" class="fin_sec">
+            <div class=" " style="font-weight: bold;font-size: small;text-transform: uppercase; margin-bottom: 5px;text-align: center">
+                FINANCIAL SECRETARY
+            </div>
+            <div style="font-weight: bold;font-size: small; text-transform: uppercase;text-align: center">
+                @isset($fin_secretary)
+                    <span>{{$fin_secretary->name}}</span>
+                @endisset
+            </div>
+            <div style="font-weight: bold;text-transform: uppercase;font-size: small; margin-top: 20px;text-align: center">
+                SIGN
+            </div>
+            <div  style="border-bottom: 1px solid black; margin-top: 40px">
+            </div>
         </div>
-        <div style="float: right">
-            <label for="organisation"style="font-weight: 400; text-transform: uppercase; font-size: smaller;">Treasurer
-                <br />
-                @if(!is_null($treasurer))
-                    {{ $treasurer->name }}
-                @endif
-            </label><br /><br />
+
+        <div style="float: right" class="treasurer">
+            <div  class=" " style="text-align: center;font-weight: bold;font-size: small;text-transform: uppercase; margin-bottom: 5px">
+                Treasurer
+            </div>
+            <div style="font-weight: bold;text-transform: uppercase;text-align: center">
+                @isset($treasurer)
+                    <span>{{$treasurer->name}}</span>
+                @endisset
+            </div>
+            <div style="font-weight: bold;text-transform: uppercase;font-size: small; margin-top: 20px;text-align: center">
+                SIGN
+            </div>
+            <div  style="border-bottom: 1px solid black; margin-top: 40px">
+            </div>
+        </div>
+        <!------------------------------End of presenters-------------------------------------->
+    </div>
+    <div class="president" style="text-align: center">
+        <div>
+            <div class=" " style="font-weight: bold;font-size: small;text-transform: uppercase; margin-bottom: 5px">
+                President
+            </div>
+            <div style="font-weight: bold;font-size: small; text-transform: uppercase">
+                @isset($president)
+                    <span>{{$president->name}}</span>
+                @endisset
+            </div>
+            <div style="font-weight: bold;text-transform: uppercase;font-size: small; margin-top: 20px">
+                SIGN
+            </div>
+            <div class="border_line" style="border-bottom: 1px solid black; margin-top: 40px;text-align: center">
+            </div>
         </div>
     </div>
-    <div style="text-align:center; margin-top:80px">
-        <label for="organisation"style="font-weight: 400; text-transform: uppercase; font-size: smaller;" >President <br />
-            @if(!is_null($president))
-                {{ $president->name }}
-            @endif
-        </label><br />
-    </div>
+    <!------------------------------------------------------END OF PRESENTERS-------------------------------------------------------------------------------------->
+
 @endsection

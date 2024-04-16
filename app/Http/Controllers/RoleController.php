@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AddUserRoleRequest;
+use App\Http\Requests\UpdateRoleRequest;
 use App\Services\RoleService;
 use Illuminate\Http\Request;
 
@@ -17,8 +18,7 @@ class RoleController extends Controller
 
     public function addUserRole(AddUserRoleRequest $request)
     {
-
-        $exist = $this->roleService->addUserRole($request->user_id, $request->role);
+        $exist = $this->roleService->addUserRole($request->user_id, $request->role, $request->user()->name);
         if($exist){
             return $this->sendResponse('success', 'Role added successfully');
         }else {
@@ -49,5 +49,12 @@ class RoleController extends Controller
     {
         $this->roleService->removeRole($user_id, $request->role);
         return $this->sendResponse('success', 'Role remove successfully');
+    }
+
+    public function updateRole(UpdateRoleRequest $request)
+    {
+        $data = $this->roleService->updateRole($request);
+
+        return $this->sendResponse($data, "success");
     }
 }

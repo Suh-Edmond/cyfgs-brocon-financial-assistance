@@ -3,10 +3,8 @@
 namespace App\Http\Controllers;
 
 
-use App\Constants\Roles;
-use App\Http\Resources\IncomeActivityResource;
+ use App\Http\Resources\IncomeActivityResource;
 use App\Http\Requests\IncomeActivityRequest;
-use App\Models\User;
 use App\Services\IncomeActivityService;
 use App\Traits\HelpTrait;
 use App\Traits\ResponseTrait;
@@ -41,11 +39,11 @@ class IncomeActivityController extends Controller
     }
 
 
-    public function getIncomeActivitiesByOrganisation($id)
+    public function getIncomeActivitiesByOrganisation($id, Request $request)
     {
-        $income_activities = $this->income_activity_service->getIncomeActivities($id);
+        $income_activities = $this->income_activity_service->getIncomeActivities($id, $request);
 
-        return $this->sendResponse(IncomeActivityResource::collection($income_activities), 200);
+        return $this->sendResponse(($income_activities), 200);
     }
 
 
@@ -76,46 +74,47 @@ class IncomeActivityController extends Controller
     {
         $income_activities = $this->income_activity_service->filterIncomeActivity($request);
 
-        return $this->sendResponse(IncomeActivityResource::collection($income_activities), 200);
+        return $this->sendResponse(($income_activities), 200);
     }
 
     public function prepareData(Request $request) {
         $activities      = $this->filterIncomeActivity($request);
-        $activities      = json_decode(json_encode($activities))->original->data;
 
+        $activities      = json_decode(json_encode($activities))->original->data;
         return $activities;
     }
 
     //I will have to pass the parameters in the request and run the query to download the data
     public function generateIncomeActivityPDF(Request $request)
     {
-        $auth_user         = auth()->user();
-        $organisation      = User::find($auth_user['id'])->organisation;
+         $organisation      = $request->user()->organisation;
 
         $income_activities = $this->prepareData($request);
+        $total             = $this->income_activity_service->calculateTotal($income_activities->data);
 
-        $total             = $this->income_activity_service->calculateTotal($income_activities);
-
-        $president         = $this->getOrganisationAdministrators(Roles::PRESIDENT);
-
-        $treasurer         = $this->getOrganisationAdministrators(Roles::TREASURER);
-
-        $fin_sec           = $this->getOrganisationAdministrators(Roles::FINANCIAL_SECRETARY);
-
+        $admins            = $this->getOrganisationAdministrators();
+        $president         = count($admins) >= 3 ? $admins[1] : null;
+        $treasurer         = count($admins) >= 3 ? $admins[2]: null;
+        $fin_sec           = count($admins) >= 3 ? $admins[0] : null;
 
         $data = [
-            'title'               => 'Transaction Report For Income Activity',
+            'title'               => !is_null($request->payment_item_name)?'Income Activities for '. $request->payment_item_name:'Income Activities for Year '.$request->year,
             'date'                => date('m/d/Y'),
             'organisation'        => $organisation,
-            'income_activities'   => $income_activities,
+            'income_activities'   => $income_activities->data,
             'total'               => $total,
             'president'           => $president,
             'treasurer'           => $treasurer,
             'fin_secretary'       => $fin_sec,
             'organisation_telephone'   => $this->setOrganisationTelephone($organisation->telephone),
+            'organisation_logo'    => env('FILE_DOWNLOAD_URL_PATH').$organisation->logo
         ];
 
         $pdf = PDF::loadView('IncomeActivities.IncomeActivities', $data);
+        $pdf->output();
+        $domPdf = $pdf->getDomPDF();
+        $canvas = $domPdf->getCanvas();
+        $canvas->page_text(10, $canvas->get_height() - 20, "Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, [0, 0, 0]);
 
         return $pdf->download('IncomeActivities.pdf');
     }

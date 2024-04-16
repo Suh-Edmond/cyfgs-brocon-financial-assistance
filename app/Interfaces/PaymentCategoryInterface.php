@@ -7,7 +7,7 @@ interface PaymentCategoryInterface {
 
     public function updatePaymentCategory($request, $id, $organisation_id);
 
-    public function getPaymentCategories($organisation_id);
+    public function getPaymentCategories($request);
 
     public function getPaymentCategory($id, $organisation_id);
 

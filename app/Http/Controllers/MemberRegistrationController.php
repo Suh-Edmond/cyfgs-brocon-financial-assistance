@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Constants\Roles;
-use App\Http\Requests\MemberRegRequest;
+ use App\Http\Requests\MemberRegRequest;
 use App\Http\Requests\SearchRegistrationRequest;
 use App\Http\Resources\MemberRegistrationResource;
-use App\Models\User;
-use App\Services\RegistrationService;
+ use App\Services\RegistrationService;
 use App\Traits\HelpTrait;
 use App\Traits\ResponseTrait;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -70,17 +68,15 @@ class MemberRegistrationController extends Controller
 
     public function downloadRegisteredMembers(SearchRegistrationRequest $request)
     {
-        $auth_user         = auth()->user();
 
-        $organisation      = User::find($auth_user['id'])->organisation;
+        $organisation      = $request->user()->organisation;
 
         $registrations     = $this->prepareData($request);
 
-        $president         = $this->getOrganisationAdministrators(Roles::PRESIDENT);
-
-        $treasurer         = $this->getOrganisationAdministrators(Roles::TREASURER);
-
-        $fin_sec           = $this->getOrganisationAdministrators(Roles::FINANCIAL_SECRETARY);
+        $admins            = $this->getOrganisationAdministrators();
+        $president         = count($admins) >= 3 ? $admins[1] : null;
+        $treasurer         = count($admins) >= 3 ? $admins[2]: null;
+        $fin_sec           = count($admins) >= 3 ? $admins[0] : null;
 
         $data = [
             'title'               => 'Registered Members for '.$request->year,
@@ -91,6 +87,7 @@ class MemberRegistrationController extends Controller
             'organisation_telephone'   => $this->setOrganisationTelephone($organisation->telephone),
             'treasurer'           => $treasurer,
             'fin_secretary'       => $fin_sec,
+            'organisation_logo'   => env('FILE_DOWNLOAD_URL_PATH').$organisation->logo
         ];
         $pdf = PDF::loadView('MemberRegistration.RegisteredMembers', $data);
 

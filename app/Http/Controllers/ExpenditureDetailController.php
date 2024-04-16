@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Constants\Roles;
+use App\Http\Requests\ApproveBulkExpenditureItemDetailRequest;
 use App\Http\Requests\ExpenditureDetailRequest;
-use App\Models\User;
 use App\Services\ExpenditureDetailService;
 use App\Traits\HelpTrait;
 use App\Traits\ResponseTrait;
@@ -42,10 +41,9 @@ class ExpenditureDetailController extends Controller
     }
 
 
-    public function getExpenditureDetails($expenditure_item_id)
+    public function getExpenditureDetails($expenditure_item_id, Request $request)
     {
-        $details = $this->expenditure_detail_service->getExpenditureDetails($expenditure_item_id);
-
+        $details = $this->expenditure_detail_service->getExpenditureDetails($expenditure_item_id, $request);
         return $this->sendResponse($details, 200);
     }
 
@@ -81,40 +79,66 @@ class ExpenditureDetailController extends Controller
 
     public function downloadExpenditureDetail(Request $request)
     {
-        $auth_user         = auth()->user();
-        $organisation      = User::find($auth_user['id'])->organisation;
+        $organisation      = $request->user()->organisation;
 
         $expenditure_details = $this->expenditure_detail_service->setDataForDownload($request);
 
-        $president         = $this->getOrganisationAdministrators(Roles::PRESIDENT);
+        $admins            = $this->getOrganisationAdministrators();
+        $president         = count($admins) >= 3 ? $admins[1] : null;
+        $treasurer         = count($admins) >= 3 ? $admins[2]: null;
+        $fin_sec           = count($admins) >= 3 ? $admins[0] : null;
 
-        $treasurer         = $this->getOrganisationAdministrators(Roles::TREASURER);
+        $total_amount_given = $expenditure_details[3]['total_amount_given'];
 
-        $fin_sec           = $this->getOrganisationAdministrators(Roles::FINANCIAL_SECRETARY);
+        $total_amount_spent = $expenditure_details[4]['total_amount_spent'];
 
-        $total_amount_given = $this->calculateTotalAmountGiven($expenditure_details);
-
-        $total_amount_spent = $this->calculateTotalAmountSpent($expenditure_details);
-
-        $balance            = $this->calculateExpenditureBalanceByExpenditureItem($expenditure_details, $expenditure_details[0]->expenditureItem->amount);
-
+        $balance            = $expenditure_details[5]['balance'];
         $data = [
-            'title'                 => 'Expenditure Details for '.$expenditure_details[0]->expenditureItem->name,
+            'title'                 => 'Detail Expenses for '.$request->expenditure_item_name,
             'date'                  => date('m/d/Y'),
             'organisation'          => $organisation,
-            'expenditure_details'   => $expenditure_details,
+            'expenditure_details'   => $expenditure_details[0],
             'president'             => $president,
             'treasurer'             => $treasurer,
             'fin_secretary'         => $fin_sec,
             'organisation_telephone'   => $this->setOrganisationTelephone($organisation->telephone),
             'total_amount_given'    => $total_amount_given,
             'total_amount_spent'    => $total_amount_spent,
-            'balance'               => $balance,
-            'item'                  => $expenditure_details[0]->expenditureItem
+            'balance'               => $total_amount_given - $total_amount_spent,
+            'net_balance'            => $balance,
+            'item_name'             => $expenditure_details[1]['expenditure_item_name'],
+            'item_amount'           => $expenditure_details[2]['expenditure_item_amount'],
+            'organisation_logo'     => env('FILE_DOWNLOAD_URL_PATH').$organisation->logo
         ];
 
         $pdf = PDF::loadView('ExpenditureDetail.ExpenditureDetail', $data);
-
+        $pdf->output();
+        $domPdf = $pdf->getDomPDF();
+        $canvas = $domPdf->getCanvas();
+        $canvas->page_text(10, $canvas->get_height() - 20, "Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, [0, 0, 0]);
         return $pdf->download('Expenditure_Details.pdf');
+    }
+
+
+    public function computeTotalExpendituresByYearly(Request $request)
+    {
+        $total = $this->expenditure_detail_service->computeTotalExpendituresByYearly($request);
+
+        return $this->sendResponse($total, 200);
+    }
+
+
+    public function getExpenditureStatistics(Request $request)
+    {
+        $data = $this->expenditure_detail_service->getExpenditureStatistics($request);
+
+        return $this->sendResponse($data, 200);
+    }
+
+    public function approveBulkItemsDetails(ApproveBulkExpenditureItemDetailRequest $request)
+    {
+        $this->expenditure_detail_service->approveBulkExpenditureItem($request);
+
+        return $this->sendResponse("success", 200);
     }
 }

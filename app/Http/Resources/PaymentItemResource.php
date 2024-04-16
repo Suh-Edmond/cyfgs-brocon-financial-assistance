@@ -4,19 +4,21 @@ namespace App\Http\Resources;
 
 use App\Traits\HelpTrait;
 use App\Traits\ResponseTrait;
+use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Ramsey\Uuid\Uuid;
 
 class PaymentItemResource extends JsonResource
 {
-    use ResponseTrait;
+    use ResponseTrait, HelpTrait;
+    private $paymentItemQuarters;
+    private $paymentItemMonths;
+    public function __construct($resource, $paymentItemQuarters = [], $paymentItemMonths = [])
+    {
+        parent::__construct($resource);
+        $this->paymentItemMonths = $paymentItemMonths;
+        $this->paymentItemQuarters = $paymentItemQuarters;
+    }
 
-    /**
-     * Transform the resource into an array.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array
-     */
     public function toArray($request)
     {
         return [
@@ -31,8 +33,14 @@ class PaymentItemResource extends JsonResource
             'frequency'             => $this->frequency,
             'created_at'            => $this->created_at,
             'updated_at'            => $this->updated_at,
-            'session'               => $this->session
-
+            'session'               => $this->session,
+            'references'            => collect($this->getReferenceResource($this->reference))->sortBy('name')->toArray(),
+            'deadline'              => $this->deadline,
+            'deadline_state'        => Carbon::now()->lessThan($this->deadline) ? "ACTIVE" : "EXPIRED",
+            'payment_item_months'   => $this->paymentItemMonths,
+            'payment_item_quarters'  => $this->paymentItemQuarters
         ];
     }
+
+
 }

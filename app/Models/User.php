@@ -7,12 +7,7 @@ use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 use Laravel\Sanctum\HasApiTokens;
 
-/**
- * @method static find(mixed $user_id)
- * @method static findOrFail($user_id)
- * @method static where(string $string, $organisation_id)
- * @method static create(array $array)
- */
+
 class User extends Authenticatable
 {
     use HasRoles, Notifiable, HasApiTokens;
@@ -37,7 +32,9 @@ class User extends Authenticatable
         'occupation',
         'organisation_id',
         'updated_by',
-        'picture'
+        'picture',
+        'status',
+        'email_verified_at'
     ];
 
     /**
@@ -60,7 +57,7 @@ class User extends Authenticatable
 
     protected  $guard_name = "api";
 
-    public function hasUserSaving(){
+    public function userSaving(){
         return $this->hasMany(UserSaving::class);
     }
 
@@ -75,6 +72,11 @@ class User extends Authenticatable
 
     public function registrations() {
         return $this->hasMany(MemberRegistration::class);
+    }
+
+    public function userRoles()
+    {
+        return  $this->hasMany(CustomRole::class);
     }
 
 }

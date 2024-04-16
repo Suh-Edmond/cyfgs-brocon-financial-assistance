@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\RegisterFeeRequest;
+use App\Http\Requests\RegistrationFeeRequest;
 use App\Http\Resources\RegisterFeeResource;
 use App\Services\RegistrationFeeService;
 use App\Traits\ResponseTrait;
+use Illuminate\Http\Request;
 
 class RegistrationController extends Controller
 {
@@ -17,22 +18,22 @@ class RegistrationController extends Controller
         $this->registration_fee_service = $registrationService;
     }
 
-    public function createRegFee(RegisterFeeRequest $request)
+    public function createRegFee(RegistrationFeeRequest $request)
     {
         $this->registration_fee_service->createRegistrationFee($request);
         return $this->sendResponse('success', 'Registration fee created successfully');
     }
 
-    public function updateRegFee(RegisterFeeRequest $request, $id)
+    public function updateRegFee(RegistrationFeeRequest $request, $id)
     {
         $this->registration_fee_service->updateRegistrationFee($request, $id);
         return $this->sendResponse('success', 'Registration fee created successfully');
     }
 
-    public function getAllRegistrationFee()
+    public function getAllRegistrationFee(Request $request)
     {
-        $data =$this->registration_fee_service->getAllRegistrationFee();
-        return $this->sendResponse(RegisterFeeResource::collection($data), 200);
+        $data = $this->registration_fee_service->getAllRegistrationFee($request);
+        return $this->sendResponse( $data, 200);
     }
 
     public function getCurrentRegistrationFee()

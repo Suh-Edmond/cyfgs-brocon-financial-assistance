@@ -15,6 +15,7 @@ class PaymentCategory extends Model
 
 
     protected $fillable = [
+        'code',
         'name',
         'description',
         'organisation_id',

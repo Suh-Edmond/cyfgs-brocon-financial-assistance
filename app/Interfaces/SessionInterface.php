@@ -12,7 +12,11 @@ interface SessionInterface
 
     public function createSession($request);
 
-    public function updateSession($request);
+    public function updateSession($request, $id);
 
     public function deleteSession($id);
+
+    public function getSessionByLabel($label);
+
+    public function getPaginatedSessions($request);
 }

@@ -2,18 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Constants\PaymentStatus;
 use App\Constants\RegistrationStatus;
 use App\Constants\Roles;
 use App\Http\Requests\CheckUserRequest;
 use App\Http\Requests\CreateAccountRequest;
 use App\Http\Requests\CreateUserRequest;
 use App\Http\Requests\LoginRequest;
+use App\Http\Requests\PasswordResetRequest;
+use App\Http\Requests\SendInvitationRequest;
 use App\Http\Requests\SetPasswordRequest;
 use App\Http\Requests\UpdatePasswordRequest;
 use App\Http\Requests\UpdateProfileRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\UserResource;
-use App\Models\User;
 use App\Services\RoleService;
 use App\Services\UserManagementService;
 use App\Traits\HelpTrait;
@@ -36,8 +38,8 @@ class UserController extends Controller
     public function createAccount(CreateAccountRequest $request)
     {
         $new_user = $this->user_management_service->createAccount($request);
-        $this->role_service->addUserRole($new_user->id, Roles::MEMBER);
-        $this->role_service->addUserRole($new_user->id, Roles::PRESIDENT);
+        $this->role_service->addUserRole($new_user->id, Roles::MEMBER, $new_user->name);
+        $this->role_service->addUserRole($new_user->id, Roles::ADMIN, $new_user->name);
 
         return $this->sendResponse("success", "Account created successfully");
     }
@@ -81,10 +83,21 @@ class UserController extends Controller
     public function getUsers($id)
     {
         $users = $this->user_management_service->getUsers($id);
-
         return $this->sendResponse(UserResource::collection($users), 'success');
     }
 
+    public function getTotalUsersByRegStatus(Request $request)
+    {
+        $users = $this->user_management_service->getTotalUsersByRegStatus($request->organisation_id, $request->session_id);
+        return $this->sendResponse($users, 200);
+    }
+
+    public function getRegMemberByMonths(Request $request)
+    {
+        $users = $this->user_management_service->getRegMemberByMonths($request->organisation_id, $request->session_id);
+
+        return $this->sendResponse($users, 200);
+    }
 
     public function getUser($user_id)
     {
@@ -120,27 +133,31 @@ class UserController extends Controller
 
     public function downloadUsers(Request $request)
     {
-        $auth_user         = auth()->user();
-        $organisation      = User::find($auth_user['id'])->organisation;
-        $users             = $this->user_management_service->filterUsers($request);
 
-        $president         = $this->getOrganisationAdministrators(Roles::PRESIDENT);
-        $treasurer         = $this->getOrganisationAdministrators(Roles::TREASURER);
-        $fin_sec           = $this->getOrganisationAdministrators(Roles::FINANCIAL_SECRETARY);
+        $organisation      =$request->user()->organisation;
+        $users             = $this->user_management_service->filterUsers($request);
+        $admins            = $this->getOrganisationAdministrators();
+        $president         = count($admins) >= 3 ? $admins[1] : null;
+        $treasurer         = count($admins) >= 3 ? $admins[2]: null;
+        $fin_sec           = count($admins) >= 3 ? $admins[0] : null;
 
         $data = [
-        'title'                      => $request->has_register == RegistrationStatus::REGISTERED ? 'Registered Organisation Members':'Non Registered Organisation Members',
+            'title'                  => $this->setTitle($request),
             'date'                   => date('m/d/Y'),
             'organisation'           => $organisation,
             'organisation_telephone' => $this->setOrganisationTelephone($organisation->telephone),
             'users'                  => $users,
             'president'              => $president,
             'treasurer'              => $treasurer,
-            'fin_secretary'          => $fin_sec
+            'fin_secretary'          => $fin_sec,
+            'organisation_logo'      => env('FILE_DOWNLOAD_URL_PATH').$organisation->logo
         ];
 
         $pdf = PDF::loadView('User.Users', $data);
-
+        $pdf->output();
+        $domPdf = $pdf->getDomPDF();
+        $canvas = $domPdf->getCanvas();
+        $canvas->page_text(10, $canvas->get_height() - 20, "Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, [0, 0, 0]);
         return $pdf->download('Organisation_Users.pdf');
     }
 
@@ -149,12 +166,86 @@ class UserController extends Controller
     {
         $users = $this->user_management_service->filterUsers($request);
 
-        return $this->sendResponse(UserResource::collection($users), 'success');
+        return $this->sendResponse(($users), 'success');
     }
 
     public function updateProfile(UpdateProfileRequest $request){
         $user = $this->user_management_service->updateProfile($request);
 
         return $this->sendResponse($user, 'success');
+    }
+
+    public function setPasswordResetToken(Request $request){
+        $this->user_management_service->setPasswordResetToken($request);
+
+        return $this->sendResponse("Password Reset Token sent successfully", 'success');
+    }
+
+    public function validateResetToken(Request $request)
+    {
+        $data = $this->user_management_service->validateResetToken($request);
+
+        return $this->sendResponse($data, 'success');
+    }
+
+    public function resetPassword(PasswordResetRequest $request)
+    {
+        $data = $this->user_management_service->resetPassword($request);
+
+        return $this->sendResponse($data, 'success');
+    }
+
+    public function getUserByPaymentItem($id, Request $request)
+    {
+        $data = $this->user_management_service->getUserByPaymentItem($id, $request);
+        return $this->sendResponse($data, 'success');
+    }
+
+    public function sendInvitation(SendInvitationRequest $request){
+        $this->user_management_service->sendInvitation($request);
+
+        return $this->sendResponse("Invitation sent successfully", 'success');
+    }
+
+    public function getInvitationNotifications(){
+        $data = $this->user_management_service->getAdminNotifications();
+
+        return $this->sendResponse($data, 'success');
+    }
+
+    public function markNotificationRead($id)
+    {
+        $this->user_management_service->markNotificationRead($id);
+
+        return $this->sendResponse("Notification mark as read","success");
+    }
+
+    public function markAllNotificationsAsRead(Request  $request){
+        $this->user_management_service->markAllNotificationsAsRead($request);
+
+        return $this->sendResponse("All notification mark as read","success");
+    }
+    private function setTitle(Request $request): string
+    {
+        $title = "";
+        if(isset($request->has_register)){
+            switch ($request->has_register){
+                case RegistrationStatus::REGISTERED:
+                    $title = 'Registered Organisation Members';
+                break;
+                case RegistrationStatus::NOT_REGISTERED:
+                    $title = 'Non Registered Organisation Members';
+                break;
+                case PaymentStatus::PENDING:
+                    $title = "Pending Registration";
+                break;
+                case PaymentStatus::DECLINED:
+                    $title = "Declined Registrations";
+            }
+        }else {
+            $title = "Organisation Members";
+        }
+
+        return $title;
     }
 }

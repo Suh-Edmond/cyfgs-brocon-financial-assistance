@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Constants\Roles;
 use App\Http\Requests\CreateUpdateActivitySupportRequest;
 use App\Http\Resources\ActivitySupportResource;
-use App\Models\User;
 use App\Services\ActivitySupportService;
 use App\Traits\HelpTrait;
 use App\Traits\ResponseTrait;
@@ -23,11 +21,10 @@ class ActivitySupportController extends Controller
         $this->activity_support_service = $activity_support_service;
     }
 
-    public function fetchAll()
+    public function fetchAll(Request $request)
     {
-        $data = $this->activity_support_service->fetchAllActivitySupport();
-
-        return $this->sendResponse(ActivitySupportResource::collection($data), 200);
+        $data = $this->activity_support_service->fetchAllActivitySupport($request);
+        return $this->sendResponse(($data), 200);
     }
 
     public function createActivitySupport(CreateUpdateActivitySupportRequest $request)
@@ -84,39 +81,52 @@ class ActivitySupportController extends Controller
     }
 
     private function prepareData(Request $request) {
-        $sponsorships      = $this->filterActivitySupport($request);
+        $sponsorships      = $this->fetchAll($request);
         $sponsorships      = json_decode(json_encode($sponsorships))->original->data;
-
         return $sponsorships;
     }
 
     public function downloadActivitySupport(Request $request)
     {
-        $auth_user         = auth()->user();
 
-        $organisation      = User::find($auth_user['id'])->organisation;
+        $organisation      = $request->user()->organisation;
 
         $supports          = $this->prepareData($request);
 
-        $president         = $this->getOrganisationAdministrators(Roles::PRESIDENT);
+        $admins            = $this->getOrganisationAdministrators();
 
-        $treasurer         = $this->getOrganisationAdministrators(Roles::TREASURER);
-
-        $fin_sec           = $this->getOrganisationAdministrators(Roles::FINANCIAL_SECRETARY);
-
+        $president         = count($admins) >= 3 ? $admins[1] : null;
+        $treasurer         = count($admins) >= 3 ? $admins[2]: null;
+        $fin_sec           = count($admins) >= 3 ? $admins[0] : null;
         $data = [
-            'title'               => 'Sponsorships for '.$supports[0]->payment_item->name,
+            'title'               => $this->setTitle($request),
             'date'                => date('m/d/Y'),
             'organisation'        => $organisation,
-            'supports'            => $supports,
+            'supports'            => $supports->data,
             'president'           => $president,
             'organisation_telephone'   => $this->setOrganisationTelephone($organisation->telephone),
             'treasurer'           => $treasurer,
             'fin_secretary'       => $fin_sec,
-            'total'                => $this->computeTotalContribution($supports),
+            'total'                => $supports->total_amount,
+            'organisation_logo'    => env('FILE_DOWNLOAD_URL_PATH').$organisation->logo
         ];
         $pdf = PDF::loadView('ActivitySupport.Support', $data);
+        $pdf->output();
+        $domPdf = $pdf->getDomPDF();
+        $canvas = $domPdf->getCanvas();
+        $canvas->page_text(10, $canvas->get_height() - 20, "Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, [0, 0, 0]);
 
         return $pdf->download('ActivitySupport.pdf');
     }
+
+    public function setTitle(Request $request){
+       if(isset($request->payment_item_label)){
+           $title = 'Sponsorships for '.$request->payment_item_label;
+       }else {
+           $title = 'Organisation Sponsorships';
+       }
+
+       return $title;
+    }
+
 }

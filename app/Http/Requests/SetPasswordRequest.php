@@ -26,7 +26,8 @@ class SetPasswordRequest extends FormRequest
         return [
             'telephone'  =>   'string',
             'email'      =>   'string',
-            'password'   =>   'string|required|confirmed|min:8'
+            'password'   =>   'string|required|confirmed|min:8',
+            'role'       =>   'string|required'
         ];
     }
 }

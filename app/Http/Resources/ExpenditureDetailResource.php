@@ -30,10 +30,10 @@ class ExpenditureDetailResource extends JsonResource
             'approve'                       => $this->approve,
             'created_at'                    => $this->created_at,
             'updated_at'                    => $this->updated_at,
-            'expenditure_item_id'           =>  $this->expenditureItem->id,
-            'expenditure_item_name'         => $this->expenditureItem->name,
             'balance'                       => $this->balance,
-            'updated_by'                    => $this->updated_by
+            'updated_by'                    => $this->updated_by,
+            'expenditure_item_id'           => $this->expenditure_item_id,
+            'is_selected'                   => false,
         ];
     }
 }

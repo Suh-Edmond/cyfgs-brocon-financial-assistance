@@ -8,6 +8,10 @@ interface UserManagementInterface {
 
     public function getUsers($organisation_id);
 
+    public function getTotalUsersByRegStatus($organisation_id, $session_id);
+
+    public function getRegMemberByMonths($organisation_id, $session_id);
+
     public function getUser($user_id);
 
     public function updateUser($user_id, $request);
@@ -29,5 +33,17 @@ interface UserManagementInterface {
     public function updateProfile($request);
 
     public function updatePassword($request);
+
+    public function setPasswordResetToken($request);
+
+    public function validateResetToken($request);
+
+    public function resetPassword($request);
+
+    public function getUserByPaymentItem($id, $request);
+
+    public function getAdminNotifications();
+
+    public function markAllNotificationsAsRead($request);
 
 }

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Http\Resources\ExpenditureCategoryCollection;
 use App\Interfaces\ExpenditureCategoryInterface;
 use App\Models\ExpenditureCategory;
 use App\Models\Organisation;
@@ -14,6 +15,7 @@ class ExpenditureCategoryService implements ExpenditureCategoryInterface {
         $expenditure_category = ExpenditureCategory::find($request->id);
         if(is_null($expenditure_category)){
             ExpenditureCategory::create([
+                'code'              => $request->code,
                 'name'              => $request->name,
                 'description'       => $request->description,
                 'organisation_id'   => $organisation->id,
@@ -21,6 +23,7 @@ class ExpenditureCategoryService implements ExpenditureCategoryInterface {
             ]);
         }else {
             $expenditure_category->update([
+                'code'        => $request->code,
                 'name'        => $request->name,
                 'description' => $request->description,
                 'updated_by'  => $request->user()->name,
@@ -37,9 +40,33 @@ class ExpenditureCategoryService implements ExpenditureCategoryInterface {
         ]);
     }
 
-    public function getExpenditureCategories($organisation_id)
+    public function getExpenditureCategories($organisation_id, $request)
     {
-        return ExpenditureCategory::where('organisation_id', $organisation_id)->orderBy('name', 'ASC')->get();
+        $categories = ExpenditureCategory::where('organisation_id', $organisation_id);
+        if(isset($request->year)){
+            $categories = $categories->whereYear('created_at', $request->year);
+        }
+        $expenditure_categories = isset($request->per_page) ? $categories->orderBy($request->sort_by)->paginate($request->per_page): $categories->orderBy($request->sort_by)->get();
+
+        $total = isset($request->per_page) ? $expenditure_categories->total() : count($expenditure_categories);
+        $last_page = isset($request->per_page) ? $expenditure_categories->lastPage(): 0;
+        $per_page = isset($request->per_page) ? (int)$expenditure_categories->perPage() : 0;
+        $current_page = isset($request->per_page) ? $expenditure_categories->currentPage() : 0;
+
+        return new ExpenditureCategoryCollection($expenditure_categories, $total, $last_page,
+            $per_page, $current_page);
+
+    }
+
+    public function getExpenditureCategoriesByOrganisationYear($organisation_id, $year)
+    {
+        $categories = ExpenditureCategory::where('organisation_id', $organisation_id);
+        if(!is_null($year)){
+            $categories = $categories->whereYear('created_at', $year);
+        }
+        $categories =  $categories->orderBy('name')->get();
+
+        return $categories;
     }
 
     public function getExpenditureCategory($id, $organisation_id)
@@ -71,6 +98,11 @@ class ExpenditureCategoryService implements ExpenditureCategoryInterface {
 
     public  function setDataForDownload($request)
     {
-        return is_null($request->year) ? $this->getExpenditureCategories($request->organisation_id): $this->filterExpenditureCategory($request);
+        return $this->getExpenditureCategories($request, $request);
+    }
+
+    public function getAllExpenditureCategories($organisation_id)
+    {
+        return ExpenditureCategory::where('organisation_id', $organisation_id)->orderBy('name')->get();
     }
 }

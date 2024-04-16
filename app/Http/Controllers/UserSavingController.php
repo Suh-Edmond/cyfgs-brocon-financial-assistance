@@ -2,35 +2,32 @@
 
 namespace App\Http\Controllers;
 
-use App\Constants\Roles;
 use App\Http\Requests\UserSavingRequest;
 use App\Http\Requests\UpdateUserSavingRequest;
 use App\Http\Resources\UserSavingResource;
-use App\Models\User;
-use App\Services\UsersavingService;
+use App\Services\UserSavingService;
 use App\Traits\HelpTrait;
 use App\Traits\ResponseTrait;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
-use function PHPUnit\Framework\isEmpty;
 
 class UserSavingController extends Controller
 {
 
     use ResponseTrait, HelpTrait;
 
-    private UsersavingService $user_saving_service;
+    private UserSavingService $user_saving_service;
 
-    public function __construct(UsersavingService $user_saving_service)
+    public function __construct(UserSavingService $user_saving_service)
     {
         $this->user_saving_service = $user_saving_service;
     }
 
 
 
-    public function getUserSavings($user_id)
+    public function getUserSavings($user_id,Request $request)
     {
-        $user_savings = $this->user_saving_service->getUserSavings($user_id);
+        $user_savings = $this->user_saving_service->getUserSavings($user_id, $request);
 
         return $this->sendResponse($user_savings, 200);
     }
@@ -76,9 +73,9 @@ class UserSavingController extends Controller
     }
 
 
-    public function getAllUserSavingsByOrganisation($id)
+    public function getAllUserSavingsByOrganisation(Request $request)
     {
-        $savings = $this->user_saving_service->getAllUserSavingsByOrganisation($id);
+        $savings = $this->user_saving_service->getAllUserSavingsByOrganisation($request);
 
         return $this->sendResponse($savings, 200);
     }
@@ -92,8 +89,8 @@ class UserSavingController extends Controller
         return $this->sendResponse($savings, 200);
     }
 
-    public function getMembersSavingsByName(Request $request){
-        $savings = $this->user_saving_service->getMembersSavingsByName($request);
+    public function getMembersSavingsByOrganisation(Request $request){
+        $savings = $this->user_saving_service->getMembersSavingsByOrganisation($request);
 
         return $this->sendResponse($savings, 200);
     }
@@ -103,64 +100,53 @@ class UserSavingController extends Controller
     {
         $savings = $this->user_saving_service->filterSavings($request);
 
-        return $this->sendResponse(UserSavingResource::collection($savings), 200);
+        return $this->sendResponse($savings, 200);
     }
 
     public function download(Request $request)
     {
-
-        $auth_user         = auth()->user();
-
-        $organisation      = User::find($auth_user['id'])->organisation;
-
-        //user whose savings are been downloaded
-        $user              = User::find($request->user_id);
+        $organisation      = $request->user()->organisation;
 
         $savings           = $this->user_saving_service->getUserSavingsForDownload($request);
 
-        $total             = $this->user_saving_service->calculateTotalSaving($savings);
-
-        $president         = $this->getOrganisationAdministrators(Roles::PRESIDENT);
-
-        $treasurer         = $this->getOrganisationAdministrators(Roles::TREASURER);
-
-        $fin_sec           = $this->getOrganisationAdministrators(Roles::FINANCIAL_SECRETARY);
-
-
+        $admins            = $this->getOrganisationAdministrators();
+        $president         = count($admins) >= 3 ? $admins[1] : null;
+        $treasurer         = count($admins) >= 3 ? $admins[2]: null;
+        $fin_sec           = count($admins) >= 3 ? $admins[0] : null;
         $data = [
-            'title'               => $user->name.' Savings',
+            'title'               => $request->name. ' Savings',
             'date'                => date('m/d/Y'),
             'organisation'        => $organisation,
-            'user_savings'        => $savings,
-            'total'               => $total,
+            'user_savings'        => $savings[0],
+            'total'               => $savings[1],
             'president'           => $president,
             'organisation_telephone'   => $this->setOrganisationTelephone($organisation->telephone),
             'treasurer'           => $treasurer,
-            'fin_secretary'       => $fin_sec
+            'fin_secretary'       => $fin_sec,
+            'organisation_logo'   => env('FILE_DOWNLOAD_URL_PATH').$organisation->logo
         ];
         $pdf = PDF::loadView('UserSaving.Usersaving', $data);
+        $pdf->output();
+        $domPdf = $pdf->getDomPDF();
+        $canvas = $domPdf->getCanvas();
+        $canvas->page_text(10, $canvas->get_height() - 20, "Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, [0, 0, 0]);
 
         return $pdf->download('User_Saving.pdf');
     }
 
     public function downloadOrganisationSavings(Request  $request)
     {
+        $organisation      = $request->user()->organisation;
 
-        $auth_user         = auth()->user();
-
-        $organisation      = User::find($auth_user['id'])->organisation;
-
-        $savings = $this->user_saving_service->getOrganisationSavingsForDownload($request->organisation_id);
+        $savings = $this->user_saving_service->getOrganisationSavingsForDownload($request);
 
         $total = $this->user_saving_service->calculateOrganisationTotalSavings($savings);
 
-        $president         = $this->getOrganisationAdministrators(Roles::PRESIDENT);
+        $admins            = $this->getOrganisationAdministrators();
 
-        $treasurer         = $this->getOrganisationAdministrators(Roles::TREASURER);
-
-        $fin_sec           = $this->getOrganisationAdministrators(Roles::FINANCIAL_SECRETARY);
-
-
+        $president         = count($admins) >= 3 ? $admins[1] : null;
+        $treasurer         = count($admins) >= 3 ? $admins[2]: null;
+        $fin_sec           = count($admins) >= 3 ? $admins[0] : null;
         $data = [
             'title'               => 'Organisation Savings',
             'date'                => date('m/d/Y'),
@@ -170,10 +156,22 @@ class UserSavingController extends Controller
             'president'           => $president,
             'organisation_telephone'   => $this->setOrganisationTelephone($organisation->telephone),
             'treasurer'           => $treasurer,
-            'fin_secretary'       => $fin_sec
+            'fin_secretary'       => $fin_sec,
+            'organisation_logo'   => env('FILE_DOWNLOAD_URL_PATH').$organisation->logo
         ];
         $pdf = PDF::loadView('UserSaving.OrganisationSavings', $data);
+        $pdf->output();
+        $domPdf = $pdf->getDomPDF();
+        $canvas = $domPdf->getCanvas();
+        $canvas->page_text(10, $canvas->get_height() - 20, "Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, [0, 0, 0]);
 
         return $pdf->download('Organisation_Saving.pdf');
     }
+
+    public function getSavingsStatistics(Request $request)
+    {
+        $data = $this->user_saving_service->getSavingsStatistics($request);
+        return $this->sendResponse($data, 200);
+    }
+
 }

@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Constants\Roles;
 use App\Http\Requests\PaymentCategoryRequest;
+use App\Http\Requests\UpdatePaymentCategoryRequest;
 use App\Http\Resources\PaymentCategoryResource;
-use App\Models\User;
 use App\Services\PaymentCategoryService;
 use App\Traits\HelpTrait;
 use App\Traits\ResponseTrait;
@@ -36,12 +35,10 @@ class PaymentCategoryController extends Controller
     }
 
 
-    public function getPaymentCategories($organisation_id)
+    public function getPaymentCategories(Request $request)
     {
-        $payment_categories = $this->payment_category_service->getPaymentCategories($organisation_id);
-
+        $payment_categories = $this->payment_category_service->getPaymentCategories($request);
         return $this->sendResponse($payment_categories, 200);
-
     }
 
 
@@ -53,7 +50,7 @@ class PaymentCategoryController extends Controller
     }
 
 
-    public function updatePaymentCategory(PaymentCategoryRequest $request, $organisation_id, $id)
+    public function updatePaymentCategory(UpdatePaymentCategoryRequest $request, $organisation_id, $id)
     {
         $this->payment_category_service->updatePaymentCategory($request, $id,  $organisation_id);
 
@@ -77,25 +74,29 @@ class PaymentCategoryController extends Controller
 
     public function downloadPaymentCategory(Request $request)
     {
-        $auth_user         = auth()->user();
-        $organisation      = User::find($auth_user['id'])->organisation;
-
-        $president         = $this->getOrganisationAdministrators(Roles::PRESIDENT);
-        $treasurer         = $this->getOrganisationAdministrators(Roles::TREASURER);
-        $fin_sec           = $this->getOrganisationAdministrators(Roles::FINANCIAL_SECRETARY);
+        $organisation      = $request->user()->organisation;
+        $admins            = $this->getOrganisationAdministrators();
+        $president         = count($admins) >= 3 ? $admins[1] : null;
+        $treasurer         = count($admins) >= 3 ? $admins[2]: null;
+        $fin_sec           = count($admins) >= 3 ? $admins[0] : null;
 
         $data = [
             'title'             =>'Payment Categories',
             'date'              => date('m/d/Y'),
             'organisation'      => $organisation,
             'organisation_telephone' => $this->setOrganisationTelephone($organisation->telephone),
-            'categories'        => $this->payment_category_service->getPaymentCategories($request['organisation_id']),
+            'categories'        => $this->payment_category_service->getPaymentCategories($request),
             'president'         => $president,
             'treasurer'         => $treasurer,
-            'fin_secretary'     => $fin_sec
+            'fin_secretary'     => $fin_sec,
+            'organisation_logo' => env('FILE_DOWNLOAD_URL_PATH').$organisation->logo
         ];
 
         $pdf = PDF::loadView('PaymentCategory.PaymentCategories', $data);
+        $pdf->output();
+        $domPdf = $pdf->getDomPDF();
+        $canvas = $domPdf->getCanvas();
+        $canvas->page_text(10, $canvas->get_height() - 20, "Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, [0, 0, 0]);
 
         return $pdf->download('Payment_Categories.pdf');
     }

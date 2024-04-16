@@ -6,8 +6,10 @@ namespace App\Services;
 
 use App\Constants\SessionStatus;
 use App\Http\Resources\SessionResource;
+use App\Http\Resources\SessionResourceCollection;
 use App\Interfaces\SessionInterface;
 use App\Models\Session;
+use Illuminate\Support\Facades\DB;
 
 class SessionService implements SessionInterface
 {
@@ -15,40 +17,60 @@ class SessionService implements SessionInterface
 
     public function getAllSessions()
     {
-        return SessionResource::collection(Session::all());
+        $sessions = DB::table('sessions')->orderBy('created_at', 'DESC')->get();
+        return SessionResource::collection($sessions->toArray());
     }
     public function getCurrentSession()
     {
-        $session = Session::where('status', SessionStatus::ACTIVE)->get()[0];
-        return new  SessionResource($session);
+        $session = Session::where('status', SessionStatus::ACTIVE)->first();
+        return new SessionResource($session);
     }
 
     public function createSession($request)
     {
-        $previousSession = Session::where('status', SessionStatus::ACTIVE)->get();
-        if(is_null($previousSession)){
-            Session::create([
-                'year'          => $request->year,
-                'status'        => SessionStatus::ACTIVE,
-                'updated_by'    => $request->user()->name
-            ]);
-        }else{
-            $previousSession->update([
-                'status'    => SessionStatus::IN_ACTIVE
-            ]);
+        $previousSession =  Session::where('status', SessionStatus::ACTIVE)->first();
+        if(isset($previousSession)) {
+            $previousSession->status = SessionStatus::IN_ACTIVE;
+            $previousSession->save();
         }
+        Session::create([
+            'year'          => $request->year,
+            'status'        => SessionStatus::ACTIVE,
+            'updated_by'    => $request->user()->name
+        ]);
     }
 
-    public function updateSession($request)
+    public function updateSession($request, $id)
     {
-        $currentSession = Session::findOrFail($request->id);
-        $currentSession->update([
+        $currentSession =  Session::where('status', SessionStatus::ACTIVE)->first();
+        $updatedSession = Session::findOrFail($id);
+
+        if(SessionStatus::ACTIVE == $request->status && $request->year != $currentSession->year){
+            $currentSession->status = SessionStatus::IN_ACTIVE;
+            $currentSession->save();
+
+        }
+        $updatedSession->update([
             'status' => $request->status
         ]);
+
+
     }
 
     public function deleteSession($id)
     {
         return Session::findOrFail($id)->delete();
+    }
+
+    public function getSessionByLabel($label)
+    {
+        return Session::where('year', $label)->first();
+    }
+
+    public function getPaginatedSessions($request)
+    {
+        $sessions = DB::table('sessions')->orderBy('year')->paginate($request->per_page);
+
+        return new SessionResourceCollection($sessions, $sessions->total(), $sessions->lastPage(), (int)$sessions->perPage(), $sessions->currentPage());
     }
 }

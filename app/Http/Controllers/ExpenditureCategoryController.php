@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Constants\Roles;
 use App\Http\Requests\ExpenditureCategoryRequest;
+use App\Http\Requests\UpdateExpenditureCategoryRequest;
 use App\Http\Resources\ExpenditureCategoryResource;
-use App\Models\User;
 use App\Services\ExpenditureCategoryService;
 use App\Traits\HelpTrait;
 use App\Traits\ResponseTrait;
@@ -24,15 +23,17 @@ class ExpenditureCategoryController extends Controller
         $this->expenditure_category_service = $expenditure_category_service;
     }
 
-
-
-    public function getExpenditureCategories($organisation_id)
+    public function getExpenditureCategories($organisation_id, Request $request)
     {
-        $expenditure_categories = $this->expenditure_category_service->getExpenditureCategories($organisation_id);
-
-        return $this->sendResponse(ExpenditureCategoryResource::collection($expenditure_categories), 200);
+        $expenditure_categories = $this->expenditure_category_service->getExpenditureCategories($organisation_id, $request);
+        return $this->sendResponse(($expenditure_categories), 200);
     }
 
+    public function getAllExpenditureCategories(Request $request)
+    {
+        $categories = $this->expenditure_category_service->getAllExpenditureCategories($request->organisation_id);
+        return $this->sendResponse(ExpenditureCategoryResource::collection($categories), "success");
+    }
 
     public function createExpenditureCategory(ExpenditureCategoryRequest $request, $organisation_id)
     {
@@ -52,7 +53,7 @@ class ExpenditureCategoryController extends Controller
 
 
 
-    public function updateExpenditureCategory(ExpenditureCategoryRequest $request, $organisation_id, $id)
+    public function updateExpenditureCategory(UpdateExpenditureCategoryRequest $request, $organisation_id, $id)
     {
         $this->expenditure_category_service->updateExpenditureCategory($request, $id, $organisation_id);
 
@@ -77,13 +78,12 @@ class ExpenditureCategoryController extends Controller
 
     public function downloadExpenditureCategory(Request $request)
     {
-        $auth_user         = auth()->user();
-        $organisation      = User::find($auth_user['id'])->organisation;
-        $expenditure_categories = $this->expenditure_category_service->getExpenditureCategories($request->organisation_id);
-
-        $president         = $this->getOrganisationAdministrators(Roles::PRESIDENT);
-        $treasurer         = $this->getOrganisationAdministrators(Roles::TREASURER);
-        $fin_sec           = $this->getOrganisationAdministrators(Roles::FINANCIAL_SECRETARY);
+        $organisation      = $request->user()->organisation;
+        $expenditure_categories = $this->expenditure_category_service->getExpenditureCategories($request->organisation_id, $request);
+        $admins            = $this->getOrganisationAdministrators();
+        $president         = count($admins) >= 3 ? $admins[1] : null;
+        $treasurer         = count($admins) >= 3 ? $admins[2]: null;
+        $fin_sec           = count($admins) >= 3 ? $admins[0] : null;
 
         $data = [
             'title'                    => 'Expenditure Categories',
@@ -93,10 +93,15 @@ class ExpenditureCategoryController extends Controller
             'organisation_telephone'   => $this->setOrganisationTelephone($organisation->telephone),
             'president'                => $president,
             'treasurer'                => $treasurer,
-            'fin_secretary'            => $fin_sec
+            'fin_secretary'            => $fin_sec,
+            'organisation_logo'         => env('FILE_DOWNLOAD_URL_PATH').$organisation->logo
         ];
 
         $pdf = PDF::loadView('ExpenditureCategory.ExpenditureCategories', $data);
+        $pdf->output();
+        $domPdf = $pdf->getDomPDF();
+        $canvas = $domPdf->getCanvas();
+        $canvas->page_text(10, $canvas->get_height() - 20, "Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, [0, 0, 0]);
 
         return $pdf->download('Expenditure_Categories.pdf');
     }

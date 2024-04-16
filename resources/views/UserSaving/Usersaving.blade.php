@@ -3,7 +3,7 @@
 @section('section')
     <div style="margin-bottom: 220px;">
         <div style="float: left;">
-            <img src="{{ $organisation->logo }}" alt="organisation logo" width="100px;" height="100px;"
+            <img src="{{url($organisation_logo)}}" alt="organisation logo" width="100px;" height="100px;"
                 style="border-radius: 2px">
         </div>
         <div style="float: right">
@@ -18,49 +18,100 @@
             <label style="font-size: small;">Printed date: {{ $date }}</label>
         </div>
     </div>
-    <div>
-        <h3 style="font-weight: bold;font-size: medium; text-align:center;text-transform: uppercase;">{{ $title }}
-        </h3>
+    <div style="margin-bottom: 2rem;">
+        <h3 style="font-weight: bold;font-size: medium; text-align:center;text-transform: capitalize;border-bottom:1px solid black;">{{$title}}</h3>
     </div>
-    <div>
-        <table style="border: 1px solid black; border-collapse: collapse;width: 100%">
+    <?php $n=1 ?>
+        <div>
+            <table style="border: 1px solid black; border-collapse: collapse;width: 100%">
             <tr style="border: 1px solid black; font-size: smaller;">
                 <th style="border: 1px solid black;">S/N</th>
-                <th style="padding: 12px; border: 1px solid black;">Name</th>
-                <th style="padding: 12px; border: 1px solid black;">Telephone</th>
-                <th style="padding: 12px; border: 1px solid black;">Amount (F CFA)</th>
+                <th style="padding: 12px; border: 1px solid black;">Amount Deposited(XAF)</th>
+                <th style="padding: 12px; border: 1px solid black;">Amount Used(XAF)</th>
+                <th style="padding: 12px; border: 1px solid black;">Transaction Status</th>
+                <th style="padding: 12px; border: 1px solid black;">Date Collected</th>
             </tr>
             @foreach ($user_savings as $key => $user_saving)
                 <tr style="border: 1px solid black; font-size: smaller">
-                    <td style="padding: 5px;">{{ $key + 1 }}</td>
-                    <td style="border: 1px solid black; padding: 11px;">{{ $user_saving->user->name }}</td>
-                    <td style="border: 1px solid black; padding: 11px;">{{ $user_saving->user->telephone }}</td>
-                    <td style="border: 1px solid black; padding: 11px;">{{ number_format($user_saving->amount_deposited) }}
+                    <td style="padding: 5px;width:5%">{{ $key + 1 }}</td>
+                    <td style="border: 1px solid black; padding: 3px;text-align: center">{{ number_format($user_saving->amount_deposited) }}
                     </td>
+                    <td style="border: 1px solid black; padding: 3px;text-align: center">{{ number_format($user_saving->amount_used) }}
+                    </td>
+                    <td style="border: 1px solid black; padding: 3px;text-align: center">{{ $user_saving->approve }}</td>
+                    <td style="border: 1px solid black; padding: 3px;text-align: center">{{ date('d-m-Y', strtotime($user_saving->created_at)) }}</td>
+
                 </tr>
+                @if ( $n % 25 == 0 )
+                    <div style="page-break-before:always;page-break-inside: auto;"> </div>
+                @endif
+                <?php $n++ ?>
             @endforeach
+            <tr style="border: 1px solid black; font-size: smaller">
+                <td style="border: 1px solid black; padding: 11px;font-weight: bold"  colspan="2"> Total Amount:</td>
+                <td style="border: 1px solid black; padding: 11px;font-weight: bold" colspan="3">{{ number_format($total) }} XAF</td>
+            </tr>
         </table>
-        <p> <label style="font-size: 15px; font-weight: bold">Total Amount:
-                <span style="padding-left: 5px;">{{ number_format($total) }} </span><span
-                    style="padding-left: 5px;">FCFA</span> </label></p>
-    </div>
-    <div style="margin-top: 100px;">
-        <div style="float: left;">
-            <label for="organisation"style="font-weight: bold; text-transform: uppercase; font-size: small;">Financial
-                Secretary <br />
-                {{ $fin_secretary->name }}
-            </label><br /><br />
         </div>
-        <div style="float: right">
-            <label for="organisation"style="font-weight: bold; text-transform: uppercase; font-size: small;">Treasurer
-                <br />
-                {{ $treasurer->name }}
-            </label><br /><br />
+
+
+    <!------------------------------------------------------DETAILS OF PRESENTERS--------------------------------------------------------------------------------------------->
+    <div style="margin-top: 40px; margin-bottom: 20px">
+        <h3 style="font-weight: bold;font-size: small; text-align:center;text-transform: uppercase;text-decoration: underline"><span style="padding-right: 5px"></span> Prepared By:
+        </h3>
+    </div>
+    <div class="detail" style="margin-top: 5px;">
+        <!------------------------------Names of presenters------------------------------------>
+        <div style="float: left;" class="fin_sec">
+            <div class=" " style="font-weight: bold;font-size: small;text-transform: uppercase; margin-bottom: 5px;text-align: center">
+                FINANCIAL SECRETARY
+            </div>
+            <div style="font-weight: bold;font-size: small; text-transform: uppercase;text-align: center">
+                @isset($fin_secretary)
+                    <span>{{$fin_secretary->name}}</span>
+                @endisset
+            </div>
+            <div style="font-weight: bold;text-transform: uppercase;font-size: small; margin-top: 10px;text-align: center">
+                SIGN
+            </div>
+            <div  style="border-bottom: 1px solid black; margin-top: 5px">
+            </div>
+        </div>
+
+        <div style="float: right" class="treasurer">
+            <div  class=" " style="text-align: center;font-weight: bold;font-size: small;text-transform: uppercase; margin-bottom: 5px">
+                Treasurer
+            </div>
+            <div style="font-weight: bold;text-transform: uppercase;text-align: center">
+                @isset($treasurer)
+                    <span>{{$treasurer->name}}</span>
+                @endisset
+            </div>
+            <div style="font-weight: bold;text-transform: uppercase;font-size: small; margin-top: 10px;text-align: center">
+                SIGN
+            </div>
+            <div  style="border-bottom: 1px solid black; margin-top: 5px">
+            </div>
+        </div>
+        <!------------------------------End of presenters-------------------------------------->
+    </div>
+    <div class="president" style="text-align: center;margin-top: 100px">
+        <div>
+            <div class=" " style="font-weight: bold;font-size: small;text-transform: uppercase; margin-bottom: 5px">
+                President
+            </div>
+            <div style="font-weight: bold;font-size: small; text-transform: uppercase">
+                @isset($president)
+                    <span>{{$president->name}}</span>
+                @endisset
+            </div>
+            <div style="font-weight: bold;text-transform: uppercase;font-size: small; margin-top: 10px">
+                SIGN
+            </div>
+            <div class="border_line" style="border-bottom: 1px solid black; margin-top: 5px;text-align: center">
+            </div>
         </div>
     </div>
-    <div style="text-align:center; margin-top:80px">
-        <label for="organisation"style="font-weight: bold; text-transform: uppercase; font-size: small;">President <br />
-            {{ $president->name }}
-        </label><br />
-    </div>
+    <!------------------------------------------------------END OF PRESENTERS-------------------------------------------------------------------------------------->
+
 @endsection

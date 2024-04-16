@@ -25,11 +25,12 @@ class UpdateProfileRequest extends FormRequest
     {
         return [
             'name'    => 'required',
-            'email'   => 'email',
+            'email'   => 'required|email',
             'address' => 'required',
             'occupation' => 'required',
             'user_id'    => 'required',
-            'gender'     => ''
+            'gender'     => '',
+            'status'     => 'required'
         ];
     }
 }

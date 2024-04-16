@@ -7,7 +7,7 @@ interface IncomeActivityInterface {
 
     public function updateIncomeActivity($request, $id);
 
-    public function getIncomeActivities($organisation_id);
+    public function getIncomeActivities($organisation_id, $request);
 
     public function getIncomeActivity($id);
 
