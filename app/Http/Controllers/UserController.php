@@ -88,13 +88,13 @@ class UserController extends Controller
 
     public function getTotalUsersByRegStatus(Request $request)
     {
-        $users = $this->user_management_service->getTotalUsersByRegStatus($request->organisation_id);
+        $users = $this->user_management_service->getTotalUsersByRegStatus($request->organisation_id, $request->session_id);
         return $this->sendResponse($users, 200);
     }
 
     public function getRegMemberByMonths(Request $request)
     {
-        $users = $this->user_management_service->getRegMemberByMonths($request->organisation_id);
+        $users = $this->user_management_service->getRegMemberByMonths($request->organisation_id, $request->session_id);
 
         return $this->sendResponse($users, 200);
     }
