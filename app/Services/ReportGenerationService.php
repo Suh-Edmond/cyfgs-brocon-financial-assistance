@@ -79,8 +79,8 @@ class ReportGenerationService implements ReportGenerationInterface
         $total_balance += $balance > 0 ? ($total_income - $total_amount_spent)  + $balance: ($total_income - $total_amount_spent);
         $admins            = $this->getOrganisationAdministrators();
         $president         = $admins[0];
-        $treasurer         = count($admins) == 3 ? $admins[2]: null;
-        $fin_sec           = count($admins) == 3 ? $admins[1] : null;
+        $treasurer         = count($admins) >= 3 ? $admins[2]: null;
+        $fin_sec           = count($admins) >= 3 ? $admins[1] : null;
 
         return [$income_list, $expenditures, ["total_income" => $total_income], ["total_amount_given" => $total_amount_given],
             ["total_amount_spent" => $total_amount_spent], ["balance" => $balance], ["total_balance" => $total_balance],
@@ -99,8 +99,8 @@ class ReportGenerationService implements ReportGenerationInterface
         $balance_bf = $this->computeBalanceBroughtForwardByQuarter($request, $current_year);
         $admins            = $this->getOrganisationAdministrators();
         $president         = $admins[0];
-        $treasurer         = count($admins) == 3 ? $admins[2]: null;
-        $fin_sec           = count($admins) == 3 ? $admins[1] : null;
+        $treasurer         = count($admins) >= 3 ? $admins[2]: null;
+        $fin_sec           = count($admins) >= 3 ? $admins[1] : null;
         return [$income_elements, $expenditures_elements, ["total_income" => $total_income], ["total_expenditure" => $total_expenditures],
             ["balance_brought_forward" => $balance_bf], ["president" => $president], ["treasurer" => $treasurer], ["fin_sec" => $fin_sec]];
     }
@@ -138,8 +138,8 @@ class ReportGenerationService implements ReportGenerationInterface
 
         $admins            = $this->getOrganisationAdministrators();
         $president         = $admins[0];
-        $treasurer         = count($admins) == 3 ? $admins[2]: null;
-        $fin_sec           = count($admins) == 3 ? $admins[1] : null;
+        $treasurer         = count($admins) >= 3 ? $admins[2]: null;
+        $fin_sec           = count($admins) >= 3 ? $admins[1] : null;
         $income_list = $income[0];
         $total_income = $income[1];
         $expenditure_list = $expenditures[0];
