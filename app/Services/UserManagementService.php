@@ -95,21 +95,22 @@ class UserManagementService implements UserManagementInterface
                ->orderBy('name')->get();
     }
 
-    public function getUsersRegistrationStatus($organisation_id)
+    public function getUsersRegistrationStatus($organisation_id, $session_id)
     {
         return User::join('organisations', 'organisations.id', '=', 'users.organisation_id')
             ->leftJoin('member_registrations', 'users.id', '=', 'member_registrations.user_id')
             ->where('organisations.id', $organisation_id)
             ->where('users.status', SessionStatus::ACTIVE)
+            ->where('member_registrations.session_id', $session_id)
             ->select('users.*', 'member_registrations.approve')
             ->distinct()
             ->orderBy('name')->get();
     }
 
-    public function getTotalUsersByRegStatus($organisation_id)
+    public function getTotalUsersByRegStatus($organisation_id, $session_id)
     {
 
-        $users = $this->getUsersRegistrationStatus($organisation_id);
+        $users = $this->getUsersRegistrationStatus($organisation_id, $session_id);
         $group_users = collect($users)->groupBy('approve')->toArray();
         $total_approved_record = 0;
         $total_pending = 0;
@@ -124,7 +125,7 @@ class UserManagementService implements UserManagementInterface
         return [$total_approved_record, $total_pending, $total_declined, $total_unregistered];
     }
 
-    public function getRegMemberByMonths($organisation_id)
+    public function getRegMemberByMonths($organisation_id, $session_id)
     {
         $data = [];
         $payment_statuses = [PaymentStatus::APPROVED, PaymentStatus::PENDING, PaymentStatus::DECLINED];
@@ -134,6 +135,7 @@ class UserManagementService implements UserManagementInterface
                 $users = User::join('organisations', 'organisations.id', '=', 'users.organisation_id')
                     ->join('member_registrations', 'users.id', '=', 'member_registrations.user_id')
                     ->where('organisations.id', $organisation_id)
+                    ->where('member_registrations.session_id', $session_id)
                     ->where('member_registrations.approve', $payment_status)
                     ->whereMonth('member_registrations.created_at', $month)
                     ->select('users.*', 'member_registrations.approve', 'member_registrations.session_id')

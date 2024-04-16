@@ -8,9 +8,9 @@ interface UserManagementInterface {
 
     public function getUsers($organisation_id);
 
-    public function getTotalUsersByRegStatus($organisation_id);
+    public function getTotalUsersByRegStatus($organisation_id, $session_id);
 
-    public function getRegMemberByMonths($organisation_id);
+    public function getRegMemberByMonths($organisation_id, $session_id);
 
     public function getUser($user_id);
 

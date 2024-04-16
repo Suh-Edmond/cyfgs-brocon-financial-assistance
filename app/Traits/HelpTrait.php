@@ -172,7 +172,7 @@ trait HelpTrait {
     public function  calculateOrganisationTotalSavings($savings): int
     {
         return collect($savings)->filter(function ($saving){
-           return ($saving->approve == PaymentStatus::APPROVED) || ($saving->approve == PaymentStatus::PENDING);
+           return ($saving->approve == PaymentStatus::APPROVED);
        })->map(function ($saving){
            return $saving->total_amount;
         })->sum();
