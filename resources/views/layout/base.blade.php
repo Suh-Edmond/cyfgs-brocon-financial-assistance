@@ -23,81 +23,49 @@
     .title{
         padding-bottom: 20px;
     }
-    .quarter_row {
-        /*border: .8px solid black;*/
-        width: 100%;
-        font-size: smaller;
-    }
-    .item_row {
-        /*border-bottom: .8px solid black;*/
-        /*border-right: .8px solid black;*/
+    .row{
         border: 1px solid black;
+        width: 100%;
     }
-    .activity {
-        /*border: .8px solid black;*/
+    .quarter_row {
+        width: 100%;
     }
-    .amount_brought_forward {
-        /*border-left: .8px solid black;*/
-        /*border-right: .8px solid black;*/
-    }
-    .activity_total {
-        border-bottom: .8px solid black;
-        border-right: .8px solid black;
-    }
+
     .column1 {
         float: left;
         width: 7%;
-        /*border-left: 1px solid black;*/
-        /*border-right: 1px solid black;*/
-        border-bottom: 2px solid black;
-        border-left: 2px solid black;
-        padding: 3px;
-        /*padding: 3px;*/
-    }
-
-    .activity_row {
-        /*border-top: .8px solid black;*/
-        /*font-size: smaller;*/
+        border-left: 1px solid black;
+        padding: 4px;
+        height: 18px;
     }
     .column2 {
         float: left;
         width: 50%;
-        /*border-left: 1px solid black;*/
-        /*border-right: 1px solid black;*/
-        /*padding: 3px;*/
-        border-bottom: 2px solid black;
-        border-left: 2px solid black;
-        padding: 3px;
+        border-left: 1px solid black;
+        padding: 4px;
         text-align: left;
+        height: 18px;
     }
     .column3 {
         float: left;
         width: 12.5%;
-        /*border-left: 1px solid black;*/
-        /*border-right: 1px solid black;*/
-        /*padding: 3px;*/
-        border-bottom: 2px solid black;
-        border-left: 2px solid black;
-        padding: 3px;
+        border-left: 1px solid black;
+        padding: 4px;
+        height: 18px;
     }
     .column4 {
         float: left;
         width: 12.5%;
-        /*border-left: 1px solid black;*/
-        /*border-right: 1px solid black;*/
-        /*padding: 3px;*/
-        border-bottom: 2px solid black;
-        border-left: 2px solid black;
-        padding: 3px;
+        border-left: 1px solid black;
+        padding: 4px;
+        height: 18px;
     }
     .column5 {
         float: left;
         width: 18%;
-        /*border-left: 1px solid black;*/
-        /*padding: 3px;*/
-        border-bottom: 2px solid black;
-        border-left: 2px solid black;
-        /*border-color: $dark;*/
+        border-left: 1px solid black;
+        padding: 4px;
+        height: 18px;
         border-right: 2px solid black;
     }
 
@@ -164,8 +132,9 @@
         padding: 3px;
         font-weight: bolder;
         text-transform: uppercase;
-        border-right: .8px solid black;
+        border-right: 1px solid black;
         font-size: small;
+        height: 22px;
     }
     .summary {
         float: left;
@@ -173,8 +142,9 @@
         padding: 3px;
         font-weight: bolder;
         text-transform: uppercase;
-        border-right: .8px solid black;
+        border-right: 1px solid black;
         font-size: small;
+        height: 22px;
     }
     .activity_summary_num {
         float: left;
@@ -182,44 +152,43 @@
         padding: 3px;
         font-weight: bolder;
         text-transform: capitalize;
-        border-right: .8px solid black;
+        border-right: 1px solid black;
         font-size: small;
+        height: 22px;
     }
     .activity_summary_num_contribution {
         float: left;
         width: 2%;
         padding: 3px;
-        min-height: 15px;
         font-weight: bolder;
         text-transform: capitalize;
-        border-right: .8px solid black;
+        border-right: 1px solid black;
         font-size: small;
+        height: 18px;
     }
     .activity_summary_label {
         float: left;
         width: 30%;
         padding: 3px;
-        min-height: 15px;
         font-weight: bolder;
         text-transform: capitalize;
-        border-right: .8px solid black;
+        border-right: 1px solid black;
         font-size: small;
+        height: 18px;
     }
     .activity_summary {
         float: left;
         width: 45%;
         padding: 3px;
-        min-height: 15px;
         font-weight: bolder;
         text-transform: capitalize;
-        border-right: .8px solid black;
+        border-right: 1px solid black;
         font-size: small;
     }
     .activity_summary_end {
         float: left;
         width: 45%;
         padding: 3px;
-        min-height: 15px;
         font-weight: bolder;
         text-transform: capitalize;
         font-size: medium;
@@ -229,7 +198,6 @@
         width: 50%;
         padding: 4px;
         font-weight: bolder;
-        min-height: 25px;
         text-transform: capitalize;
         font-size: medium;
     }

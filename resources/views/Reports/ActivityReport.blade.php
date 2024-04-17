@@ -62,9 +62,9 @@
     <?php $n=1 ?>
     <div style="margin-top: 10px;" >
         <div style="margin-bottom: 20px;margin-top: 20px">
-            <h3 style="font-weight: bold;font-size: small; text-align:center;text-transform: uppercase;padding-bottom: 20px;text-decoration: underline"><span style="padding-right: 5px;"></span>
+            <h5 style="font-weight: bold;font-size: small; text-align:center;text-transform: uppercase;padding-bottom: 20px;text-decoration: underline"><span style="padding-right: 5px;"></span>
                 Expenditures/Disbursements
-            </h3>
+            </h5>
         </div>
         <table style="border: 1px solid black; border-collapse: collapse;width: 100%">
             <tr style="border: 1px solid black; font-size: smaller;">

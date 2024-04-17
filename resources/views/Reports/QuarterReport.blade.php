@@ -24,34 +24,34 @@
 
     <!-------------------------------------------------------------------income details------------------------------------------------------------------>
     <div>
-        <h3 style="font-weight: bold;font-size: small; text-align:center;text-transform: uppercase;padding-bottom: 20px;text-decoration: underline"><span style="padding-right: 5px;"></span> Income (XAF)
-        </h3>
+        <h5 style="font-weight: bold;font-size: small; text-align:center;text-transform: uppercase;padding-bottom: 20px;text-decoration: underline"><span style="padding-right: 5px;"></span> Income (XAF)
+        </h5>
     </div>
 
     <?php $n=1 ?>
     <div class="activity" >
         <!---start of title-->
-        <div class="row quarter_row">
-            <div class="column1" style="font-weight: bold">
+        <div class="row">
+            <div class="column1" style="font-weight: bold;font-size: small">
                 S/N
             </div>
-            <div class="column2" style="font-weight: bold">
+            <div class="column2" style="font-weight: bold;font-size: small">
                 Description/Activity
             </div>
-            <div class="column3" style="font-weight: bold">
+            <div class="column3" style="font-weight: bold;font-size: small">
                 Amount
             </div>
-            <div class="column4" style="font-weight: bold">
+            <div class="column4" style="font-weight: bold;font-size: small">
                 SubTotal
             </div>
-            <div class="column5" style="font-weight: bold">
+            <div class="column5" style="font-weight: bold;font-size: small">
                 Total
             </div>
         </div>
         <!---end of title-->
 
         <!---start of balance brought forward-->
-        <div class="row amount_brought_forward">
+        <div class="row">
             <div class="column1" style="font-size: x-small">
                 BBF
             </div>
@@ -68,7 +68,7 @@
         <!---start of incomes categories-->
         @foreach($incomes as $key => $income)
             <div>
-                <div class="row quarter_row" style="font-size: x-small">
+                <div class="row" style="font-size: x-small">
                     <div class="column1">
                         {{$income->code}}
                     </div>
@@ -85,7 +85,7 @@
                 </div>
                 <!------list of activities under the category--->
                 @foreach($income->items as $k => $value)
-                    <div class="row activity_row" style="font-size: x-small">
+                    <div style="font-size: x-small">
                         <div class="column1">
                             {{$income->code }}.{{$value->code}}
                         </div>
@@ -100,7 +100,7 @@
 
                         <!-------------items under an activity------------>
                         <div>
-                            <div class="row item_row">
+                            <div class="row">
                                 <div class="column1">
                                     {{$income->code}}.{{$value->code}}.{{array_key_first($value->items) + 1}}
                                 </div>
@@ -112,7 +112,7 @@
                                 <div class="column5"></div>
                             </div>
                             @foreach($value->items as $v => $item)
-                                <div class="row item_row">
+                                <div class="row">
                                     <div class="column1">
                                         {{$income->code}}.{{$value->code}}.{{$v + 1}}
                                     </div>
@@ -133,7 +133,7 @@
                         <!-------------end of items----------------------->
 
                         <!--------- activity sub total and total -------------------->
-                        <div class="row activity_total">
+                        <div class="row">
                             <div class="column1">
                                 {{$income->code}}.{{$value->code}}
                             </div>
@@ -150,7 +150,7 @@
                 <!------end of activities------------------------>
             </div>
             @if(!empty($income->items))
-                <div class="row quarter_row" style="font-size: x-small">
+                <div class="row" style="font-size: x-small">
                     <div class="column1">
                         {{$income->code}}
                     </div>
@@ -169,7 +169,7 @@
 
         @endforeach
         <!------total of incomes------------------------->
-        <div class="row quarter_row" style="font-size: x-small">
+        <div class="row" style="font-size: x-small">
             <div class="column1">
             </div>
             <div style="font-weight: bold;text-align: left" class="column2" >
@@ -188,27 +188,27 @@
 
     <!------------------------------------------------------------expenditures----------------------------------------------------------------------------------------------->
     <div style="margin-top: 30px;margin-bottom: 20px;">
-        <h3 style="font-weight: bold;font-size: small; text-align:center;text-transform: uppercase;padding-bottom: 20px;text-decoration: underline"><span style="padding-right: 5px"></span> Expenditures (XAF)
-        </h3>
+        <h5 style="font-weight: bold;font-size: small; text-align:center;text-transform: uppercase;padding-bottom: 20px;text-decoration: underline"><span style="padding-right: 5px"></span> Expenditures / Disbursements (XAF)
+        </h5>
     </div>
 
     <?php $p=1 ?>
     <div class="activity" >
         <!---start of title-->
-        <div class="row quarter_row">
-            <div class="column1" style="font-weight: bold">
+        <div class="row">
+            <div class="column1" style="font-weight: bold;font-size: small">
                 S/N
             </div>
-            <div class="column2" style="font-weight: bold">
+            <div class="column2" style="font-weight: bold;font-size: small">
                 Description/Activity
             </div>
-            <div class="column3" style="font-weight: bold">
+            <div class="column3" style="font-weight: bold;font-size: small">
                 Amount
             </div>
-            <div class="column4" style="font-weight: bold">
+            <div class="column4" style="font-weight: bold;font-size: small">
                 SubTotal
             </div>
-            <div class="column5" style="font-weight: bold">
+            <div class="column5" style="font-weight: bold;font-size: small">
                 Total
             </div>
         </div>
@@ -217,7 +217,7 @@
         <!---start of expenditure categories-->
         @foreach($expenditures as $key => $expenditure)
             <div>
-                <div class="row quarter_row">
+                <div class="row" style="font-size: x-small">
                     <div>
                         <div class="column1">
                             {{$expenditure->code}}
@@ -233,7 +233,7 @@
                 <!------list of activities under the category--->
                 <?php $t=1 ?>
                 @foreach($expenditure->items as $k => $value)
-                    <div class="row activity_row">
+                    <div style="font-size: x-small">
                         <div class="column1">
                             {{$expenditure->code}}.{{$value->code}}
                         </div>
@@ -247,7 +247,7 @@
                         <div class="column5"></div>
 
                         <!-------------items under an activity------------>
-                        <div class="row item_row">
+                        <div class="row">
                             <div class="column1">
                                 {{$expenditure->code}}.{{$k + 1}}.{{array_key_first($value->items) + 1}}
                             </div>
@@ -261,7 +261,7 @@
                         <?php $counter=1 ?>
                         @for($i = 0; $i < count($value->items); $i++)
                             <div>
-                                <div class="row item_row">
+                                <div class="row">
                                     <div class="column1">
                                         {{$expenditure->code}}.{{$k + 1}}.{{$i + 1}}
                                     </div>
@@ -301,7 +301,7 @@
                 @endforeach
                 <!------end of activities------------------------>
             </div>
-            <div class="row quarter_row">
+            <div class="row" style="font-size: x-small">
                 <div class="column1">
                     {{$expenditure->code}}
                 </div>
@@ -318,7 +318,7 @@
         <?php $p++ ?>
         @endforeach
         <!------total of expenditures------------------------->
-        <div class="row quarter_row">
+        <div class="row" style="font-size: x-small">
             <div class="column1">
             </div>
             <div style="font-weight: bold;text-align: left" class="column2" >
@@ -337,13 +337,13 @@
 
     <!----------------------------------------------------------summary of report-------------------------------------------------------------------------------------------->
 
-    <div style="margin-top: 20px;">
+    <div style="margin-top: 30px;">
         <h3 style="font-weight: bold;font-size: small; text-align:center;text-transform: uppercase;padding-bottom: 20px;text-decoration: underline"><span style="padding-right: 5px"></span> Summary (XAF)
         </h3>
     </div>
 
-    <div class="activity">
-        <div class="row quarter_row">
+    <div>
+        <div class="row">
             <div class="summary_num">
                 S1
             </div>
@@ -352,7 +352,7 @@
             </div>
             <div class="totals">{{number_format($total_income)}}</div>
         </div>
-        <div class="row quarter_row">
+        <div class="row">
             <div class="summary_num">
                 S2
             </div>
@@ -361,7 +361,7 @@
             </div>
             <div class="totals">{{number_format($total_expenditure)}}</div>
         </div>
-        <div class="row quarter_row">
+        <div class="row">
             <div class="summary_num">
                 S3
             </div>
