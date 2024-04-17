@@ -52,15 +52,15 @@
 
         <!---start of balance brought forward-->
         <div class="row amount_brought_forward">
-            <div class="column1">
+            <div class="column1" style="font-size: x-small">
                 BBF
             </div>
-            <div class="column2" style="font-weight: bold; text-align: center">
+            <div class="column2" style="font-weight: 100; text-align: left;font-size: x-small">
                 Balance Brought-Forward
             </div>
             <div class="column3"></div>
             <div class="column4"></div>
-            <div class="column5">{{number_format($bal_brought_forward)}}</div>
+            <div class="column5" style="font-size: x-small">{{number_format($bal_brought_forward)}}</div>
         </div>
         <!-----end of balance brought forward-->
 
@@ -68,30 +68,28 @@
         <!---start of incomes categories-->
         @foreach($incomes as $key => $income)
             <div>
-                <div class="row quarter_row">
-                    <div>
-                        <div class="column1">
-                            {{$income->code}}
-                        </div>
-                        <div class="column2" style="font-weight: bold;text-align: center">
-                            {{$income->name}}
-                        </div>
-                        <div class="column3"></div>
-                        <div class="column4"></div>
-                        <div class="column5">
-                            @if(empty($income->items))
-                                {{number_format($income->total)}}
-                            @endif
-                        </div>
+                <div class="row quarter_row" style="font-size: x-small">
+                    <div class="column1">
+                        {{$income->code}}
+                    </div>
+                    <div class="column2" style="font-weight: 100;text-align: left">
+                        {{$income->name}}
+                    </div>
+                    <div class="column3"></div>
+                    <div class="column4"></div>
+                    <div class="column5">
+                        @if(empty($income->items))
+                            {{number_format($income->total)}}
+                        @endif
                     </div>
                 </div>
                 <!------list of activities under the category--->
                 @foreach($income->items as $k => $value)
-                    <div class="row activity_row">
+                    <div class="row activity_row" style="font-size: x-small">
                         <div class="column1">
                             {{$income->code }}.{{$value->code}}
                         </div>
-                        <div class="column2" style="font-weight: bold">
+                        <div class="column2" style="font-weight: 100">
                             {{$value->name}}
                         </div>
                         <div class="column3" >
@@ -139,7 +137,7 @@
                             <div class="column1">
                                 {{$income->code}}.{{$value->code}}
                             </div>
-                            <div class="column2" style="font-weight: bold">
+                            <div class="column2" style="font-weight: 100">
 
                             </div>
                             <div class="column3"></div>
@@ -148,15 +146,15 @@
                         </div>
                         <!---------end of activity sub total and total--------------->
                     </div>
-            @endforeach
+                @endforeach
                 <!------end of activities------------------------>
             </div>
             @if(!empty($income->items))
-                <div class="row quarter_row">
+                <div class="row quarter_row" style="font-size: x-small">
                     <div class="column1">
                         {{$income->code}}
                     </div>
-                    <div style="font-weight: bold;text-align: center" class="column2" >
+                    <div style="font-weight: bold;text-align: left" class="column2" >
                         Total
                     </div>
                     <div class="column3"></div>
@@ -171,10 +169,10 @@
 
         @endforeach
         <!------total of incomes------------------------->
-        <div class="row quarter_row">
+        <div class="row quarter_row" style="font-size: x-small">
             <div class="column1">
             </div>
-            <div style="font-weight: bold;text-align: center" class="column2" >
+            <div style="font-weight: bold;text-align: left" class="column2" >
                 Total Income
             </div>
             <div class="column3"></div>
@@ -224,7 +222,7 @@
                         <div class="column1">
                             {{$expenditure->code}}
                         </div>
-                        <div class="column2" style="font-weight: bold;text-align: center">
+                        <div class="column2" style="font-weight: bold;text-align: left">
                             {{$expenditure->name}}
                         </div>
                         <div class="column3"></div>
@@ -307,7 +305,7 @@
                 <div class="column1">
                     {{$expenditure->code}}
                 </div>
-                <div style="font-weight: bold;text-align: center" class="column2" >
+                <div style="font-weight: bold;text-align: left" class="column2" >
                     Total
                 </div>
                 <div class="column3"></div>
@@ -323,7 +321,7 @@
         <div class="row quarter_row">
             <div class="column1">
             </div>
-            <div style="font-weight: bold;text-align: center" class="column2" >
+            <div style="font-weight: bold;text-align: left" class="column2" >
                 Total Expenditure
             </div>
             <div class="column3"></div>
@@ -383,54 +381,61 @@
     <div class="detail" style="margin-top: 30px;margin-bottom: 150px">
         <!------------------------------Names of presenters------------------------------------>
         <div style="float: left" class="fin_sec">
-            <div class=" " style="font-weight: bold;font-size: small;text-transform: uppercase; margin-bottom: 5px;text-align: center">
+            <div class=" " style="font-weight: bold;font-size: small;text-transform: uppercase; margin-bottom: 3px;text-align: center">
                 FINANCIAL SECRETARY
             </div>
             <div style="font-weight: bold;font-size: small; text-transform: uppercase;text-align: center">
-                @isset($treasurer)
-                    <span>{{$fin_secretary->name}}</span>
+                @isset($fin_secretary)
+                    @foreach($fin_secretary as $key => $value)
+                        <span>{{$value->name}}</span><br>
+                    @endforeach
                 @endisset
             </div>
             <div style="font-weight: bold;text-transform: uppercase;font-size: small; margin-top: 20px;text-align: center">
                 SIGN
             </div>
-            <div  style="border-bottom: 1px solid black; margin-top: 40px">
+            <div  style="border-bottom: 1px solid black; margin-top: 10px">
             </div>
         </div>
 
         <div style="float: right" class="treasurer">
-            <div  class=" " style="text-align: center;font-weight: bold;font-size: small;text-transform: uppercase; margin-bottom: 5px">
+            <div  class=" " style="text-align: center;font-weight: bold;font-size: small;text-transform: uppercase; margin-bottom: 3px">
                 Treasurer
             </div>
             <div style="font-weight: bold;text-transform: uppercase;text-align: center">
                 @isset($treasurer)
-                    <span>{{$treasurer->name}}</span>
+                    @foreach($treasurer as $key => $value)
+                        <span>{{$value->name}}</span><br>
+                    @endforeach
                 @endisset
             </div>
             <div style="font-weight: bold;text-transform: uppercase;font-size: small; margin-top: 20px;text-align: center">
                 SIGN
             </div>
-            <div  style="border-bottom: 1px solid black; margin-top: 40px">
+            <div  style="border-bottom: 1px solid black; margin-top: 10px">
             </div>
         </div>
         <!------------------------------End of presenters-------------------------------------->
     </div>
     <div class="president" style="text-align: center">
         <div>
-            <div class=" " style="font-weight: bold;font-size: small;text-transform: uppercase; margin-bottom: 5px">
+            <div class=" " style="font-weight: bold;font-size: small;text-transform: uppercase; margin-bottom: 3px">
                 President
             </div>
             <div style="font-weight: bold;font-size: small; text-transform: uppercase">
                 @isset($president)
-                    <span>{{$president->name}}</span>
+                    @foreach($president as $key => $value)
+                        <span>{{$value->name}}</span><br>
+                    @endforeach
                 @endisset
             </div>
             <div style="font-weight: bold;text-transform: uppercase;font-size: small; margin-top: 20px">
                 SIGN
             </div>
-            <div class="border_line" style="border-bottom: 1px solid black; margin-top: 40px;text-align: center">
+            <div class="border_line" style="border-bottom: 1px solid black; margin-top: 10px;text-align: center">
             </div>
         </div>
     </div>
     <!------------------------------------------------------END OF PRESENTERS-------------------------------------------------------------------------------------->
+
 @endsection

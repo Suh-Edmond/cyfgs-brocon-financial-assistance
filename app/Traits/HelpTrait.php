@@ -97,12 +97,17 @@ trait HelpTrait {
 
     public static function getOrganisationAdministrators()
     {
-        return DB::table('users')
+        $admins = DB::table('users')
             ->join('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
             ->join('roles', 'roles.id', '=', 'model_has_roles.role_id')
-            ->select('users.name', 'users.telephone', 'users.email')
+            ->select('users.name', 'users.telephone', 'users.email', 'roles.name as role_name')
             ->whereIn('roles.name', [Roles::PRESIDENT, Roles::FINANCIAL_SECRETARY, Roles::TREASURER])
             ->get()->toArray();
+        $president         = collect($admins)->filter(function ($admin) {return $admin->role_name == Roles::PRESIDENT;});
+        $fin_sec           = collect($admins)->filter(function ($admin) {return $admin->role_name == Roles::FINANCIAL_SECRETARY;});
+        $treasurer         = collect($admins)->filter(function ($admin) {return $admin->role_name == Roles::TREASURER;});
+
+        return array(Roles::PRESIDENT => $president, Roles::FINANCIAL_SECRETARY => $fin_sec, Roles::TREASURER => $treasurer);
     }
 
     public static function computeTotalAmountByPaymentCategory($items): int

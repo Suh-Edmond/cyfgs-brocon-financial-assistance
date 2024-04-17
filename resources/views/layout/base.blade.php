@@ -24,20 +24,21 @@
         padding-bottom: 20px;
     }
     .quarter_row {
-        border: .8px solid black;
+        /*border: .8px solid black;*/
         width: 100%;
-
+        font-size: smaller;
     }
     .item_row {
-        border-bottom: .8px solid black;
-        border-right: .8px solid black;
+        /*border-bottom: .8px solid black;*/
+        /*border-right: .8px solid black;*/
+        border: 1px solid black;
     }
     .activity {
-        border: .8px solid black;
+        /*border: .8px solid black;*/
     }
     .amount_brought_forward {
-        border-left: .8px solid black;
-        border-right: .8px solid black;
+        /*border-left: .8px solid black;*/
+        /*border-right: .8px solid black;*/
     }
     .activity_total {
         border-bottom: .8px solid black;
@@ -46,47 +47,58 @@
     .column1 {
         float: left;
         width: 7%;
-        border-left: .8px solid black;
-        border-right: .8px solid black;
-        padding: 4px;
-        min-height: 25px;
+        /*border-left: 1px solid black;*/
+        /*border-right: 1px solid black;*/
+        border-bottom: 2px solid black;
+        border-left: 2px solid black;
+        padding: 3px;
+        /*padding: 3px;*/
     }
 
     .activity_row {
-        border-top: .8px solid black;
+        /*border-top: .8px solid black;*/
+        /*font-size: smaller;*/
     }
     .column2 {
         float: left;
         width: 50%;
-        border-left: .8px solid black;
-        border-right: .8px solid black;
-        padding: 4px;
+        /*border-left: 1px solid black;*/
+        /*border-right: 1px solid black;*/
+        /*padding: 3px;*/
+        border-bottom: 2px solid black;
+        border-left: 2px solid black;
+        padding: 3px;
         text-align: left;
-        min-height: 25px;
-
     }
     .column3 {
         float: left;
         width: 12.5%;
-        border-left: .8px solid black;
-        border-right: .8px solid black;
-        padding: 4px;
-        min-height: 25px;
+        /*border-left: 1px solid black;*/
+        /*border-right: 1px solid black;*/
+        /*padding: 3px;*/
+        border-bottom: 2px solid black;
+        border-left: 2px solid black;
+        padding: 3px;
     }
     .column4 {
         float: left;
         width: 12.5%;
-        border-left: .8px solid black;
-        border-right: .8px solid black;
-        padding: 4px;
-        min-height: 25px;
+        /*border-left: 1px solid black;*/
+        /*border-right: 1px solid black;*/
+        /*padding: 3px;*/
+        border-bottom: 2px solid black;
+        border-left: 2px solid black;
+        padding: 3px;
     }
     .column5 {
         float: left;
         width: 18%;
-        border-left: .8px solid black;
-        padding: 4px;
-        min-height: 25px;
+        /*border-left: 1px solid black;*/
+        /*padding: 3px;*/
+        border-bottom: 2px solid black;
+        border-left: 2px solid black;
+        /*border-color: $dark;*/
+        border-right: 2px solid black;
     }
 
     .pre_column1 {
@@ -94,8 +106,7 @@
          width: 30%;
          border-left: .8px solid black;
          border-right: .8px solid black;
-         padding: 4px;
-         min-height: 25px;
+         padding: 3px;
         font-size: small;
      }
 
@@ -104,8 +115,7 @@
         width: 30%;
         border-left: .8px solid black;
         border-right: .8px solid black;
-        padding: 4px;
-        min-height: 25px;
+        padding: 3px;
         font-size: small;
     }
 
@@ -114,7 +124,7 @@
         width: 20%;
         border-left: .8px solid black;
         border-right: .8px solid black;
-        padding: 4px;
+        padding: 3px;
         min-height: 25px;
         font-size: small;
     }
@@ -124,7 +134,7 @@
         width: 20%;
         border-left: .8px solid black;
         border-right: .8px solid black;
-        padding: 4px;
+        padding: 3px;
         min-height: 25px;
         font-size: small;
     }
@@ -132,14 +142,14 @@
     .total {
         float: left;
         width: 50%;
-        padding: 4px;
+        padding: 3px;
         min-height: 25px;
     }
 
     .income_totals{
         float: left;
         width: 16.6%;
-        padding: 4px;
+        padding: 3px;
         min-height: 25px;
     }
 
@@ -151,8 +161,7 @@
     .summary_num {
         float: left;
         width: 5%;
-        padding: 4px;
-        min-height: 25px;
+        padding: 3px;
         font-weight: bolder;
         text-transform: uppercase;
         border-right: .8px solid black;
@@ -161,8 +170,7 @@
     .summary {
         float: left;
         width: 45%;
-        padding: 4px;
-        min-height: 25px;
+        padding: 3px;
         font-weight: bolder;
         text-transform: uppercase;
         border-right: .8px solid black;
@@ -171,8 +179,7 @@
     .activity_summary_num {
         float: left;
         width: 10%;
-        padding: 10px;
-        min-height: 15px;
+        padding: 3px;
         font-weight: bolder;
         text-transform: capitalize;
         border-right: .8px solid black;
@@ -181,7 +188,7 @@
     .activity_summary_num_contribution {
         float: left;
         width: 2%;
-        padding: 10px;
+        padding: 3px;
         min-height: 15px;
         font-weight: bolder;
         text-transform: capitalize;
@@ -191,7 +198,7 @@
     .activity_summary_label {
         float: left;
         width: 30%;
-        padding: 10px;
+        padding: 3px;
         min-height: 15px;
         font-weight: bolder;
         text-transform: capitalize;
@@ -201,7 +208,7 @@
     .activity_summary {
         float: left;
         width: 45%;
-        padding: 10px;
+        padding: 3px;
         min-height: 15px;
         font-weight: bolder;
         text-transform: capitalize;
@@ -211,7 +218,7 @@
     .activity_summary_end {
         float: left;
         width: 45%;
-        padding: 10px;
+        padding: 3px;
         min-height: 15px;
         font-weight: bolder;
         text-transform: capitalize;

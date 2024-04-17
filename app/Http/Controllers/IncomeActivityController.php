@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 
+ use App\Constants\Roles;
  use App\Http\Resources\IncomeActivityResource;
 use App\Http\Requests\IncomeActivityRequest;
 use App\Services\IncomeActivityService;
@@ -84,8 +85,7 @@ class IncomeActivityController extends Controller
         return $activities;
     }
 
-    //I will have to pass the parameters in the request and run the query to download the data
-    public function generateIncomeActivityPDF(Request $request)
+     public function generateIncomeActivityPDF(Request $request)
     {
          $organisation      = $request->user()->organisation;
 
@@ -93,9 +93,9 @@ class IncomeActivityController extends Controller
         $total             = $this->income_activity_service->calculateTotal($income_activities->data);
 
         $admins            = $this->getOrganisationAdministrators();
-        $president         = count($admins) >= 3 ? $admins[1] : null;
-        $treasurer         = count($admins) >= 3 ? $admins[2]: null;
-        $fin_sec           = count($admins) >= 3 ? $admins[0] : null;
+        $president         = $admins[Roles::PRESIDENT];
+        $treasurer         = $admins[Roles::TREASURER];
+        $fin_sec           = $admins[Roles::FINANCIAL_SECRETARY];
 
         $data = [
             'title'               => !is_null($request->payment_item_name)?'Income Activities for '. $request->payment_item_name:'Income Activities for Year '.$request->year,

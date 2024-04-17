@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Constants\Roles;
 use App\Http\Requests\UserSavingRequest;
 use App\Http\Requests\UpdateUserSavingRequest;
 use App\Http\Resources\UserSavingResource;
@@ -110,9 +111,9 @@ class UserSavingController extends Controller
         $savings           = $this->user_saving_service->getUserSavingsForDownload($request);
 
         $admins            = $this->getOrganisationAdministrators();
-        $president         = count($admins) >= 3 ? $admins[1] : null;
-        $treasurer         = count($admins) >= 3 ? $admins[2]: null;
-        $fin_sec           = count($admins) >= 3 ? $admins[0] : null;
+        $president         = $admins[Roles::PRESIDENT];
+        $treasurer         = $admins[Roles::TREASURER];
+        $fin_sec           = $admins[Roles::FINANCIAL_SECRETARY];
         $data = [
             'title'               => $request->name. ' Savings',
             'date'                => date('m/d/Y'),
@@ -144,9 +145,9 @@ class UserSavingController extends Controller
 
         $admins            = $this->getOrganisationAdministrators();
 
-        $president         = count($admins) >= 3 ? $admins[1] : null;
-        $treasurer         = count($admins) >= 3 ? $admins[2]: null;
-        $fin_sec           = count($admins) >= 3 ? $admins[0] : null;
+        $president         = $admins[Roles::PRESIDENT];
+        $treasurer         = $admins[Roles::TREASURER];
+        $fin_sec           = $admins[Roles::FINANCIAL_SECRETARY];
         $data = [
             'title'               => 'Organisation Savings',
             'date'                => date('m/d/Y'),

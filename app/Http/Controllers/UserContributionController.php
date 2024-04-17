@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Constants\PaymentItemFrequency;
+use App\Constants\Roles;
 use App\Http\Requests\ApproveContributionRequest;
 use App\Http\Requests\BulkPaymentRequest;
 use App\Http\Requests\CreateUserContributionRequest;
@@ -111,9 +112,9 @@ class UserContributionController extends Controller
         $organisation      = $request->user()->organisation;
 
         $admins            = $this->getOrganisationAdministrators();
-        $president         = count($admins) >= 3 ? $admins[1] : null;
-        $treasurer         = count($admins) >= 3 ? $admins[2]: null;
-        $fin_sec           = count($admins) >= 3 ? $admins[0] : null;
+        $president         = $admins[Roles::PRESIDENT];
+        $treasurer         = $admins[Roles::TREASURER];
+        $fin_sec           = $admins[Roles::FINANCIAL_SECRETARY];
 
         $data = [
             'title'             => "Member's Contribution for ".$request->payment_item_name,
@@ -157,9 +158,9 @@ class UserContributionController extends Controller
         $organisation      = $request->user()->organisation;
         $debts             = json_decode(json_encode($this->userContributionService->getMemberDebt($request)));
         $admins            = $this->getOrganisationAdministrators();
-        $president         = count($admins) >= 3 ? $admins[1] : null;
-        $treasurer         = count($admins) >= 3 ? $admins[2]: null;
-        $fin_sec           = count($admins) >= 3 ? $admins[0] : null;
+        $president         = $admins[Roles::PRESIDENT];
+        $treasurer         = $admins[Roles::TREASURER];
+        $fin_sec           = $admins[Roles::FINANCIAL_SECRETARY];
         $member            = User::findOrFail($request->user_id);
 
         $data = [
@@ -190,9 +191,9 @@ class UserContributionController extends Controller
         $organisation      = $request->user()->organisation;
         $debts             = json_decode(json_encode($this->userContributionService->getMemberContributedItems($request->user_id, $request->session_id)));
         $admins            = $this->getOrganisationAdministrators();
-        $president         = count($admins) >= 3 ? $admins[1] : null;
-        $treasurer         = count($admins) >= 3 ? $admins[2]: null;
-        $fin_sec           = count($admins) >= 3 ? $admins[0] : null;
+        $president         = $admins[Roles::PRESIDENT];
+        $treasurer         = $admins[Roles::TREASURER];
+        $fin_sec           = $admins[Roles::FINANCIAL_SECRETARY];
         $member            = User::findOrFail($request->user_id);
 
         $data = [
@@ -230,9 +231,9 @@ class UserContributionController extends Controller
         $organisation      = $request->user()->organisation;
 
         $admins            = $this->getOrganisationAdministrators();
-        $president         = count($admins) >= 3 ? $admins[1] : null;
-        $treasurer         = count($admins) >= 3 ? $admins[2]: null;
-        $fin_sec           = count($admins) >= 3 ? $admins[0] : null;
+        $president         = $admins[Roles::PRESIDENT];
+        $treasurer         = $admins[Roles::TREASURER];
+        $fin_sec           = $admins[Roles::FINANCIAL_SECRETARY];
 
         $data = [
             'title'             => $request->user_name." Contributions for ".$request->payment_item_name,

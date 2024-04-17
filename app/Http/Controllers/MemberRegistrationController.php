@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+ use App\Constants\Roles;
  use App\Http\Requests\MemberRegRequest;
 use App\Http\Requests\SearchRegistrationRequest;
 use App\Http\Resources\MemberRegistrationResource;
@@ -74,9 +75,9 @@ class MemberRegistrationController extends Controller
         $registrations     = $this->prepareData($request);
 
         $admins            = $this->getOrganisationAdministrators();
-        $president         = count($admins) >= 3 ? $admins[1] : null;
-        $treasurer         = count($admins) >= 3 ? $admins[2]: null;
-        $fin_sec           = count($admins) >= 3 ? $admins[0] : null;
+        $president         = $admins[Roles::PRESIDENT];
+        $treasurer         = $admins[Roles::TREASURER];
+        $fin_sec           = $admins[Roles::FINANCIAL_SECRETARY];
 
         $data = [
             'title'               => 'Registered Members for '.$request->year,
