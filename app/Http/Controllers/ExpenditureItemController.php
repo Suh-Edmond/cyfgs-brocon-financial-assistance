@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+ use App\Constants\Roles;
  use App\Http\Requests\ExpenditureItemRequest;
  use App\Services\ExpenditureItemService;
 use App\Traits\HelpTrait;
@@ -109,9 +110,9 @@ class ExpenditureItemController extends Controller
         $organisation      = $request->user()->organisation;
         $expenditure_items = $this->prepareDataForDownload($request);
         $admins            = $this->getOrganisationAdministrators();
-        $president         = count($admins) >= 3 ? $admins[1] : null;
-        $treasurer         = count($admins) >= 3 ? $admins[2]: null;
-        $fin_sec           = count($admins) >= 3 ? $admins[0] : null;
+        $president         = $admins[Roles::PRESIDENT];
+        $treasurer         = $admins[Roles::TREASURER];
+        $fin_sec           = $admins[Roles::FINANCIAL_SECRETARY];
         $data = [
             'title'               => 'Expenditure Items under '.$request->category_name,
             'date'                => date('m/d/Y'),

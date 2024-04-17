@@ -37,17 +37,17 @@
             </tr>
             @foreach ($contributions as $key => $contribution)
                 <tr style="border: 1px solid black; font-size: smaller">
-                    <td style="padding: 5px;">{{ $key + 1 }}</td>
-                    <td style="border: 1px solid black; padding: 11px; text-align: center" >{{ $contribution->name }}</td>
-                    <td style="border: 1px solid black; padding: 11px; text-align: center">
+                    <td style="padding: 3px;">{{ $key + 1 }}</td>
+                    <td style="border: 1px solid black; padding: 3px; text-align: center" >{{ $contribution->name }}</td>
+                    <td style="border: 1px solid black; padding: 3px; text-align: center">
                         {{ number_format($contribution->payment_item_amount) }}</td>
-                    <td style="border: 1px solid black; padding: 11px; text-align: center">
+                    <td style="border: 1px solid black; padding: 3px; text-align: center">
                         {{ number_format($contribution->balance) }}</td>
-                    <td style="border: 1px solid black; padding: 11px; text-align: center">
+                    <td style="border: 1px solid black; padding: 3px; text-align: center">
                         {{ $contribution->approve }}</td>
-                    <td style="border: 1px solid black; padding: 11px; text-align: center">
+                    <td style="border: 1px solid black; padding: 3px; text-align: center">
                         {{ $contribution->payment_status }}</td>
-                    <td style="border: 1px solid black; padding: 11px; text-align: center">
+                    <td style="border: 1px solid black; padding: 3px; text-align: center">
                         {{ $contribution->frequency }}</td>
                     @if ( $n % 25 == 0 )
                         <div style="page-break-before:always;page-break-inside: auto;"> </div>
@@ -57,10 +57,10 @@
                 </tr>
             @endforeach
             <tr style="border: 1px solid black; font-size: smaller">
-                <td style="border: 1px solid black; padding: 11px; text-align: center" colspan="2">
+                <td style="border: 1px solid black; padding: 3px; text-align: center" colspan="2">
                     <b>Total</b>
                 </td>
-                <td style="border: 1px solid black; padding: 11px; text-align: center" colspan="5">
+                <td style="border: 1px solid black; padding: 3px; text-align: center" colspan="5">
                     <b>{{number_format($total)}} XAF</b>
                 </td>
             </tr>
@@ -76,52 +76,58 @@
     <div class="detail" style="margin-top: 30px;margin-bottom: 150px">
         <!------------------------------Names of presenters------------------------------------>
         <div style="float: left" class="fin_sec">
-            <div class=" " style="font-weight: bold;font-size: small;text-transform: uppercase; margin-bottom: 5px;text-align: center">
+            <div class=" " style="font-weight: bold;font-size: small;text-transform: uppercase; margin-bottom: 3px;text-align: center">
                 FINANCIAL SECRETARY
             </div>
             <div style="font-weight: bold;font-size: small; text-transform: uppercase;text-align: center">
                 @isset($fin_secretary)
-                    <span>{{$fin_secretary->name}}</span>
+                    @foreach($fin_secretary as $key => $value)
+                        <span>{{$value->name}}</span><br>
+                    @endforeach
                 @endisset
             </div>
             <div style="font-weight: bold;text-transform: uppercase;font-size: small; margin-top: 20px;text-align: center">
                 SIGN
             </div>
-            <div  style="border-bottom: 1px solid black; margin-top: 40px">
+            <div  style="border-bottom: 1px solid black; margin-top: 10px">
             </div>
         </div>
 
         <div style="float: right" class="treasurer">
-            <div  class=" " style="text-align: center;font-weight: bold;font-size: small;text-transform: uppercase; margin-bottom: 5px">
+            <div  class=" " style="text-align: center;font-weight: bold;font-size: small;text-transform: uppercase; margin-bottom: 3px">
                 Treasurer
             </div>
             <div style="font-weight: bold;text-transform: uppercase;text-align: center">
                 @isset($treasurer)
-                    <span>{{$treasurer->name}}</span>
+                    @foreach($treasurer as $key => $value)
+                        <span>{{$value->name}}</span><br>
+                    @endforeach
                 @endisset
             </div>
             <div style="font-weight: bold;text-transform: uppercase;font-size: small; margin-top: 20px;text-align: center">
                 SIGN
             </div>
-            <div  style="border-bottom: 1px solid black; margin-top: 40px">
+            <div  style="border-bottom: 1px solid black; margin-top: 10px">
             </div>
         </div>
         <!------------------------------End of presenters-------------------------------------->
     </div>
     <div class="president" style="text-align: center">
         <div>
-            <div class=" " style="font-weight: bold;font-size: small;text-transform: uppercase; margin-bottom: 5px">
+            <div class=" " style="font-weight: bold;font-size: small;text-transform: uppercase; margin-bottom: 3px">
                 President
             </div>
             <div style="font-weight: bold;font-size: small; text-transform: uppercase">
                 @isset($president)
-                    <span>{{$president->name}}</span>
+                    @foreach($president as $key => $value)
+                        <span>{{$value->name}}</span><br>
+                    @endforeach
                 @endisset
             </div>
             <div style="font-weight: bold;text-transform: uppercase;font-size: small; margin-top: 20px">
                 SIGN
             </div>
-            <div class="border_line" style="border-bottom: 1px solid black; margin-top: 40px;text-align: center">
+            <div class="border_line" style="border-bottom: 1px solid black; margin-top: 10px;text-align: center">
             </div>
         </div>
     </div>

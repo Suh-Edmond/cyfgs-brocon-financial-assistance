@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Constants\Roles;
 use App\Http\Requests\ApproveBulkExpenditureItemDetailRequest;
 use App\Http\Requests\ExpenditureDetailRequest;
 use App\Services\ExpenditureDetailService;
@@ -84,9 +85,9 @@ class ExpenditureDetailController extends Controller
         $expenditure_details = $this->expenditure_detail_service->setDataForDownload($request);
 
         $admins            = $this->getOrganisationAdministrators();
-        $president         = count($admins) >= 3 ? $admins[1] : null;
-        $treasurer         = count($admins) >= 3 ? $admins[2]: null;
-        $fin_sec           = count($admins) >= 3 ? $admins[0] : null;
+        $president         = $admins[Roles::PRESIDENT];
+        $treasurer         = $admins[Roles::TREASURER];
+        $fin_sec           = $admins[Roles::FINANCIAL_SECRETARY];
 
         $total_amount_given = $expenditure_details[3]['total_amount_given'];
 

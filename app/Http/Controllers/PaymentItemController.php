@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Constants\Roles;
 use App\Http\Requests\PaymentItemRequest;
 use App\Http\Requests\UpdatePaymentItemReferenceRequest;
 use App\Http\Resources\PaymentItemResource;
@@ -86,9 +87,9 @@ class PaymentItemController extends Controller
         $organisation      = $request->user()->organisation;
         $items             = $this->payment_item_service->filterPaymentItems($request);
         $admins            = $this->getOrganisationAdministrators();
-        $president         = count($admins) >= 3 ? $admins[1] : null;
-        $treasurer         = count($admins) >= 3 ? $admins[2]: null;
-        $fin_sec           = count($admins) >= 3 ? $admins[0] : null;
+        $president         = $admins[Roles::PRESIDENT];
+        $treasurer         = $admins[Roles::TREASURER];
+        $fin_sec           = $admins[Roles::FINANCIAL_SECRETARY];
 
 
         $data = [

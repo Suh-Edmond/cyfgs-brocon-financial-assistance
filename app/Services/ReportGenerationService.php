@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Constants\Roles;
 use App\Http\Resources\ActivityReportResource;
 use App\Http\Resources\DetailResource;
 use App\Http\Resources\IncomeResource;
@@ -78,13 +79,10 @@ class ReportGenerationService implements ReportGenerationInterface
         }
         $total_balance += $balance > 0 ? ($total_income - $total_amount_spent)  + $balance: ($total_income - $total_amount_spent);
         $admins            = $this->getOrganisationAdministrators();
-        $president         = $admins[0];
-        $treasurer         = count($admins) >= 3 ? $admins[2]: null;
-        $fin_sec           = count($admins) >= 3 ? $admins[1] : null;
 
         return [$income_list, $expenditures, ["total_income" => $total_income], ["total_amount_given" => $total_amount_given],
             ["total_amount_spent" => $total_amount_spent], ["balance" => $balance], ["total_balance" => $total_balance],
-            ["president" => $president], ["fin_sec" => $fin_sec], ["treasurer" => $treasurer]];
+            ["president" => $admins[Roles::PRESIDENT]], ["fin_sec" => $admins[Roles::FINANCIAL_SECRETARY]], ["treasurer" => $admins[Roles::TREASURER]]];
     }
 
     public function generateQuarterlyReport($request): array
@@ -98,11 +96,9 @@ class ReportGenerationService implements ReportGenerationInterface
         $total_expenditures = $expenditures[1];
         $balance_bf = $this->computeBalanceBroughtForwardByQuarter($request, $current_year);
         $admins            = $this->getOrganisationAdministrators();
-        $president         = $admins[0];
-        $treasurer         = count($admins) >= 3 ? $admins[2]: null;
-        $fin_sec           = count($admins) >= 3 ? $admins[1] : null;
+
         return [$income_elements, $expenditures_elements, ["total_income" => $total_income], ["total_expenditure" => $total_expenditures],
-            ["balance_brought_forward" => $balance_bf], ["president" => $president], ["treasurer" => $treasurer], ["fin_sec" => $fin_sec]];
+            ["balance_brought_forward" => $balance_bf], ["president" => $admins[Roles::PRESIDENT]], ["treasurer" => $admins[Roles::TREASURER]], ["fin_sec" => $admins[Roles::FINANCIAL_SECRETARY]]];
     }
 
     public function downloadQuarterlyReport($request): array
@@ -137,16 +133,13 @@ class ReportGenerationService implements ReportGenerationInterface
         $expenditures = $this->fetchYearlyExpenditures($request->year_id, $request->user()->organisation_id);
 
         $admins            = $this->getOrganisationAdministrators();
-        $president         = $admins[0];
-        $treasurer         = count($admins) >= 3 ? $admins[2]: null;
-        $fin_sec           = count($admins) >= 3 ? $admins[1] : null;
         $income_list = $income[0];
         $total_income = $income[1];
         $expenditure_list = $expenditures[0];
         $total_expenditure = $expenditures[1];
 
         return [$income_list, $expenditure_list, ["total_income" => $total_income], ["total_expenditure" => $total_expenditure],["bal_brought_forward" => $bal_brought_forward],
-            ["president" => $president], ["treasurer" => $treasurer], ["fin_sec" => $fin_sec]];
+            ["president" => $admins[Roles::PRESIDENT]], ["treasurer" => $admins[Roles::TREASURER]], ["fin_sec" => $admins[Roles::FINANCIAL_SECRETARY]]];
     }
 
     public function downloadYearlyReport($request): array
@@ -186,7 +179,7 @@ class ReportGenerationService implements ReportGenerationInterface
         $payment_categories = $this->paymentCategoryService->getPaymentCategoriesByOrganisationAndYear($organisation_id, $current_year->year);
         $incomes = array();
         $total_reg_saving = 0;
-        $total_income =null;
+        $total_income = null;
         $member_reg = $this->registrationService->getMemberRegistrationPerQuarter($quarter, $current_year, "MR");
         $savings = $this->userSavingService->getMemberSavingPerQuarter($quarter, $current_year, "MS");
         array_push($incomes, $member_reg, $savings);
