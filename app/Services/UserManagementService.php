@@ -18,6 +18,7 @@ use App\Http\Resources\UserResource;
 use App\Imports\UsersImport;
 use App\Interfaces\UserManagementInterface;
 use App\Mail\MemberInvitationMail;
+use App\Mail\PasswordResetConfirmationMail;
 use App\Mail\PasswordResetMail;
 use App\Models\CustomRole;
 use App\Models\MemberInvitation;
@@ -364,6 +365,12 @@ class UserManagementService implements UserManagementInterface
 
             $token = $this->generateToken($user);
             $currentSession = $this->session_service->getCurrentSession();
+            try {
+                $organisation_logo = env('FILE_DOWNLOAD_URL_PATH').$user->organisation->logo;
+                Mail::to($user['email'])->send(new PasswordResetConfirmationMail($user, $organisation_logo));
+            }catch (Exception $exception){
+                throw new EmailException("Could not send reset email link", 550);
+            }
             return new TokenResource(new UserResource($user, $token, true), $currentSession);
         }else {
             throw new UnAuthorizedException("Invalid token", 403);
