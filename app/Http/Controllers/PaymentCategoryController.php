@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Constants\Roles;
 use App\Http\Requests\PaymentCategoryRequest;
 use App\Http\Requests\UpdatePaymentCategoryRequest;
 use App\Http\Resources\PaymentCategoryResource;
@@ -76,9 +77,9 @@ class PaymentCategoryController extends Controller
     {
         $organisation      = $request->user()->organisation;
         $admins            = $this->getOrganisationAdministrators();
-        $president         = count($admins) >= 3 ? $admins[1] : null;
-        $treasurer         = count($admins) >= 3 ? $admins[2]: null;
-        $fin_sec           = count($admins) >= 3 ? $admins[0] : null;
+        $president         = $admins[Roles::PRESIDENT];
+        $treasurer         = $admins[Roles::TREASURER];
+        $fin_sec           = $admins[Roles::FINANCIAL_SECRETARY];
 
         $data = [
             'title'             =>'Payment Categories',

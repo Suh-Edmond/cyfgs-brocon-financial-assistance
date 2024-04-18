@@ -41,7 +41,7 @@ class GenerateReportController extends Controller
         $auth_user         = $request->user();
         $organisation      = $auth_user->organisation;
         $data = [
-            'title'               => 'Financial Report for '.$request->payment_activity.' for the Year: '. $request->year,
+            'title'               => 'Financial Report for '.$request->payment_activity,
             'date'                => date('m/d/Y'),
             'organisation'        => $organisation,
             'incomes'             => $data[0],

@@ -35,7 +35,7 @@
             </tr>
             @foreach ($supports as $key => $value)
                 <tr style="border: 1px solid black; font-size: smaller">
-                    <td style="padding: 5px;">{{ $key + 1 }}</td>
+                    <td style="padding: 3px;">{{ $key + 1 }}</td>
                     <td style="border: 1px solid black; padding: 3px;">{{ $value->supporter }}</td>
                     <td style="border: 1px solid black; padding: 3px;text-align: center">{{ number_format($value->amount_deposited) }}
                     </td>
@@ -49,9 +49,9 @@
                 <?php $n++ ?>
             @endforeach
             <tr style="padding: 12px; border: 1px solid black; font-size: smaller">
-                <td style="border: 1px solid black; padding: 11px;font-weight: bold" colspan="2"> Total Amount
+                <td style="border: 1px solid black; padding: 3px;font-weight: bold" colspan="2"> Total Amount
                 </td>
-                <td style="padding: 15px;font-weight: 200" colspan="4">{{ number_format($total) }} XAF </td>
+                <td style="padding: 3px;font-weight: bold" colspan="4">{{ number_format($total) }} XAF </td>
             </tr>
         </table>
     </div>
@@ -64,52 +64,58 @@
     <div class="detail" style="margin-top: 30px;margin-bottom: 150px">
         <!------------------------------Names of presenters------------------------------------>
         <div style="float: left" class="fin_sec">
-            <div class=" " style="font-weight: bold;font-size: small;text-transform: uppercase; margin-bottom: 5px;text-align: center">
+            <div class=" " style="font-weight: bold;font-size: small;text-transform: uppercase; margin-bottom: 3px;text-align: center">
                 FINANCIAL SECRETARY
             </div>
             <div style="font-weight: bold;font-size: small; text-transform: uppercase;text-align: center">
                 @isset($fin_secretary)
-                    <span>{{$fin_secretary->name}}</span>
+                    @foreach($fin_secretary as $key => $value)
+                        <span>{{$value->name}}</span><br>
+                    @endforeach
                 @endisset
             </div>
             <div style="font-weight: bold;text-transform: uppercase;font-size: small; margin-top: 20px;text-align: center">
                 SIGN
             </div>
-            <div  style="border-bottom: 1px solid black; margin-top: 5x">
+            <div  style="border-bottom: 1px solid black; margin-top: 10px">
             </div>
         </div>
 
         <div style="float: right" class="treasurer">
-            <div  class=" " style="text-align: center;font-weight: bold;font-size: small;text-transform: uppercase; margin-bottom: 5px">
+            <div  class=" " style="text-align: center;font-weight: bold;font-size: small;text-transform: uppercase; margin-bottom: 3px">
                 Treasurer
             </div>
             <div style="font-weight: bold;text-transform: uppercase;text-align: center">
                 @isset($treasurer)
-                    <span>{{$treasurer->name}}</span>
+                    @foreach($treasurer as $key => $value)
+                        <span>{{$value->name}}</span><br>
+                    @endforeach
                 @endisset
             </div>
             <div style="font-weight: bold;text-transform: uppercase;font-size: small; margin-top: 20px;text-align: center">
                 SIGN
             </div>
-            <div  style="border-bottom: 1px solid black; margin-top: 5px">
+            <div  style="border-bottom: 1px solid black; margin-top: 10px">
             </div>
         </div>
         <!------------------------------End of presenters-------------------------------------->
     </div>
     <div class="president" style="text-align: center">
         <div>
-            <div class=" " style="font-weight: bold;font-size: small;text-transform: uppercase; margin-bottom: 5px">
+            <div class=" " style="font-weight: bold;font-size: small;text-transform: uppercase; margin-bottom: 3px">
                 President
             </div>
             <div style="font-weight: bold;font-size: small; text-transform: uppercase">
                 @isset($president)
-                    <span>{{$president->name}}</span>
+                    @foreach($president as $key => $value)
+                        <span>{{$value->name}}</span><br>
+                    @endforeach
                 @endisset
             </div>
             <div style="font-weight: bold;text-transform: uppercase;font-size: small; margin-top: 20px">
                 SIGN
             </div>
-            <div class="border_line" style="border-bottom: 1px solid black; margin-top: 5px;text-align: center">
+            <div class="border_line" style="border-bottom: 1px solid black; margin-top: 10px;text-align: center">
             </div>
         </div>
     </div>
