@@ -149,6 +149,7 @@ class ExpenditureItemService implements ExpenditureItemInterface {
 
     public function getExpenditureByCategory($expenditure_category_id, $request)
     {
+
         $items = ExpenditureItem::select('expenditure_items.*')
             ->join('expenditure_categories', ['expenditure_categories.id' => 'expenditure_items.expenditure_category_id'])
             ->join('sessions', ['sessions.id' => 'expenditure_items.session_id'])
@@ -160,6 +161,9 @@ class ExpenditureItemService implements ExpenditureItemInterface {
         }
         if(isset($request->status)  && $request->status != "ALL") {
             $items = $items->where('expenditure_items.approve', $request->status);
+        }
+        if(isset($request->filter)){
+            $items = $items->where('expenditure_items.name', 'LIKE', '%'.$request->filter.'%');
         }
         $paginated_data  = $items->paginate($request->per_page);
         return (new ExpenditureItemCollection($this->generateExpenditureItemResponse($paginated_data), $paginated_data->total(),
@@ -192,7 +196,9 @@ class ExpenditureItemService implements ExpenditureItemInterface {
         if(isset($request->payment_item_id)){
             $items = $items->where('expenditure_items.payment_item_id', $request->payment_item_id);
         }
-
+        if(isset($request->filter)){
+            $items = $items->where('expenditure_items.name', 'LIKE', '%'.$request->filter.'%');
+        }
         $items = $items->orderBy('expenditure_items.name', 'ASC');
         $expenditure_items  =isset($request->per_page)? $items->paginate($request->per_page) : $items->get();
 

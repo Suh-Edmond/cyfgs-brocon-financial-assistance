@@ -62,8 +62,11 @@ class IncomeActivityService implements IncomeActivityInterface {
 
     public function getIncomeActivities($organisation_id, $request)
     {
-        $incomes =  $this->findIncomeActivities($organisation_id)
-                            ->orderBy('income_activities.name', 'ASC');
+        $incomes =  $this->findIncomeActivities($organisation_id);
+        if(isset($request->filter)){
+            $incomes = $incomes->where('income_activities.name', 'LIKE', '%'.$request->filter.'%');
+        }
+        $incomes = $incomes->orderBy('income_activities.name', 'ASC');
         $total_income = $this->computeTotalIncomeActivities($incomes->get());
         $paginated_data = $incomes->paginate($request->per_page);
 
@@ -104,6 +107,9 @@ class IncomeActivityService implements IncomeActivityInterface {
         }
         if(!is_null($request->month)) {
             $activities = $activities ->whereMonth('income_activities.date', $request->month);
+        }
+        if(isset($request->filter)){
+            $activities = $activities->where('income_activities.name', 'LIKE', '%'.$request->filter.'%');
         }
         $activities = $activities->orderBy('income_activities.name', 'ASC');
 

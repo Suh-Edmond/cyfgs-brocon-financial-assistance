@@ -164,6 +164,9 @@ class UserContributionService implements UserContributionInterface {
         if ($payment_item->frequency == PaymentItemFrequency::MONTHLY) {
             $unpaid_durations = $this->getMemberUnPayMonths($payment_item->frequency, $payment_item->created_at, $contributions->get());
         }
+        if(isset($request->filter)){
+            $contributions = $contributions->where('users.name', 'LIKE', '%'.$request->filter.'%');
+        }
         $contributions = !is_null($request->per_page) ? $contributions->paginate($request->per_page): $contributions->get();
 
         $total = !is_null($request->per_page) ? $contributions->total() : count($contributions);

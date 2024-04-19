@@ -94,7 +94,7 @@ class UserSavingService implements UserSavingInterface
 
     public function getAllUserSavingsByOrganisation($request)
     {
-        $savings = $this->findOrganisationUserSavings($request->organisation_id, $request->session_id, $request->month);
+        $savings = $this->findOrganisationUserSavings($request->organisation_id, $request->session_id, $request->month, $request->filter);
         $total_amount_deposited = $this->calculateOrganisationTotalSavings($savings->get());
         $paginated_savings = $savings->paginate($request->per_page);
 
@@ -166,7 +166,7 @@ class UserSavingService implements UserSavingInterface
     }
 
 
-    public function findOrganisationUserSavings($organisation_id, $session_id, $month)
+    public function findOrganisationUserSavings($organisation_id, $session_id, $month, $filter)
     {
         $savings = DB::table('user_savings')
             ->join('sessions', 'sessions.id', '=', 'user_savings.session_id')
@@ -179,7 +179,9 @@ class UserSavingService implements UserSavingInterface
         if(isset($month)){
             $savings = $savings->whereMonth('user_savings.created_at', $month);
         }
-
+        if(isset($filter)){
+            $savings = $savings->where('users.name', 'LIKE', '%'.$filter.'%');
+        }
         $savings = $savings->selectRaw('(SUM(user_savings.amount_deposited) - SUM(user_savings.amount_used)) as total_amount, users.id as user_id,
             users.name as name, users.email as email, users.telephone as telephone, sessions.id as session_id, sessions.year as session_year, sessions.status as session_status,
             user_savings.id, user_savings.amount_deposited, user_savings.comment, user_savings.approve, user_savings.amount_used, user_savings.created_at, user_savings.updated_at, user_savings.updated_by')
@@ -209,7 +211,7 @@ class UserSavingService implements UserSavingInterface
 
     public function getOrganisationSavingsForDownload($request)
     {
-        return $this->findOrganisationUserSavings($request->organisation_id, $request->session_id, $request->month)->get();
+        return $this->findOrganisationUserSavings($request->organisation_id, $request->session_id, $request->month, $request->filter)->get();
     }
 
     public function  getMembersSavingsByOrganisation($request)
@@ -241,6 +243,9 @@ class UserSavingService implements UserSavingInterface
         }
         if (!is_null($request->month)) {
             $data = $data->whereMonth('user_savings.created_at', $request->month);
+        }
+        if(isset($request->filter)) {
+            $data = $data->where('users.name', 'LIKE', '%'.$request->filter.'%');
         }
 
         $savings = $data->selectRaw('(SUM(user_savings.amount_deposited) - SUM(user_savings.amount_used)) as total_amount, users.id as user_id,
