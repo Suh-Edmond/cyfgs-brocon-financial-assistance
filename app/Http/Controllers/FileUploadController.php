@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\FileUploadRequest;
 use App\Http\Requests\GetFileRequest;
 use App\Services\FileService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class FileUploadController extends Controller
 {
@@ -18,15 +20,15 @@ class FileUploadController extends Controller
 
     public function uploadFile(FileUploadRequest $request)
     {
-        $this->file_service->uploadFile($request);
+        $filePath = $this->file_service->uploadFile($request);
 
-        return $this->sendResponse('success', 'File upload sucessfully');
+        return $this->sendResponse($filePath, 'File upload successfully');
     }
 
-    public function getUploadFile(GetFileRequest $request)
+    public function getUploadFile(Request $request)
     {
-        return $this->file_service->getUploadedFile($request);
+        $filePath = $this->file_service->getUploadedFile($request);
 
-//        return $this->sendResponse($response, 200);
+        return $this->sendResponse($filePath, "success");
     }
 }

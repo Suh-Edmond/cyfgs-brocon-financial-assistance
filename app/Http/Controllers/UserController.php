@@ -111,7 +111,7 @@ class UserController extends Controller
     {
         $this->user_management_service->updateUser($id, $request);
 
-        return $this->sendResponse('success', 'Account updated sucessfully');
+        return $this->sendResponse("success", 'Account updated sucessfully');
     }
 
 
