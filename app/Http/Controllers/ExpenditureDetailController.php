@@ -73,7 +73,7 @@ class ExpenditureDetailController extends Controller
 
     public function filterExpenditureDetails(Request $request)
     {
-        $details = $this->expenditure_detail_service->filterExpenditureDetail($request->expenditure_item_id, $request->status);
+        $details = $this->expenditure_detail_service->filterExpenditureDetail($request->expenditure_item_id, $request->status, $request);
 
         return $this->sendResponse($details, 200);
     }

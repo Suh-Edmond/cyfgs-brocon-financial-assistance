@@ -80,6 +80,9 @@ class ActivitySupportService implements ActivitySupportInterface
         if(!is_null($request->status) && $request->status != "ALL"){
             $supports = $supports->where('approve', $request->status);
         }
+        if(isset($request->filter)){
+            $supports = $supports->where('activity_supports.supporter', 'LIKE', '%'.$request->filter.'%');
+        }
         return $supports->orderBy('created_at', 'DESC')->get();
     }
 
@@ -95,6 +98,9 @@ class ActivitySupportService implements ActivitySupportInterface
         }
         if(!is_null($request->status) && $request->status != "ALL"){
             $sponsorships = $sponsorships->where('approve', $request->status);
+        }
+        if(isset($request->filter)){
+            $sponsorships = $sponsorships->where('activity_supports.supporter', 'LIKE', '%'.$request->filter.'%');
         }
         $sponsorships = $sponsorships->orderBy('created_at', 'DESC');
         $total_sponsorship = $this->computeTotalSponsorship($sponsorships->get());

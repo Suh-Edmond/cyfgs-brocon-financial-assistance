@@ -47,6 +47,9 @@ class PaymentCategoryService implements PaymentCategoryInterface {
         if(isset($request->year)){
             $categories = $categories->whereYear('created_at', $request->year);
         }
+        if(isset($request->filter)){
+            $categories = $categories->where('name', 'LIKE', '%'.$request->filter.'%');
+        }
         $payment_categories = isset($request->per_page) ? $categories->orderBy($request->sort_by)->paginate($request->per_page): $categories->orderBy($request->sort_by)->get();
         $total = isset($request->per_page) ? $payment_categories->total() : count($payment_categories);
         $last_page = isset($request->per_page) ? $payment_categories->lastPage(): 0;
@@ -63,23 +66,19 @@ class PaymentCategoryService implements PaymentCategoryInterface {
         $categories =  $categories->orderBy('name')->get();
         return $categories;
     }
-
     public function filterPaymentCategory($request){
         return $this->getPaymentCategories($request);
     }
-
     public function getPaymentCategory($id, $organisation_id)
     {
         return $this->findPaymentCategory($id, $organisation_id);
     }
-
     public function deletePaymentCategory($id, $organisation_id)
     {
         $payment_category = $this->findPaymentCategory($id, $organisation_id);
 
         $payment_category->delete();
     }
-
 
     private function findPaymentCategory($id, $organisation_id)
     {
