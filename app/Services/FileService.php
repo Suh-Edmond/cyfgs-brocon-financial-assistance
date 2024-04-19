@@ -28,12 +28,12 @@ class FileService implements FileServiceInterface {
             $request->file('image')->storeAs(FileStorageConstants::FILE_STORAGE_BASE_DIRECTORY.$directory, $fileName, 'public');
             $filePath = FileStorageConstants::FETCH_FILE_BASE_DIRECTORY.$directory."/".$fileName;
 
-            $this->removeStoredFile($request, $filePath);
+//            $this->removeStoredFile($request, $filePath);
 
             $this->saveFile($filePath, $request);
 
         }catch (\Exception $exception){
-            throw new BusinessValidationException("Could not upload file");
+            throw new BusinessValidationException("Could not upload file", 400);
         }
 
         return $filePath;
@@ -68,13 +68,13 @@ class FileService implements FileServiceInterface {
 
     private function removeStoredFile($request, $filePath){
         if ($request->requester == "ORGANISATION"){
-            if($request->user()->organisation->logo != $filePath){
+            if(isset($request->user()->organisation->logo) && $request->user()->organisation->logo != $filePath){
                 $path = explode("/storage/", $request->user()->organisation->logo)[1];
                 Storage::delete($path);
             }
         }
         if($request->requester == "MEMBER") {
-            if($request->user()->picture != $filePath){
+            if(isset($request->user()->picture) && $request->user()->picture != $filePath){
                 $path = explode("/storage/", $request->user()->picture)[1];
                 Storage::delete($path);
             }
