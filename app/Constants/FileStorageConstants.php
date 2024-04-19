@@ -3,7 +3,9 @@ namespace App\Constants;
 
 class FileStorageConstants {
     public const BASE_URL = "http://localhost:9000/api/v1/protected/";
-    public const FILE_STORAGE_BASE_DIRECTORY = "IMAGES";
+    public const FILE_STORAGE_BASE_DIRECTORY = "/uploads/";
+
+    public const FETCH_FILE_BASE_DIRECTORY = "/storage/uploads/";
     public const APP_NAME = "FINANCIAL_ASSISTANT_SERVICE";
 
     public const EXPENDITURE_DETAILS = "EXPENDITURE_DETAILS";

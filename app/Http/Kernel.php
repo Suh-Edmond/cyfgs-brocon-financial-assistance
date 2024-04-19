@@ -11,7 +11,6 @@ use App\Http\Middleware\IsPresidentIsFinancialSecretaryIsTreasurerIsAdmin;
 use App\Http\Middleware\isPresidentMiddleware;
 use App\Http\Middleware\IsPresidentOrIsAdmin;
 use App\Http\Middleware\isPresidentOrisFinancialSecretary;
-use App\Http\Middleware\IsPresidentOrIsFinancialSecretaryOrIsTreasurerOrIsAdmin;
 use App\Http\Middleware\IsTreasurerMiddleware;
 use App\Http\Middleware\IsTreasurerOrIsFinancialSecretary;
 use App\Http\Middleware\IsTreasurerOrIsFinancialSecretaryOrIsPresident;

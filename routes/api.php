@@ -4,6 +4,7 @@ use App\Http\Controllers\ActivitySupportController;
 use App\Http\Controllers\ExpenditureCategoryController;
 use App\Http\Controllers\ExpenditureDetailController;
 use App\Http\Controllers\ExpenditureItemController;
+use App\Http\Controllers\FileUploadController;
 use App\Http\Controllers\GenerateReportController;
 use App\Http\Controllers\IncomeActivityController;
 use App\Http\Controllers\MemberRegistrationController;
@@ -42,6 +43,11 @@ Route::prefix('public/auth')->group(function () {
 });
 
 Route::middleware('auth:sanctum')->group(function () {
+
+    Route::prefix('protected')->middleware('IsPresidentIsFinancialSecretaryIsTreasurerIsAdmin')->group(function (){
+        Route::post("/upload_file", [FileUploadController::class, 'uploadFile']);
+        Route::get("/get_file", [FileUploadController::class, 'getUploadFile']);
+     });
 
     Route::prefix('protected/roles')->group(function () {
         Route::post('', [RoleController::class, 'addUserRole'])->middleware('isAdmin');
@@ -341,6 +347,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/registration_fees', [RegistrationController::class, 'getAllRegistrationFee']);
         Route::get('/registration_fees/current', [RegistrationController::class, 'getCurrentRegistrationFee']);
     });
+
+
 
  });
 
