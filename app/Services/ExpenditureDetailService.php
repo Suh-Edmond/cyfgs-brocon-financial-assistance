@@ -60,6 +60,9 @@ class ExpenditureDetailService implements ExpenditureDetailInterface {
     {
         $expenditure_item   = ExpenditureItem::findOrFail($expenditure_item_id);
         $details            = $this->findExpenditureDetails($expenditure_item->id, $request->status);
+        if(isset($request->filter)){
+            $details = $details->where('expenditure_details.name', 'LIKE', '%'.$request->filter.'%');
+        }
         $expenditure_items  = !is_null($request->per_page) ? $details->paginate($request->per_page) : $details->get();
         $response           = $this->generateResponseForExpenditureDetails($expenditure_items);
 
@@ -99,15 +102,19 @@ class ExpenditureDetailService implements ExpenditureDetailInterface {
         $detail->save();
     }
 
-    public function filterExpenditureDetail($id, $status)
+    public function filterExpenditureDetail($id, $status, $request)
     {
+
         $expenditure_item_name = null;
         $expenditure_item_amount = 0;
         $details = ExpenditureDetail::select('expenditure_details.*', 'expenditure_items.amount as expenditure_item_amount')
                                     ->join('expenditure_items', ['expenditure_items.id' => 'expenditure_details.expenditure_item_id'])
                                     ->where('expenditure_items.id', $id);
         if(!is_null($status) && $status != "ALL"){
-            $details = $details->Where('expenditure_details.approve', $status);
+            $details = $details->where('expenditure_details.approve', $status);
+        }
+        if(isset($request->filter)){
+            $details = $details->where('expenditure_details.name', 'LIKE', '%'.$request->filter.'%');
         }
         $details = $details ->orderBy('expenditure_details.name', 'ASC')->get();
         $detail_response           = $this->generateResponseForExpenditureDetails($details);
@@ -124,7 +131,7 @@ class ExpenditureDetailService implements ExpenditureDetailInterface {
     }
 
     public function setDataForDownload($request) {
-        return $this->filterExpenditureDetail($request->expenditure_item_id, $request->status);
+        return $this->filterExpenditureDetail($request->expenditure_item_id, $request->status, $request);
     }
 
     public function findExpenditureDetailsByItemAndQuarter($item, $start_quarter, $end_quarter){

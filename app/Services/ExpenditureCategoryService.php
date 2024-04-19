@@ -46,6 +46,9 @@ class ExpenditureCategoryService implements ExpenditureCategoryInterface {
         if(isset($request->year)){
             $categories = $categories->whereYear('created_at', $request->year);
         }
+        if(isset($request->filter)){
+            $categories = $categories->where('name', 'LIKE', '%'.$request->filter.'%');
+        }
         $expenditure_categories = isset($request->per_page) ? $categories->orderBy($request->sort_by)->paginate($request->per_page): $categories->orderBy($request->sort_by)->get();
 
         $total = isset($request->per_page) ? $expenditure_categories->total() : count($expenditure_categories);

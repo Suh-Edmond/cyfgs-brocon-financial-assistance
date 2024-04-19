@@ -15,7 +15,7 @@ interface ExpenditureDetailInterface {
 
     public function approveExpenditureDetail($id, $type);
 
-    public function filterExpenditureDetail($item, $status);
+    public function filterExpenditureDetail($item, $status, $request);
 
     public function computeTotalExpendituresByYearly($request);
 

@@ -99,7 +99,9 @@ class PaymentItemService implements PaymentItemInterface {
         if (isset($request->state) && $request->state == "expired"){
             $payment_items = $payment_items->whereDate('deadline', '<=', Carbon::now()->toDateString());
         }
-
+        if(isset($request->filter)){
+            $payment_items = $payment_items->where('payment_items.name', 'LIKE', '%'.$request->filter.'%');
+        }
         $payment_items_response =   isset($request->per_page) ? $payment_items->orderBy('payment_items.name')->paginate($request->per_page): $payment_items->orderBy('payment_items.name')->get();
 
         $total         =   isset($request->per_page) ? $payment_items_response->total()         : count($payment_items_response);
