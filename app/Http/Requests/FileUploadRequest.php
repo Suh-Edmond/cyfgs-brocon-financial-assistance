@@ -25,7 +25,7 @@ class FileUploadRequest extends FormRequest
     {
         return [
             'file'              => 'mimes:png,jpg,jpeg|max:2048',
-            'directory'         => 'required'
+            'file_category'         => 'required'
         ];
     }
 }

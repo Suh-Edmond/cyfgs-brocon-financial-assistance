@@ -2,36 +2,82 @@
 
 namespace App\Services;
 
+
+use App\Exceptions\BusinessValidationException;
 use App\Interfaces\FileServiceInterface;
 use App\Constants\FileStorageConstants;
 use App\Traits\HelpTrait;
 use App\Traits\ResponseTrait;
-use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 
 class FileService implements FileServiceInterface {
 
     use ResponseTrait, HelpTrait;
-
-
-    public static function uploadFile($request)
+    public function uploadFile($request)
     {
         $organisation   = $request->user()->organisation;
-        $directory      = FileStorageConstants::APP_NAME."/".$organisation->name."/".$request->directory;
-        $url            = FileStorageConstants::BASE_URL."upload-file?directory=".$directory."&fileCategory=".FileStorageConstants::FILE_STORAGE_BASE_DIRECTORY;
+        $organisationName = str_replace(" ", "", $organisation->name);
+        $directory      = $organisationName."/".$request->file_category;
+        $fileName = $request->file('image')->getClientOriginalName();
+        $fileName = str_replace(' ', '', $fileName);
+         try {
+            $request->validate([
+                'image' => 'required|image|mimes:jpg,jpeg,png'
+            ]);
 
-        Http::attach('file', file_get_contents($request->file('file')), $request->file('file')->getClientOriginalName())->post($url);
+            $request->file('image')->storeAs(FileStorageConstants::FILE_STORAGE_BASE_DIRECTORY.$directory, $fileName, 'public');
+            $filePath = FileStorageConstants::FETCH_FILE_BASE_DIRECTORY.$directory."/".$fileName;
+
+            $this->removeStoredFile($request, $filePath);
+
+            $this->saveFile($filePath, $request);
+
+        }catch (\Exception $exception){
+            throw new BusinessValidationException("Could not upload file");
+        }
+
+        return $filePath;
     }
 
-    public static function getUploadedFile($request)
+    public function getUploadedFile($request)
+    {
+        return $this->getFilePath($request);
+    }
+
+    private function getFilePath($request)
     {
         $organisation   = $request->user()->organisation;
-        $directory      = FileStorageConstants::APP_NAME."/".$organisation->name."/".$request->directory;
-        $file_name      = $request->file_name;
+        $organisationName = str_replace(" ", "", $organisation->name);
+        $directory      = $organisationName."/".$request->file_category;
+        return FileStorageConstants::FETCH_FILE_BASE_DIRECTORY.$directory."/".$request->file;
+    }
 
-        $url            = FileStorageConstants::BASE_URL."downloadFile?directory=".$directory."&fileCategory=".FileStorageConstants::FILE_STORAGE_BASE_DIRECTORY."&fileName=".$file_name;
+    private function saveFile($filePath, $request)
+    {
+        if($request->requester == "ORGANISATION"){
+            $request->user()->organisation()->update([
+                'logo' => $filePath
+            ]);
+        }
+        if($request->requester == "MEMBER"){
+            $request->user()->update([
+                'picture' => $filePath
+            ]);
+        }
+    }
 
-        $file_response  = Http::get($url);
-
-        return ($file_response);
+    private function removeStoredFile($request, $filePath){
+        if ($request->requester == "ORGANISATION"){
+            if($request->user()->organisation->logo != $filePath){
+                $path = explode("/storage/", $request->user()->organisation->logo)[1];
+                Storage::delete($path);
+            }
+        }
+        if($request->requester == "MEMBER") {
+            if($request->user()->picture != $filePath){
+                $path = explode("/storage/", $request->user()->picture)[1];
+                Storage::delete($path);
+            }
+        }
     }
 }
