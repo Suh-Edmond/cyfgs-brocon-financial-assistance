@@ -4,8 +4,8 @@
 @section('section')
     <div style="margin-bottom: 220px;">
         <div style="float: left;">
-            <img src="{{url($organisation_logo)}}" alt="organisation_logo" width="100px;" height="100px;"
-                style="border-radius: 2px">
+            <img src="logo.png" alt="organisation_logo" width="100px;" height="100px;"
+                 style="border-radius: 2px">
         </div>
         <div style="float: right">
             <label for="organisation"style="font-weight: bold; text-transform: uppercase; font-size: small;">
