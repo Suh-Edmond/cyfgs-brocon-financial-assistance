@@ -4,7 +4,7 @@
 @section('section')
     <div style="margin-bottom: 220px;">
         <div style="float: left;">
-            <img src="logo.png" alt="organisation_logo" width="100px;" height="100px;"
+            <img src="{{public_path($organisation_logo)}}" alt="organisation_logo" width="100px;" height="100px;"
                  style="border-radius: 2px">
         </div>
         <div style="float: right">

@@ -150,7 +150,7 @@ class UserController extends Controller
             'president'              => $president,
             'treasurer'              => $treasurer,
             'fin_secretary'          => $fin_sec,
-//            'organisation_logo'      => env('APP_URL').$organisation->logo
+            'organisation_logo'      => $organisation->logo
         ];
 
         $pdf = PDF::loadView('User.Users', $data);

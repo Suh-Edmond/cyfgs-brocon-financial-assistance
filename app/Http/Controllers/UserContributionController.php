@@ -127,7 +127,7 @@ class UserContributionController extends Controller
             'fin_secretary'     => $fin_sec,
             'total'             => $contributions->total_amount,
 //            'balance'           => $contributions->data[0]->payment_item_amount - $total,
-            'organisation_logo' => env('FILE_DOWNLOAD_URL_PATH').$organisation->logo
+            'organisation_logo' => $organisation->logo
         ];
 
         $pdf = PDF::loadView('Contribution.UsersContribution', $data);
@@ -174,7 +174,7 @@ class UserContributionController extends Controller
             'fin_secretary'     => $fin_sec,
             'total'             => $this->computeTotal($debts, "DEBTS"),
             'balance'           => 0,
-            'organisation_logo' => env('FILE_DOWNLOAD_URL_PATH').$organisation->logo,
+            'organisation_logo' => $organisation->logo,
         ];
 
         $pdf = PDF::loadView('Contribution.MemberDebts', $data);
@@ -207,7 +207,7 @@ class UserContributionController extends Controller
             'fin_secretary'     => $fin_sec,
             'total'             => $this->computeTotal($debts, "PAID"),
             'balance'           => 0,
-            'organisation_logo' => env('FILE_DOWNLOAD_URL_PATH').$organisation->logo,
+            'organisation_logo' => $organisation->logo,
         ];
 
         $pdf = PDF::loadView('Contribution.MemberPaidItems', $data);
@@ -249,7 +249,7 @@ class UserContributionController extends Controller
             'payment_item_name' => $request->payment_item_name,
             'payment_item_amount' => $request->payment_item_amount,
             'payment_item_frequency'   => $request->payment_item_frequency,
-            'organisation_logo' => env('FILE_DOWNLOAD_URL_PATH').$organisation->logo,
+            'organisation_logo' => $organisation->logo,
             'unpaid_durations'    => $contributions->unpaid_durations
         ];
 
