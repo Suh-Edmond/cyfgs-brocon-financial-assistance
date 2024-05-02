@@ -1,5 +1,14 @@
 <?php
 
+use App\Constants\FileStorageConstants;
+use App\Constants\PaymentItemFrequency;
+use App\Constants\PaymentItemType;
+use App\Constants\PaymentStatus;
+use App\Constants\RegistrationFrequency;
+use App\Constants\RegistrationStatus;
+use App\Constants\Roles;
+use App\Constants\SessionStatus;
+
 return [
 
     /*
@@ -161,11 +170,12 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
+        Barryvdh\DomPDF\ServiceProvider::class,
 
         /*
          * Package Service Providers...
          */
-
+        Spatie\Permission\PermissionServiceProvider::class,
         /*
          * Application Service Providers...
          */
@@ -226,7 +236,15 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-
+        'PDF' => Barryvdh\DomPDF\Facade::class,
+        'RegistrationFrequency' => RegistrationFrequency::class,
+        'RegistrationStatus' => RegistrationStatus::class,
+        'PaymentItemFrequency' => PaymentItemFrequency::class,
+        'FileStorageConstants' => FileStorageConstants::class,
+        'PaymentItemType'  => PaymentItemType::class,
+        'PaymentStatus' => PaymentStatus::class,
+        'Roles' => Roles::class,
+        'SessionStatus' => SessionStatus::class
     ],
 
 ];

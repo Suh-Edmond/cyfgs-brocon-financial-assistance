@@ -1,12 +1,25 @@
 <?php
 
+use App\Constants\Roles;
+use App\Constants\SessionStatus;
+use App\Models\CustomRole;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 use Faker\Generator as Faker;
 use App\Models\Organisation;
+use App\Models\User;
+use Illuminate\Support\Facades\DB;
 
 class UserSeeder extends Seeder
 {
+
+    private $organisation;
+    private $role_user;
+
+    public function __construct()
+    {
+        $this->organisation  = Organisation::all()->pluck('id');
+        $this->role_user     = CustomRole::findByName(Roles::MEMBER, 'api');
+    }
 
     /**
      * Run the database seeds.
@@ -15,18 +28,31 @@ class UserSeeder extends Seeder
      */
     public function run(Faker $faker)
     {
-        DB::table('users')->insert([
-            'id' => "4929bb93-e16e-41c8-a4bb-0724fccd352d",
-            'name' => $faker->name,
-            'email' => $faker->email(),
-            'telephone' => $faker->phoneNumber(9),
-            'password' => $faker->password(6),
-            'address' => $faker->address(),
-            'occupation' => $faker->sentence(5),
-            'gender' => $faker->randomElement(['MALE', 'FEMALE']),
-            'created_by' => $faker->name,
-            'updated_by' => $faker->name,
-            'organisation_id' =>  "1ed5ddb4-b0f9-4cea-a3bf-7849b27f4302"
+        for($i = 0; $i < 100; $i++){
+            $created =  User::create([
+                'name'            => $faker->name,
+                'email'           => $faker->email,
+                'telephone'       => $faker->phoneNumber,
+                'gender'          => $faker->randomElement(['MALE', 'FEMALE']),
+                'address'         => $faker->address,
+                'occupation'      => $faker->randomElement(['Teacher', 'Accountant', 'Software Engineer', 'Banker', 'Devops Engineer', 'Nurse', 'Electrician', 'Plumber']),
+                'organisation_id' => $this->organisation[0],
+                'updated_by'      => "James Mark",
+                'status'          => SessionStatus::ACTIVE
+            ]);
+
+            $role = CustomRole::findByName(Roles::MEMBER, 'api');
+            $this->saveUserRole($created, $role,  "James Mark");
+        }
+    }
+
+    public function  saveUserRole($user, $role, $updated_by)
+    {
+        DB::table('model_has_roles')->insert([
+            'role_id'       => $role->id,
+            'model_id'      => $user->id,
+            'model_type'    => 'App\Models\User',
+            'updated_by'    => $updated_by
         ]);
     }
 }

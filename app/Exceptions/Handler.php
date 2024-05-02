@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 
@@ -50,6 +51,22 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $exception)
     {
+        if($exception instanceof ModelNotFoundException && $request->wantsJson()){
+            return response()->json(['message' => "Resource not found", "status"=> "404"], 404);
+        }
+        if ($exception instanceof  BusinessValidationException) {
+            return response()->json(['message' => $exception->getMessage(), "status"=> $exception->getCode()], $exception->getCode());
+        }
+        if ($exception instanceof ResourceNotFoundException){
+            return response()->json(['message' => $exception->getMessage(), 'status' => $exception->getCode()], $exception->getCode());
+        }
+        if ($exception instanceof  EmailException){
+            return  response()->json(['message' => $exception->getMessage(), 'status'=>$exception->getCode()], $exception->getCode());
+        }
+        if ($exception instanceof  UnAuthorizedException){
+            return  response()->json(['message' => $exception->getMessage(), 'status'=>$exception->getCode()], $exception->getCode());
+        }
+
         return parent::render($request, $exception);
     }
 }

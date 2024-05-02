@@ -16,19 +16,20 @@ class CreateUserContributionsTable extends Migration
         Schema::create('user_contributions', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('code')->unique();
-            $table->string('scan_picture');
-            $table->longText('comment');
+            $table->string('scan_picture')->nullable(true);
+            $table->longText('comment')->nullable(true);
             $table->double('amount_deposited');
-            $table->enum('status', ['COMPLETE', 'INCOMPLETE']);
-            $table->boolean('approve')->default(false);
+            $table->string('status');
+            $table->enum('approve', ['PENDING', 'APPROVED', 'DECLINED'])->default('PENDING');
             $table->timestamps();
-            $table->mediumText('created_by')->nullable(true);
-            $table->mediumText('updated_by')->nullable(true);
-            $table->string('user_id');
-            $table->string('payment_item_id');
+            $table->uuid('user_id');
+            $table->double('balance');
+            $table->uuid('payment_item_id');
+            $table->string('updated_by');
 
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('payment_item_id')->references('id')->on('payment_items')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->cascadeOnDelete();
+            $table->foreign('payment_item_id')->references('id')->on('payment_items')->cascadeOnDelete();
+
         });
     }
 

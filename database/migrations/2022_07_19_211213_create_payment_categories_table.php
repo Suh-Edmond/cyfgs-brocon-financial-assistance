@@ -18,11 +18,10 @@ class CreatePaymentCategoriesTable extends Migration
             $table->string('name');
             $table->text('description');
             $table->timestamps();
-            $table->mediumText('created_by')->nullable(true);
-            $table->mediumText('updated_by')->nullable(true);
-            $table->string('organisation_id');
+            $table->uuid('organisation_id');
+            $table->string('updated_by');
 
-            $table->foreign('organisation_id')->references('id')->on('organisations');
+            $table->foreign('organisation_id')->references('id')->on('organisations')->cascadeOnDelete();
         });
     }
 

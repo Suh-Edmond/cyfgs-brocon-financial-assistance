@@ -16,20 +16,20 @@ class Users extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('name');
-            $table->string('email')->unique()->nullable(true);
-            $table->string('telephone')->nullable(true);
-            $table->timestamp('email_verified_at')->nullable(true);
-            $table->string('password');
-            $table->string('gender');
-            $table->string('address');
-            $table->string('occupation');
+            $table->string('email')->unique()->nullable();
+            $table->string('telephone')->unique(true);
+            $table->timestamp('email_verified_at')->nullable();
+            $table->string('password')->nullable();
+            $table->string('gender')->nullable();
+            $table->string('address')->nullable();
+            $table->string('occupation')->nullable();
+            $table->string('picture')->nullable();
             $table->rememberToken();
             $table->timestamps();
-            $table->mediumText('created_by')->nullable(true);
-            $table->mediumText('updated_by')->nullable(true);
-            $table->string('organisation_id');
+            $table->uuid('organisation_id')->nullable();
+            $table->string('updated_by');
 
-            $table->foreign('organisation_id')->references('id')->on('organisations');
+            $table->foreign('organisation_id')->references('id')->on('organisations')->cascadeOnDelete();
         });
     }
 
