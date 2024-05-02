@@ -219,6 +219,21 @@
         page-break-after: always;
 
     }
+
+    .column_25 {
+        float: left;
+        width: 25%;
+    }
+    .column_50 {
+        float: left;
+        width: 50%;
+    }
+    .column_100:after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+
 </style>
 <body>
     @yield('section')

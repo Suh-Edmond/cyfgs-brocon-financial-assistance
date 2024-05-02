@@ -1,20 +1,25 @@
 @extends('layout.base')
 
 @section('section')
-    <div style="margin-bottom: 220px;">
-        <div style="float: left;">
-            <img src="{{public_path($organisation_logo)}}" alt="organisation logo" width="100px;" height="100px;"
-                style="border-radius: 2px">
-        </div>
-        <div style="float: right">
-            <label for="organisation"style="font-weight: bold; text-transform: uppercase; font-size: small;">
-                {{ $organisation->name }}</label><br />
-            <label style="font-size: small;">{{ $organisation->salutation }}</label><br />
-            <label style="font-size: small;">{{ $organisation->region }}, {{ $organisation->address }}, {{ $organisation->box_number }}</label><br />
-            <label style="font-size: small;">Phone_No:</label><br />
-            <label style="font-size: small;">{{ $organisation_telephone }}</label><br />
-            <label style="font-size: small;">Email: {{ $organisation->email }}</label><br /><br />
-            <label style="font-size: small;">Printed date: {{ $date }}</label>
+    <div style="margin-bottom:30px;">
+        <div class="column_100" style="margin-left: 30px">
+            <div class="column_25">
+                <img src="{{public_path("/images/pcc_logo.png")}}" alt="organisation logo" width="100px;" height="100px;"
+                     style="border-radius: 2px">
+            </div>
+            <div class="column_50" style="text-align: center;">
+                <label for="organisation"style="font-weight: bold; text-transform: uppercase; font-size: small;">
+                    {{ $organisation->name }}</label><br />
+                <label style="font-size: small;">{{ $organisation->salutation }}</label><br />
+                <label style="font-size: small;">{{ $organisation->region }}, {{ $organisation->address }}, {{ $organisation->box_number }}</label><br />
+                <label style="font-size: small;">Phone_No:<span style="font-size: small;">{{ $organisation_telephone }}</span></label><br />
+                <label style="font-size: small;">Email: {{ $organisation->email }}</label><br />
+                <label style="font-size: small;">Printed date: {{ $date }}</label>
+            </div>
+            <div class="column_25" style="margin-left: 40px">
+                <img src="{{public_path($organisation_logo)}}" alt="organisation logo" width="100px;" height="100px;"
+                     style="border-radius: 2px">
+            </div>
         </div>
     </div>
     <div style="margin-bottom: 2rem;">

@@ -16,6 +16,7 @@ use App\Http\Requests\UpdatePasswordRequest;
 use App\Http\Requests\UpdateProfileRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\UserResource;
+use App\Models\User;
 use App\Services\RoleService;
 use App\Services\UserManagementService;
 use App\Traits\HelpTrait;
@@ -254,4 +255,5 @@ class UserController extends Controller
 
         return $title;
     }
+
 }

@@ -4,7 +4,29 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d71c4c3c-9d87-4403-a1f0-a9f945658af0" name="Default Changelist" comment="" />
+    <list default="true" id="d71c4c3c-9d87-4403-a1f0-a9f945658af0" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/UserController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/UserController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/ActivitySupport/Support.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/ActivitySupport/Support.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/Contribution/MemberContribution.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/Contribution/MemberContribution.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/Contribution/MemberDebts.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/Contribution/MemberDebts.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/Contribution/MemberPaidItems.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/Contribution/MemberPaidItems.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/Contribution/UsersContribution.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/Contribution/UsersContribution.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/ExpenditureCategory/ExpenditureCategories.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/ExpenditureCategory/ExpenditureCategories.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/ExpenditureDetail/ExpenditureDetail.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/ExpenditureDetail/ExpenditureDetail.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/ExpenditureItem/ExpenditureItems.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/ExpenditureItem/ExpenditureItems.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/IncomeActivities/IncomeActivities.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/IncomeActivities/IncomeActivities.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/PaymentCategory/PaymentCategories.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/PaymentCategory/PaymentCategories.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/PaymentItem/PaymentItems.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/PaymentItem/PaymentItems.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/Registration/RegisteredMembers.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/Registration/RegisteredMembers.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/Reports/ActivityReport.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/Reports/ActivityReport.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/Reports/QuarterReport.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/Reports/QuarterReport.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/Reports/YearlyReport.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/Reports/YearlyReport.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/User/Users.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/User/Users.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/UserSaving/OrganisationSavings.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/UserSaving/OrganisationSavings.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/UserSaving/Usersaving.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/UserSaving/Usersaving.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/layout/base.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/layout/base.blade.php" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -456,6 +478,7 @@
       <workItem from="1714129152541" duration="7326000" />
       <workItem from="1714148689516" duration="12045000" />
       <workItem from="1714637125872" duration="449000" />
+      <workItem from="1714637885544" duration="4283000" />
     </task>
     <servers />
   </component>
@@ -493,27 +516,27 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/resources/views/PaymentCategory/PaymentCategories.blade.php</url>
-          <line>44</line>
+          <line>49</line>
           <option name="timeStamp" value="5" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/resources/views/UserSaving/OrganisationSavings.blade.php</url>
-          <line>26</line>
+          <line>30</line>
           <option name="timeStamp" value="8" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/resources/views/UserSaving/OrganisationSavings.blade.php</url>
-          <line>54</line>
+          <line>58</line>
           <option name="timeStamp" value="9" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/resources/views/UserSaving/Usersaving.blade.php</url>
-          <line>57</line>
+          <line>61</line>
           <option name="timeStamp" value="10" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/resources/views/layout/base.blade.php</url>
-          <line>225</line>
+          <line>240</line>
           <option name="timeStamp" value="14" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php-line-method">
