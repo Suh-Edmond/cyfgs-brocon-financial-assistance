@@ -124,7 +124,7 @@ class UserSavingController extends Controller
             'organisation_telephone'   => $this->setOrganisationTelephone($organisation->telephone),
             'treasurer'           => $treasurer,
             'fin_secretary'       => $fin_sec,
-            'organisation_logo'   => env('FILE_DOWNLOAD_URL_PATH').$organisation->logo
+            'organisation_logo'   => $organisation->logo
         ];
         $pdf = PDF::loadView('UserSaving.Usersaving', $data);
         $pdf->output();
@@ -158,7 +158,7 @@ class UserSavingController extends Controller
             'organisation_telephone'   => $this->setOrganisationTelephone($organisation->telephone),
             'treasurer'           => $treasurer,
             'fin_secretary'       => $fin_sec,
-            'organisation_logo'   => env('FILE_DOWNLOAD_URL_PATH').$organisation->logo
+            'organisation_logo'   => $organisation->logo
         ];
         $pdf = PDF::loadView('UserSaving.OrganisationSavings', $data);
         $pdf->output();

@@ -167,6 +167,18 @@ class UserManagementService implements UserManagementInterface
     }
 
 
+    public function updateMemberProfile($request) {
+        $user = User::findOrFail($request->user_id);
+        $user->update([
+            'name'          => $request->name,
+            'email'         => $request->email,
+            'address'       => $request->address,
+            'occupation'    => $request->occupation,
+            'gender'        => $request->gender,
+            'status'        => $request->status,
+        ]);
+        return $user;
+    }
 
     public function updateProfile($request) {
         $user = User::findOrFail($request->user_id);

@@ -90,7 +90,7 @@ class PaymentCategoryController extends Controller
             'president'         => $president,
             'treasurer'         => $treasurer,
             'fin_secretary'     => $fin_sec,
-            'organisation_logo' => env('FILE_DOWNLOAD_URL_PATH').$organisation->logo
+            'organisation_logo' => $organisation->logo
         ];
 
         $pdf = PDF::loadView('PaymentCategory.PaymentCategories', $data);
