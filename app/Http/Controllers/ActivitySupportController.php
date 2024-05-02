@@ -109,7 +109,7 @@ class ActivitySupportController extends Controller
             'treasurer'           => $treasurer,
             'fin_secretary'       => $fin_sec,
             'total'                => $supports->total_amount,
-            'organisation_logo'    => env('FILE_DOWNLOAD_URL_PATH').$organisation->logo
+            'organisation_logo'    => $organisation->logo
         ];
         $pdf = PDF::loadView('ActivitySupport.Support', $data);
         $pdf->output();
