@@ -6,26 +6,11 @@
   <component name="ChangeListManager">
     <list default="true" id="d71c4c3c-9d87-4403-a1f0-a9f945658af0" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/UserController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/UserController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/ActivitySupport/Support.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/ActivitySupport/Support.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/Contribution/MemberContribution.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/Contribution/MemberContribution.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/Contribution/MemberDebts.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/Contribution/MemberDebts.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/Contribution/MemberPaidItems.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/Contribution/MemberPaidItems.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/Contribution/UsersContribution.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/Contribution/UsersContribution.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/ExpenditureCategory/ExpenditureCategories.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/ExpenditureCategory/ExpenditureCategories.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/ExpenditureDetail/ExpenditureDetail.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/ExpenditureDetail/ExpenditureDetail.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/ExpenditureItem/ExpenditureItems.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/ExpenditureItem/ExpenditureItems.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/IncomeActivities/IncomeActivities.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/IncomeActivities/IncomeActivities.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/PaymentCategory/PaymentCategories.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/PaymentCategory/PaymentCategories.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/PaymentItem/PaymentItems.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/PaymentItem/PaymentItems.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/Registration/RegisteredMembers.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/Registration/RegisteredMembers.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/Reports/ActivityReport.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/Reports/ActivityReport.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/Reports/QuarterReport.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/Reports/QuarterReport.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/Reports/YearlyReport.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/Reports/YearlyReport.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/User/Users.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/User/Users.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/UserSaving/OrganisationSavings.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/UserSaving/OrganisationSavings.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/UserSaving/Usersaving.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/UserSaving/Usersaving.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/layout/base.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/layout/base.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/migrations/2024_04_05_115011_add_role_member_invitation.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2024_04_05_115011_add_role_member_invitation.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/seeds/DatabaseSeeder.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/seeds/DatabaseSeeder.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/seeds/RoleAndPermissionSeeder.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/seeds/RoleAndPermissionSeeder.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/seeds/SessionSeeder.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/seeds/SessionSeeder.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/seeds/UserSeeder.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/seeds/UserSeeder.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

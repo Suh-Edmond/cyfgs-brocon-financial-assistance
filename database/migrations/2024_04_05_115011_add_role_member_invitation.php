@@ -13,7 +13,7 @@ class AddRoleMemberInvitation extends Migration
      */
     public function up()
     {
-        Schema::create('member_invitations', function (Blueprint $table) {
+        Schema::table('member_invitations', function (Blueprint $table) {
             $table->uuid('role_id');
         });
     }
