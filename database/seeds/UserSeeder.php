@@ -3,11 +3,13 @@
 use App\Constants\Roles;
 use App\Constants\SessionStatus;
 use App\Models\CustomRole;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Faker\Generator as Faker;
 use App\Models\Organisation;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class UserSeeder extends Seeder
 {
@@ -28,22 +30,41 @@ class UserSeeder extends Seeder
      */
     public function run(Faker $faker)
     {
-        for($i = 0; $i < 100; $i++){
-            $created =  User::create([
-                'name'            => $faker->name,
-                'email'           => $faker->email,
-                'telephone'       => $faker->phoneNumber,
-                'gender'          => $faker->randomElement(['MALE', 'FEMALE']),
-                'address'         => $faker->address,
-                'occupation'      => $faker->randomElement(['Teacher', 'Accountant', 'Software Engineer', 'Banker', 'Devops Engineer', 'Nurse', 'Electrician', 'Plumber']),
-                'organisation_id' => $this->organisation[0],
-                'updated_by'      => "James Mark",
-                'status'          => SessionStatus::ACTIVE
-            ]);
+//        for($i = 0; $i < 100; $i++){
+//            $created =  User::create([
+//                'name'            => $faker->name,
+//                'email'           => $faker->email,
+//                'telephone'       => $faker->phoneNumber,
+//                'gender'          => $faker->randomElement(['MALE', 'FEMALE']),
+//                'address'         => $faker->address,
+//                'occupation'      => $faker->randomElement(['Teacher', 'Accountant', 'Software Engineer', 'Banker', 'Devops Engineer', 'Nurse', 'Electrician', 'Plumber']),
+//                'organisation_id' => $this->organisation[0],
+//                'updated_by'      => "James Mark",
+//                'status'          => SessionStatus::ACTIVE
+//            ]);
+//
+//            $role = CustomRole::findByName(Roles::MEMBER, 'api');
+//            $this->saveUserRole($created, $role,  "James Mark");
+//        }
+        $created =  User::create([
+            'name'            => $faker->name,
+            'email'           => $faker->email,
+            'telephone'       => $faker->phoneNumber,
+            'gender'          => $faker->randomElement(['MALE', 'FEMALE']),
+            'address'         => $faker->address,
+            'occupation'      => 'Software Engineer',
+            'organisation_id' => $this->organisation[0],
+            'updated_by'      => "Edmond",
+            'status'          => SessionStatus::ACTIVE,
+            'password'        => Hash::make("Summer123!"),
+            "email_verified_at" => Carbon::now()
+        ]);
 
-            $role = CustomRole::findByName(Roles::MEMBER, 'api');
-            $this->saveUserRole($created, $role,  "James Mark");
-        }
+        $role = CustomRole::findByName(Roles::MEMBER, 'api');
+        $role2 = CustomRole::findByName(Roles::ADMIN, 'api');
+        $this->saveUserRole($created, $role,  "Edmond");
+        $this->saveUserRole($created, $role2,  "Edmond");
+
     }
 
     public function  saveUserRole($user, $role, $updated_by)
