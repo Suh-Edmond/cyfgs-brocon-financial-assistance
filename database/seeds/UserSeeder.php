@@ -3,11 +3,13 @@
 use App\Constants\Roles;
 use App\Constants\SessionStatus;
 use App\Models\CustomRole;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Faker\Generator as Faker;
 use App\Models\Organisation;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class UserSeeder extends Seeder
 {
@@ -53,7 +55,9 @@ class UserSeeder extends Seeder
             'occupation'      => 'Software Engineer',
             'organisation_id' => $this->organisation[0],
             'updated_by'      => "Edmond",
-            'status'          => SessionStatus::ACTIVE
+            'status'          => SessionStatus::ACTIVE,
+            'password'        => Hash::make("Summer123!"),
+            "email_verified_at" => Carbon::now()
         ]);
 
         $role = CustomRole::findByName(Roles::MEMBER, 'api');

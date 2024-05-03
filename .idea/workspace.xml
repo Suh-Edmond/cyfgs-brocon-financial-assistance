@@ -6,10 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="d71c4c3c-9d87-4403-a1f0-a9f945658af0" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/migrations/2024_04_05_115011_add_role_member_invitation.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2024_04_05_115011_add_role_member_invitation.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/seeds/DatabaseSeeder.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/seeds/DatabaseSeeder.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/seeds/RoleAndPermissionSeeder.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/seeds/RoleAndPermissionSeeder.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/seeds/SessionSeeder.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/seeds/SessionSeeder.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/database/seeds/UserSeeder.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/seeds/UserSeeder.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
