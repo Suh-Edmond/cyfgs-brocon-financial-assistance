@@ -44,19 +44,22 @@ class UsersImport implements ToModel, WithStartRow, WithCustomCsvSettings
      */
     public function model(array $row)
     {
-        $saved = User::create([
-            'name'            => $row[0],
-            'email'           => $row[1],
-            'telephone'       => str_replace(" ", "", $row[2]),
-            'gender'          => $row[3],
-            'address'         => $row[4],
-            'occupation'      => $row[5],
-            'organisation_id' => $this->organisation_id,
-            'updated_by'      => $this->updated_by,
-            'password'        => "",
-            'status'          => SessionStatus::ACTIVE
-        ]);
-        $this->saveUserRole($saved->id, $this->assignRole, $this->updated_by);
+        $exist = User::where('email', $row[1])->where('telephone', str_replace(" ", "", $row[2]))->first();
+        if(! isset($exist)){
+            $saved = User::create([
+                'name'            => $row[0],
+                'email'           => $row[1],
+                'telephone'       => str_replace(" ", "", $row[2]),
+                'gender'          => $row[3],
+                'address'         => $row[4],
+                'occupation'      => $row[5],
+                'organisation_id' => $this->organisation_id,
+                'updated_by'      => $this->updated_by,
+                'password'        => "",
+                'status'          => SessionStatus::ACTIVE
+            ]);
+            $this->saveUserRole($saved->id, $this->assignRole, $this->updated_by);
+        }
     }
 
     public function saveUserRole($user_id, $role, $updated_by)

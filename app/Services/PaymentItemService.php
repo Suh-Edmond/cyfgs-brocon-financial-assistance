@@ -112,10 +112,11 @@ class PaymentItemService implements PaymentItemInterface {
             $per_page, $current_page);
     }
 
-    public function getPaymentItems() {
+    public function getPaymentItems($request) {
         $payment_items = array();
-        $current_session = $this->session_service->getCurrentSession();
-        $session_payment_items =  PaymentItem::where('session_id', $current_session->id)->get();
+        $session_id = $request->session_id ?? $this->session_service->getCurrentSession()->id;
+
+        $session_payment_items =  PaymentItem::where('session_id', $session_id)->get();
         foreach ($session_payment_items as $payment_item){
             if($payment_item->frequency == PaymentItemFrequency::QUARTERLY){
                 $quarters = $this->getPaymentItemQuartersBySession($payment_item->frequency, $payment_item->created_at);
@@ -237,5 +238,6 @@ class PaymentItemService implements PaymentItemInterface {
         $current_quarter = $this->convertQuarterNameToNumber($this->getDateQuarter($item_frequency, $item_created_at));
         return array_splice($quarters, ($current_quarter - 1), count($quarters));
     }
+
 
 }
