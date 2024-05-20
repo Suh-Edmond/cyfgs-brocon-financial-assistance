@@ -24,8 +24,8 @@ class PaymentItemController extends Controller
         $this->payment_item_service = $payment_item_service;
     }
 
-    public function getAllPaymentItems() {
-        $data = $this->payment_item_service->getPaymentItems();
+    public function getAllPaymentItems(Request $request) {
+        $data = $this->payment_item_service->getPaymentItems($request);
 
         return $this->sendResponse($data, 200);
     }
@@ -125,4 +125,5 @@ class PaymentItemController extends Controller
 
         return $this->sendResponse($data, 'success');
     }
+
 }

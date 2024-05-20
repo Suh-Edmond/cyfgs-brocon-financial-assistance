@@ -14,11 +14,12 @@ interface PaymentItemInterface
 
     public function deletePaymentItem($id, $payment_category_id);
 
-    public function getPaymentItems();
+    public function getPaymentItems($request);
 
     public function getPaymentItemByType($type);
 
     public function updatePaymentItemReference($request);
 
     public function getPaymentItemReferences($id);
+
 }
