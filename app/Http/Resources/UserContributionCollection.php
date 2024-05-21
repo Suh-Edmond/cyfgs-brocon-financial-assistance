@@ -15,7 +15,12 @@ class UserContributionCollection extends ResourceCollection
     private $unpaid_durations;
     private $total_amount_payable;
 
-    public function __construct($collection, $total_contribution, $total_balance, $unpaid_durations,$total_amount_payable, $total, $lastPage, $perPage, $currentPage)
+    private $percentage;
+
+    private $payment_durations;
+
+    public function __construct($collection, $total_contribution, $total_balance, $unpaid_durations,$total_amount_payable, $total, $lastPage, $perPage, $currentPage, $percentage,
+                                $payment_durations)
     {
         parent::__construct($collection);
         $this->total_contribution = $total_contribution;
@@ -26,6 +31,8 @@ class UserContributionCollection extends ResourceCollection
         $this->total_balance = $total_balance;
         $this->unpaid_durations = $unpaid_durations;
         $this->total_amount_payable = $total_amount_payable;
+        $this->percentage = $percentage;
+        $this->payment_durations = $payment_durations;
     }
 
 
@@ -41,6 +48,8 @@ class UserContributionCollection extends ResourceCollection
             'total_balance'  => $this->total_balance,
             'unpaid_durations' => $this->unpaid_durations,
             'total_amount_payable' => $this->total_amount_payable,
+            'percentage'        => $this->percentage,
+            'payment_durations' => $this->payment_durations
         ];
     }
 }
