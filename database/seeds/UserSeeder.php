@@ -47,11 +47,11 @@ class UserSeeder extends Seeder
 //            $this->saveUserRole($created, $role,  "James Mark");
 //        }
         $created =  User::create([
-            'name'            => $faker->name,
-            'email'           => $faker->email,
-            'telephone'       => $faker->phoneNumber,
-            'gender'          => $faker->randomElement(['MALE', 'FEMALE']),
-            'address'         => $faker->address,
+            'name'            => "Suh Edmond Neba",
+            'email'           => "suhedmond25@yahoo.com",
+            'telephone'       => "+237673660071",
+            'gender'          => "MALE",
+            'address'         => "Buea, Cameroon",
             'occupation'      => 'Software Engineer',
             'organisation_id' => $this->organisation[0],
             'updated_by'      => "Edmond",
