@@ -17,12 +17,13 @@ class MemberInvitationMail extends Mailable
     public $sender;
     public $organisation_name;
     public $role;
+    public $year;
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($user_name, $user_email, $redirectLink, $organisation_logo, $sender, $organisation_name, $role)
+    public function __construct($user_name, $user_email, $redirectLink, $organisation_logo, $sender, $organisation_name, $role, $year)
     {
         $this->user_name = $user_name;
         $this->user_email = $user_email;
@@ -31,6 +32,7 @@ class MemberInvitationMail extends Mailable
         $this->sender = $sender;
         $this->organisation_name = $organisation_name;
         $this->role = $role;
+        $this->year = $year;
     }
 
     /**
