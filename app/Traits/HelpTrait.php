@@ -557,4 +557,22 @@ trait HelpTrait {
     public function computePercentageContributed($total_amount_contributed, $expected_amount){
         return ($total_amount_contributed/$expected_amount) * 100;
     }
+
+    public function computeTotalAmountByUser($array) {
+        $total = 0;
+        foreach ($array as $item){
+            $total += $item->total_amount_deposited;
+        }
+        return $total;
+    }
+
+    public function computeBalanceByUser($array) {
+        $total = 0;
+        foreach ($array as $item){
+            $total += $item->balance;
+        }
+        return $total;
+    }
+
+
 }

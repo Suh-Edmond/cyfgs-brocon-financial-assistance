@@ -184,6 +184,7 @@
         text-transform: capitalize;
         border-right: 1px solid black;
         font-size: small;
+        height: 25px;
     }
     .activity_summary_end {
         float: left;

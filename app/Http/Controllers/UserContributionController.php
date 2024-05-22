@@ -9,6 +9,7 @@ use App\Http\Requests\BulkPaymentRequest;
 use App\Http\Requests\CreateUserContributionRequest;
 use App\Http\Requests\UpdateUserContributionRequest;
 use App\Http\Resources\UserContributionResource;
+use App\Models\PaymentItem;
 use App\Models\User;
 use App\Services\UserContributionService;
 use App\Traits\HelpTrait;
@@ -110,14 +111,14 @@ class UserContributionController extends Controller
         $contributions     = $this->filterContributions($request);
         $contributions     = json_decode(json_encode($contributions))->original->data;
         $organisation      = $request->user()->organisation;
-
+        $paymentItem        = PaymentItem::find($request->payment_item_id);
         $admins            = $this->getOrganisationAdministrators();
         $president         = $admins[Roles::PRESIDENT];
         $treasurer         = $admins[Roles::TREASURER];
         $fin_sec           = $admins[Roles::FINANCIAL_SECRETARY];
-
+//        dd($contributions);
         $data = [
-            'title'             => "Member's Contribution for ".$request->payment_item_name,
+            'title'             => "Member's Contribution for ".$paymentItem->name,
             'date'              => date('m/d/Y'),
             'organisation'      => $organisation,
             'contributions'     => $contributions->data,
@@ -126,8 +127,13 @@ class UserContributionController extends Controller
             'treasurer'         => $treasurer,
             'fin_secretary'     => $fin_sec,
             'total'             => $contributions->total_amount,
-//            'balance'           => $contributions->data[0]->payment_item_amount - $total,
-            'organisation_logo' => $organisation->logo
+            'balance'           => $contributions->total_balance,
+            'organisation_logo' => $organisation->logo,
+            'total_deposited_users' => $this->computeTotalAmountByUser($contributions->data),
+            'total_balance_users' => $this->computeBalanceByUser($contributions->data),
+            'total_amount_payable' => $contributions->total_amount_payable,
+            'paymentItem' => $paymentItem,
+            'payment_durations' => $contributions->payment_durations
         ];
 
         $pdf = PDF::loadView('Contribution.UsersContribution', $data);
