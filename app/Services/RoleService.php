@@ -34,17 +34,10 @@ class RoleService implements RoleInterface {
         $user = User::findOrFail($user_id);
         $user_role = CustomRole::findByName($role, 'api');
         $assigned_role = $this->getAssignedRole($user_role->id, $user->id);
-        if(isset($assigned_role)){
-            $role_end_term = (Carbon::create($assigned_role->created_at)->addYears($user_role->term));
-            if(Carbon::now()->greaterThanOrEqualTo($role_end_term)){
-                $user->removeRole($user_role);
-            }else {
-                throw new BusinessValidationException("This User has not reach the Expiration Term. Term: ". $user_role->term, 427);
-            }
-        }else {
+        if(!isset($assigned_role)){
             throw new BusinessValidationException("User does not have this role: ".$role, 404);
         }
-
+        $user->removeRole($user_role);
     }
 
     public function getUserRoles($user_id)
