@@ -70,7 +70,7 @@ class UserController extends Controller
     {
         $this->user_management_service->updatePassword($request);
 
-        return $this->sendResponse(200, 'success');;
+        return $this->sendResponse(200, 'success');
     }
 
 

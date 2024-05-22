@@ -70,14 +70,14 @@ class UserManagementService implements UserManagementInterface
     {
         $auth_user = $request->user();
         $redirectLink = env('MEMBER_INVITATION_REDIRECT_LINK').$request->role;
-        $organisation_logo = env('FILE_DOWNLOAD_URL_PATH').$auth_user->organisation->logo;
+        $organisation_logo = $auth_user->organisation->logo;
         try {
             Mail::to($request->user_email)->send(new MemberInvitationMail($request->user_name, $request->user_email, $redirectLink,
                 $organisation_logo, $auth_user->name, $auth_user->organisation->name, $request->role));
             $assignedRole = $this->getAssignedRole($request->role);
             MemberInvitation::create([
                 'user_id'               => $request->user_id,
-                'expire_at'             => Carbon::now()->addHours(24),
+                'expire_at'             => Carbon::now()->addMinutes(5),
                 'has_seen_notification' => false,
                 'role_id'               => $assignedRole->id
             ]);
@@ -257,7 +257,7 @@ class UserManagementService implements UserManagementInterface
 
     public function checkUserExist($request)
     {
-        $user = User::where('telephone', str_replace(" ", "", $request->credential))->orWhere('email', $request->credential)->firstOrFail();
+        $user = User::where('email', $request->credential)->firstOrFail();
         $member_invitation = MemberInvitation::where('user_id', $user->id)->first();
         if(isset($member_invitation)){
             if(Carbon::now()->greaterThan($member_invitation->expire_at)){
@@ -330,7 +330,7 @@ class UserManagementService implements UserManagementInterface
         $this->validateIfUserCanLogin($user);
         $token = md5(mt_rand());
         $redirectLink = env('PASSWORD_RESET_UI_REDIRECT_LINK')."?token=".$token;
-        $organisation_logo = env('FILE_DOWNLOAD_URL_PATH').$user->organisation->logo;
+        $organisation_logo = $user->organisation->logo;
         try {
             Mail::to($user['email'])->send(new PasswordResetMail($user, $redirectLink, $organisation_logo));
         }catch (Exception $exception){
@@ -378,7 +378,7 @@ class UserManagementService implements UserManagementInterface
             $token = $this->generateToken($user);
             $currentSession = $this->session_service->getCurrentSession();
             try {
-                $organisation_logo = env('FILE_DOWNLOAD_URL_PATH').$user->organisation->logo;
+                $organisation_logo = $user->organisation->logo;
                 Mail::to($user['email'])->send(new PasswordResetConfirmationMail($user, $organisation_logo));
             }catch (Exception $exception){
                 throw new EmailException("Could not send reset email link", 550);
