@@ -11,6 +11,7 @@ class PasswordResetConfirmationMail extends Mailable
 {
     use Queueable, SerializesModels;
     public $data;
+    public $year;
 
     public $organisation_logo;
     /**
@@ -18,10 +19,11 @@ class PasswordResetConfirmationMail extends Mailable
      *
      * @return void
      */
-    public function __construct($data, $organisation_logo)
+    public function __construct($data, $organisation_logo, $year)
     {
         $this->data = $data;
         $this->organisation_logo = $organisation_logo;
+        $this->year = $year;
     }
 
     /**
