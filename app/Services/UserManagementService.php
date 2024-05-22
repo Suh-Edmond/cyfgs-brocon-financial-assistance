@@ -70,14 +70,15 @@ class UserManagementService implements UserManagementInterface
     {
         $auth_user = $request->user();
         $redirectLink = env('MEMBER_INVITATION_REDIRECT_LINK').$request->role;
-        $organisation_logo = env('FILE_DOWNLOAD_URL_PATH').$auth_user->organisation->logo;
+        $organisation_logo = $auth_user->organisation->logo;
+        $year = Carbon::now()->year;
         try {
             Mail::to($request->user_email)->send(new MemberInvitationMail($request->user_name, $request->user_email, $redirectLink,
-                $organisation_logo, $auth_user->name, $auth_user->organisation->name, $request->role));
+                $organisation_logo, $auth_user->name, $auth_user->organisation->name, $request->role, $year));
             $assignedRole = $this->getAssignedRole($request->role);
             MemberInvitation::create([
                 'user_id'               => $request->user_id,
-                'expire_at'             => Carbon::now()->addHours(24),
+                'expire_at'             => Carbon::now()->addHours(4),
                 'has_seen_notification' => false,
                 'role_id'               => $assignedRole->id
             ]);
@@ -233,7 +234,7 @@ class UserManagementService implements UserManagementInterface
 
         $user = $this->checkUserExist($request);
         $user->password = Hash::make($request->password);
-        $user->email_verified_at = Carbon::now()->setTimezone('Africa/Douala')->toDateTimeString();
+        $user->email_verified_at = Carbon::now()->toDateTimeString();
         $user->save();
 
         $this->role_service->addUserRole($user->id, $request->role, 'Default');
@@ -257,11 +258,11 @@ class UserManagementService implements UserManagementInterface
 
     public function checkUserExist($request)
     {
-        $user = User::where('telephone', str_replace(" ", "", $request->credential))->orWhere('email', $request->credential)->firstOrFail();
+        $user = User::where('email', $request->credential)->firstOrFail();
         $member_invitation = MemberInvitation::where('user_id', $user->id)->first();
         if(isset($member_invitation)){
             if(Carbon::now()->greaterThan($member_invitation->expire_at)){
-                throw new UnAuthorizedException("Member's invitation link has expired. Please request for a nwe one", 403);
+                throw new UnAuthorizedException("Member's invitation link has expired. Please request for a new one", 403);
             }
         }else {
             throw new UnAuthorizedException("Invalid Invitation Link", 403);
@@ -330,9 +331,10 @@ class UserManagementService implements UserManagementInterface
         $this->validateIfUserCanLogin($user);
         $token = md5(mt_rand());
         $redirectLink = env('PASSWORD_RESET_UI_REDIRECT_LINK')."?token=".$token;
-        $organisation_logo = env('FILE_DOWNLOAD_URL_PATH').$user->organisation->logo;
+        $organisation_logo = $user->organisation->logo;
+        $year = Carbon::now()->year;
         try {
-            Mail::to($user['email'])->send(new PasswordResetMail($user, $redirectLink, $organisation_logo));
+            Mail::to($user['email'])->send(new PasswordResetMail($user, $redirectLink, $organisation_logo, $year));
         }catch (Exception $exception){
             throw new EmailException("Could not send reset email link", 550);
         }
@@ -377,9 +379,10 @@ class UserManagementService implements UserManagementInterface
 
             $token = $this->generateToken($user);
             $currentSession = $this->session_service->getCurrentSession();
+            $year = Carbon::now()->year;
             try {
-                $organisation_logo = env('FILE_DOWNLOAD_URL_PATH').$user->organisation->logo;
-                Mail::to($user['email'])->send(new PasswordResetConfirmationMail($user, $organisation_logo));
+                $organisation_logo = $user->organisation->logo;
+                Mail::to($user['email'])->send(new PasswordResetConfirmationMail($user, $organisation_logo, $year));
             }catch (Exception $exception){
                 throw new EmailException("Could not send reset email link", 550);
             }
