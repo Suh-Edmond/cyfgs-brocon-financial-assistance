@@ -32,7 +32,7 @@
         <table style="border: 1px solid black; border-collapse: collapse;width: 100%">
             <tr style="padding: 13px;border: 1px solid black; font-size: smaller;">
                 <th style="padding: 1px; border: 1px solid black;">S/N</th>
-                <th style="padding: 12px; border: 1px solid black;">Quarter/Month</th>
+                <th style="padding: 12px; border: 1px solid black;">Frequency</th>
                 <th style="padding: 12px; border: 1px solid black;">Amount Deposited(XAF)</th>
                 <th style="padding: 12px; border: 1px solid black;">Balance(XAF)</th>
                 <th style="padding: 12px; border: 1px solid black;">Payment Status</th>
@@ -71,104 +71,196 @@
 
 
     <!----------------------------------------------------------SUMMARY OF REPORT-------------------------------------------------------------------------------------------->
-    <div style="margin-bottom: 20px;">
-        <h3 style="font-weight: bold;font-size: small; text-align:center;text-transform: uppercase;text-decoration: underline"><span style="padding-right: 5px"></span> Summary:
+    <div style="margin-top: 20px;">
+        <h3 style="font-weight: bold;font-size: small; text-align:center;text-transform: uppercase;text-decoration: underline">
+            <span style="padding-right: 5px;"></span> Summary
         </h3>
     </div>
-    <div>
-        <div class="row" style="border: 1px solid black">
-            <div class="activity_summary_num_contribution">
-                1
-            </div>
-            <div class="activity_summary_label">
-                Payment Item
-            </div>
-            <div class="activity_summary_end">
-                {{$payment_item_name}}
-            </div>
-        </div>
-        <div class="row" style="border: 1px solid black">
-            <div class="activity_summary_num_contribution">
-                2
-            </div>
-            <div class="activity_summary_label">
-                Total Amount Payable
-            </div>
-            <div class="activity_summary_end">
-                {{number_format($payment_item_amount)}}
-            </div>
-        </div>
-        <div class="row" style="border: 1px solid black">
-            <div class="activity_summary_num_contribution">
-                3
-            </div>
-            <div class="activity_summary_label">
-                Payment Item Frequency
-            </div>
-            <div class="activity_summary_end">
-                {{$payment_item_frequency}}
-            </div>
-        </div>
-        <div class="row" style="border: 1px solid black">
-            <div class="activity_summary_num_contribution">
-                4
-            </div>
-            <div class="activity_summary_label">
-                Total Amount Contributed
-            </div>
-            <div class="activity_summary_end">
-                {{number_format($total)}}
-            </div>
-        </div>
-        @if($payment_item_frequency == \App\Constants\PaymentItemFrequency::QUARTERLY || $payment_item_frequency == \App\Constants\PaymentItemFrequency::MONTHLY)
-        <div class="row" style="border: 1px solid black">
-            <div class="activity_summary_num_contribution">
-                5
-            </div>
-            @if($payment_item_frequency == \App\Constants\PaymentItemFrequency::QUARTERLY)
-            <div class="activity_summary_label">
-                Unpaid Quarters
-            </div>
-            @elseif($payment_item_frequency == \App\Constants\PaymentItemFrequency::MONTHLY)
-                <div class="activity_summary_label">
-                    Unpaid Months
+    <div style="margin-top: 4px;">
+        @if($paymentItem->frequency == \App\Constants\PaymentItemFrequency::MONTHLY || $paymentItem->frequency == \App\Constants\PaymentItemFrequency::QUARTERLY)
+            <div class="row" style="border: 1px solid black">
+                <div class="activity_summary_num">
+                    S1
                 </div>
-            @endif
-            <div class="activity_summary_end">
-                @foreach($unpaid_durations as $key => $value)
-                   [<span>{{$value}}</span>],
-                @endforeach
+                <div class="activity_summary">
+                    Payment Frequency
+                </div>
+                <div class="activity_summary_end">
+                    {{$paymentItem->frequency}}
+                </div>
             </div>
-        </div>
+            <div class="row" style="border: 1px solid black">
+                <div class="activity_summary_num">
+                    S2
+                </div>
+                <div class="activity_summary">
+                    Payment Type
+                </div>
+                <div class="activity_summary_end">
+                    {{$paymentItem->type}}
+                </div>
+            </div>
+            <div class="row" style="border: 1px solid black">
+                <div class="activity_summary_num">
+                    S3
+                </div>
+                <div class="activity_summary">
+                    Member Size
+                </div>
+                <div class="activity_summary_end">
+                    {{$member_size}}
+                </div>
+            </div>
+            <div class="row" style="border: 1px solid black">
+                <div class="activity_summary_num">
+                    S4
+                </div>
+                <div class="activity_summary" >
+                    Payment Durations
+                </div>
+                <div class="activity_summary_end">
+                    @foreach($payment_durations as $duration)
+                        <span><small>{{$duration}}</small></span>,
+                    @endforeach
+                </div>
+            </div>
+            <div class="row" style="border: 1px solid black">
+                <div class="activity_summary_num">
+                    S5
+                </div>
+                <div class="activity_summary" >
+                    Unpaid Durations
+                </div>
+                <div class="activity_summary_end">
+                    @foreach($unpaid_durations as $duration)
+                        <span><small>{{$duration}}</small></span>,
+                    @endforeach
+                </div>
+            </div>
+            <div class="row" style="border: 1px solid black">
+                <div class="activity_summary_num">
+                    S6
+                </div>
+                <div class="activity_summary">
+                    Payment Amount/Frequency
+                </div>
+                <div class="activity_summary_end">
+                    {{number_format($paymentItem->amount)}} XAF
+                </div>
+            </div>
+            <div class="row" style="border: 1px solid black">
+                <div class="activity_summary_num">
+                    S7
+                </div>
+                <div class="activity_summary">
+                    Expected Contribution
+                </div>
+                <div class="activity_summary_end">
+                    {{number_format($total_amount_payable)}} XAF
+                </div>
+            </div>
+            <div class="row" style="border: 1px solid black">
+                <div class="activity_summary_num">
+                    S8
+                </div>
+                <div class="activity_summary">
+                    Total Amount Contributed
+                </div>
+                <div class="activity_summary_end">
+                    {{number_format($total)}} XAF
+                </div>
+            </div>
+            <div class="row" style="border: 1px solid black">
+                <div class="activity_summary_num">
+                    S9
+                </div>
+                <div class="activity_summary">
+                    Total Balance
+                </div>
+                <div class="activity_summary_end">
+                    {{number_format($balance)}} XAF
+                </div>
+            </div>
+        @else
+            <div class="row" style="border: 1px solid black">
+                <div class="activity_summary_num">
+                    S1
+                </div>
+                <div class="activity_summary">
+                    Payment Frequency
+                </div>
+                <div class="activity_summary_end">
+                    {{$paymentItem->frequency}}
+                </div>
+            </div>
+            <div class="row" style="border: 1px solid black">
+                <div class="activity_summary_num">
+                    S2
+                </div>
+                <div class="activity_summary">
+                    Payment Type
+                </div>
+                <div class="activity_summary_end">
+                    {{$paymentItem->type}}
+                </div>
+            </div>
+            <div class="row" style="border: 1px solid black">
+                <div class="activity_summary_num">
+                    S3
+                </div>
+                <div class="activity_summary">
+                    Member Size
+                </div>
+                <div class="activity_summary_end">
+                    {{$member_size}}
+                </div>
+            </div>
+            <div class="row" style="border: 1px solid black">
+                <div class="activity_summary_num">
+                    S4
+                </div>
+                <div class="activity_summary">
+                    Payment Amount/Frequency
+                </div>
+                <div class="activity_summary_end">
+                    {{number_format($paymentItem->amount)}} XAF
+                </div>
+            </div>
+            <div class="row" style="border: 1px solid black">
+                <div class="activity_summary_num">
+                    S5
+                </div>
+                <div class="activity_summary">
+                    Expected Contribution
+                </div>
+                <div class="activity_summary_end">
+                    {{number_format($total_amount_payable)}} XAF
+                </div>
+            </div>
+            <div class="row" style="border: 1px solid black">
+                <div class="activity_summary_num">
+                    S6
+                </div>
+                <div class="activity_summary">
+                    Total Amount Contributed
+                </div>
+                <div class="activity_summary_end">
+                    {{number_format($total)}} XAF
+                </div>
+            </div>
+            <div class="row" style="border: 1px solid black">
+                <div class="activity_summary_num">
+                    S7
+                </div>
+                <div class="activity_summary">
+                    Total Balance
+                </div>
+                <div class="activity_summary_end">
+                    {{number_format($balance)}} XAF
+                </div>
+            </div>
         @endif
-        <div class="row" style="border: 1px solid black">
-            @if($payment_item_frequency == \App\Constants\PaymentItemFrequency::QUARTERLY || $payment_item_frequency == \App\Constants\PaymentItemFrequency::MONTHLY)
-            <div class="activity_summary_num_contribution">
-                6
-            </div>
-            @endif
-            @if($payment_item_frequency == \App\Constants\PaymentItemFrequency::ONE_TIME || $payment_item_frequency == \App\Constants\PaymentItemFrequency::YEARLY)
-                5
-                @endif
-            <div class="activity_summary_label">
-                Total Balance
-            </div>
-            <div class="activity_summary_end">
-                {{number_format($balance)}}
-            </div>
-        </div>
-        @if($payment_item_frequency == \App\Constants\PaymentItemFrequency::QUARTERLY)
-        <div class="row" style="margin-top: 20px">
-            <label style="font-style: italic; color: lightskyblue;font-weight: bold">
-                NB: For Quarterly Contributions, Total Amount Payable equals the Payment Item Amount multiply by
-                the SUM of the number of Quarters from when the Payment Item was created. </label>
-        </div>
-        @elseif($payment_item_frequency == \App\Constants\PaymentItemFrequency::MONTHLY)
-        <div class="row" style="margin-top: 20px">
-            <label style="font-style: italic; color: lightskyblue;font-weight: bold">
-                NB: For Monthly Contributions, Total Amount Payable equals the Payment Item Amount multiply by the SUM of the number of Months from when the Payment Item was created. </label>
-        </div>
-        @endif
+
     </div>
     <!----------------------------------------------------------END OF SUMMARY OF REPORT------------------------------------------------------------------------------------->
 
