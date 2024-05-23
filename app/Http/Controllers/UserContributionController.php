@@ -9,6 +9,7 @@ use App\Http\Requests\BulkPaymentRequest;
 use App\Http\Requests\CreateUserContributionRequest;
 use App\Http\Requests\UpdateUserContributionRequest;
 use App\Http\Resources\UserContributionResource;
+use App\Models\PaymentItem;
 use App\Models\User;
 use App\Services\UserContributionService;
 use App\Traits\HelpTrait;
@@ -110,15 +111,15 @@ class UserContributionController extends Controller
         $contributions     = $this->filterContributions($request);
         $contributions     = json_decode(json_encode($contributions))->original->data;
         $organisation      = $request->user()->organisation;
-
+        $paymentItem        = $contributions->payment_item;
         $admins            = $this->getOrganisationAdministrators();
         $president         = $admins[Roles::PRESIDENT];
         $treasurer         = $admins[Roles::TREASURER];
         $fin_sec           = $admins[Roles::FINANCIAL_SECRETARY];
 
         $data = [
-            'title'             => "Member's Contribution for ".$request->payment_item_name,
-            'date'              => date('m/d/Y'),
+            'title'             => "Member's Contribution for ".$paymentItem->name,
+            'date'              => date('d/m/Y'),
             'organisation'      => $organisation,
             'contributions'     => $contributions->data,
             'organisation_telephone'   => $this->setOrganisationTelephone($organisation->telephone),
@@ -126,8 +127,14 @@ class UserContributionController extends Controller
             'treasurer'         => $treasurer,
             'fin_secretary'     => $fin_sec,
             'total'             => $contributions->total_amount,
-//            'balance'           => $contributions->data[0]->payment_item_amount - $total,
-            'organisation_logo' => $organisation->logo
+            'balance'           => $contributions->total_balance,
+            'organisation_logo' => $organisation->logo,
+            'total_deposited_users' => $this->computeTotalAmountByUser($contributions->data),
+            'total_balance_users' => $this->computeBalanceByUser($contributions->data),
+            'total_amount_payable' => $contributions->total_amount_payable,
+            'paymentItem' => $paymentItem,
+            'payment_durations' => $contributions->payment_durations,
+            'member_size'       => $contributions->member_size
         ];
 
         $pdf = PDF::loadView('Contribution.UsersContribution', $data);
@@ -229,7 +236,7 @@ class UserContributionController extends Controller
         $contributions      = $this->getUsersContributionsByItem($request->payment_item_id, $request->user_id, $request);
         $contributions      = json_decode(json_encode($contributions))->original->data;
         $organisation      = $request->user()->organisation;
-
+        $paymentItem        = $contributions->payment_item;
         $admins            = $this->getOrganisationAdministrators();
         $president         = $admins[Roles::PRESIDENT];
         $treasurer         = $admins[Roles::TREASURER];
@@ -249,8 +256,12 @@ class UserContributionController extends Controller
             'payment_item_name' => $request->payment_item_name,
             'payment_item_amount' => $request->payment_item_amount,
             'payment_item_frequency'   => $request->payment_item_frequency,
-            'organisation_logo' => $organisation->logo,
-            'unpaid_durations'    => $contributions->unpaid_durations
+            'organisation_logo'   => $organisation->logo,
+            'unpaid_durations'    => $contributions->unpaid_durations,
+            'total_amount_payable'=> $contributions->total_amount_payable,
+            'paymentItem'        => $paymentItem,
+            'payment_durations' => $contributions->payment_durations,
+            'member_size'       => $contributions->member_size
         ];
 
         $pdf = PDF::loadView('Contribution.MemberContribution', $data);
