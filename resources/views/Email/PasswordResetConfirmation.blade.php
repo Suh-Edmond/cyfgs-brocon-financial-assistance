@@ -11,7 +11,7 @@
 <body>
 
 <div style="text-align: center">
-    <img src="{{url($organisation_logo)}}" alt="organisation logo" width="100px;" height="100px;">
+    <img src="{{url("/images/App_Logo.jpeg")}}" alt="organisation logo" width="100px;" height="100px;">
 </div>
 <div style="margin-bottom:2rem;margin-left: 5rem; margin-right: 5rem">
     <div>
