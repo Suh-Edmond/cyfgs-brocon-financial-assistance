@@ -111,7 +111,7 @@ class UserContributionController extends Controller
         $contributions     = $this->filterContributions($request);
         $contributions     = json_decode(json_encode($contributions))->original->data;
         $organisation      = $request->user()->organisation;
-        $paymentItem        = PaymentItem::find($request->payment_item_id);
+        $paymentItem        = $contributions->payment_item;
         $admins            = $this->getOrganisationAdministrators();
         $president         = $admins[Roles::PRESIDENT];
         $treasurer         = $admins[Roles::TREASURER];
@@ -236,7 +236,7 @@ class UserContributionController extends Controller
         $contributions      = $this->getUsersContributionsByItem($request->payment_item_id, $request->user_id, $request);
         $contributions      = json_decode(json_encode($contributions))->original->data;
         $organisation      = $request->user()->organisation;
-        $paymentItem        = PaymentItem::find($request->payment_item_id);
+        $paymentItem        = $contributions->payment_item;
         $admins            = $this->getOrganisationAdministrators();
         $president         = $admins[Roles::PRESIDENT];
         $treasurer         = $admins[Roles::TREASURER];

@@ -130,7 +130,7 @@ class UserContributionService implements UserContributionInterface {
 
 
         return new UserContributionCollection($paginated_contribution, $total_contribution, $total_balance, $unpaid_durations, $total_amount_payable,  $total, $last_page,
-            $per_page, $current_page, $percentage, $payment_item_durations, 1);
+            $per_page, $current_page, $percentage, $payment_item_durations, 1, $payment_item);
     }
 
     public function deleteUserContribution($id)
@@ -187,7 +187,7 @@ class UserContributionService implements UserContributionInterface {
 
 
         return new UserContributionCollection($contributions, $total_contribution, $total_balance, array(), $total_amount_payable, $total, $last_page,
-            $per_page, $current_page, $percentage, $payment_item_durations, $member_size);
+            $per_page, $current_page, $percentage, $payment_item_durations, $member_size, $payment_item);
     }
 
     public function getContribution($id)
@@ -260,7 +260,7 @@ class UserContributionService implements UserContributionInterface {
         }
 
         return new UserContributionCollection($user_contributions, $total, $balance, $unpaid_durations, $total_amount_payable, $paginated_data->total(), $paginated_data->lastPage()
-            , (int)$paginated_data->perPage(), $paginated_data->currentPage(), $percentage, $payment_item_durations, $member_size);
+            , (int)$paginated_data->perPage(), $paginated_data->currentPage(), $percentage, $payment_item_durations, $member_size, $payment_item);
     }
 
 
