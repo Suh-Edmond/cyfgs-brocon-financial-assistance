@@ -479,79 +479,71 @@ trait HelpTrait {
     }
 
     public function computeTotalExpectedPaymentItemAmount($payment_item) {
+        $member_size = 1;
         switch ($payment_item->frequency) {
             case PaymentItemFrequency::ONE_TIME:
+            case PaymentItemFrequency::YEARLY:
                 switch ($payment_item->type){
                     case PaymentItemType::A_MEMBER:
                         $amount = $payment_item->amount;
+                        $member_size = 1;
                         break;
                     case PaymentItemType::ALL_MEMBERS:
-                        $amount = User::all()->count() * $payment_item->amount;
+                        $member_size = User::all()->count();
+                        $amount = $member_size * $payment_item->amount;
                         break;
                     case PaymentItemType::GROUPED_MEMBERS:
-                        $amount = count(explode("/", $payment_item->reference)) * $payment_item->amount;
+                        $member_size = count(explode("/", $payment_item->reference));
+                        $amount = $member_size * $payment_item->amount;
                         break;
                     case PaymentItemType::MEMBERS_WITH_ROLES:
-                        $amount = count(explode("/", $this->getAllAdminsId())) * $payment_item->amount;
+                        $member_size = count(explode("/", $this->getAllAdminsId()));
+                        $amount = $member_size * $payment_item->amount;
                         break;
                     case PaymentItemType::MEMBERS_WITHOUT_ROLES:
-                        $amount = count(explode("/", $this->getAllNoAdminsId())) * $payment_item->amount;
+                        $member_size = count(explode("/", $this->getAllNoAdminsId()));
+                        $amount = $member_size * $payment_item->amount;
                         break;
                     default:
                         $amount = $payment_item->amount;
                 }
             break;
+            case PaymentItemFrequency::QUARTERLY:
             case PaymentItemFrequency::MONTHLY:
                 $total_payable_months = $this->getTotalPaymentItemAmountByQuarters($payment_item);
                 switch ($payment_item->type){
                     case PaymentItemType::A_MEMBER:
+                        $member_size = 1;
                         $amount = $total_payable_months;
                         break;
                     case PaymentItemType::ALL_MEMBERS:
-                        $amount = User::all()->count() * $total_payable_months;
+                        $member_size = User::all()->count();
+                        $amount = $member_size * $total_payable_months;
                         break;
                     case PaymentItemType::GROUPED_MEMBERS:
-                        $amount = count(explode("/", $payment_item->reference)) * $total_payable_months;
+                        $member_size = count(explode("/", $payment_item->reference));
+                        $amount = $member_size * $total_payable_months;
                         break;
                     case PaymentItemType::MEMBERS_WITH_ROLES:
-                        $amount = count(explode("/", $this->getAllAdminsId())) * $total_payable_months;
+                        $member_size = count(explode("/", $this->getAllAdminsId()));
+                        $amount = $member_size * $total_payable_months;
                         break;
                     case PaymentItemType::MEMBERS_WITHOUT_ROLES:
-                        $amount = count(explode("/", $this->getAllNoAdminsId())) * $total_payable_months;
+                        $member_size = count(explode("/", $this->getAllNoAdminsId()));
+                        $amount = $member_size * $total_payable_months;
                         break;
                     default:
                         $amount = $total_payable_months;
                 }
             break;
-            case PaymentItemFrequency::QUARTERLY:
-                $total_payable_months = $this->getTotalPaymentItemAmountByQuarters($payment_item);
-                switch ($payment_item->type){
-                    case PaymentItemType::A_MEMBER:
-                        $amount = $total_payable_months;
-                        break;
-                    case PaymentItemType::ALL_MEMBERS:
-                        $amount = User::all()->count() * $total_payable_months;
-                        break;
-                    case PaymentItemType::GROUPED_MEMBERS:
-                        $amount = count(explode("/", $payment_item->reference)) * $total_payable_months;
-                        break;
-                    case PaymentItemType::MEMBERS_WITH_ROLES:
-                        $amount = count(explode("/", $this->getAllAdminsId())) * $total_payable_months;
-                        break;
-                    case PaymentItemType::MEMBERS_WITHOUT_ROLES:
-                        $amount = count(explode("/", $this->getAllNoAdminsId())) * $total_payable_months;
-                        break;
-                    default:
-                        $amount = $total_payable_months;
-                }
             default:
                 $amount = 0;
         }
-        return $amount;
+        return [$amount, $member_size];
     }
 
     public function computeTotalBalanceByPaymentItem($payment_item, $total_amount_contributed) {
-        return $this->computeTotalExpectedPaymentItemAmount($payment_item) - $total_amount_contributed;
+        return $this->computeTotalExpectedPaymentItemAmount($payment_item)[0] - $total_amount_contributed;
     }
 
     public function computePercentageContributed($total_amount_contributed, $expected_amount){

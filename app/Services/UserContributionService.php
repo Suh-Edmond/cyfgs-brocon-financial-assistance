@@ -130,7 +130,7 @@ class UserContributionService implements UserContributionInterface {
 
 
         return new UserContributionCollection($paginated_contribution, $total_contribution, $total_balance, $unpaid_durations, $total_amount_payable,  $total, $last_page,
-            $per_page, $current_page, $percentage, $payment_item_durations);
+            $per_page, $current_page, $percentage, $payment_item_durations, 1);
     }
 
     public function deleteUserContribution($id)
@@ -163,7 +163,9 @@ class UserContributionService implements UserContributionInterface {
         $contributions = $contributions->selectRaw('SUM(user_contributions.amount_deposited) as total_amount_deposited, user_contributions.*')
             ->groupBy('user_id')->orderBy('user_contributions.created_at', 'DESC');
         $total_contribution = $this->computeTotalOrganisationContribution($contributions);
-        $total_amount_payable = $this->computeTotalExpectedPaymentItemAmount($payment_item);
+        $expectedData = $this->computeTotalExpectedPaymentItemAmount($payment_item);
+        $total_amount_payable = $expectedData[0];
+        $member_size = $expectedData[1];
         $total_balance = $this->computeTotalBalanceByPaymentItem($payment_item, $total_contribution);
         $percentage = $this->computePercentageContributed($total_contribution, $total_amount_payable);
 
@@ -185,7 +187,7 @@ class UserContributionService implements UserContributionInterface {
 
 
         return new UserContributionCollection($contributions, $total_contribution, $total_balance, array(), $total_amount_payable, $total, $last_page,
-            $per_page, $current_page, $percentage, $payment_item_durations);
+            $per_page, $current_page, $percentage, $payment_item_durations, $member_size);
     }
 
     public function getContribution($id)
@@ -242,6 +244,7 @@ class UserContributionService implements UserContributionInterface {
         $total_amount_payable = $this->getTotalPaymentItemAmountByQuarters($payment_item);
         $balance = $total != 0 ? $total_amount_payable - $total :0;
         $percentage = $this->computePercentageContributed($total, $total_amount_payable);
+        $member_size = User::all()->count('id');
 
         if($payment_item->frequency == PaymentItemFrequency::QUARTERLY){
             $unpaid_durations = $this->getMemberUnPayQuarters($payment_item->frequency, $payment_item->created_at, $user_contributions->get());
@@ -257,7 +260,7 @@ class UserContributionService implements UserContributionInterface {
         }
 
         return new UserContributionCollection($user_contributions, $total, $balance, $unpaid_durations, $total_amount_payable, $paginated_data->total(), $paginated_data->lastPage()
-            , (int)$paginated_data->perPage(), $paginated_data->currentPage(), $percentage, $payment_item_durations);
+            , (int)$paginated_data->perPage(), $paginated_data->currentPage(), $percentage, $payment_item_durations, $member_size);
     }
 
 
@@ -854,7 +857,6 @@ class UserContributionService implements UserContributionInterface {
                 ->toArray();
             $totalContribution = collect($contributions)->sum('amount_deposited');
             $contributors = count($contributions);
-//            $percentage =  round(($totalContribution / $payment_item->amount) * 100, 2);
             array_push($percentages, ["name" => $payment_item->name, "percentage" => $totalContribution, "contributors" => $contributors]);
         }
 
@@ -869,19 +871,19 @@ class UserContributionService implements UserContributionInterface {
             switch ($frequency){
                 case  PaymentItemFrequency::YEARLY:
                     $payment_items = $this->paymentItemService->getPaymentItemsByFrequency($request->session_id, PaymentItemFrequency::YEARLY);
-                    array_push($averages, $this->computeAverageContributionByPaymentFrequency($payment_items, $request->session_id));
+                    $averages[] = $this->computeAverageContributionByPaymentFrequency($payment_items, $request->session_id);
                     break;
                 case  PaymentItemFrequency::QUARTERLY:
                     $payment_items = $this->paymentItemService->getPaymentItemsByFrequency($request->session_id, PaymentItemFrequency::QUARTERLY);
-                    array_push($averages, $this->computeAverageContributionByPaymentFrequency($payment_items, $request->session_id));
+                    $averages[] = $this->computeAverageContributionByPaymentFrequency($payment_items, $request->session_id);
                     break;
                 case  PaymentItemFrequency::MONTHLY:
                     $payment_items = $this->paymentItemService->getPaymentItemsByFrequency($request->session_id, PaymentItemFrequency::MONTHLY);
-                    array_push($averages, $this->computeAverageContributionByPaymentFrequency($payment_items, $request->session_id));
+                    $averages[] = $this->computeAverageContributionByPaymentFrequency($payment_items, $request->session_id);
                     break;
                 case  PaymentItemFrequency::ONE_TIME:
                     $payment_items = $this->paymentItemService->getPaymentItemsByFrequency($request->session_id, PaymentItemFrequency::ONE_TIME);
-                    array_push($averages, $this->computeAverageContributionByPaymentFrequency($payment_items, $request->session_id));
+                    $averages[] = $this->computeAverageContributionByPaymentFrequency($payment_items, $request->session_id);
                     break;
             }
         }

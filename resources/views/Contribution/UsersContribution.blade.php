@@ -62,25 +62,47 @@
     <!----------------------------------------------------------SUMMARY OF REPORT-------------------------------------------------------------------------------------------->
     <div style="margin-top: 20px;">
         <h3 style="font-weight: bold;font-size: small; text-align:center;text-transform: uppercase;text-decoration: underline">
-            <span style="padding-right: 5px"></span> Summary
+            <span style="padding-right: 5px;"></span> Summary
         </h3>
     </div>
-    <div>
-        <div class="row" style="border: 1px solid black">
-            <div class="activity_summary_num">
-                S1
-            </div>
-            <div class="activity_summary">
-                Payment Frequency
-            </div>
-            <div class="activity_summary_end">
-                {{$paymentItem->frequency}}
-            </div>
-        </div>
+    <div style="margin-top: 4px;">
         @if($paymentItem->frequency == \App\Constants\PaymentItemFrequency::MONTHLY || $paymentItem->frequency == \App\Constants\PaymentItemFrequency::QUARTERLY)
             <div class="row" style="border: 1px solid black">
                 <div class="activity_summary_num">
+                    S1
+                </div>
+                <div class="activity_summary">
+                    Payment Frequency
+                </div>
+                <div class="activity_summary_end">
+                    {{$paymentItem->frequency}}
+                </div>
+            </div>
+            <div class="row" style="border: 1px solid black">
+                <div class="activity_summary_num">
                     S2
+                </div>
+                <div class="activity_summary">
+                    Payment Type
+                </div>
+                <div class="activity_summary_end">
+                    {{$paymentItem->type}}
+                </div>
+            </div>
+            <div class="row" style="border: 1px solid black">
+                <div class="activity_summary_num">
+                    S3
+                </div>
+                <div class="activity_summary">
+                    Member Size
+                </div>
+                <div class="activity_summary_end">
+                    {{$member_size}}
+                </div>
+            </div>
+            <div class="row" style="border: 1px solid black">
+                <div class="activity_summary_num">
+                    S4
                 </div>
                 <div class="activity_summary" >
                     Payment Durations
@@ -91,51 +113,130 @@
                     @endforeach
                 </div>
             </div>
+            <div class="row" style="border: 1px solid black">
+                <div class="activity_summary_num">
+                    S5
+                </div>
+                <div class="activity_summary">
+                    Payment Amount/Frequency
+                </div>
+                <div class="activity_summary_end">
+                    {{number_format($paymentItem->amount)}} XAF
+                </div>
+            </div>
+            <div class="row" style="border: 1px solid black">
+                <div class="activity_summary_num">
+                    S6
+                </div>
+                <div class="activity_summary">
+                    Expected Contribution
+                </div>
+                <div class="activity_summary_end">
+                    {{number_format($total_amount_payable)}} XAF
+                </div>
+            </div>
+            <div class="row" style="border: 1px solid black">
+                <div class="activity_summary_num">
+                    S7
+                </div>
+                <div class="activity_summary">
+                    Total Amount Contributed
+                </div>
+                <div class="activity_summary_end">
+                    {{number_format($total)}} XAF
+                </div>
+            </div>
+            <div class="row" style="border: 1px solid black">
+                <div class="activity_summary_num">
+                    S8
+                </div>
+                <div class="activity_summary">
+                    Total Balance
+                </div>
+                <div class="activity_summary_end">
+                    {{number_format($balance)}} XAF
+                </div>
+            </div>
+        @else
+            <div class="row" style="border: 1px solid black">
+                <div class="activity_summary_num">
+                    S1
+                </div>
+                <div class="activity_summary">
+                    Payment Frequency
+                </div>
+                <div class="activity_summary_end">
+                    {{$paymentItem->frequency}}
+                </div>
+            </div>
+            <div class="row" style="border: 1px solid black">
+                <div class="activity_summary_num">
+                    S2
+                </div>
+                <div class="activity_summary">
+                    Payment Type
+                </div>
+                <div class="activity_summary_end">
+                    {{$paymentItem->type}}
+                </div>
+            </div>
+            <div class="row" style="border: 1px solid black">
+                <div class="activity_summary_num">
+                    S3
+                </div>
+                <div class="activity_summary">
+                    Member Size
+                </div>
+                <div class="activity_summary_end">
+                    {{$member_size}}
+                </div>
+            </div>
+            <div class="row" style="border: 1px solid black">
+                <div class="activity_summary_num">
+                    S4
+                </div>
+                <div class="activity_summary">
+                    Payment Amount/Frequency
+                </div>
+                <div class="activity_summary_end">
+                    {{number_format($paymentItem->amount)}} XAF
+                </div>
+            </div>
+            <div class="row" style="border: 1px solid black">
+                <div class="activity_summary_num">
+                    S5
+                </div>
+                <div class="activity_summary">
+                    Expected Contribution
+                </div>
+                <div class="activity_summary_end">
+                    {{number_format($total_amount_payable)}} XAF
+                </div>
+            </div>
+            <div class="row" style="border: 1px solid black">
+                <div class="activity_summary_num">
+                    S6
+                </div>
+                <div class="activity_summary">
+                    Total Amount Contributed
+                </div>
+                <div class="activity_summary_end">
+                    {{number_format($total)}} XAF
+                </div>
+            </div>
+            <div class="row" style="border: 1px solid black">
+                <div class="activity_summary_num">
+                    S7
+                </div>
+                <div class="activity_summary">
+                    Total Balance
+                </div>
+                <div class="activity_summary_end">
+                    {{number_format($balance)}} XAF
+                </div>
+            </div>
         @endif
-        <div class="row" style="border: 1px solid black">
-            <div class="activity_summary_num">
-                S3
-            </div>
-            <div class="activity_summary">
-                Payment Amount/Frequency
-            </div>
-            <div class="activity_summary_end">
-                {{number_format($paymentItem->amount)}} XAF
-            </div>
-        </div>
-        <div class="row" style="border: 1px solid black">
-            <div class="activity_summary_num">
-                S4
-            </div>
-            <div class="activity_summary">
-                Expected Contribution
-            </div>
-            <div class="activity_summary_end">
-                {{number_format($total_amount_payable)}} XAF
-            </div>
-        </div>
-        <div class="row" style="border: 1px solid black">
-            <div class="activity_summary_num">
-                S5
-            </div>
-            <div class="activity_summary">
-                Total Amount Contributed
-            </div>
-            <div class="activity_summary_end">
-                {{number_format($total)}} XAF
-            </div>
-        </div>
-        <div class="row" style="border: 1px solid black">
-            <div class="activity_summary_num">
-                S6
-            </div>
-            <div class="activity_summary">
-                Total Balance
-            </div>
-            <div class="activity_summary_end">
-                {{number_format($balance)}} XAF
-            </div>
-        </div>
+
     </div>
     <!----------------------------------------------------------END OF SUMMARY OF REPORT------------------------------------------------------------------------------------->
 
@@ -143,7 +244,7 @@
 
     <!------------------------------------------------------DETAILS OF PRESENTERS--------------------------------------------------------------------------------------------->
     <div style="margin-top: 40px;">
-        <h3 style="font-weight: bold;font-size: small; text-align:center;text-transform: uppercase;text-decoration: underline"><span style="padding-right: 5px"></span> Prepared By:
+        <h3 style="font-weight: bold;font-size: small; text-align:center;text-transform: uppercase;text-decoration: underline"><span style="padding-right: 5px"></span> Prepared By
         </h3>
     </div>
     <div class="detail" style="margin-top: 30px;margin-bottom: 150px">

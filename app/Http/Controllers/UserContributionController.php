@@ -116,10 +116,10 @@ class UserContributionController extends Controller
         $president         = $admins[Roles::PRESIDENT];
         $treasurer         = $admins[Roles::TREASURER];
         $fin_sec           = $admins[Roles::FINANCIAL_SECRETARY];
-//        dd($contributions);
+
         $data = [
             'title'             => "Member's Contribution for ".$paymentItem->name,
-            'date'              => date('m/d/Y'),
+            'date'              => date('d/m/Y'),
             'organisation'      => $organisation,
             'contributions'     => $contributions->data,
             'organisation_telephone'   => $this->setOrganisationTelephone($organisation->telephone),
@@ -133,7 +133,8 @@ class UserContributionController extends Controller
             'total_balance_users' => $this->computeBalanceByUser($contributions->data),
             'total_amount_payable' => $contributions->total_amount_payable,
             'paymentItem' => $paymentItem,
-            'payment_durations' => $contributions->payment_durations
+            'payment_durations' => $contributions->payment_durations,
+            'member_size'       => $contributions->member_size
         ];
 
         $pdf = PDF::loadView('Contribution.UsersContribution', $data);
@@ -235,7 +236,7 @@ class UserContributionController extends Controller
         $contributions      = $this->getUsersContributionsByItem($request->payment_item_id, $request->user_id, $request);
         $contributions      = json_decode(json_encode($contributions))->original->data;
         $organisation      = $request->user()->organisation;
-
+        $paymentItem        = PaymentItem::find($request->payment_item_id);
         $admins            = $this->getOrganisationAdministrators();
         $president         = $admins[Roles::PRESIDENT];
         $treasurer         = $admins[Roles::TREASURER];
@@ -255,8 +256,12 @@ class UserContributionController extends Controller
             'payment_item_name' => $request->payment_item_name,
             'payment_item_amount' => $request->payment_item_amount,
             'payment_item_frequency'   => $request->payment_item_frequency,
-            'organisation_logo' => $organisation->logo,
-            'unpaid_durations'    => $contributions->unpaid_durations
+            'organisation_logo'   => $organisation->logo,
+            'unpaid_durations'    => $contributions->unpaid_durations,
+            'total_amount_payable'=> $contributions->total_amount_payable,
+            'paymentItem'        => $paymentItem,
+            'payment_durations' => $contributions->payment_durations,
+            'member_size'       => $contributions->member_size
         ];
 
         $pdf = PDF::loadView('Contribution.MemberContribution', $data);

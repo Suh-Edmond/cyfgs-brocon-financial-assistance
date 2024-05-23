@@ -130,7 +130,7 @@
         float: left;
         width: 5%;
         padding: 3px;
-        font-weight: bolder;
+        font-weight: bold;
         text-transform: uppercase;
         border-right: 1px solid black;
         font-size: small;
@@ -140,7 +140,7 @@
         float: left;
         width: 45%;
         padding: 3px;
-        font-weight: bolder;
+        font-weight: bold;
         text-transform: uppercase;
         border-right: 1px solid black;
         font-size: small;
@@ -150,17 +150,17 @@
         float: left;
         width: 10%;
         padding: 3px;
-        font-weight: bolder;
+        font-weight: bold;
         text-transform: capitalize;
         border-right: 1px solid black;
         font-size: small;
-        height: 22px;
+        height: 18px;
     }
     .activity_summary_num_contribution {
         float: left;
         width: 2%;
         padding: 3px;
-        font-weight: bolder;
+        font-weight: bold;
         text-transform: capitalize;
         border-right: 1px solid black;
         font-size: small;
@@ -170,7 +170,7 @@
         float: left;
         width: 30%;
         padding: 3px;
-        font-weight: bolder;
+        font-weight: bold;
         text-transform: capitalize;
         border-right: 1px solid black;
         font-size: small;
@@ -180,19 +180,20 @@
         float: left;
         width: 45%;
         padding: 3px;
-        font-weight: bolder;
+        font-weight: bold;
         text-transform: capitalize;
         border-right: 1px solid black;
-        font-size: small;
-        height: 25px;
+        font-size: smaller;
+        height: 18px;
     }
     .activity_summary_end {
         float: left;
         width: 45%;
         padding: 3px;
-        font-weight: bolder;
+        font-weight: bold;
         text-transform: capitalize;
-        font-size: medium;
+        font-size: smaller;
+        height: 18px;
     }
     .totals {
         float: left;

@@ -109,7 +109,7 @@
     <!----------------------------------------------------------SUMMARY OF REPORT-------------------------------------------------------------------------------------------->
     <div style="margin-top: 20px;">
         <h3 style="font-weight: bold;font-size: small; text-align:center;text-transform: uppercase;text-decoration: underline">
-            <span style="padding-right: 5px"></span> Summary (XAF):
+            <span style="padding-right: 5px"></span> Summary (XAF)
         </h3>
     </div>
     <div>
@@ -151,7 +151,7 @@
 
     <!------------------------------------------------------DETAILS OF PRESENTERS--------------------------------------------------------------------------------------------->
     <div style="margin-top: 40px;">
-        <h3 style="font-weight: bold;font-size: small; text-align:center;text-transform: uppercase;text-decoration: underline"><span style="padding-right: 5px"></span> Prepared By:
+        <h3 style="font-weight: bold;font-size: small; text-align:center;text-transform: uppercase;text-decoration: underline"><span style="padding-right: 5px"></span> Prepared By
         </h3>
     </div>
     <div class="detail" style="margin-top: 30px;margin-bottom: 150px">
