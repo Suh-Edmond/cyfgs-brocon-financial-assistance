@@ -6,18 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="d71c4c3c-9d87-4403-a1f0-a9f945658af0" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/ActivitySupportController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/ActivitySupportController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/ExpenditureCategoryController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/ExpenditureCategoryController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/ExpenditureDetailController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/ExpenditureDetailController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/ExpenditureItemController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/ExpenditureItemController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/GenerateReportController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/GenerateReportController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/IncomeActivityController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/IncomeActivityController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/MemberRegistrationController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/MemberRegistrationController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/PaymentCategoryController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/PaymentCategoryController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/PaymentItemController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/PaymentItemController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/UserContributionController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/UserContributionController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/UserController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/UserController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/UserSavingController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/UserSavingController.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -476,6 +464,7 @@
       <workItem from="1716223198114" duration="50000" />
       <workItem from="1716223257895" duration="10693000" />
       <workItem from="1716283069448" duration="5099000" />
+      <workItem from="1716535428522" duration="3005000" />
     </task>
     <servers />
   </component>
