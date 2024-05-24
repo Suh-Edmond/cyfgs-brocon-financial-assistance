@@ -20,19 +20,18 @@
             <p>
                 {{$sender}} has invited you to join <span style="font-weight: bold">{{$organisation_name}}</span> on <span style="font-weight: bold">QuickRecords</span>
                 in order to better manage your Financial Transactions<br>
-                Your role:  <span style="color: blue">{{$role}}</span><br>
-                Your email: <span style="color: blue">{{$user_email}}</span>
+                Your role:  <span style="color: #213c65;font-weight: bold">{{$role}}</span><br>
+                Your email: <span style="color: #213c65;font-weight: bold">{{$user_email}}</span>
             </p>
         </div>
         <div>
-            <label>Click on the button to join</label>
             <div style="margin-bottom: 7px">
-                <a style="text-decoration: none;display:inline-block;text-align:center;padding: 10px;background-color: dodgerblue;color: white;cursor: pointer; border: 1px solid dodgerblue; border-radius: 5px" href="{{$redirectLink}}">Click to Join</a>
+                <a style="text-decoration: none;display:inline-block;text-align:center;padding: 10px;background-color: #213c65 ;color: white;cursor: pointer; border: 1px solid #213c65; border-radius: 5px" href="{{$redirectLink}}">Click here to Join</a>
             </div><br>
         </div>
         <div style="margin-top: 5px">
             <label>Or Copy and paste the link below on your browser</label><br>
-            <label for="link" style="cursor: pointer;color: blue">{{$redirectLink}}</label>
+            <label for="link" style="cursor: pointer;color: #213c65;font-weight: bold">{{$redirectLink}}</label>
         </div>
         <br>
 

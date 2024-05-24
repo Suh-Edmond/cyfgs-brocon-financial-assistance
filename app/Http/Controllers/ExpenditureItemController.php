@@ -115,7 +115,7 @@ class ExpenditureItemController extends Controller
         $fin_sec           = $admins[Roles::FINANCIAL_SECRETARY];
         $data = [
             'title'               => 'Expenditure Items under '.$request->category_name,
-            'date'                => date('m/d/Y'),
+            'date'                => date('d/m/Y'),
             'organisation'        => $organisation,
             'expenditure_items'   => $expenditure_items->data,
             'president'           => $president,

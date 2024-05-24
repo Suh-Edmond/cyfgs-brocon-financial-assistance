@@ -42,7 +42,7 @@ class GenerateReportController extends Controller
         $organisation      = $auth_user->organisation;
         $data = [
             'title'               => 'Financial Report for '.$request->payment_activity,
-            'date'                => date('m/d/Y'),
+            'date'                => date('d/m/Y'),
             'organisation'        => $organisation,
             'incomes'             => $data[0],
             'expenditures'        => $data[1],
@@ -86,7 +86,7 @@ class GenerateReportController extends Controller
 
         $payload = [
             'title'                  => 'Financial Report From ' . $this->convertNumberToQuarterName($request->quarter) . " ". $this->session_service->getCurrentSession()->year,
-            'date'                   => date('m/d/Y'),
+            'date'                   => date('d/m/Y'),
             'organisation'           => $organisation,
             'incomes'                => $data[0],
             'total_income'           => $data[2]['total_income'] + $data[4]['balance_brought_forward'],
@@ -127,7 +127,7 @@ class GenerateReportController extends Controller
 
         $payload = [
             'title'                  => 'Financial Report for the Year  ' . $request->year_label,
-            'date'                   => date('m/d/Y'),
+            'date'                   => date('d/m/Y'),
             'organisation'           => $organisation,
             'incomes'                => $data[0],
             'total_income'           => $data[2]['total_income'] + $data[4]['bal_brought_forward'],

@@ -88,7 +88,7 @@ class ExpenditureCategoryController extends Controller
 
         $data = [
             'title'                    => 'Expenditure Categories',
-            'date'                     => date('m/d/Y'),
+            'date'                     => date('d/m/Y'),
             'organisation'             => $organisation,
             'expenditure_categories'   => $expenditure_categories,
             'organisation_telephone'   => $this->setOrganisationTelephone($organisation->telephone),
