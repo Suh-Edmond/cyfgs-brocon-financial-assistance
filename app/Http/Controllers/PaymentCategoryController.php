@@ -83,7 +83,7 @@ class PaymentCategoryController extends Controller
 
         $data = [
             'title'             =>'Payment Categories',
-            'date'              => date('m/d/Y'),
+            'date'              => date('d/m/Y'),
             'organisation'      => $organisation,
             'organisation_telephone' => $this->setOrganisationTelephone($organisation->telephone),
             'categories'        => $this->payment_category_service->getPaymentCategories($request),

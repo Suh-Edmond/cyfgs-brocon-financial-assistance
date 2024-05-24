@@ -172,7 +172,7 @@ class UserContributionController extends Controller
 
         $data = [
             'title'             => $member->name . " Unpaid Payment Items",
-            'date'              => date('m/d/Y'),
+            'date'              => date('d/m/Y'),
             'organisation'      => $organisation,
             'contributions'     => $debts,
             'organisation_telephone'   => $this->setOrganisationTelephone($organisation->telephone),
@@ -205,7 +205,7 @@ class UserContributionController extends Controller
 
         $data = [
             'title'             => $member->name . " Paid Payment Items",
-            'date'              => date('m/d/Y'),
+            'date'              => date('d/m/Y'),
             'organisation'      => $organisation,
             'contributions'     => $debts,
             'organisation_telephone'   => $this->setOrganisationTelephone($organisation->telephone),
@@ -244,7 +244,7 @@ class UserContributionController extends Controller
 
         $data = [
             'title'             => $request->user_name." Contributions for ".$request->payment_item_name,
-            'date'              => date('m/d/Y'),
+            'date'              => date('d/m/Y'),
             'organisation'      => $organisation,
             'contributions'     => $contributions->data,
             'organisation_telephone'   => $this->setOrganisationTelephone($organisation->telephone),

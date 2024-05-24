@@ -19,18 +19,18 @@
         <p>
             Forgot your password ? <br>
             We received a password reset Request for this Account<br>
-            Your email:<span style="color: blue">{{$data->email}}</span>
+            Your email:<span style="color: #213c65;font-weight: bold">{{$data->email}}</span>
         </p>
     </div>
     <div>
         <label>To Reset your password, please click on the button below</label>
         <div style="margin-bottom: 7px">
-            <a style="text-decoration: none;display:inline-block;text-align:center;padding: 10px;background-color: dodgerblue;color: white;cursor: pointer; border: 1px solid dodgerblue; border-radius: 5px" href="{{$redirectLink}}">Click here to reset password</a>
+            <a style="text-decoration: none;display:inline-block;text-align:center;padding: 10px;background-color: #213c65;color: white;cursor: pointer; border: 1px solid #213c65; border-radius: 5px" href="{{$redirectLink}}">Click here to reset password</a>
         </div><br>
     </div>
    <div style="margin-top: 5px">
        <label>Or copy and paste the link below on your browser</label><br>
-       <label for="link" style="cursor: pointer;color: blue">{{$redirectLink}}</label>
+       <label for="link" style="cursor: pointer;color: #213c65;font-weight: bold">{{$redirectLink}}</label>
    </div>
     <br>
 

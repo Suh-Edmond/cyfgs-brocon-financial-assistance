@@ -144,7 +144,7 @@ class UserController extends Controller
 
         $data = [
             'title'                  => $this->setTitle($request),
-            'date'                   => date('m/d/Y'),
+            'date'                   => date('d/m/Y'),
             'organisation'           => $organisation,
             'organisation_telephone' => $this->setOrganisationTelephone($organisation->telephone),
             'users'                  => $users,
