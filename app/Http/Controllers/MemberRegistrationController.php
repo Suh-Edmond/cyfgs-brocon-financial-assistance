@@ -81,7 +81,7 @@ class MemberRegistrationController extends Controller
 
         $data = [
             'title'               => 'Registered Members for '.$request->year,
-            'date'                => date('m/d/Y'),
+            'date'                => date('d/m/Y'),
             'organisation'        => $organisation,
             'members'             => $registrations,
             'president'           => $president,

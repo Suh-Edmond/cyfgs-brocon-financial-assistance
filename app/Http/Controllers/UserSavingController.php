@@ -116,7 +116,7 @@ class UserSavingController extends Controller
         $fin_sec           = $admins[Roles::FINANCIAL_SECRETARY];
         $data = [
             'title'               => $request->name. ' Savings',
-            'date'                => date('m/d/Y'),
+            'date'                => date('d/m/Y'),
             'organisation'        => $organisation,
             'user_savings'        => $savings[0],
             'total'               => $savings[1],
@@ -150,7 +150,7 @@ class UserSavingController extends Controller
         $fin_sec           = $admins[Roles::FINANCIAL_SECRETARY];
         $data = [
             'title'               => 'Organisation Savings',
-            'date'                => date('m/d/Y'),
+            'date'                => date('d/m/Y'),
             'organisation'        => $organisation,
             'user_savings'        => $savings,
             'total'               => $total,

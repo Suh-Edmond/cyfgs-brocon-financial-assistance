@@ -101,7 +101,7 @@ class ActivitySupportController extends Controller
         $fin_sec           = $admins[Roles::FINANCIAL_SECRETARY];
         $data = [
             'title'               => $this->setTitle($request),
-            'date'                => date('m/d/Y'),
+            'date'                => date('d/m/Y'),
             'organisation'        => $organisation,
             'supports'            => $supports->data,
             'president'           => $president,

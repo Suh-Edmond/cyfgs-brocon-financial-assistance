@@ -94,7 +94,7 @@ class PaymentItemController extends Controller
 
         $data = [
             'title'               => 'Payment Items under '.$request->category_name. ' Category',
-            'date'                => date('m/d/Y'),
+            'date'                => date('d/m/Y'),
             'organisation'        => $organisation,
             'payment_items'       => $items,
             'president'           => $president,

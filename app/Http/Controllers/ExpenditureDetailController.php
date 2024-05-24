@@ -96,7 +96,7 @@ class ExpenditureDetailController extends Controller
         $balance            = $expenditure_details[5]['balance'];
         $data = [
             'title'                 => 'Detail Expenses for '.$request->expenditure_item_name,
-            'date'                  => date('m/d/Y'),
+            'date'                  => date('d/m/Y'),
             'organisation'          => $organisation,
             'expenditure_details'   => $expenditure_details[0],
             'president'             => $president,

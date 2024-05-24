@@ -99,7 +99,7 @@ class IncomeActivityController extends Controller
 
         $data = [
             'title'               => !is_null($request->payment_item_name)?'Income Activities for '. $request->payment_item_name:'Income Activities for Year '.$request->year,
-            'date'                => date('m/d/Y'),
+            'date'                => date('d/m/Y'),
             'organisation'        => $organisation,
             'income_activities'   => $income_activities->data,
             'total'               => $total,
