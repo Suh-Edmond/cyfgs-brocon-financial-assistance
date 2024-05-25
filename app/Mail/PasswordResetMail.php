@@ -14,18 +14,20 @@ class PasswordResetMail extends Mailable
     public $redirectLink;
     public $organisation_logo;
     public $year;
+    public $token;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($data, $redirectLink, $organisation_logo, $year)
+    public function __construct($data, $redirectLink, $organisation_logo, $year, $token)
     {
         $this->data = $data;
         $this->redirectLink = $redirectLink;
         $this->organisation_logo = $organisation_logo;
         $this->year = $year;
+        $this->token = $token;
     }
 
     /**

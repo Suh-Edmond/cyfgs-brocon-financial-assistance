@@ -20,7 +20,8 @@ class MemberInvitation extends Model
         'user_id',
         'expire_at',
         'has_seen_notification',
-        'role_id'
+        'role_id',
+        'invitation_token'
     ];
 
 
