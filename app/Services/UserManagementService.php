@@ -33,6 +33,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
 
 class UserManagementService implements UserManagementInterface
@@ -78,7 +79,7 @@ class UserManagementService implements UserManagementInterface
             $assignedRole = $this->getAssignedRole($request->role);
             MemberInvitation::create([
                 'user_id'               => $request->user_id,
-                'expire_at'             => Carbon::now()->addHours(4),
+                'expire_at'             => Carbon::now()->addHours(1),
                 'has_seen_notification' => false,
                 'role_id'               => $assignedRole->id
             ]);
@@ -329,12 +330,12 @@ class UserManagementService implements UserManagementInterface
         ]);
         $user = User::where('email', $request->email)->firstOrFail();
         $this->validateIfUserCanLogin($user);
-        $token = md5(mt_rand());
-        $redirectLink = env('PASSWORD_RESET_UI_REDIRECT_LINK')."?token=".$token;
+        $token = $this->generatePaswordResetToken();
+        $redirectLink = env('PASSWORD_RESET_UI_REDIRECT_LINK');
         $organisation_logo = $user->organisation->logo;
         $year = Carbon::now()->year;
         try {
-            Mail::to($user['email'])->send(new PasswordResetMail($user, $redirectLink, $organisation_logo, $year));
+            Mail::to($user['email'])->send(new PasswordResetMail($user, $redirectLink, $organisation_logo, $year, $token));
         }catch (Exception $exception){
             throw new EmailException("Could not send reset email link", 550);
         }
@@ -344,7 +345,7 @@ class UserManagementService implements UserManagementInterface
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             'user_id' => $user->id,
-            'expire_at' => Carbon::now()->addHours(4)
+            'expire_at' => Carbon::now()->addMinutes(10)
         ]);
     }
 
