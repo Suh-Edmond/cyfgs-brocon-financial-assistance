@@ -8,9 +8,9 @@
     <meta name="description" content="overview &amp; stats" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 </head>
-<body style="display: flex; justify-content: center;margin-bottom: 15px;margin-top: 15px;height: 100%">
+<body style="margin-bottom: 20px;margin-top: 20px;">
 
- <div style="width: 500px;border: dashed 1px black;padding: 20px;height: 400px;display: flex;flex-flow: column">
+ <div style="padding: 20px;">
      <div style="text-align: center">
          <img src="{{url("/images/App_Logo.jpeg")}}" alt="organisation logo" width="100px;" height="100px;">
      </div>

@@ -6,9 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="d71c4c3c-9d87-4403-a1f0-a9f945658af0" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Models/MemberInvitation.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/MemberInvitation.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Services/UserManagementService.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Services/UserManagementService.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Traits/HelpTrait.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Traits/HelpTrait.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/Email/MemberInvitationEmail.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/Email/MemberInvitationEmail.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/Email/PasswordResetConfirmation.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/Email/PasswordResetConfirmation.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/Email/PasswordResetEmail.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/Email/PasswordResetEmail.blade.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -467,7 +467,7 @@
       <workItem from="1716223198114" duration="50000" />
       <workItem from="1716223257895" duration="10693000" />
       <workItem from="1716283069448" duration="5099000" />
-      <workItem from="1716535428522" duration="16289000" />
+      <workItem from="1716535428522" duration="22062000" />
     </task>
     <servers />
   </component>
