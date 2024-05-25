@@ -69,8 +69,9 @@ class UserManagementService implements UserManagementInterface
 
     public function sendInvitation($request)
     {
+        $invitation_token = $this->generateSecurityToken(20);
         $auth_user = $request->user();
-        $redirectLink = env('MEMBER_INVITATION_REDIRECT_LINK').$request->role;
+        $redirectLink = env('MEMBER_INVITATION_REDIRECT_LINK').$request->role."&key=".$invitation_token;
         $organisation_logo = $auth_user->organisation->logo;
         $year = Carbon::now()->year;
         try {
@@ -81,7 +82,8 @@ class UserManagementService implements UserManagementInterface
                 'user_id'               => $request->user_id,
                 'expire_at'             => Carbon::now()->addHours(1),
                 'has_seen_notification' => false,
-                'role_id'               => $assignedRole->id
+                'role_id'               => $assignedRole->id,
+                'invitation_token'                      => $invitation_token
             ]);
         }catch (Exception $exception){
             throw new BusinessValidationException("Could not send member's invitation email", 404);
@@ -260,10 +262,10 @@ class UserManagementService implements UserManagementInterface
     public function checkUserExist($request)
     {
         $user = User::where('email', $request->credential)->firstOrFail();
-        $member_invitation = MemberInvitation::where('user_id', $user->id)->first();
+        $member_invitation = MemberInvitation::where('user_id', $user->id)->where('invitation_token', $request->invitation_token)->first();
         if(isset($member_invitation)){
             if(Carbon::now()->greaterThan($member_invitation->expire_at)){
-                throw new UnAuthorizedException("Member's invitation link has expired. Please request for a new one", 403);
+                throw new BusinessValidationException("Member's invitation link has expired. Please request for a new one", 400);
             }
         }else {
             throw new UnAuthorizedException("Invalid Invitation Link", 403);
@@ -330,7 +332,7 @@ class UserManagementService implements UserManagementInterface
         ]);
         $user = User::where('email', $request->email)->firstOrFail();
         $this->validateIfUserCanLogin($user);
-        $token = $this->generatePaswordResetToken();
+        $token = $this->generateSecurityToken(7);
         $redirectLink = env('PASSWORD_RESET_UI_REDIRECT_LINK');
         $organisation_logo = $user->organisation->logo;
         $year = Carbon::now()->year;
