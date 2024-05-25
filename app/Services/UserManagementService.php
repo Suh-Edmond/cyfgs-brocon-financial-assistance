@@ -33,6 +33,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
 
 class UserManagementService implements UserManagementInterface
@@ -68,8 +69,9 @@ class UserManagementService implements UserManagementInterface
 
     public function sendInvitation($request)
     {
+        $invitation_token = $this->generateSecurityToken(20);
         $auth_user = $request->user();
-        $redirectLink = env('MEMBER_INVITATION_REDIRECT_LINK').$request->role;
+        $redirectLink = env('MEMBER_INVITATION_REDIRECT_LINK').$request->role."&key=".$invitation_token;
         $organisation_logo = $auth_user->organisation->logo;
         $year = Carbon::now()->year;
         try {
@@ -78,9 +80,10 @@ class UserManagementService implements UserManagementInterface
             $assignedRole = $this->getAssignedRole($request->role);
             MemberInvitation::create([
                 'user_id'               => $request->user_id,
-                'expire_at'             => Carbon::now()->addHours(4),
+                'expire_at'             => Carbon::now()->addHours(1),
                 'has_seen_notification' => false,
-                'role_id'               => $assignedRole->id
+                'role_id'               => $assignedRole->id,
+                'invitation_token'                      => $invitation_token
             ]);
         }catch (Exception $exception){
             throw new BusinessValidationException("Could not send member's invitation email", 404);
@@ -259,10 +262,10 @@ class UserManagementService implements UserManagementInterface
     public function checkUserExist($request)
     {
         $user = User::where('email', $request->credential)->firstOrFail();
-        $member_invitation = MemberInvitation::where('user_id', $user->id)->first();
+        $member_invitation = MemberInvitation::where('user_id', $user->id)->where('invitation_token', $request->invitation_token)->first();
         if(isset($member_invitation)){
             if(Carbon::now()->greaterThan($member_invitation->expire_at)){
-                throw new UnAuthorizedException("Member's invitation link has expired. Please request for a new one", 403);
+                throw new BusinessValidationException("Member's invitation link has expired. Please request for a new one", 400);
             }
         }else {
             throw new UnAuthorizedException("Invalid Invitation Link", 403);
@@ -329,23 +332,23 @@ class UserManagementService implements UserManagementInterface
         ]);
         $user = User::where('email', $request->email)->firstOrFail();
         $this->validateIfUserCanLogin($user);
-        $token = md5(mt_rand());
-        $redirectLink = env('PASSWORD_RESET_UI_REDIRECT_LINK')."?token=".$token;
+        $token = $this->generateSecurityToken(7);
+        $redirectLink = env('PASSWORD_RESET_UI_REDIRECT_LINK');
         $organisation_logo = $user->organisation->logo;
         $year = Carbon::now()->year;
         try {
-            Mail::to($user['email'])->send(new PasswordResetMail($user, $redirectLink, $organisation_logo, $year));
+            Mail::to($user['email'])->send(new PasswordResetMail($user, $redirectLink, $organisation_logo, $year, $token));
+            PasswordReset::create([
+                'email' => $user->email,
+                'token' => $token,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+                'user_id' => $user->id,
+                'expire_at' => Carbon::now()->addMinutes(10)
+            ]);
         }catch (Exception $exception){
             throw new EmailException("Could not send reset email link", 550);
         }
-        PasswordReset::create([
-            'email' => $user->email,
-            'token' => $token,
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now(),
-            'user_id' => $user->id,
-            'expire_at' => Carbon::now()->addHours(4)
-        ]);
     }
 
     public function validateResetToken($request)
@@ -356,7 +359,7 @@ class UserManagementService implements UserManagementInterface
         $resetData = PasswordReset::where('token',$request->token)->first();
         if(isset($resetData)){
             if(Carbon::now()->greaterThan($resetData->expire_at)){
-                throw new UnAuthorizedException("Password Reset token has Expired", 403);
+                throw new BusinessValidationException("Password Reset token has Expired", 400);
             }
         }else {
             throw new UnAuthorizedException("Invalid token", 403);
