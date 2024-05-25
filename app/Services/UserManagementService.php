@@ -336,17 +336,17 @@ class UserManagementService implements UserManagementInterface
         $year = Carbon::now()->year;
         try {
             Mail::to($user['email'])->send(new PasswordResetMail($user, $redirectLink, $organisation_logo, $year, $token));
+            PasswordReset::create([
+                'email' => $user->email,
+                'token' => $token,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+                'user_id' => $user->id,
+                'expire_at' => Carbon::now()->addMinutes(10)
+            ]);
         }catch (Exception $exception){
             throw new EmailException("Could not send reset email link", 550);
         }
-        PasswordReset::create([
-            'email' => $user->email,
-            'token' => $token,
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now(),
-            'user_id' => $user->id,
-            'expire_at' => Carbon::now()->addMinutes(10)
-        ]);
     }
 
     public function validateResetToken($request)
@@ -357,7 +357,7 @@ class UserManagementService implements UserManagementInterface
         $resetData = PasswordReset::where('token',$request->token)->first();
         if(isset($resetData)){
             if(Carbon::now()->greaterThan($resetData->expire_at)){
-                throw new UnAuthorizedException("Password Reset token has Expired", 403);
+                throw new BusinessValidationException("Password Reset token has Expired", 400);
             }
         }else {
             throw new UnAuthorizedException("Invalid token", 403);
