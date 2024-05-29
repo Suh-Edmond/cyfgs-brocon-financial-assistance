@@ -4,6 +4,7 @@ namespace App\Http;
 
 use App\Http\Middleware\IsAdminIsPresidentIsFinancialSecretary;
 use App\Http\Middleware\IsAdminMiddleware;
+use App\Http\Middleware\IsAdminOrIsTreasurer;
 use App\Http\Middleware\IsAuditorMiddleware;
 use App\Http\Middleware\IsElectionAdmin;
 use App\Http\Middleware\IsFinancialSecretaryMiddleware;
@@ -94,7 +95,8 @@ class Kernel extends HttpKernel
         'isElectionAdmin' => IsElectionAdmin::class,
         'IsPresidentIsFinancialSecretaryIsTreasurerIsAdmin' => IsPresidentIsFinancialSecretaryIsTreasurerIsAdmin::class,
         'isPresidentOrIsAdmin' => IsPresidentOrIsAdmin::class,
-        'isAdminIsPresidentIsFinancialSecretary' => IsAdminIsPresidentIsFinancialSecretary::class
+        'isAdminIsPresidentIsFinancialSecretary' => IsAdminIsPresidentIsFinancialSecretary::class,
+        'IsAdminOrIsTreasurer' => IsAdminOrIsTreasurer::class
 
     ];
 }
