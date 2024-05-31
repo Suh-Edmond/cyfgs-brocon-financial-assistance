@@ -101,7 +101,8 @@ class PaymentItemController extends Controller
             'treasurer'           => $treasurer,
             'fin_secretary'       => $fin_sec,
             'total'               => $this->computeTotalAmountByPaymentCategory($items),
-            'organisation_logo'   => $organisation->logo
+            'organisation_logo'   => $organisation->logo,
+            'organisation_telephone' => $this->setOrganisationTelephone($organisation->telephone),
         ];
 
         $pdf = PDF::loadView('PaymentItem.PaymentItems', $data);
