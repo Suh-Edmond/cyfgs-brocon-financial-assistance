@@ -35,7 +35,7 @@
     <br>
 
     <div>If you don't recognise the sender, please ignore this email, and nothing will happen. <br>
-        <span style="color: red">This Invitation link will expire within 1 hour</span>.
+        <span style="color: red">This Invitation link will expire within 24 hours</span>.
     </div><br>
 
     <p>Sincerely,<br>
