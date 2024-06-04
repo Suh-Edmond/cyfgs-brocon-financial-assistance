@@ -118,15 +118,14 @@ class UserSavingService implements UserSavingInterface
         return new UserSavingCollection($savings, $total);
     }
 
-    public function getMemberSavingPerQuarter($quarter_num, $current_year, $code)
+    public function getMemberSavingPerQuarter($start_quarter, $end_quarter, $code, $session_id)
     {
-        $start_quarter = $this->getStartQuarter($current_year->year, $quarter_num)[0];
-        $end_quarter = $this->getStartQuarter($current_year->year, $quarter_num)[1];
 
         $savings =  DB::table('user_savings')
             ->join('users', 'users.id', '=', 'user_savings.user_id')
             ->join('sessions', 'sessions.id' , '=', 'user_savings.session_id')
             ->where('user_savings.approve', PaymentStatus::APPROVED)
+            ->where('sessions.id', $session_id)
             ->whereBetween('user_savings.created_at', [$start_quarter, $end_quarter])
             ->selectRaw('SUM(user_savings.amount_deposited) as amount')
             ->get()[0]->amount;

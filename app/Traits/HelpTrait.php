@@ -13,6 +13,8 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 trait HelpTrait {
+    public static string $INCOME_ONLY = "INCOME_ONLY";
+    public static string $BALANCE_BROUGHT_FORWARD = "BALANCE_BROUGHT_FORWARD";
     public static function generateCode($size): string
     {
         $code  = "";
@@ -261,7 +263,9 @@ trait HelpTrait {
             1 => "January - March",
             2 => "April - June",
             3 => "July - September",
-            4 =>"October - December"
+            4 =>"October - December",
+            6 => "January - June",
+            12 => "July - December"
         ];
         return $quarters[$num];
     }
@@ -411,28 +415,64 @@ trait HelpTrait {
         return $nonAdminRef;
     }
 
-    public static function getStartQuarter($year, $quarter)
+    public static function getStartQuarter($year, $quarter, $type)
     {
-        $start_date = "";
-        $end_date = "";
-        switch ($quarter){
-            case 1:
-                $start_date = Carbon::create($year, 2)->startOfQuarter();
-                $end_date = Carbon::create($year, 2)->endOfQuarter();
-            break;
-            case 2:
-                $start_date = Carbon::create($year, 6)->startOfQuarter();
-                $end_date = Carbon::create($year, 6)->endOfQuarter();
-            break;
-            case 3:
-                $start_date = Carbon::create($year, 9)->startOfQuarter();
-                $end_date = Carbon::create($year, 9)->endOfQuarter();
-            break;
-            case 4:
-                $start_date = Carbon::create($year, 12)->startOfQuarter();
-                $end_date = Carbon::create($year, 12)->endOfQuarter();
-            break;
+        if($type == self::$INCOME_ONLY){
+            switch ($quarter){
+                case 1:
+                    $start_date = Carbon::create($year, 2)->startOfQuarter();
+                    $end_date = Carbon::create($year, 2)->endOfQuarter();
+                    break;
+                case 2:
+                    $start_date = Carbon::create($year, 6)->startOfQuarter();
+                    $end_date = Carbon::create($year, 6)->endOfQuarter();
+                    break;
+                case 3:
+                    $start_date = Carbon::create($year, 9)->startOfQuarter();
+                    $end_date = Carbon::create($year, 9)->endOfQuarter();
+                    break;
+                case 4:
+                    $start_date = Carbon::create($year, 12)->startOfQuarter();
+                    $end_date = Carbon::create($year, 12)->endOfQuarter();
+                    break;
+                case 6:
+                    $start_date = Carbon::create($year, 2)->startOfQuarter();
+                    $end_date = Carbon::create($year, 6)->endOfQuarter();
+                    break;
+                case 12:
+                    $start_date = Carbon::create($year, 9)->startOfQuarter();
+                    $end_date = Carbon::create($year, 12)->endOfQuarter();
+                    break;
+                default:
+                    $start_date = Carbon::create($year, 2)->startOfQuarter();
+                    $end_date = Carbon::create($year, 12)->endOfQuarter();
+            }
+        }else if($type == self::$BALANCE_BROUGHT_FORWARD){
+            switch ($quarter){
+                case 1:
+                    $start_date = Carbon::create($year, 2)->startOfQuarter();
+                    $end_date = Carbon::create($year, 2)->endOfQuarter();
+                    break;
+                case 6:
+                case 2:
+                    $start_date = Carbon::create($year, 2)->startOfQuarter();
+                    $end_date = Carbon::create($year, 6)->endOfQuarter();
+                    break;
+                case 3:
+                    $start_date = Carbon::create($year, 2)->startOfQuarter();
+                    $end_date = Carbon::create($year, 9)->endOfQuarter();
+                    break;
+                case 12:
+                case 4:
+                    $start_date = Carbon::create($year, 2)->startOfQuarter();
+                    $end_date = Carbon::create($year, 12)->endOfQuarter();
+                    break;
+                default:
+                    $start_date = Carbon::create($year, 2)->startOfQuarter();
+                    $end_date = Carbon::create($year, 12)->endOfQuarter();
+            }
         }
+
 
         return [$start_date->toDateTimeString(),  $end_date->toDateTimeString()];
     }
