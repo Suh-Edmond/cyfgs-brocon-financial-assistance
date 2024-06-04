@@ -81,16 +81,15 @@ class RegistrationService implements RegistrationInterface
         $reg->save();
     }
 
-    public function getMemberRegistrationPerQuarter($quarter_num, $current_year, $code)
+    public function getMemberRegistrationPerQuarter($start_quarter,$end_quarter, $code, $session_id)
     {
-        $start_quarter = $this->getStartQuarter($current_year->year, $quarter_num)[0];
-        $end_quarter = $this->getStartQuarter($current_year->year, $quarter_num)[1];
 
         $reg_amount = DB::table('member_registrations')
             ->join('registrations', 'registrations.id' , '=', 'member_registrations.registration_id')
             ->join('users', 'users.id', '=', 'member_registrations.user_id')
             ->join('sessions', 'sessions.id' , '=', 'member_registrations.session_id')
             ->where('member_registrations.approve', PaymentStatus::APPROVED)
+            ->where('sessions.id', $session_id)
             ->whereBetween('member_registrations.created_at', [$start_quarter, $end_quarter])
             ->selectRaw('SUM(registrations.amount) as amount')
             ->get()[0]->amount;
@@ -99,7 +98,7 @@ class RegistrationService implements RegistrationInterface
 
     public function getMemberRegistrationPerYear($year, $code)
     {
-        $reg_amount = DB::table('member_registrations')
+         $reg_amount = DB::table('member_registrations')
             ->join('registrations', 'registrations.id' , '=', 'member_registrations.registration_id')
             ->join('users', 'users.id', '=', 'member_registrations.user_id')
             ->join('sessions', 'sessions.id' , '=', 'member_registrations.session_id')

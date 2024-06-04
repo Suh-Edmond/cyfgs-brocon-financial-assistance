@@ -119,15 +119,15 @@ class ActivitySupportService implements ActivitySupportInterface
         $sponsorship->save();
     }
 
-    public function getSponsorshipIncomePerQuarterly($quarter_num, $current_year, $payment_item): array
+    public function getSponsorshipIncomePerQuarterly($start_quarter,$end_quarter, $payment_item, $session_id): array
     {
-        $start_quarter = $this->getStartQuarter($current_year->year, $quarter_num)[0];
-        $end_quarter = $this->getStartQuarter($current_year->year, $quarter_num)[1];
+
         return  DB::table('activity_supports')
             ->join('payment_items', 'payment_items.id', '=', 'activity_supports.payment_item_id')
             ->join('sessions', 'sessions.id' , '=', 'activity_supports.session_id')
             ->where('activity_supports.approve', PaymentStatus::APPROVED)
             ->where('payment_items.id', $payment_item->id)
+            ->where('sessions.id', $session_id)
             ->whereBetween('activity_supports.created_at', [$start_quarter, $end_quarter])
             ->select('activity_supports.id', 'activity_supports.supporter as name', 'activity_supports.amount_deposited as amount', 'sessions.year')
             ->orderBy('name')

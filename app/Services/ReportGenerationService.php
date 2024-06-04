@@ -11,6 +11,7 @@ use App\Http\Resources\QuarterlyExpenditureResourceCollection;
 use App\Http\Resources\QuarterlyIncomeResource;
 use App\Interfaces\ReportGenerationInterface;
 use App\Traits\HelpTrait;
+use Carbon\Carbon;
 
 class ReportGenerationService implements ReportGenerationInterface
 {
@@ -87,14 +88,17 @@ class ReportGenerationService implements ReportGenerationInterface
 
     public function generateQuarterlyReport($request): array
     {
+
         $current_year = $this->sessionService->getCurrentSession();
-        $incomes = $this->fetchQuarterlyIncomes($request->organisation_id, $request->quarter, $current_year);
+
+        $incomes = $this->fetchQuarterlyIncomes($request->organisation_id, $request->quarter, $current_year, self::$INCOME_ONLY);
+        $expenditures = $this->fetchQuarterlyExpenditures($request->quarter,$current_year, $request->organisation_id, self::$INCOME_ONLY);
+        $balance_bf = $request->quarter == 6? 0: $this->computeBalanceBroughtForwardByQuarter($request, $current_year, self::$BALANCE_BROUGHT_FORWARD);
         $income_elements = $incomes[0];
-        $total_income = $incomes[1];
-        $expenditures = $this->fetchQuarterlyExpenditures($request->quarter,$current_year, $request->organisation_id);
+        $total_income = $incomes[1] + $balance_bf;
         $expenditures_elements = $expenditures[0];
         $total_expenditures = $expenditures[1];
-        $balance_bf = $this->computeBalanceBroughtForwardByQuarter($request, $current_year);
+
         $admins            = $this->getOrganisationAdministrators();
 
         return [$income_elements, $expenditures_elements, ["total_income" => $total_income], ["total_expenditure" => $total_expenditures],
@@ -106,19 +110,26 @@ class ReportGenerationService implements ReportGenerationInterface
         return $this->generateQuarterlyReport($request);
     }
 
-    public function computeBalanceBroughtForwardByQuarter($request, $current_year){
-        $quarter = (int) $request->quarter > 1 ? ((int) $request->quarter - 1) : ((int) $request->quarter);
-        $income = $this->fetchQuarterlyIncomes($request->organisation_id, $quarter, $current_year);
-        $expenditure = $this->fetchQuarterlyExpenditures($quarter, $current_year, $request->organisation_id);
+    public function computeBalanceBroughtForwardByQuarter($request, $current_year, $type){
+        $quarter = (int) $request->quarter > 1 && $type == self::$BALANCE_BROUGHT_FORWARD ? ((int) $request->quarter - 1) : ((int) $request->quarter);
+
+        $income = $this->fetchQuarterlyIncomes($request->organisation_id, $quarter, $current_year, $type);
+
+        $expenditure = $this->fetchQuarterlyExpenditures($quarter, $current_year, $request->organisation_id, $type);
         return $income[1] - $expenditure[1];
     }
 
     public function computeBalanceBroughtForwardByYear($request)
     {
-        $previous_year = (int)$request->year_label - 1;
-        $previous_year_id = $this->sessionService->getSessionByLabel($previous_year);
-        $income = $this->fetchYearIncomes($previous_year_id, $request->year_label, $request->user()->organisation_id)[1];
-        $expenditure = $this->fetchYearlyExpenditures($previous_year_id, $request->user()->organisation_id)[1];
+        $balance_brought_forward = 0;
+        $previous_year_label = (int)$request->year_label - 1;
+        $previous_year = $this->sessionService->getSessionByLabel($previous_year_label);
+        if(!isset($previous_year)){
+            return $balance_brought_forward;
+        }
+        $income = $this->fetchYearIncomes($previous_year->id, $previous_year_label, $request->user()->organisation_id)[1];
+
+        $expenditure = $this->fetchYearlyExpenditures($previous_year->id, $request->user()->organisation_id)[1];
 
         return $income - $expenditure;
     }
@@ -126,15 +137,15 @@ class ReportGenerationService implements ReportGenerationInterface
 
     public function generateYearlyReport($request): array
     {
-        $bal_brought_forward = $this->computeBalanceBroughtForwardByYear($request);
 
         $income = $this->fetchYearIncomes($request->year_id, $request->year_label, $request->user()->organisation_id);
 
         $expenditures = $this->fetchYearlyExpenditures($request->year_id, $request->user()->organisation_id);
 
+        $bal_brought_forward = $this->computeBalanceBroughtForwardByYear($request);
         $admins            = $this->getOrganisationAdministrators();
         $income_list = $income[0];
-        $total_income = $income[1];
+        $total_income = $income[1] + $bal_brought_forward;
         $expenditure_list = $expenditures[0];
         $total_expenditure = $expenditures[1];
 
@@ -146,10 +157,10 @@ class ReportGenerationService implements ReportGenerationInterface
     {
         return $this->generateYearlyReport($request);
     }
-    private function fetchQuarterlyExpenditures($quarter,$current_year, $organisation_id): array
+    private function fetchQuarterlyExpenditures($quarter,$current_year, $organisation_id, $type): array
     {
-        $start_quarter = $this->getStartQuarter($current_year->year, $quarter)[0];
-        $end_quarter = $this->getStartQuarter($current_year->year, $quarter)[1];
+        $start_quarter = $this->getStartQuarter($current_year->year, $quarter,$type)[0];
+        $end_quarter = $this->getStartQuarter($current_year->year, $quarter, $type)[1];
         $expenses = [];
         $exp_total = 0;
         $expenditure_categories = $this->expenditureCategoryService->getExpenditureCategoriesByOrganisationYear($organisation_id, $current_year->year);
@@ -172,31 +183,33 @@ class ReportGenerationService implements ReportGenerationInterface
     }
 
 
-    private function fetchQuarterlyIncomes($organisation_id, $quarter, $current_year): array
+    private function fetchQuarterlyIncomes($organisation_id, $quarter, $current_year, $type): array
     {
-        $start_quarter = $this->getStartQuarter($current_year->year, (int)$quarter)[0];
-        $end_quarter = $this->getStartQuarter($current_year->year, (int)$quarter)[1];
+
+        $start_quarter = $this->getStartQuarter($current_year->year, (int)$quarter, $type)[0];
+        $end_quarter = $this->getStartQuarter($current_year->year, (int)$quarter, $type)[1];
         $payment_categories = $this->paymentCategoryService->getPaymentCategoriesByOrganisationAndYear($organisation_id, $current_year->year);
         $incomes = array();
         $total_reg_saving = 0;
         $total_income = null;
-        $member_reg = $this->registrationService->getMemberRegistrationPerQuarter($quarter, $current_year, "MR");
-        $savings = $this->userSavingService->getMemberSavingPerQuarter($quarter, $current_year, "MS");
+        $member_reg = $this->registrationService->getMemberRegistrationPerQuarter($start_quarter, $end_quarter, "MR", $current_year->id);
+        $savings = $this->userSavingService->getMemberSavingPerQuarter($start_quarter, $end_quarter, "MS", $current_year->id);
         array_push($incomes, $member_reg, $savings);
         $total_reg_saving += $member_reg->total + $savings->total;
         $quarterly_incomes = array();
+
+
         foreach ($payment_categories as $key => $payment_category){
             $payment_items = $this->paymentItemService->getPaymentActivitiesByCategoryAndSession($payment_category->id, $current_year->id);
             $payment_activities = array();
             $payment_category_total = 0;
             foreach ($payment_items as $payment_item_key => $payment_item){
                 $payment_incomes = array();
-                $supports = $this->activitySupportService->getSponsorshipIncomePerQuarterly($quarter, $current_year, $payment_item);
-                $activities = $this->incomeActivityService->getQuarterlyIncomeActivities($quarter, $current_year, $payment_item);
-                $user_contribution = $this->userContributionService->getContributionsByItemAndSession($payment_item->id, $start_quarter, $end_quarter);
+                $supports = $this->activitySupportService->getSponsorshipIncomePerQuarterly($start_quarter,$end_quarter, $payment_item, $current_year->id);
+                $activities = $this->incomeActivityService->getQuarterlyIncomeActivities($start_quarter,$end_quarter, $payment_item, $current_year->id);
+                $user_contribution = $this->userContributionService->getContributionsByItemAndSession($payment_item->id, $start_quarter, $end_quarter, $current_year->id);
                 $payment_incomes = array_merge($user_contribution, $payment_incomes, $supports, $activities);
                 $total = $this->calculateTotal($payment_incomes);
-
                 $payment_activity = json_encode(new QuarterlyIncomeResource($payment_item_key + 1, $payment_item->name, $payment_incomes, $total));
 
                 array_push($payment_activities, json_decode($payment_activity));
@@ -209,29 +222,36 @@ class ReportGenerationService implements ReportGenerationInterface
             $total_income = $payment_category_total + $total_reg_saving;
             array_push($quarterly_incomes, $incomes, $total_income);
          }
+
         return $quarterly_incomes;
     }
 
     private function fetchYearIncomes($year_id, $year_label, $organisation_id): array
     {
+
         $payment_categories = $this->paymentCategoryService->getPaymentCategoriesByOrganisationAndYear($organisation_id, $year_label);
         $incomes = array();
         $total_reg_saving = 0;
         $year_incomes = array();
+
         $member_reg = $this->registrationService->getMemberRegistrationPerYear($year_id, "MR");
+
         $savings = $this->userSavingService->getMemberSavingPerYear($year_id, "MS");
         array_push($incomes, $member_reg, $savings);
         $total_reg_saving += $member_reg->total + $savings->total;
+
         foreach ($payment_categories as $key => $payment_category){
             $payment_items = $this->paymentItemService->getPaymentActivitiesByCategoryAndSession($payment_category->id, $year_id);
             $payment_activities = array();
             $payment_category_total = 0;
+
             foreach ($payment_items as $payment_item_key => $payment_item){
                 $payment_incomes = array();
                 $supports = $this->activitySupportService->getSponsorshipIncomePerYear($year_id, $payment_item);
                 $activities = $this->incomeActivityService->getYearIncomeActivities($year_id, $payment_item);
                 $user_contribution = $this->userContributionService->getContributionsByItemAndYear($payment_item->id, $year_id);
                 $payment_incomes = array_merge($user_contribution, $payment_incomes, $supports, $activities);
+
                 $total = $this->calculateTotal($payment_incomes);
 
                 $payment_activity = json_encode(new QuarterlyIncomeResource($payment_item_key + 1, $payment_item->name, $payment_incomes, $total));
