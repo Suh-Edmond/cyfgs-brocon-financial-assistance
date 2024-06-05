@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use App\Constants\PaymentStatus;
 use App\Constants\RegistrationStatus;
+use App\Constants\SessionStatus;
 use App\Models\Session;
 use App\Traits\HelpTrait;
 use App\Traits\ResponseTrait;
@@ -16,12 +17,14 @@ class UserResource extends JsonResource
 
     private $token;
     private $hasLoginBefore;
+    private $current_session;
 
     public function __construct($resource, $token = null, $hasLoginBefore = null)
     {
         parent::__construct($resource);
         $this->token = $token;
         $this->hasLoginBefore = $hasLoginBefore;
+        $this->current_session = Session::where('status', SessionStatus::ACTIVE)->first();
     }
     /**
      * Transform the resource into an array.
@@ -31,6 +34,7 @@ class UserResource extends JsonResource
      */
     public function toArray($request)
     {
+
         return [
             'id'             => $this->id,
             'name'           => $this->name,
@@ -44,10 +48,10 @@ class UserResource extends JsonResource
             'picture'        => $this->picture,
             'roles'          => $this->roles,
             'token'          => $this->hasLoginBefore ? $this->token: "",
-            'has_register'   => !is_null($this->approve) && $this->approve == PaymentStatus::APPROVED ? RegistrationStatus::REGISTERED : RegistrationStatus::NOT_REGISTERED,
+            'has_register'   => !is_null($this->approve) && $this->approve == PaymentStatus::APPROVED && $this->current_session->id == $this->session_id ? RegistrationStatus::REGISTERED : RegistrationStatus::NOT_REGISTERED,
             'hasLoginBefore' => $this->hasLoginBefore,
-            'has_paid'       => !is_null($this->approve),
-            'approve'        => !is_null($this->approve)? $this->approve : '',
+            'has_paid'       => !is_null($this->approve) && $this->current_session->id == $this->session_id,
+            'approve'        => !is_null($this->approve) && $this->current_session->id == $this->session_id? $this->approve : '',
             'year'           => !is_null(Session::find($this->session_id)) ? Session::find($this->session_id)->year : null,
             'session_id'     => $this->session_id,
             'status'         => $this->status,

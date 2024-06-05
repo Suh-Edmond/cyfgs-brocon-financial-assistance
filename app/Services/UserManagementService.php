@@ -287,25 +287,22 @@ class UserManagementService implements UserManagementInterface
             ->leftJoin('member_registrations', 'users.id', '=', 'member_registrations.user_id')
             ->where('organisations.id', $request->organisation_id);
 
-        if(isset($request->year)) {
-            $filter_users = $filter_users->where('member_registrations.session_id', $request->year);
+        if(isset($request->has_register) && $request->has_register == RegistrationStatus::REGISTERED){
+            $filter_users = $filter_users->where('member_registrations.session_id', $request->year)->where('member_registrations.approve', PaymentStatus::APPROVED);
         }
-        if(isset($request->has_register) && $request->has_register == RegistrationStatus::REGISTERED && $request->has_register != "ALL"){
-            $filter_users = $filter_users->where('member_registrations.approve', PaymentStatus::APPROVED);
+        if(isset($request->has_register) && $request->has_register == RegistrationStatus::NOT_REGISTERED){
+            $filter_users = $filter_users->whereNull('member_registrations.approve')->orWhere('member_registrations.approve', PaymentStatus::PENDING)->orWhere('member_registrations.approve', PaymentStatus::DECLINED);
         }
-        if(isset($request->has_register) && $request->has_register == RegistrationStatus::NOT_REGISTERED && $request->has_register != "ALL"){
-            $filter_users = $filter_users->whereNull('member_registrations.approve');
+        if(isset($request->has_register) && $request->has_register == PaymentStatus::PENDING){
+            $filter_users = $filter_users->where('member_registrations.session_id', $request->year)->where('member_registrations.approve', PaymentStatus::PENDING);
         }
-        if(isset($request->has_register) && $request->has_register == PaymentStatus::PENDING && $request->has_register != "ALL"){
-            $filter_users = $filter_users->where('member_registrations.approve', PaymentStatus::PENDING);
+        if(isset($request->has_register) && $request->has_register == PaymentStatus::DECLINED ){
+            $filter_users = $filter_users->where('member_registrations.session_id', $request->year)->where('member_registrations.approve', PaymentStatus::DECLINED);
         }
-        if(isset($request->has_register) && $request->has_register == PaymentStatus::DECLINED && $request->has_register != "ALL"){
-            $filter_users = $filter_users->where('member_registrations.approve', PaymentStatus::DECLINED);
-        }
-        if(isset($request->has_register) && $request->has_register == SessionStatus::ACTIVE && $request->has_register != "ALL"){
+        if(isset($request->has_register) && $request->has_register == SessionStatus::ACTIVE ){
             $filter_users = $filter_users->where('users.status', SessionStatus::ACTIVE);
         }
-        if(isset($request->has_register) && $request->has_register == SessionStatus::IN_ACTIVE && $request->has_register != "ALL"){
+        if(isset($request->has_register) && $request->has_register == SessionStatus::IN_ACTIVE){
             $filter_users = $filter_users->where('users.status', SessionStatus::IN_ACTIVE);
         }
         if(isset($request->gender) && $request->gender != "ALL"){

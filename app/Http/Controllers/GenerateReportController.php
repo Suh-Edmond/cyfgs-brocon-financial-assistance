@@ -89,7 +89,7 @@ class GenerateReportController extends Controller
             'date'                   => date('d/m/Y'),
             'organisation'           => $organisation,
             'incomes'                => $data[0],
-            'total_income'           => $data[2]['total_income'] + $data[4]['balance_brought_forward'],
+            'total_income'           => $data[2]['total_income'],
             'expenditures'           => $data[1],
             'total_expenditure'     => $data[3]['total_expenditure'],
             'bal_brought_forward'    => $data[4]['balance_brought_forward'],
@@ -97,7 +97,7 @@ class GenerateReportController extends Controller
             'organisation_telephone' => $this->setOrganisationTelephone($organisation->telephone),
             'treasurer'              => $data[6]['treasurer'],
             'fin_secretary'          => $data[7]['fin_sec'],
-            'balance'                => ($data[2]['total_income'] + $data[4]['balance_brought_forward']) - $data[3]['total_expenditure'],
+            'balance'                => $data[2]['total_income'] - $data[3]['total_expenditure'],
             'year'                   => $this->session_service->getCurrentSession()->year,
             'organisation_logo'      => $organisation->logo
         ];
@@ -130,7 +130,7 @@ class GenerateReportController extends Controller
             'date'                   => date('d/m/Y'),
             'organisation'           => $organisation,
             'incomes'                => $data[0],
-            'total_income'           => $data[2]['total_income'] + $data[4]['bal_brought_forward'],
+            'total_income'           => $data[2]['total_income'],
             'expenditures'           => $data[1],
             'total_expenditure'      => $data[3]['total_expenditure'],
             'bal_brought_forward'    => $data[4]['bal_brought_forward'],
@@ -138,7 +138,7 @@ class GenerateReportController extends Controller
             'organisation_telephone' => $this->setOrganisationTelephone($organisation->telephone),
             'treasurer'              => $data[6]['treasurer'],
             'fin_secretary'          => $data[7]['fin_sec'],
-            'balance'                => ($data[2]['total_income'] + $data[4]['bal_brought_forward']) - $data[3]['total_expenditure'],
+            'balance'                => $data[2]['total_income'] - $data[3]['total_expenditure'],
             'year'                   => $request->year_label,
             'organisation_logo'      => $organisation->logo
         ];
