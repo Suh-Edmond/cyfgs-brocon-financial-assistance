@@ -532,10 +532,12 @@ class UserContributionService implements UserContributionInterface {
     {
         $debts = [];
         $payment_items =  PaymentItem::where('compulsory', true)->where('session_id', $current_session_id)->get();
+
         foreach ($payment_items as $item) {
             if ($item->type == PaymentItemType::ALL_MEMBERS){
                 switch ($item->frequency) {
                     case PaymentItemFrequency::YEARLY:
+
                         $debts = array_merge($debts, $this->verifyItemPaymentByYear($item, $user_id, $current_session_id));
                         break;
                     case PaymentItemFrequency::QUARTERLY:
@@ -759,12 +761,12 @@ class UserContributionService implements UserContributionInterface {
 
     private function verifyItemPaymentByYear($item, $user_id, $current_session) {
         $debts = [];
-        if(count($this->verifyCompleteItemPaymentByYear($item->id, $user_id, $current_session->id)) == 0){
+        if(count($this->verifyCompleteItemPaymentByYear($item->id, $user_id, $current_session)) == 0){
              $to_be_paid = new MemberPaymentItemResource($item->id, $item->name, $item->amount,$item->amount, $item->compulsory,
                 $item->type, $item->frequency,"CONTRIBUTION",$current_session, null, null );
             array_push($debts, $to_be_paid);
         }
-        $last_payment = $this->verifyIncompleteItemPaymentsByYear($item->id, $user_id, $current_session->id);
+        $last_payment = $this->verifyIncompleteItemPaymentsByYear($item->id, $user_id, $current_session);
         if(!is_null($last_payment) && $last_payment->status != PaymentStatus::COMPLETE){
              $to_be_paid = new MemberPaymentItemResource($item->id, $item->name, $last_payment->balance,$item->amount, $item->compulsory,
                 $item->type, $item->frequency,"CONTRIBUTION", $current_session, null, null );
