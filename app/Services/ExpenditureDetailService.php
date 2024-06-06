@@ -26,7 +26,9 @@ class ExpenditureDetailService implements ExpenditureDetailInterface {
     {
 
         $item = ExpenditureItem::findOrFail($id);
-
+        if($item->approve == PaymentStatus::APPROVED){
+            throw new BusinessValidationException("Expenditure Item Details can't ne added after approval of the expenditure", 403);
+        }
         ExpenditureDetail::create([
             'name'                  => $request->name,
             'amount_spent'          => $request->amount_spent,
