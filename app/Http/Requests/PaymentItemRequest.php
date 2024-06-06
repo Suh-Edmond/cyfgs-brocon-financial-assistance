@@ -31,7 +31,10 @@ class PaymentItemRequest extends FormRequest
             'type'          => 'required|string',
             'frequency'     => 'required|string',
             'reference'     => '',
-            'deadline'      => 'required|date'
+            'deadline'      => 'required|date',
+            'is_range'      => 'required|boolean',
+            'start_amount'  => 'required',
+            'end_amount'    => 'required'
         ];
     }
 }

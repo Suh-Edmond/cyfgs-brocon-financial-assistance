@@ -37,7 +37,10 @@ class PaymentItemService implements PaymentItemInterface {
             'frequency'           => $request->frequency,
             'session_id'          => $current_session->id,
             'reference'           => $this->setPaymentItemReference($request->reference, $request->type),
-            'deadline'            => $request->deadline
+            'deadline'            => $request->deadline,
+            'is_range'            => $request->is_range,
+            'start_amount'        => $request->start_amount,
+            'end_amount'          => $request->end_amount
         ]);
     }
 
@@ -52,7 +55,10 @@ class PaymentItemService implements PaymentItemInterface {
             'type'          => $request->type,
             'frequency'     => $request->frequency,
             'reference'     => $this->setPaymentItemReference($request->reference, $request->type),
-            'deadline'      => $request->deadline
+            'deadline'      => $request->deadline,
+            'is_range'      => $request->is_range,
+            'start_amount'  => $request->start_amount,
+            'end_amount'    => $request->end_amount
         ]);
     }
 
@@ -84,13 +90,13 @@ class PaymentItemService implements PaymentItemInterface {
         if(isset($request->session_id)){
             $payment_items = $payment_items->where('session_id', $request->session_id);
         }
-        if(isset($request->is_compulsory) && $request->is_compulsory !== "ALL"){
+        if(isset($request->is_compulsory) && $request->is_compulsory != "ALL"){
             $payment_items = $payment_items->where('compulsory', $request->is_compulsory);
         }
-        if(isset($request->type) && $request->type !== "ALL"){
+        if(isset($request->type) && $request->type != "ALL"){
             $payment_items = $payment_items->where('type', $request->type);
         }
-        if(isset($request->frequency) && $request->frequency !== "ALL"){
+        if(isset($request->frequency) && $request->frequency != "ALL"){
             $payment_items = $payment_items->where('frequency', $request->frequency);
         }
         if(isset($request->state) && $request->state == "active"){
@@ -98,6 +104,9 @@ class PaymentItemService implements PaymentItemInterface {
         }
         if (isset($request->state) && $request->state == "expired"){
             $payment_items = $payment_items->whereDate('deadline', '<=', Carbon::now()->toDateString());
+        }
+        if(isset($request->is_range) && $request->is_range != "ALL"){
+            $payment_items = $payment_items->where('is_range', $request->is_range);
         }
         if(isset($request->filter)){
             $payment_items = $payment_items->where('payment_items.name', 'LIKE', '%'.$request->filter.'%');
