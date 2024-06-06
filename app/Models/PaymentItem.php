@@ -29,7 +29,10 @@ class PaymentItem extends Model
         'frequency',
         'session_id',
         'reference',
-        'deadline'
+        'deadline',
+        'is_range',
+        'start_amount',
+        'end_amount'
     ];
 
     public function paymentCategory(){

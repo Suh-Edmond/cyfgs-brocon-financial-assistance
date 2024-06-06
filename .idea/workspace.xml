@@ -6,7 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="d71c4c3c-9d87-4403-a1f0-a9f945658af0" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Resources/ExpenditureItemResource.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Resources/ExpenditureItemResource.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Models/PaymentItem.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/PaymentItem.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
