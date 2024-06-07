@@ -12,7 +12,9 @@ class BalanceSheetResource extends JsonResource
     private $total_yearly_balance;
     private $total_year_expected_amount;
 
-    public function __construct($resource, $member_yearly_payment_resource, $total_year_expected_amount,  $total_yearly_contribution, $total_yearly_balance, $session)
+    private $column_names;
+
+    public function __construct($resource, $member_yearly_payment_resource, $total_year_expected_amount,  $total_yearly_contribution, $total_yearly_balance, $session, $column_names)
     {
         parent::__construct($resource);
         $this->total_yearly_contribution = $total_yearly_contribution;
@@ -20,6 +22,7 @@ class BalanceSheetResource extends JsonResource
         $this->session = $session;
         $this->member_yearly_payment_resource = $member_yearly_payment_resource;
         $this->total_year_expected_amount = $total_year_expected_amount;
+        $this->column_names = $column_names;
     }
 
 
@@ -30,7 +33,8 @@ class BalanceSheetResource extends JsonResource
             'total_yearly_contribution'   => $this->total_yearly_contribution,
             'total_yearly_balance' => $this->total_yearly_balance,
             'total_year_expected_amount' => $this->total_year_expected_amount,
-            'members_contributions' => $this->member_yearly_payment_resource
+            'members_contributions' => $this->member_yearly_payment_resource,
+            'column_names'          => $this->column_names
         ];
     }
 }

@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Services;
+use App\Http\Resources\BalanceSheetColumns;
 use App\Http\Resources\BalanceSheetResource;
 use App\Http\Resources\MemberInfoResource;
 use App\Http\Resources\MemberPaymentItemContributionResource;
@@ -45,6 +46,7 @@ class BalanceSheetService implements BalanceSheetInterface {
         $total_year_contributions = 0;
         $total_year_balance = 0;
         $total_year_expected_amount = 0;
+        $column_names = array();
         foreach ($members as $key => $member){
             $memberPayments = array();
             $total_member_year_contribution = 0;
@@ -65,9 +67,11 @@ class BalanceSheetService implements BalanceSheetInterface {
             $total_member_year_balance =$perMemberExpectedAmount - $total_member_year_contribution;
             $total_year_balance += $total_member_year_balance;
             $total_year_expected_amount += $perMemberExpectedAmount;
-            $membersYearlyPayments[$member->name] =  (new MemberYearlyPaymentResource($member, $memberPayments, $total_member_year_contribution, $total_member_year_balance, new MemberInfoResource($member, $member->id, $member->name, $member->email), $perMemberExpectedAmount));
+            $membersYearlyPayments[] =  (new MemberYearlyPaymentResource($member, $memberPayments, $total_member_year_contribution, $total_member_year_balance, new MemberInfoResource($member, $member->id, $member->name, $member->email), $perMemberExpectedAmount));
         }
-        return new BalanceSheetResource(null, $membersYearlyPayments, $total_year_expected_amount, $total_year_contributions, $total_year_balance, new SessionResource($session));
+        $column_names = $this->getColumnNameForBalanceSheet($memberPayments);
+
+        return new BalanceSheetResource(null, $membersYearlyPayments, $total_year_expected_amount, $total_year_contributions, $total_year_balance, new SessionResource($session), $column_names);
     }
 
     public function downloadBalanceSheet($request)
@@ -83,5 +87,13 @@ class BalanceSheetService implements BalanceSheetInterface {
         }
 
         return $total;
+    }
+
+    private function getColumnNameForBalanceSheet($data)
+    {
+        return collect($data)->map(function ($ele) {
+            $payment_item = json_decode(json_encode($ele));
+            return new BalanceSheetColumns($payment_item, $payment_item->code, $payment_item->name);
+        })->toArray();
     }
 }
