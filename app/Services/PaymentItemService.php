@@ -84,13 +84,13 @@ class PaymentItemService implements PaymentItemInterface {
         if(isset($request->session_id)){
             $payment_items = $payment_items->where('session_id', $request->session_id);
         }
-        if(isset($request->is_compulsory) && $request->is_compulsory !== "ALL"){
+        if(isset($request->is_compulsory) && $request->is_compulsory != "ALL"){
             $payment_items = $payment_items->where('compulsory', $request->is_compulsory);
         }
-        if(isset($request->type) && $request->type !== "ALL"){
+        if(isset($request->type) && $request->type != "ALL"){
             $payment_items = $payment_items->where('type', $request->type);
         }
-        if(isset($request->frequency) && $request->frequency !== "ALL"){
+        if(isset($request->frequency) && $request->frequency != "ALL"){
             $payment_items = $payment_items->where('frequency', $request->frequency);
         }
         if(isset($request->state) && $request->state == "active"){
