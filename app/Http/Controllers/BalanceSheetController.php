@@ -31,10 +31,6 @@ class BalanceSheetController extends Controller
     {
         $balance_sheet_data = json_decode(json_encode($this->balanceSheetService->downloadBalanceSheet($request)));
         $organisation      = $request->user()->organisation;
-        $admins            = $this->getOrganisationAdministrators();
-        $president         = $admins[Roles::PRESIDENT];
-        $treasurer         = $admins[Roles::TREASURER];
-        $fin_sec           = $admins[Roles::FINANCIAL_SECRETARY];
 
         $data = [
             'title'             => "Balance Sheet for the Year ".$request->year,
@@ -42,16 +38,16 @@ class BalanceSheetController extends Controller
             'organisation'      => $organisation,
             'contributions'     => $balance_sheet_data->members_contributions,
             'organisation_telephone'   => $this->setOrganisationTelephone($organisation->telephone),
-            'president'         => $president,
-            'treasurer'         => $treasurer,
-            'fin_secretary'     => $fin_sec,
+            'president'         => $balance_sheet_data->president,
+            'treasurer'         => $balance_sheet_data->treasurer,
+            'fin_secretary'     => $balance_sheet_data->fin_sec,
             'organisation_logo' => $organisation->logo,
             'columns'           => $balance_sheet_data->column_names,
             'column_title'      => "Column codes and their names",
             'yearly_total'      => $balance_sheet_data->total_yearly_contribution,
             'yearly_expected'   => $balance_sheet_data->total_year_expected_amount,
             'year_balance'      => $balance_sheet_data->total_yearly_balance,
-            'col_span'          => (5 + count($balance_sheet_data->column_names)) - 3
+            'col_span'          => (5 + count($balance_sheet_data->column_names)) - 3,
         ];
 
         $pdf = PDF::loadView('BalanceSheet.BalanceSheet', $data);

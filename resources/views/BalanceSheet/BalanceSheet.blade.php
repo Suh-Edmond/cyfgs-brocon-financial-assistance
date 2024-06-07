@@ -81,9 +81,10 @@
     </div>
     <div style="margin-bottom: 50px">
         <table style="border: 1px solid black; border-collapse: collapse;width: 100%">
-            <tr style="padding: 13px;border: 1px solid black; font-size: smaller;">
+            <tr style="padding: 10x;border: 1px solid black; font-size: smaller;">
                 <th style="padding: 1px; border: 1px solid black;">S/N</th>
                 <th style="padding: 12px; border: 1px solid black;">Names</th>
+                <th style="padding: 12px; border: 1px solid black;">Amount</th>
             </tr>
             @foreach($columns as $colum)
             <tr style="border: 1px solid black; font-size: smaller">
@@ -92,6 +93,9 @@
                 </td>
                 <td style="padding: 12px; border: 1px solid black;">
                     {{$colum->name}}
+                </td>
+                <td style="padding: 12px; border: 1px solid black;">
+                    {{number_format($colum->amount)}}
                 </td>
             </tr>
             @endforeach

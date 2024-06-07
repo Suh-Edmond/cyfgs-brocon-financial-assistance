@@ -10,11 +10,16 @@ class BalanceSheetColumns extends JsonResource
     private $code;
     private $name;
 
-    public function __construct($resource, $code, $name)
+    private $id;
+    private $amount;
+
+    public function __construct($resource, $code, $name, $id, $amount)
     {
         parent::__construct($resource);
         $this->code = $code;
         $this->name = $name;
+        $this->id = $id;
+        $this->amount = $amount;
     }
 
     /**
@@ -27,7 +32,9 @@ class BalanceSheetColumns extends JsonResource
     {
         return [
             'code'  => $this->code,
-            'name'  => $this->name
+            'name'  => $this->name,
+            'id'    => $this->id,
+            'amount' => $this->amount
         ];
     }
 }

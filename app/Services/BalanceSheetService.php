@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Services;
+use App\Constants\Roles;
 use App\Http\Resources\BalanceSheetColumns;
 use App\Http\Resources\BalanceSheetResource;
 use App\Http\Resources\MemberInfoResource;
@@ -38,6 +39,8 @@ class BalanceSheetService implements BalanceSheetInterface {
 
     public function generateBalanceSheet($request)
     {
+        $admins            = $this->getOrganisationAdministrators();
+//        dd($admins[Roles::PRESIDENT][3]);
         $session = $this->sessionService->getSessionById($request->session_id);
         $registration = $this->registrationFeeService->getCurrentRegistrationFee();
         $members = $this->userManagementService->getUsers($request->organisation_id);
@@ -70,8 +73,8 @@ class BalanceSheetService implements BalanceSheetInterface {
             $membersYearlyPayments[] =  (new MemberYearlyPaymentResource($member, $memberPayments, $total_member_year_contribution, $total_member_year_balance, new MemberInfoResource($member, $member->id, $member->name, $member->email), $perMemberExpectedAmount));
         }
         $column_names = $this->getColumnNameForBalanceSheet($memberPayments);
-
-        return new BalanceSheetResource(null, $membersYearlyPayments, $total_year_expected_amount, $total_year_contributions, $total_year_balance, new SessionResource($session), $column_names);
+        return new BalanceSheetResource(null, $membersYearlyPayments, $total_year_expected_amount,
+            $total_year_contributions, $total_year_balance, new SessionResource($session), $column_names, $admins[Roles::PRESIDENT], $admins[Roles::TREASURER], $admins[Roles::FINANCIAL_SECRETARY]);
     }
 
     public function downloadBalanceSheet($request)
@@ -91,9 +94,11 @@ class BalanceSheetService implements BalanceSheetInterface {
 
     private function getColumnNameForBalanceSheet($data)
     {
+
         return collect($data)->map(function ($ele) {
             $payment_item = json_decode(json_encode($ele));
-            return new BalanceSheetColumns($payment_item, $payment_item->code, $payment_item->name);
+
+            return new BalanceSheetColumns($payment_item, $payment_item->code, $payment_item->name, $payment_item->id, $payment_item->amount_payable);
         })->toArray();
     }
 }
