@@ -42,31 +42,7 @@ class UserContributionService implements UserContributionInterface {
 
     public function updateUserContribution($request, $id)
     {
-//        $user_contribution = $this->findUserContributionById($id);
-//
-////        $amount_contributed = $this->getTotalAmountPaidByUserForTheItem($user_contribution->user_id, $user_contribution->payment_item_id) - $user_contribution->amount_deposited;
-//
-//        $total_amount_contributed = $amount_contributed + $request->amount_deposited;
-//
-//        $balance = $user_contribution->paymentItem->amount - $total_amount_contributed;
-//
-//        $hasCompleted = $this->verifyExcessUserContribution($total_amount_contributed, $user_contribution->paymentItem->amount);
-//
-//        $status = $this->getUserContributionStatus($user_contribution->paymentItem->amount, $total_amount_contributed);
-//
-//        if(!$hasCompleted){
-//            if($user_contribution->approve == PaymentStatus::PENDING){
-//                $user_contribution->update([
-//                    'amount_deposited' => $request->amount_deposited,
-//                    'comment'          => $request->comment,
-//                    'scan_picture'     => $request->scan_picture,
-//                    'balance'          => $balance,
-//                    'status'           => $status
-//                ]);
-//            }else {
-//                throw new BusinessValidationException("Income activity cannot be updated after been approved or declined");
-//            }
-//        }
+
     }
 
     public function getContributionsByItem($payment_item_id)
@@ -417,13 +393,7 @@ class UserContributionService implements UserContributionInterface {
 
     private function getUserContributionStatus($payment_item_amount, $total_amount_contributed)
     {
-        $status = null;
-        if($payment_item_amount == $total_amount_contributed){
-            $status = PaymentStatus::COMPLETE;
-        }else{
-            $status = PaymentStatus::INCOMPLETE;
-        }
-        return $status;
+        return  $total_amount_contributed == $payment_item_amount? PaymentStatus::COMPLETE : PaymentStatus::INCOMPLETE;
     }
 
     private function findUserContributionById($id)
@@ -448,7 +418,7 @@ class UserContributionService implements UserContributionInterface {
 
         $user_last_contribution = $this->getUserLastContributionByPaymentItem($user_id, $request->payment_item_id, $request->month_name, $request->quarterly_name, $payment_item->frequency);
 
-        $balance_contribution = $user_last_contribution == null ? ($payment_item_amount- $request->amount_deposited) : ($user_last_contribution->balance - $request->amount_deposited);
+        $balance_contribution = $this->getMemberLastContribution($user_last_contribution, $payment_item_amount, $request->amount_deposited);
 
         if(!$hasCompleted){
             UserContribution::create([
@@ -475,7 +445,11 @@ class UserContributionService implements UserContributionInterface {
 
     private function verifyExcessUserContribution($total_amount_contributed, $payment_item_amount)
     {
-        return $total_amount_contributed == $payment_item_amount;
+        return $total_amount_contributed > $payment_item_amount;
+    }
+
+    private function getMemberLastContribution($user_last_contribution,$payment_item_amount, $request_amount_deposited) {
+        return $user_last_contribution == null ? ($payment_item_amount- $request_amount_deposited) : ($user_last_contribution->balance - $request_amount_deposited);
     }
 
     private function validateAmountDeposited($payment_item_amount, $amount_deposited) {

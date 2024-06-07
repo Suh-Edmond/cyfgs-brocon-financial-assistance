@@ -39,9 +39,6 @@ class PaymentItemResource extends JsonResource
             'deadline_state'        => Carbon::now()->lessThan($this->deadline) ? "ACTIVE" : "EXPIRED",
             'payment_item_months'   => $this->paymentItemMonths,
             'payment_item_quarters'  => $this->paymentItemQuarters,
-            'is_range'              => $this->is_range,
-            'start_amount'          => $this->start_amount,
-            'end_amount'            => $this->end_amount
         ];
     }
 

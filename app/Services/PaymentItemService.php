@@ -37,10 +37,7 @@ class PaymentItemService implements PaymentItemInterface {
             'frequency'           => $request->frequency,
             'session_id'          => $current_session->id,
             'reference'           => $this->setPaymentItemReference($request->reference, $request->type),
-            'deadline'            => $request->deadline,
-            'is_range'            => $request->is_range,
-            'start_amount'        => $request->start_amount,
-            'end_amount'          => $request->end_amount
+            'deadline'            => $request->deadline
         ]);
     }
 
@@ -55,10 +52,7 @@ class PaymentItemService implements PaymentItemInterface {
             'type'          => $request->type,
             'frequency'     => $request->frequency,
             'reference'     => $this->setPaymentItemReference($request->reference, $request->type),
-            'deadline'      => $request->deadline,
-            'is_range'      => $request->is_range,
-            'start_amount'  => $request->start_amount,
-            'end_amount'    => $request->end_amount
+            'deadline'      => $request->deadline
         ]);
     }
 
@@ -104,9 +98,6 @@ class PaymentItemService implements PaymentItemInterface {
         }
         if (isset($request->state) && $request->state == "expired"){
             $payment_items = $payment_items->whereDate('deadline', '<=', Carbon::now()->toDateString());
-        }
-        if(isset($request->is_range) && $request->is_range != "ALL"){
-            $payment_items = $payment_items->where('is_range', $request->is_range);
         }
         if(isset($request->filter)){
             $payment_items = $payment_items->where('payment_items.name', 'LIKE', '%'.$request->filter.'%');
