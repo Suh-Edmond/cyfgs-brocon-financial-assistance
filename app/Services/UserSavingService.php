@@ -277,6 +277,16 @@ class UserSavingService implements UserSavingInterface
         return ['monthly_stat' => $monthly_stat, 'yearly_stat' => $yearly_stat, 'status_stat' => $status_stat];
     }
 
+    public function getTotalYearlyMemberSavings($session_id, $user_id)
+    {
+        return UserSaving::join('users', 'users.id', '=', 'user_savings.user_id')
+            ->join('sessions', 'sessions.id' , '=', 'user_savings.session_id')
+            ->where('user_savings.approve', PaymentStatus::APPROVED)
+            ->where('user_savings.session_id', $session_id)
+            ->where('users.id', $user_id)
+            ->selectRaw('SUM(user_savings.amount_deposited) - SUM(user_savings.amount_used) as balance_saving')->first();
+    }
+
     private function getTotalMonthlySavings($request)
     {
         $total_monthly_savings = [];

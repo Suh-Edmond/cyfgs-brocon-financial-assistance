@@ -181,14 +181,17 @@ class UserContributionService implements UserContributionInterface {
     public function getTotalAmountPaidByUserForTheItem($user_id, $payment_item_id, $month, $quarter, $frequency)
     {
         $contributions =  $this->getContributionByUserAndPaymentItem($payment_item_id, $user_id);
-        if($frequency == PaymentItemFrequency::QUARTERLY){
-            $contributions = $contributions->where('quarterly_name', $quarter);
+        switch ($frequency){
+            case PaymentItemFrequency::QUARTERLY:
+                $contributions = $contributions->where('quarterly_name', $quarter);
+            break;
+            case PaymentItemFrequency::MONTHLY:
+                $contributions = $contributions->where('month_name', $month);
+            break;
+            default:
+
         }
-        if($frequency == PaymentItemFrequency::MONTHLY){
-            $contributions = $contributions->where('month_name', $month);
-        }
-        $contributions = $contributions->sum('user_contributions.amount_deposited');
-        return $contributions;
+        return $contributions->sum('user_contributions.amount_deposited');
     }
 
 
@@ -494,7 +497,7 @@ class UserContributionService implements UserContributionInterface {
         return $contributions;
     }
 
-    private function getContributionByUserAndPaymentItem($payment_item_id, $user_id) {
+    public function getContributionByUserAndPaymentItem($payment_item_id, $user_id) {
         return UserContribution::join('users', ['users.id' => 'user_contributions.user_id'])
             ->join('payment_items', ['payment_items.id' => 'user_contributions.payment_item_id'])
             ->where('users.id', $user_id)

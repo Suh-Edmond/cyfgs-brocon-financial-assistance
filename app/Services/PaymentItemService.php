@@ -201,10 +201,21 @@ class PaymentItemService implements PaymentItemInterface {
             ->join('payment_categories', 'payment_categories.id', '=', 'payment_items.payment_category_id')
             ->join('sessions', 'sessions.id', '=', 'payment_items.session_id')
             ->where('payment_items.session_id', $session_id)
-            ->Where('payment_items.type', $type)
+            ->where('payment_items.type', $type)
             ->select('payment_items.id', 'payment_items.name', 'payment_items.amount', 'payment_items.session_id')
             ->distinct()
             ->get()->toArray();
+    }
+
+    public function getPaymentItemsForBalanceSheet($session_id)
+    {
+        return PaymentItem::join('payment_categories', ['payment_categories.id' => 'payment_items.payment_category_id'])
+                            ->join('sessions', ['sessions.id' => 'payment_items.session_id'])
+                            ->where('sessions.id', $session_id)
+                            ->where('compulsory', true)
+                            ->select('payment_items.*')
+                            ->distinct()
+                            ->orderBy('created_at')->get();
     }
 
     private function findPaymentItem($id, $payment_category_id)
