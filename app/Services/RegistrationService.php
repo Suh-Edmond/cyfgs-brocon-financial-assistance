@@ -109,4 +109,14 @@ class RegistrationService implements RegistrationInterface
         return new QuarterlyIncomeResource($code, "Member's Registration", [], $reg_amount);
     }
 
+    public function getMemberRegistration($session_id, $user_id){
+        return MemberRegistration::join('registrations', ['registrations.id' => 'member_registrations.registration_id'])
+                            ->join('users', ['users.id' => 'member_registrations.user_id'])
+                            ->join('sessions', ['sessions.id' => 'member_registrations.session_id'])
+                            ->where('member_registrations.approve', PaymentStatus::APPROVED)
+                            ->where('member_registrations.session_id', $session_id)
+                            ->where('user_id', $user_id)
+                            ->select('registrations.amount')->sum('amount');
+    }
+
 }

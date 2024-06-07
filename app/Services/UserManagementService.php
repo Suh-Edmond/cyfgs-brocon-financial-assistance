@@ -92,9 +92,7 @@ class UserManagementService implements UserManagementInterface
 
     public function getUsers($organisation_id)
     {
-        return User::join('organisations', 'organisations.id', '=', 'users.organisation_id')
-               ->where('organisations.id', $organisation_id)
-               ->where('users.status', SessionStatus::ACTIVE)
+        return User::where('users.status', SessionStatus::ACTIVE)
                ->select('users.*')
                ->distinct()
                ->orderBy('name')->get();

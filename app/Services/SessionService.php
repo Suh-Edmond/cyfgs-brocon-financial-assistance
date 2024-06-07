@@ -73,4 +73,9 @@ class SessionService implements SessionInterface
 
         return new SessionResourceCollection($sessions, $sessions->total(), $sessions->lastPage(), (int)$sessions->perPage(), $sessions->currentPage());
     }
+
+    public function getSessionById($id)
+    {
+        return Session::findOrFail($id);
+    }
 }
