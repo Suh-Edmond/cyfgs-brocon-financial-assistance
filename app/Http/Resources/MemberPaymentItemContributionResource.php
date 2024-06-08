@@ -14,7 +14,13 @@ class MemberPaymentItemContributionResource extends JsonResource
     private $code;
     private $balance;
     private $compulsory;
-     public function __construct($resource, $id, $name, $amount, $item_amount, $balance, $code, $compulsory)
+    private $type;
+    private $frequency;
+    private $payment_durations;
+    private $created_at;
+    private $reference;
+     public function __construct($resource, $id, $name, $amount, $item_amount, $balance, $code, $compulsory,
+                                $type, $frequency, $payment_durations, $created_at, $reference)
      {
          parent::__construct($resource);
          $this->id = $id;
@@ -24,6 +30,11 @@ class MemberPaymentItemContributionResource extends JsonResource
          $this->code = $code;
          $this->balance = $balance;
          $this->compulsory = $compulsory;
+         $this->type = $type;
+         $this->frequency = $frequency;
+         $this->payment_durations = $payment_durations;
+         $this->created_at = $created_at;
+         $this->reference = $reference;
      }
 
     /**
@@ -38,10 +49,15 @@ class MemberPaymentItemContributionResource extends JsonResource
             'id'  => $this->id,
             'name' => $this->name,
             'amount_deposited' => $this->amount,
-            'amount_payable' => $this->item_amount,
+            'amount' => $this->item_amount,
             'code'           => $this->code,
             'balance'        => $this->balance,
-            'compulsory'     => $this->compulsory
+            'compulsory'     => $this->compulsory,
+            'type'           => $this->type,
+            'frequency'      => $this->frequency,
+            'payment_durations' => $this->payment_durations,
+            'created_at'        => $this->created_at,
+            'reference'         => $this->reference
         ];
     }
 }
