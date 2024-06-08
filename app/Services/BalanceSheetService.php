@@ -40,7 +40,7 @@ class BalanceSheetService implements BalanceSheetInterface {
     public function generateBalanceSheet($request)
     {
         $admins            = $this->getOrganisationAdministrators();
-//        dd($admins[Roles::PRESIDENT][3]);
+
         $session = $this->sessionService->getSessionById($request->session_id);
         $registration = $this->registrationFeeService->getCurrentRegistrationFee();
         $members = $this->userManagementService->getUsers($request->organisation_id);
@@ -57,12 +57,12 @@ class BalanceSheetService implements BalanceSheetInterface {
             $savings = $this->userSavingService->getTotalYearlyMemberSavings($session->id, $member->id)->balance_saving;
             $balance_saving = $savings ?? 0;
             $total_member_year_contribution += ($registration_amount);
-            $memberPayments[] = new MemberPaymentItemContributionResource($registration, $registration->id, "Registration", $registration_amount, $registration->amount, ($registration->amount - $registration_amount), "MR");
-            $memberPayments[] = new MemberPaymentItemContributionResource($registration, $member->id, "Savings", $balance_saving, 0, 0, "MS");
+            $memberPayments[] = new MemberPaymentItemContributionResource($registration, $registration->id, "Registration", $registration_amount, $registration->amount, ($registration->amount - $registration_amount), "MR", $registration->is_compulsory);
+            $memberPayments[] = new MemberPaymentItemContributionResource($registration, $member->id, "Savings", $balance_saving, 0, 0, "MS", false);
             foreach ($payment_items as $k => $payment_item){
                 $amount_per_item = $this->userContributionService->getContributionByUserAndPaymentItem($payment_item->id, $member->id)->sum('user_contributions.amount_deposited');
                     $memberPayments[] = new MemberPaymentItemContributionResource($payment_item, $payment_item->id, $payment_item->name, $amount_per_item, $payment_item->amount, ($payment_item->amount - $amount_per_item),
-                        $payment_item->paymentCategory->code . '.' . $k);
+                        $payment_item->paymentCategory->code . '.' . $k, $payment_item->compulsory);
                 $total_member_year_contribution += $amount_per_item;
             }
             $total_year_contributions += $total_member_year_contribution;
@@ -98,7 +98,7 @@ class BalanceSheetService implements BalanceSheetInterface {
         return collect($data)->map(function ($ele) {
             $payment_item = json_decode(json_encode($ele));
 
-            return new BalanceSheetColumns($payment_item, $payment_item->code, $payment_item->name, $payment_item->id, $payment_item->amount_payable);
+            return new BalanceSheetColumns($payment_item, $payment_item->code, $payment_item->name, $payment_item->id, $payment_item->amount_payable, $payment_item->compulsory);
         })->toArray();
     }
 }

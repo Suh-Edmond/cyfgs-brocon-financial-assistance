@@ -85,6 +85,7 @@
                 <th style="padding: 1px; border: 1px solid black;">S/N</th>
                 <th style="padding: 12px; border: 1px solid black;">Names</th>
                 <th style="padding: 12px; border: 1px solid black;">Amount</th>
+                <th style="padding: 12px; border: 1px solid black;">Compulsory</th>
             </tr>
             @foreach($columns as $colum)
             <tr style="border: 1px solid black; font-size: smaller">
@@ -97,13 +98,20 @@
                 <td style="padding: 12px; border: 1px solid black;">
                     {{number_format($colum->amount)}}
                 </td>
+                <td style="padding: 12px; border: 1px solid black;">
+                    @if($colum->compulsory)
+                        YES
+                    @else
+                        NO
+                    @endif
+                </td>
             </tr>
             @endforeach
         </table>
     </div>
     <!------------------------------------------------------DETAILS OF PRESENTERS--------------------------------------------------------------------------------------------->
     <div style="margin-top: 40px;">
-        <h3 style="font-weight: bold;font-size: small; text-align:center;text-transform: uppercase;text-decoration: underline"><span style="padding-right: 5px"></span> Prepared By:
+        <h3 style="font-weight: bold;font-size: small; text-align:center;text-transform: uppercase;text-decoration: underline"><span style="padding-right: 5px"></span> Prepared By
         </h3>
     </div>
     <div class="detail" style="margin-bottom: 200px">

@@ -43,7 +43,7 @@ class BalanceSheetController extends Controller
             'fin_secretary'     => $balance_sheet_data->fin_sec,
             'organisation_logo' => $organisation->logo,
             'columns'           => $balance_sheet_data->column_names,
-            'column_title'      => "Column codes and their names",
+            'column_title'      => "Column Definition",
             'yearly_total'      => $balance_sheet_data->total_yearly_contribution,
             'yearly_expected'   => $balance_sheet_data->total_year_expected_amount,
             'year_balance'      => $balance_sheet_data->total_yearly_balance,

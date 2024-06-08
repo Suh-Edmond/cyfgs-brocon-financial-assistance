@@ -12,9 +12,9 @@ class MemberPaymentItemContributionResource extends JsonResource
     private $item_amount;
     private $amount;
     private $code;
-
     private $balance;
-     public function __construct($resource, $id, $name, $amount, $item_amount, $balance, $code)
+    private $compulsory;
+     public function __construct($resource, $id, $name, $amount, $item_amount, $balance, $code, $compulsory)
      {
          parent::__construct($resource);
          $this->id = $id;
@@ -23,6 +23,7 @@ class MemberPaymentItemContributionResource extends JsonResource
          $this->item_amount = $item_amount;
          $this->code = $code;
          $this->balance = $balance;
+         $this->compulsory = $compulsory;
      }
 
     /**
@@ -39,7 +40,8 @@ class MemberPaymentItemContributionResource extends JsonResource
             'amount_deposited' => $this->amount,
             'amount_payable' => $this->item_amount,
             'code'           => $this->code,
-            'balance'        => $this->balance
+            'balance'        => $this->balance,
+            'compulsory'     => $this->compulsory
         ];
     }
 }

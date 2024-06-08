@@ -212,7 +212,6 @@ class PaymentItemService implements PaymentItemInterface {
         return PaymentItem::join('payment_categories', ['payment_categories.id' => 'payment_items.payment_category_id'])
                             ->join('sessions', ['sessions.id' => 'payment_items.session_id'])
                             ->where('sessions.id', $session_id)
-                            ->where('compulsory', true)
                             ->select('payment_items.*')
                             ->distinct()
                             ->orderBy('created_at')->get();

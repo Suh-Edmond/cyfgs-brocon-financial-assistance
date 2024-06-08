@@ -9,17 +9,19 @@ class BalanceSheetColumns extends JsonResource
 
     private $code;
     private $name;
-
     private $id;
     private $amount;
 
-    public function __construct($resource, $code, $name, $id, $amount)
+    private $compulsory;
+
+    public function __construct($resource, $code, $name, $id, $amount, $compulsory)
     {
         parent::__construct($resource);
         $this->code = $code;
         $this->name = $name;
         $this->id = $id;
         $this->amount = $amount;
+        $this->compulsory = $compulsory;
     }
 
     /**
@@ -34,7 +36,8 @@ class BalanceSheetColumns extends JsonResource
             'code'  => $this->code,
             'name'  => $this->name,
             'id'    => $this->id,
-            'amount' => $this->amount
+            'amount' => $this->amount,
+            'compulsory' => $this->compulsory,
         ];
     }
 }
