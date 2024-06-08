@@ -42,31 +42,7 @@ class UserContributionService implements UserContributionInterface {
 
     public function updateUserContribution($request, $id)
     {
-//        $user_contribution = $this->findUserContributionById($id);
-//
-////        $amount_contributed = $this->getTotalAmountPaidByUserForTheItem($user_contribution->user_id, $user_contribution->payment_item_id) - $user_contribution->amount_deposited;
-//
-//        $total_amount_contributed = $amount_contributed + $request->amount_deposited;
-//
-//        $balance = $user_contribution->paymentItem->amount - $total_amount_contributed;
-//
-//        $hasCompleted = $this->verifyExcessUserContribution($total_amount_contributed, $user_contribution->paymentItem->amount);
-//
-//        $status = $this->getUserContributionStatus($user_contribution->paymentItem->amount, $total_amount_contributed);
-//
-//        if(!$hasCompleted){
-//            if($user_contribution->approve == PaymentStatus::PENDING){
-//                $user_contribution->update([
-//                    'amount_deposited' => $request->amount_deposited,
-//                    'comment'          => $request->comment,
-//                    'scan_picture'     => $request->scan_picture,
-//                    'balance'          => $balance,
-//                    'status'           => $status
-//                ]);
-//            }else {
-//                throw new BusinessValidationException("Income activity cannot be updated after been approved or declined");
-//            }
-//        }
+
     }
 
     public function getContributionsByItem($payment_item_id)
@@ -205,14 +181,17 @@ class UserContributionService implements UserContributionInterface {
     public function getTotalAmountPaidByUserForTheItem($user_id, $payment_item_id, $month, $quarter, $frequency)
     {
         $contributions =  $this->getContributionByUserAndPaymentItem($payment_item_id, $user_id);
-        if($frequency == PaymentItemFrequency::QUARTERLY){
-            $contributions = $contributions->where('quarterly_name', $quarter);
+        switch ($frequency){
+            case PaymentItemFrequency::QUARTERLY:
+                $contributions = $contributions->where('quarterly_name', $quarter);
+            break;
+            case PaymentItemFrequency::MONTHLY:
+                $contributions = $contributions->where('month_name', $month);
+            break;
+            default:
+
         }
-        if($frequency == PaymentItemFrequency::MONTHLY){
-            $contributions = $contributions->where('month_name', $month);
-        }
-        $contributions = $contributions->sum('user_contributions.amount_deposited');
-        return $contributions;
+        return $contributions->sum('user_contributions.amount_deposited');
     }
 
 
@@ -417,13 +396,7 @@ class UserContributionService implements UserContributionInterface {
 
     private function getUserContributionStatus($payment_item_amount, $total_amount_contributed)
     {
-        $status = null;
-        if($payment_item_amount == $total_amount_contributed){
-            $status = PaymentStatus::COMPLETE;
-        }else{
-            $status = PaymentStatus::INCOMPLETE;
-        }
-        return $status;
+        return  $total_amount_contributed == $payment_item_amount? PaymentStatus::COMPLETE : PaymentStatus::INCOMPLETE;
     }
 
     private function findUserContributionById($id)
@@ -448,7 +421,7 @@ class UserContributionService implements UserContributionInterface {
 
         $user_last_contribution = $this->getUserLastContributionByPaymentItem($user_id, $request->payment_item_id, $request->month_name, $request->quarterly_name, $payment_item->frequency);
 
-        $balance_contribution = $user_last_contribution == null ? ($payment_item_amount- $request->amount_deposited) : ($user_last_contribution->balance - $request->amount_deposited);
+        $balance_contribution = $this->getMemberLastContribution($user_last_contribution, $payment_item_amount, $request->amount_deposited);
 
         if(!$hasCompleted){
             UserContribution::create([
@@ -475,7 +448,11 @@ class UserContributionService implements UserContributionInterface {
 
     private function verifyExcessUserContribution($total_amount_contributed, $payment_item_amount)
     {
-        return $total_amount_contributed == $payment_item_amount;
+        return $total_amount_contributed > $payment_item_amount;
+    }
+
+    private function getMemberLastContribution($user_last_contribution,$payment_item_amount, $request_amount_deposited) {
+        return $user_last_contribution == null ? ($payment_item_amount- $request_amount_deposited) : ($user_last_contribution->balance - $request_amount_deposited);
     }
 
     private function validateAmountDeposited($payment_item_amount, $amount_deposited) {
@@ -520,12 +497,20 @@ class UserContributionService implements UserContributionInterface {
         return $contributions;
     }
 
-    private function getContributionByUserAndPaymentItem($payment_item_id, $user_id) {
+    public function getContributionByUserAndPaymentItem($payment_item_id, $user_id) {
         return UserContribution::join('users', ['users.id' => 'user_contributions.user_id'])
             ->join('payment_items', ['payment_items.id' => 'user_contributions.payment_item_id'])
             ->where('users.id', $user_id)
             ->where('payment_items.id', $payment_item_id)
             ->whereIn('user_contributions.approve', [PaymentStatus::APPROVED, PaymentStatus::PENDING]);
+    }
+
+    public function getApprovedContributionByUserAndPaymentItem($payment_item_id, $user_id) {
+        return UserContribution::join('users', ['users.id' => 'user_contributions.user_id'])
+            ->join('payment_items', ['payment_items.id' => 'user_contributions.payment_item_id'])
+            ->where('users.id', $user_id)
+            ->where('payment_items.id', $payment_item_id)
+            ->where('user_contributions.approve', PaymentStatus::APPROVED);
     }
 
     private function getMemberOwingItems($user_id, $current_session_id)
@@ -657,14 +642,14 @@ class UserContributionService implements UserContributionInterface {
             ->select('sessions.year as year', 'member_registrations.*', 'registrations.amount', 'registrations.frequency','registrations.is_compulsory')
             ->orderBy('member_registrations.created_at', 'DESC')->get();
         foreach ($reg as $value){
-           array_push($registrations,  new MemberContributedItemResource($value->id, $value->registration_id,   $value->amount, "Registration", $value->amount,0.0,
-               PaymentStatus::COMPLETE, $value->approve, $value->created_at, $value->year, $value->frequency, null, null, $value->updated_by, null, "", $value->is_compulsory));
+           $registrations[] = new MemberContributedItemResource($value->id, $value->registration_id, $value->amount, "Registration", $value->amount, 0.0,
+               PaymentStatus::COMPLETE, $value->approve, $value->created_at, $value->year, $value->frequency, null, null, $value->updated_by, null, "", $value->is_compulsory);
         }
         return $registrations;
     }
 
     private function getMonths(){
-        return $months = [
+        return [
             "January",
             "February",
             "March",

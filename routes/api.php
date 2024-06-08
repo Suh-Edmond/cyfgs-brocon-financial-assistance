@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ActivitySupportController;
+use App\Http\Controllers\BalanceSheetController;
 use App\Http\Controllers\ExpenditureCategoryController;
 use App\Http\Controllers\ExpenditureDetailController;
 use App\Http\Controllers\ExpenditureItemController;
@@ -350,6 +351,10 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/registration_fees/current', [RegistrationController::class, 'getCurrentRegistrationFee']);
     });
 
+    Route::prefix('/protected')->middleware('isAdminIsPresidentIsFinancialSecretary')->group(function (){
+        Route::get("/organisation/year/balance_sheet",[BalanceSheetController::class, 'generateBalanceSheet']);
+        Route::get("/organisation/year/balance_sheet/download", [BalanceSheetController::class, 'downloadBalanceSheet']);
+    });
 
 
  });

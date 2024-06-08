@@ -84,13 +84,13 @@ class PaymentItemService implements PaymentItemInterface {
         if(isset($request->session_id)){
             $payment_items = $payment_items->where('session_id', $request->session_id);
         }
-        if(isset($request->is_compulsory) && $request->is_compulsory !== "ALL"){
+        if(isset($request->is_compulsory) && $request->is_compulsory != "ALL"){
             $payment_items = $payment_items->where('compulsory', $request->is_compulsory);
         }
-        if(isset($request->type) && $request->type !== "ALL"){
+        if(isset($request->type) && $request->type != "ALL"){
             $payment_items = $payment_items->where('type', $request->type);
         }
-        if(isset($request->frequency) && $request->frequency !== "ALL"){
+        if(isset($request->frequency) && $request->frequency != "ALL"){
             $payment_items = $payment_items->where('frequency', $request->frequency);
         }
         if(isset($request->state) && $request->state == "active"){
@@ -201,10 +201,20 @@ class PaymentItemService implements PaymentItemInterface {
             ->join('payment_categories', 'payment_categories.id', '=', 'payment_items.payment_category_id')
             ->join('sessions', 'sessions.id', '=', 'payment_items.session_id')
             ->where('payment_items.session_id', $session_id)
-            ->Where('payment_items.type', $type)
+            ->where('payment_items.type', $type)
             ->select('payment_items.id', 'payment_items.name', 'payment_items.amount', 'payment_items.session_id')
             ->distinct()
             ->get()->toArray();
+    }
+
+    public function getPaymentItemsForBalanceSheet($session_id)
+    {
+        return PaymentItem::join('payment_categories', ['payment_categories.id' => 'payment_items.payment_category_id'])
+                            ->join('sessions', ['sessions.id' => 'payment_items.session_id'])
+                            ->where('sessions.id', $session_id)
+                            ->select('payment_items.*')
+                            ->distinct()
+                            ->orderBy('created_at')->get();
     }
 
     private function findPaymentItem($id, $payment_category_id)
