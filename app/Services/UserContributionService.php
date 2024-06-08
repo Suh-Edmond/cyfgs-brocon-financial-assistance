@@ -505,6 +505,14 @@ class UserContributionService implements UserContributionInterface {
             ->whereIn('user_contributions.approve', [PaymentStatus::APPROVED, PaymentStatus::PENDING]);
     }
 
+    public function getApprovedContributionByUserAndPaymentItem($payment_item_id, $user_id) {
+        return UserContribution::join('users', ['users.id' => 'user_contributions.user_id'])
+            ->join('payment_items', ['payment_items.id' => 'user_contributions.payment_item_id'])
+            ->where('users.id', $user_id)
+            ->where('payment_items.id', $payment_item_id)
+            ->where('user_contributions.approve', PaymentStatus::APPROVED);
+    }
+
     private function getMemberOwingItems($user_id, $current_session_id)
     {
         $debts = [];
@@ -634,14 +642,14 @@ class UserContributionService implements UserContributionInterface {
             ->select('sessions.year as year', 'member_registrations.*', 'registrations.amount', 'registrations.frequency','registrations.is_compulsory')
             ->orderBy('member_registrations.created_at', 'DESC')->get();
         foreach ($reg as $value){
-           array_push($registrations,  new MemberContributedItemResource($value->id, $value->registration_id,   $value->amount, "Registration", $value->amount,0.0,
-               PaymentStatus::COMPLETE, $value->approve, $value->created_at, $value->year, $value->frequency, null, null, $value->updated_by, null, "", $value->is_compulsory));
+           $registrations[] = new MemberContributedItemResource($value->id, $value->registration_id, $value->amount, "Registration", $value->amount, 0.0,
+               PaymentStatus::COMPLETE, $value->approve, $value->created_at, $value->year, $value->frequency, null, null, $value->updated_by, null, "", $value->is_compulsory);
         }
         return $registrations;
     }
 
     private function getMonths(){
-        return $months = [
+        return [
             "January",
             "February",
             "March",
