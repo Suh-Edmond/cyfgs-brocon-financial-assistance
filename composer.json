@@ -19,7 +19,8 @@
         "laravel/tinker": "^2.5",
         "laravel/ui": "*",
         "maatwebsite/excel": "*",
-        "spatie/laravel-permission": "^5.3"
+        "spatie/laravel-permission": "^5.3",
+        "ext-gd": "*"
     },
     "require-dev": {
         "facade/ignition": "^2.3.6",

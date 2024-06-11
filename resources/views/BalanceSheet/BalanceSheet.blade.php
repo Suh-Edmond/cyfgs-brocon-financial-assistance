@@ -16,15 +16,15 @@
                 <label style="font-size: small;">Email: {{ $organisation->email }}</label><br />
                 <label style="font-size: small;">Printed date: {{ $date }}</label>
             </div>
-            <div class="column_25" style="margin-left: 40px">
+            <div class="column_25" style="margin-left: 15rem">
                 <img src="{{public_path($organisation_logo)}}" alt="organisation logo" width="100px;" height="100px;"
                      style="border-radius: 2px">
             </div>
         </div>
     </div>
 
-    <div style="margin-bottom: 2rem;">
-        <h3 style="font-weight: bold;font-size: medium; text-align:center;text-transform: capitalize;border-bottom: 1px solid black;">{{ $title }}
+    <div style="margin-bottom: 2rem;border-bottom: 1px solid black; width: 25%; margin-left: 36rem">
+        <h3 style="font-weight: bold;font-size: medium; text-align:center;text-transform: capitalize;">{{ $title }}
         </h3>
     </div>
 
@@ -81,8 +81,8 @@
         </table>
     </div>
 
-    <div style="margin-top: 30px">
-        <h5 style="font-weight: bold;font-size: medium; text-align:center;text-transform: capitalize;border-bottom: 1px solid black;">{{ $column_title }}
+    <div style="margin-top: 30px;border-bottom: 1px solid black; width: 15%; margin-left: 43rem">
+        <h5 style="font-weight: bold;font-size: medium; text-align:center;text-transform: capitalize;">{{ $column_title }}
         </h5>
     </div>
     <div style="margin-bottom: 50px;margin-top: 10px;">
@@ -135,8 +135,8 @@
     </div>
 
 
-    <div style="margin-top: 30px">
-        <h5 style="font-weight: bold;font-size: medium; text-align:center;text-transform: capitalize;border-bottom: 1px solid black;">Summary
+    <div style="margin-top: 30px;border-bottom: 1px solid black; width: 15%; margin-left: 43rem">
+        <h5 style="font-weight: bold;font-size: medium; text-align:center;text-transform: capitalize;">Summary
         </h5>
     </div>
     <div style="margin-bottom: 50px;margin-top: 10px">
@@ -162,8 +162,8 @@
 
 
     <!------------------------------------------------------DETAILS OF PRESENTERS--------------------------------------------------------------------------------------------->
-    <div style="margin-top: 40px;">
-        <h3 style="font-weight: bold;font-size: small; text-align:center;text-transform: uppercase;text-decoration: underline"><span style="padding-right: 5px"></span> Prepared By
+    <div style="margin-top: 40px;text-align: center;border-bottom: 1px solid black; width: 15%; margin-left: 43rem">
+        <h3 style="font-weight: bold;font-size: small; text-align:center;text-transform: uppercase;"><span style="padding-right: 5px"></span> Prepared By
         </h3>
     </div>
     <div class="detail" style="margin-bottom: 200px">
@@ -220,7 +220,7 @@
             <div style="font-weight: bold;text-transform: uppercase;font-size: .7rem; margin-top: 20px">
                 SIGN
             </div>
-            <div class="border_line" style="border-bottom: 1px solid black; margin-top: 10px;text-align: center">
+            <div class="border_line" style="border-bottom: 1px solid black; margin-top: 10px;text-align: center; justify-content: center;align-content: center;margin-left: 35rem">
             </div>
         </div>
     </div>
