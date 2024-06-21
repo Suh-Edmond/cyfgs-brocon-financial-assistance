@@ -211,9 +211,13 @@
         min-width: 27%;
     }
     .border_line {
-        width: 30px;
-        min-width: 30%;
-        margin-left: 270px;
+        width: 15px;
+        min-width: 15%;
+    }
+
+    .border_line_2 {
+        width: 40px;
+        min-width: 40%;
     }
 
     .page-break {

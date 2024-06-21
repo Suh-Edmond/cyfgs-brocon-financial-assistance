@@ -277,10 +277,10 @@ class ReportGenerationService implements ReportGenerationInterface
             $expenditures_by_cat = array();
             $expenditure_items = $this->expenditureItemService->getExpensesByCategoryAndYear($expenditure_category->id, $year_id);
             $total = 0;
-            foreach ($expenditure_items as $expenditure_item) {
+            foreach ($expenditure_items as $k => $expenditure_item) {
                 $details = $this->expenditureDetailService->findExpenditureDetailsByItemAndYear($expenditure_item->id, $year_id);
                 $sub_total = collect($details)->sum('amount_spent');
-                $expenditure = json_encode(new QuarterlyExpenditureResource(($key + 1), $expenditure_item->name, ($details->toArray()), $sub_total));
+                $expenditure = json_encode(new QuarterlyExpenditureResource(($k + 1), $expenditure_item->name, ($details->toArray()), $sub_total));
                 array_push($expenditures_by_cat, json_decode($expenditure));
                 $total += $sub_total;
             }

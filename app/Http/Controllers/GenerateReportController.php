@@ -101,7 +101,7 @@ class GenerateReportController extends Controller
             'year'                   => $this->session_service->getCurrentSession()->year,
             'organisation_logo'      => $organisation->logo
         ];
-        $pdf = PDF::loadView('Reports.QuarterReport', $payload);
+        $pdf = PDF::loadView('Reports.QuarterReport', $payload)->setPaper('a3', 'landscape');
         $pdf->output();
         $domPdf = $pdf->getDomPDF();
         $canvas = $domPdf->getCanvas();
@@ -142,7 +142,7 @@ class GenerateReportController extends Controller
             'year'                   => $request->year_label,
             'organisation_logo'      => $organisation->logo
         ];
-        $pdf = PDF::loadView('Reports.YearlyReport', $payload);
+        $pdf = PDF::loadView('Reports.YearlyReport', $payload)->setPaper('a3', 'landscape');
         $pdf->output();
         $domPdf = $pdf->getDomPDF();
         $canvas = $domPdf->getCanvas();
