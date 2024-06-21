@@ -50,7 +50,7 @@ class BalanceSheetController extends Controller
             'col_span'          => 2,
         ];
 
-        $pdf = PDF::loadView('BalanceSheet.BalanceSheet', $data)->setPaper('a3', 'landscape');;
+        $pdf = PDF::loadView('BalanceSheet.BalanceSheet', $data)->setPaper('a3', 'landscape');
         $pdf->output();
         $domPdf = $pdf->getDomPDF();
         $canvas = $domPdf->getCanvas();

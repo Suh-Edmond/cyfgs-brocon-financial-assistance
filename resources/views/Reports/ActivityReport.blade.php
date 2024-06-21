@@ -31,8 +31,8 @@
     <?php $n=1 ?>
     <div>
         <div style="margin-bottom: 10px;margin-top: 10px">
-            <h3 style="font-weight: bold;font-size: small; text-align:center;text-transform: uppercase;padding-bottom: 20px;text-decoration: underline"><span style="padding-right: 5px;"></span> Income (XAF)
-            </h3>
+            <h6 style="font-weight: bold;font-size: .7rem; text-align:center;text-transform: uppercase;padding-bottom: 20px;text-decoration: underline"><span style="padding-right: 5px;"></span> Income (XAF)
+            </h6>
         </div>
         <table style="border: 1px solid black; border-collapse: collapse;width: 100%">
             <tr style="border: 1px solid black; font-size: smaller;">
@@ -65,10 +65,10 @@
     <!----------------------------------------------------------START OF EXPENDITURES------------------------------------------------------------------------------------------>
     <?php $n=1 ?>
     <div style="margin-top: 10px;" >
-        <div style="margin-bottom: 20px;margin-top: 20px">
-            <h5 style="font-weight: bold;font-size: small; text-align:center;text-transform: uppercase;padding-bottom: 20px;text-decoration: underline"><span style="padding-right: 5px;"></span>
-                Expenditures/Disbursements
-            </h5>
+        <div style="margin-bottom: 5px;margin-top: 10px">
+            <h6 style="font-weight: bold;font-size: .7rem; text-align:center;text-transform: uppercase;padding-bottom: 20px;text-decoration: underline"><span style="padding-right: 5px;"></span>
+                Expenditures / Disbursements
+            </h6>
         </div>
         <table style="border: 1px solid black; border-collapse: collapse;width: 100%">
             <tr style="border: 1px solid black; font-size: smaller;">
@@ -107,12 +107,12 @@
     <!----------------------------------------------------------END OF EXPENDITURES------------------------------------------------------------------------------------------>
 
     <!----------------------------------------------------------SUMMARY OF REPORT-------------------------------------------------------------------------------------------->
-    <div style="margin-top: 20px;">
-        <h3 style="font-weight: bold;font-size: small; text-align:center;text-transform: uppercase;text-decoration: underline">
+    <div style="margin-top: 10px;">
+        <h6 style="font-weight: bold;font-size: .7rem; text-align:center;text-transform: uppercase;text-decoration: underline">
             <span style="padding-right: 5px"></span> Summary (XAF)
-        </h3>
+        </h6>
     </div>
-    <div>
+    <div style="margin-top: 1rem">
         <div class="row" style="border: 1px solid black">
             <div class="activity_summary_num">
                 S1
@@ -121,7 +121,7 @@
                 Total Income
             </div>
             <div class="activity_summary_end">
-                {{number_format($total_income)}}
+                {{number_format($total_income)}} XAF
             </div>
         </div>
         <div class="row" style="border: 1px solid black">
@@ -132,7 +132,7 @@
                 Total Expenditure
             </div>
             <div class="activity_summary_end">
-                {{number_format($total_amount_spent)}}
+                {{number_format($total_amount_spent)}} XAF
             </div>
         </div>
         <div class="row" style="border: 1px solid black">
@@ -143,7 +143,7 @@
                 Total Balance
             </div>
             <div class="activity_summary_end">
-                {{number_format($total_balance)}}
+                {{number_format($total_balance)}} XAF
             </div>
         </div>
     </div>
@@ -151,8 +151,8 @@
 
     <!------------------------------------------------------DETAILS OF PRESENTERS--------------------------------------------------------------------------------------------->
     <div style="margin-top: 40px;">
-        <h3 style="font-weight: bold;font-size: small; text-align:center;text-transform: uppercase;text-decoration: underline"><span style="padding-right: 5px"></span> Prepared By
-        </h3>
+        <h6 style="font-weight: bold;font-size: .7rem; text-align:center;text-transform: uppercase;text-decoration: underline"><span style="padding-right: 5px"></span> Prepared By
+        </h6>
     </div>
     <div class="detail" style="margin-top: 30px;margin-bottom: 150px">
         <!------------------------------Names of presenters------------------------------------>
