@@ -62,7 +62,6 @@
                         <div style="page-break-before:always;page-break-inside: auto;"> </div>
                     @endif
                         <?php $n++ ?>
-
                 </tr>
             @endforeach
             <tr style="padding: 12px; border: 1px solid black; font-size: smaller">
@@ -166,7 +165,7 @@
         <h3 style="font-weight: bold;font-size: small; text-align:center;text-transform: uppercase;"><span style="padding-right: 5px"></span> Prepared By
         </h3>
     </div>
-    <div class="detail" style="margin-bottom: 200px">
+    <div class="detail">
         <!------------------------------Names of presenters------------------------------------>
         <div style="float: left;margin-top: 10px" class="fin_sec">
             <div class=" " style="font-weight: bold;font-size: .7rem;text-transform: uppercase; margin-bottom: 3px;text-align: center;">
@@ -182,7 +181,7 @@
             <div style="font-weight: bold;text-transform: uppercase;font-size: .7rem; margin-top: 20px;text-align: center">
                 SIGN
             </div>
-            <div  style="border-bottom: 1px solid black; margin-top: 10px">
+            <div class="border_line_2" style="border-bottom: 1px solid black; margin-top: 10px;text-align: center; justify-content: center;align-content: center;margin-left: 8rem">
             </div>
         </div>
 
@@ -200,12 +199,12 @@
             <div style="font-weight: bold;text-transform: uppercase;font-size: .7rem; margin-top: 20px;text-align: center">
                 SIGN
             </div>
-            <div  style="border-bottom: 1px solid black; margin-top: 10px">
+            <div class="border_line_2" style="border-bottom: 1px solid black; margin-top: 10px;text-align: center; justify-content: center;align-content: center;margin-left: 8rem">
             </div>
         </div>
         <!------------------------------End of presenters-------------------------------------->
     </div>
-    <div class="president" style="text-align: center">
+    <div class="president" style="text-align: center; margin-top: 9rem">
         <div>
             <div class=" " style="font-weight: bold;font-size: .7rem;text-transform: uppercase; margin-bottom: 3px">
                 President
@@ -220,7 +219,7 @@
             <div style="font-weight: bold;text-transform: uppercase;font-size: .7rem; margin-top: 20px">
                 SIGN
             </div>
-            <div class="border_line" style="border-bottom: 1px solid black; margin-top: 10px;text-align: center; justify-content: center;align-content: center;margin-left: 35rem">
+            <div class="border_line" style="border-bottom: 1px solid black; margin-top: 10px;text-align: center; justify-content: center;align-content: center;margin-left: 41rem">
             </div>
         </div>
     </div>
