@@ -69,13 +69,13 @@
                 </td>
                 @foreach($columns as $column)
                     <td style="padding: 3px;font-weight: bold;border: 1px solid black; text-align: center;font-size: .8rem">
-                        {{ number_format($column->total_amount_deposited)  }} XAF
+                        {{ number_format($column->total_amount_deposited)  }}
                     </td>
                 @endforeach
 
-                <td style="padding: 3px;font-weight: bold;border: 1px solid black; text-align: center;font-size: .8rem">{{ number_format($yearly_expected) }} XAF </td>
-                <td style="padding: 3px;font-weight: bold;border: 1px solid black; text-align: center;font-size: .8rem">{{ number_format($yearly_total) }} XAF </td>
-                <td style="padding: 3px;font-weight: bold;text-align: center;font-size: .8rem">{{ number_format($year_balance) }} XAF </td>
+                <td style="padding: 3px;font-weight: bold;border: 1px solid black; text-align: center;font-size: .8rem">{{ number_format($yearly_expected) }}   </td>
+                <td style="padding: 3px;font-weight: bold;border: 1px solid black; text-align: center;font-size: .8rem">{{ number_format($yearly_total) }}   </td>
+                <td style="padding: 3px;font-weight: bold;text-align: center;font-size: .8rem">{{ number_format($year_balance) }}   </td>
             </tr>
         </table>
     </div>
