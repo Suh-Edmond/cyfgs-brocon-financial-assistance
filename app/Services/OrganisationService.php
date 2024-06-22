@@ -41,6 +41,7 @@ class OrganisationService implements OrganisationInterface
             $organisation->salutation       = $request->salutation;
             $organisation->box_number       = $request->box_number;
             $organisation->updated_by       = $request->user()->name;
+            $organisation->region           = $request->region;
 
             $organisation->save();
 
