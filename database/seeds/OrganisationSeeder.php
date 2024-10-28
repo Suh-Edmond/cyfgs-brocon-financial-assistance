@@ -16,16 +16,16 @@ class OrganisationSeeder extends Seeder
     {
         Organisation::create([
             'id'            => Str::uuid()->toString(),
-            'name'          => $faker->name,
-            'email'         => $faker->email,
-            'region'        => $faker->country,
-            'telephone'     => $faker->phoneNumber,
-            'address'       => $faker->address,
-            'description'   => $faker->sentence,
-            'logo'          => $faker->name,
-            'salutation'    => $faker->sentence,
-            'box_number'    => $faker->randomDigit(),
-            'updated_by'    => $faker->name
+            'name'          => "Brothers Corner Great Soppo (BROCON)",
+            'email'         => "suhedmond11@gmail.com",
+            'region'        => "South West",
+            'telephone'     => "+237 6 83 40 42 89",
+            'address'       => "Buea",
+            'description'   => "The Brothers Corner of the Christian Youth Fellowship Movement of the Presbyterian Church in Cameroon, in Great Soppo",
+            'logo'          => "",
+            'salutation'    => "Brothers we lead the way. In Christ we Head the Trail",
+            'box_number'    => 1523,
+            'updated_by'    => "Edmond"
         ]);
 
     }

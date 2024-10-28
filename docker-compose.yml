@@ -1,0 +1,81 @@
+version: '3.8'
+
+services:
+
+  # Laravel app
+  quick_records_app:
+    build:
+      args:
+        user: eddy
+        uid: 1000
+      context: .
+      dockerfile: Dockerfile
+    platform: linux/amd64
+    image: quick_records_app_image
+    container_name: quick_records_app_container
+    restart: unless-stopped
+    depends_on:
+      - quick_records_mysql
+    volumes:
+      - ./:/var/www
+    networks:
+      - quick_records_network
+
+  # Nginx Service
+  quick_records_nginx:
+    platform: linux/amd64
+    image: nginx:alpine
+    container_name: quick_records_nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      - quick_records_app
+    volumes:
+      - ./:/var/www
+      - ./docker-compose/nginx/:/etc/nginx/conf.d
+    networks:
+      - quick_records_network
+
+  # MySQL Service
+  quick_records_mysql:
+    platform: linux/amd64
+    image: mysql:latest
+    container_name: quick_records_mysql
+    restart: unless-stopped
+    ports:
+      - "3337:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: Summer123!
+      MYSQL_DATABASE: quick_records_db
+      MYSQL_USER: quickrecord_user
+      MYSQL_PASSWORD: Summer123!
+    networks:
+      - quick_records_network
+    volumes:
+      -   quick_records_mysql_data:/var/lib/mysql
+      -   ./docker-compose/mysql/my.cnf:/etc/mysql/my.cnf
+
+  # phpMyAdmin Service
+  quick_records_phpmyadmin:
+    image: phpmyadmin:5.2.1-apache
+    container_name: quick_records_phpmyadmin
+    restart: unless-stopped
+    ports:
+      - "8383:80"
+    environment:
+      PMA_HOST: quick_records_mysql
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD:  Summer123!
+    depends_on:
+      - quick_records_mysql
+    networks:
+      - quick_records_network
+
+networks:
+  quick_records_network:
+    driver: bridge
+volumes:
+  quick_records_mysql_data:
+    driver: local
