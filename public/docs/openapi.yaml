@@ -1,0 +1,4426 @@
+openapi: 3.0.3
+info:
+  title: 'Quick Records App'
+  description: ''
+  version: 1.0.0
+servers:
+  -
+    url: 'http://localhost:8000'
+paths:
+  /api/public/auth/login:
+    post:
+      summary: ''
+      operationId: postApiPublicAuthLogin
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: ''
+                  example: jaskolski.joel@example.net
+                telephone:
+                  type: string
+                  description: ''
+                  example: earum
+                password:
+                  type: string
+                  description: ''
+                  example: '+nkT6:&>m50+4?4dToE'
+              required:
+                - password
+      security: []
+  /api/public/auth/signup:
+    post:
+      summary: ''
+      operationId: postApiPublicAuthSignup
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'Must not be greater than 255 characters. Must be at least 4 characters.'
+                  example: fnfacgfpqcsuvnzqbroiaqsjhohtutpzwphqpzakigndqamwtbt
+                telephone:
+                  type: string
+                  description: ''
+                  example: et
+                password:
+                  type: string
+                  description: 'Must be at least 8 characters.'
+                  example: ~)92mA!
+                email:
+                  type: string
+                  description: 'Must be a valid email address.'
+                  example: ethyl.hilpert@example.org
+              required:
+                - name
+                - telephone
+                - password
+                - email
+      security: []
+  /api/public/auth/check-user:
+    post:
+      summary: ''
+      operationId: postApiPublicAuthCheckUser
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                credential:
+                  type: string
+                  description: ''
+                  example: libero
+              required:
+                - credential
+      security: []
+  /api/public/auth/set-password:
+    post:
+      summary: ''
+      operationId: postApiPublicAuthSetPassword
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                telephone:
+                  type: string
+                  description: ''
+                  example: officiis
+                email:
+                  type: string
+                  description: ''
+                  example: dprohaska@example.net
+                password:
+                  type: string
+                  description: 'Must be at least 8 characters.'
+                  example: "ZpjRe}FB|Xpp?L'K"
+                role:
+                  type: string
+                  description: ''
+                  example: commodi
+              required:
+                - password
+                - role
+      security: []
+  /api/public/auth/reset-password-token:
+    post:
+      summary: ''
+      operationId: postApiPublicAuthResetPasswordToken
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+  /api/public/auth/validate/password-reset:
+    post:
+      summary: ''
+      operationId: postApiPublicAuthValidatePasswordReset
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+  /api/public/auth/reset-password:
+    post:
+      summary: ''
+      operationId: postApiPublicAuthResetPassword
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: string
+                  description: ''
+                  example: architecto
+                new_password:
+                  type: string
+                  description: 'Must be at least 8 characters.'
+                  example: chrrbwcqiynafneymhclzenzmzbwappdpkzjtfbtcmqzgqxxeymvmdfqysjxcywhfwa
+                token:
+                  type: string
+                  description: ''
+                  example: et
+              required:
+                - user_id
+                - new_password
+                - token
+      security: []
+  /api/protected/upload_file:
+    post:
+      summary: ''
+      operationId: postApiProtectedUpload_file
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  description: 'Must not be greater than 2048 characters.'
+                  example: ooqjwuuuzcqnpnzmkonfbhkj
+                file_category:
+                  type: string
+                  description: ''
+                  example: quod
+              required:
+                - file_category
+      security: []
+  /api/protected/get_file:
+    get:
+      summary: ''
+      operationId: getApiProtectedGet_file
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  /api/protected/roles:
+    post:
+      summary: ''
+      operationId: postApiProtectedRoles
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: string
+                  description: ''
+                  example: animi
+                role:
+                  type: string
+                  description: ''
+                  example: optio
+              required:
+                - user_id
+                - role
+      security: []
+    get:
+      summary: ''
+      operationId: getApiProtectedRoles
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  '/api/protected/roles/users/{user_id}':
+    get:
+      summary: ''
+      operationId: getApiProtectedRolesUsersUser_id
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    delete:
+      summary: ''
+      operationId: deleteApiProtectedRolesUsersUser_id
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: user_id
+        description: 'The ID of the user.'
+        example: nesciunt
+        required: true
+        schema:
+          type: string
+  /api/protected/roles/update:
+    put:
+      summary: ''
+      operationId: putApiProtectedRolesUpdate
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: ''
+                  example: consequuntur
+                term:
+                  type: number
+                  description: ''
+                  example: 598139984.0
+                number_of_members:
+                  type: number
+                  description: ''
+                  example: 1.96495637
+              required:
+                - name
+                - term
+                - number_of_members
+      security: []
+  '/api/protected/organisations/{id}/users':
+    get:
+      summary: ''
+      operationId: getApiProtectedOrganisationsIdUsers
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the organisation.'
+        example: tempore
+        required: true
+        schema:
+          type: string
+  '/api/protected/organisations/users/{id}':
+    get:
+      summary: ''
+      operationId: getApiProtectedOrganisationsUsersId
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the user.'
+        example: similique
+        required: true
+        schema:
+          type: string
+  /api/protected/organisations/download-users:
+    get:
+      summary: ''
+      operationId: getApiProtectedOrganisationsDownloadUsers
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  /api/protected/organisations/filter-users:
+    get:
+      summary: ''
+      operationId: getApiProtectedOrganisationsFilterUsers
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  /api/protected/organisations/users:
+    get:
+      summary: ''
+      operationId: getApiProtectedOrganisationsUsers
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  /api/protected/organisations/registered_users:
+    get:
+      summary: ''
+      operationId: getApiProtectedOrganisationsRegistered_users
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  '/api/protected/organisations/payment_items/{id}/users':
+    get:
+      summary: ''
+      operationId: getApiProtectedOrganisationsPayment_itemsIdUsers
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the payment item.'
+        example: voluptatibus
+        required: true
+        schema:
+          type: string
+  /api/protected/organisations/members/send_invitation:
+    post:
+      summary: ''
+      operationId: postApiProtectedOrganisationsMembersSend_invitation
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: string
+                  description: ''
+                  example: pariatur
+                user_name:
+                  type: string
+                  description: ''
+                  example: laudantium
+                user_email:
+                  type: string
+                  description: 'Must be a valid email address.'
+                  example: fahey.rita@example.com
+                role:
+                  type: string
+                  description: ''
+                  example: enim
+              required:
+                - user_id
+                - user_name
+                - user_email
+                - role
+      security: []
+  /api/protected/organisations/members/get_invitation_notifications:
+    get:
+      summary: ''
+      operationId: getApiProtectedOrganisationsMembersGet_invitation_notifications
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  '/api/protected/organisations/members/get_invitation_notifications/{id}/mark_as_read':
+    put:
+      summary: ''
+      operationId: putApiProtectedOrganisationsMembersGet_invitation_notificationsIdMark_as_read
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the get invitation notification.'
+        example: sed
+        required: true
+        schema:
+          type: string
+  /api/protected/organisations/members/get_invitation_notifications/mark_all_as_read:
+    put:
+      summary: ''
+      operationId: putApiProtectedOrganisationsMembersGet_invitation_notificationsMark_all_as_read
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+  '/api/protected/organisations/{id}/add-users':
+    post:
+      summary: ''
+      operationId: postApiProtectedOrganisationsIdAddUsers
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: sljeaezymhvwr
+                email:
+                  type: string
+                  description: 'Must be a valid email address.'
+                  example: vkoss@example.org
+                telephone:
+                  type: string
+                  description: ''
+                  example: in
+                password:
+                  type: string
+                  description: ''
+                  example: 'EsM|CbvS/CeWXr:Jv49P'
+                address:
+                  type: string
+                  description: ''
+                  example: expedita
+                occupation:
+                  type: string
+                  description: ''
+                  example: necessitatibus
+                gender:
+                  type: string
+                  description: ''
+                  example: nemo
+              required:
+                - name
+                - email
+                - telephone
+                - address
+                - occupation
+                - gender
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the organisation.'
+        example: esse
+        required: true
+        schema:
+          type: string
+  '/api/protected/organisations/{id}/import-users':
+    post:
+      summary: ''
+      operationId: postApiProtectedOrganisationsIdImportUsers
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the organisation.'
+        example: rerum
+        required: true
+        schema:
+          type: string
+  '/api/protected/users/{id}':
+    put:
+      summary: ''
+      operationId: putApiProtectedUsersId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                picture:
+                  type: string
+                  description: ''
+                  example: est
+              required:
+                - picture
+      security: []
+    delete:
+      summary: ''
+      operationId: deleteApiProtectedUsersId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the user.'
+        example: molestias
+        required: true
+        schema:
+          type: string
+  /api/protected/user/profile/update:
+    put:
+      summary: ''
+      operationId: putApiProtectedUserProfileUpdate
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: ''
+                  example: id
+                email:
+                  type: string
+                  description: 'Must be a valid email address.'
+                  example: gbogisich@example.com
+                address:
+                  type: string
+                  description: ''
+                  example: pariatur
+                occupation:
+                  type: string
+                  description: ''
+                  example: quam
+                user_id:
+                  type: string
+                  description: ''
+                  example: qui
+                gender:
+                  type: string
+                  description: ''
+                  example: null
+                status:
+                  type: string
+                  description: ''
+                  example: quas
+              required:
+                - name
+                - email
+                - address
+                - occupation
+                - user_id
+                - status
+      security: []
+  /api/protected/user/member/profile/update:
+    put:
+      summary: ''
+      operationId: putApiProtectedUserMemberProfileUpdate
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: ''
+                  example: ratione
+                email:
+                  type: string
+                  description: 'Must be a valid email address.'
+                  example: ernser.breana@example.org
+                address:
+                  type: string
+                  description: ''
+                  example: sunt
+                occupation:
+                  type: string
+                  description: ''
+                  example: ab
+                user_id:
+                  type: string
+                  description: ''
+                  example: modi
+                gender:
+                  type: string
+                  description: ''
+                  example: null
+                status:
+                  type: string
+                  description: ''
+                  example: debitis
+              required:
+                - name
+                - email
+                - address
+                - occupation
+                - user_id
+                - status
+      security: []
+  /api/protected/user/profile/password/update:
+    put:
+      summary: ''
+      operationId: putApiProtectedUserProfilePasswordUpdate
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: string
+                  description: ''
+                  example: deleniti
+                old_password:
+                  type: string
+                  description: ''
+                  example: nihil
+                password:
+                  type: string
+                  description: 'Must be at least 8 characters.'
+                  example: 'G.P_"PVJYmz|'
+              required:
+                - user_id
+                - old_password
+                - password
+      security: []
+  /api/protected/organisations:
+    post:
+      summary: ''
+      operationId: postApiProtectedOrganisations
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: navuescvsc
+                email:
+                  type: string
+                  description: 'Must be a valid email address.'
+                  example: langworth.adrien@example.org
+                address:
+                  type: string
+                  description: ''
+                  example: non
+                box_number:
+                  type: integer
+                  description: ''
+                  example: 7
+                description:
+                  type: string
+                  description: 'Must not be greater than 5000 characters.'
+                  example: 'Pariatur velit itaque accusamus accusantium excepturi ullam et.'
+                salutation:
+                  type: string
+                  description: ''
+                  example: porro
+                region:
+                  type: string
+                  description: ''
+                  example: vel
+                telephone:
+                  type: string
+                  description: ''
+                  example: ad
+                id:
+                  type: string
+                  description: ''
+                  example: null
+              required:
+                - name
+                - address
+                - description
+                - telephone
+      security: []
+  '/api/protected/organisations/{id}':
+    get:
+      summary: ''
+      operationId: getApiProtectedOrganisationsId
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    put:
+      summary: ''
+      operationId: putApiProtectedOrganisationsId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                logo:
+                  type: string
+                  description: ''
+                  example: voluptatem
+              required:
+                - logo
+      security: []
+    delete:
+      summary: ''
+      operationId: deleteApiProtectedOrganisationsId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the organisation.'
+        example: maiores
+        required: true
+        schema:
+          type: string
+  '/api/protected/organisations/{id}/update_telephone':
+    put:
+      summary: ''
+      operationId: putApiProtectedOrganisationsIdUpdate_telephone
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the organisation.'
+        example: amet
+        required: true
+        schema:
+          type: string
+  /api/protected/organisation-info:
+    get:
+      summary: ''
+      operationId: getApiProtectedOrganisationInfo
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  '/api/protected/organisations/{organisation_id}/payment-categories':
+    post:
+      summary: ''
+      operationId: postApiProtectedOrganisationsOrganisation_idPaymentCategories
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: ixzp
+                description:
+                  type: string
+                  description: 'Must not be greater than 5000 characters.'
+                  example: 'Iusto non vel fugiat aut facilis accusamus.'
+                id:
+                  type: string
+                  description: ''
+                  example: null
+                code:
+                  type: string
+                  description: 'Must not be greater than 100 characters.'
+                  example: fjqvrubzpzdblhjkfbodsy
+              required:
+                - name
+                - description
+                - code
+      security: []
+    parameters:
+      -
+        in: path
+        name: organisation_id
+        description: 'The ID of the organisation.'
+        example: laboriosam
+        required: true
+        schema:
+          type: string
+  '/api/protected/organisations/{organisation_id}/payment-categories/{id}':
+    put:
+      summary: ''
+      operationId: putApiProtectedOrganisationsOrganisation_idPaymentCategoriesId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: apgupmbeyofufruoaysxg
+                description:
+                  type: string
+                  description: 'Must not be greater than 5000 characters.'
+                  example: 'Esse minima temporibus blanditiis illo est molestias consequatur.'
+              required:
+                - name
+                - description
+      security: []
+    get:
+      summary: ''
+      operationId: getApiProtectedOrganisationsOrganisation_idPaymentCategoriesId
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    delete:
+      summary: ''
+      operationId: deleteApiProtectedOrganisationsOrganisation_idPaymentCategoriesId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: organisation_id
+        description: 'The ID of the organisation.'
+        example: voluptates
+        required: true
+        schema:
+          type: string
+      -
+        in: path
+        name: id
+        description: 'The ID of the payment category.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  /api/protected/organisation/payment-categories:
+    get:
+      summary: ''
+      operationId: getApiProtectedOrganisationPaymentCategories
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  /api/protected/download-payment-categories:
+    get:
+      summary: ''
+      operationId: getApiProtectedDownloadPaymentCategories
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  /api/protected/filter-payment-categories:
+    get:
+      summary: ''
+      operationId: getApiProtectedFilterPaymentCategories
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  '/api/protected/payment-categories/{payment_category_id}/payment-items':
+    post:
+      summary: ''
+      operationId: postApiProtectedPaymentCategoriesPayment_category_idPaymentItems
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: hadkjfoedhjjcqaoctubywv
+                amount:
+                  type: string
+                  description: ''
+                  example: qui
+                compulsory:
+                  type: boolean
+                  description: ''
+                  example: false
+                description:
+                  type: string
+                  description: 'Must not be greater than 4000 characters.'
+                  example: 'Culpa et mollitia maxime.'
+                type:
+                  type: string
+                  description: ''
+                  example: reprehenderit
+                frequency:
+                  type: string
+                  description: ''
+                  example: ipsam
+                reference:
+                  type: string
+                  description: ''
+                  example: null
+                deadline:
+                  type: string
+                  description: 'Must be a valid date.'
+                  example: '2024-10-17T11:31:25'
+              required:
+                - name
+                - amount
+                - compulsory
+                - type
+                - frequency
+                - deadline
+      security: []
+    get:
+      summary: ''
+      operationId: getApiProtectedPaymentCategoriesPayment_category_idPaymentItems
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: payment_category_id
+        description: 'The ID of the payment category.'
+        example: atque
+        required: true
+        schema:
+          type: string
+  '/api/protected/payment-categories/{payment_category_id}/payment-items/{id}':
+    put:
+      summary: ''
+      operationId: putApiProtectedPaymentCategoriesPayment_category_idPaymentItemsId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: pwurtcklicpgbcgfqlnv
+                amount:
+                  type: string
+                  description: ''
+                  example: tempore
+                compulsory:
+                  type: boolean
+                  description: ''
+                  example: false
+                description:
+                  type: string
+                  description: 'Must not be greater than 4000 characters.'
+                  example: 'Odio atque vel quos consequuntur.'
+                type:
+                  type: string
+                  description: ''
+                  example: tempora
+                frequency:
+                  type: string
+                  description: ''
+                  example: velit
+                reference:
+                  type: string
+                  description: ''
+                  example: null
+                deadline:
+                  type: string
+                  description: 'Must be a valid date.'
+                  example: '2024-10-17T11:31:25'
+              required:
+                - name
+                - amount
+                - compulsory
+                - type
+                - frequency
+                - deadline
+      security: []
+    get:
+      summary: ''
+      operationId: getApiProtectedPaymentCategoriesPayment_category_idPaymentItemsId
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    delete:
+      summary: ''
+      operationId: deleteApiProtectedPaymentCategoriesPayment_category_idPaymentItemsId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: payment_category_id
+        description: 'The ID of the payment category.'
+        example: tempore
+        required: true
+        schema:
+          type: string
+      -
+        in: path
+        name: id
+        description: 'The ID of the payment item.'
+        example: dolorum
+        required: true
+        schema:
+          type: string
+  /api/protected/payment-items:
+    get:
+      summary: ''
+      operationId: getApiProtectedPaymentItems
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  /api/protected/download-payment-items:
+    get:
+      summary: ''
+      operationId: getApiProtectedDownloadPaymentItems
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  /api/protected/filter-payment-items:
+    get:
+      summary: ''
+      operationId: getApiProtectedFilterPaymentItems
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  /api/protected/payment-items/type:
+    get:
+      summary: ''
+      operationId: getApiProtectedPaymentItemsType
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  /api/protected/payment-items/update/reference:
+    put:
+      summary: ''
+      operationId: putApiProtectedPaymentItemsUpdateReference
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  description: ''
+                  example: commodi
+                reference_id:
+                  type: string
+                  description: ''
+                  example: ea
+              required:
+                - id
+                - reference_id
+      security: []
+  '/api/protected/payment-items/{id}/references':
+    get:
+      summary: ''
+      operationId: getApiProtectedPaymentItemsIdReferences
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the payment item.'
+        example: sint
+        required: true
+        schema:
+          type: string
+  '/api/protected/organisations/{organisation_id}/expenditure-categories':
+    get:
+      summary: ''
+      operationId: getApiProtectedOrganisationsOrganisation_idExpenditureCategories
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    post:
+      summary: ''
+      operationId: postApiProtectedOrganisationsOrganisation_idExpenditureCategories
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: bkcmmiweytozvlufsexiuxrpc
+                description:
+                  type: string
+                  description: 'Must not be greater than 5000 characters.'
+                  example: 'Aut voluptatem sit eos earum suscipit autem magni iusto.'
+                id:
+                  type: string
+                  description: ''
+                  example: null
+                code:
+                  type: string
+                  description: 'Must not be greater than 100 characters.'
+                  example: xfsosxeyociuaucjpwaanmf
+              required:
+                - name
+                - description
+                - code
+      security: []
+    parameters:
+      -
+        in: path
+        name: organisation_id
+        description: 'The ID of the organisation.'
+        example: officiis
+        required: true
+        schema:
+          type: string
+  '/api/protected/organisations/{organisation_id}/expenditure-categories/{id}':
+    get:
+      summary: ''
+      operationId: getApiProtectedOrganisationsOrganisation_idExpenditureCategoriesId
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    put:
+      summary: ''
+      operationId: putApiProtectedOrganisationsOrganisation_idExpenditureCategoriesId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: rbivujnkclgbdalgwbdtwinym
+                description:
+                  type: string
+                  description: 'Must not be greater than 5000 characters.'
+                  example: 'Harum veritatis non est ratione qui consequatur alias.'
+              required:
+                - name
+                - description
+      security: []
+    delete:
+      summary: ''
+      operationId: deleteApiProtectedOrganisationsOrganisation_idExpenditureCategoriesId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: organisation_id
+        description: 'The ID of the organisation.'
+        example: harum
+        required: true
+        schema:
+          type: string
+      -
+        in: path
+        name: id
+        description: 'The ID of the expenditure category.'
+        example: modi
+        required: true
+        schema:
+          type: string
+  /api/protected/expenditure-categories/download:
+    get:
+      summary: ''
+      operationId: getApiProtectedExpenditureCategoriesDownload
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  /api/protected/expenditure-categories/filter:
+    get:
+      summary: ''
+      operationId: getApiProtectedExpenditureCategoriesFilter
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  '/api/protected/expenditure-categories/{expenditure_category_id}/expenditure-items/{id}':
+    put:
+      summary: ''
+      operationId: putApiProtectedExpenditureCategoriesExpenditure_category_idExpenditureItemsId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: vvfjmnihrfysvaivnli
+                amount:
+                  type: number
+                  description: ''
+                  example: 6929658.17
+                comment:
+                  type: string
+                  description: ''
+                  example: null
+                venue:
+                  type: string
+                  description: ''
+                  example: null
+                date:
+                  type: string
+                  description: 'Must be a valid date.'
+                  example: '2024-10-17T11:31:25'
+                payment_item_id:
+                  type: string
+                  description: ''
+                  example: et
+              required:
+                - name
+                - amount
+                - date
+                - payment_item_id
+      security: []
+    get:
+      summary: ''
+      operationId: getApiProtectedExpenditureCategoriesExpenditure_category_idExpenditureItemsId
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    delete:
+      summary: ''
+      operationId: deleteApiProtectedExpenditureCategoriesExpenditure_category_idExpenditureItemsId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: expenditure_category_id
+        description: 'The ID of the expenditure category.'
+        example: consequuntur
+        required: true
+        schema:
+          type: string
+      -
+        in: path
+        name: id
+        description: 'The ID of the expenditure item.'
+        example: sint
+        required: true
+        schema:
+          type: string
+  '/api/protected/expenditure-categories/{id}/expenditure-items':
+    post:
+      summary: ''
+      operationId: postApiProtectedExpenditureCategoriesIdExpenditureItems
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: ztmbzxetfsqftqff
+                amount:
+                  type: number
+                  description: ''
+                  example: 643697605.29599
+                comment:
+                  type: string
+                  description: ''
+                  example: null
+                venue:
+                  type: string
+                  description: ''
+                  example: null
+                date:
+                  type: string
+                  description: 'Must be a valid date.'
+                  example: '2024-10-17T11:31:25'
+                payment_item_id:
+                  type: string
+                  description: ''
+                  example: tenetur
+              required:
+                - name
+                - amount
+                - date
+                - payment_item_id
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the expenditure category.'
+        example: minima
+        required: true
+        schema:
+          type: string
+  '/api/protected/expenditure-categories/{expenditure_category_id}/expenditure-items':
+    get:
+      summary: ''
+      operationId: getApiProtectedExpenditureCategoriesExpenditure_category_idExpenditureItems
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: expenditure_category_id
+        description: 'The ID of the expenditure category.'
+        example: non
+        required: true
+        schema:
+          type: string
+  '/api/protected/expenditure-categories/{expenditure_category_id}/expenditures':
+    get:
+      summary: ''
+      operationId: getApiProtectedExpenditureCategoriesExpenditure_category_idExpenditures
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: expenditure_category_id
+        description: 'The ID of the expenditure category.'
+        example: recusandae
+        required: true
+        schema:
+          type: string
+  '/api/protected/expenditure-items/{id}':
+    get:
+      summary: ''
+      operationId: getApiProtectedExpenditureItemsId
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the expenditure item.'
+        example: quia
+        required: true
+        schema:
+          type: string
+  /api/protected/expenditure-categories/expenditure-items/download:
+    get:
+      summary: ''
+      operationId: getApiProtectedExpenditureCategoriesExpenditureItemsDownload
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  '/api/protected/expenditure-items/payment-items/{payment_item_id}':
+    get:
+      summary: ''
+      operationId: getApiProtectedExpenditureItemsPaymentItemsPayment_item_id
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: payment_item_id
+        description: 'The ID of the payment item.'
+        example: quo
+        required: true
+        schema:
+          type: string
+  /api/protected/expenditure_categories/expenditure_items/filter:
+    get:
+      summary: ''
+      operationId: getApiProtectedExpenditure_categoriesExpenditure_itemsFilter
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  /api/protected/expenditure-categories-all:
+    get:
+      summary: ''
+      operationId: getApiProtectedExpenditureCategoriesAll
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  '/api/protected/expenditure-items/{id}/approve':
+    put:
+      summary: ''
+      operationId: putApiProtectedExpenditureItemsIdApprove
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the expenditure item.'
+        example: molestiae
+        required: true
+        schema:
+          type: string
+  /api/protected/user-savings:
+    post:
+      summary: ''
+      operationId: postApiProtectedUserSavings
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                amount_deposited:
+                  type: string
+                  description: 'Must be at least 1 character.'
+                  example: vdbqvthdu
+                comment:
+                  type: string
+                  description: ''
+                  example: null
+                user_id:
+                  type: string
+                  description: ''
+                  example: fugiat
+                id:
+                  type: string
+                  description: ''
+                  example: null
+              required:
+                - amount_deposited
+                - user_id
+      security: []
+    get:
+      summary: ''
+      operationId: getApiProtectedUserSavings
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  '/api/protected/user-savings/{user_id}/{id}':
+    put:
+      summary: ''
+      operationId: putApiProtectedUserSavingsUser_idId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                amount_deposited:
+                  type: string
+                  description: 'Must be at least 1 character.'
+                  example: fwaoptpkyftvgpjosykkhzooteoyriawl
+                comment:
+                  type: string
+                  description: 'Must not be greater than 5000 characters.'
+                  example: xoigurjowidqtn
+              required:
+                - amount_deposited
+      security: []
+    get:
+      summary: ''
+      operationId: getApiProtectedUserSavingsUser_idId
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    delete:
+      summary: ''
+      operationId: deleteApiProtectedUserSavingsUser_idId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: user_id
+        description: 'The ID of the user.'
+        example: sapiente
+        required: true
+        schema:
+          type: string
+      -
+        in: path
+        name: id
+        description: 'The ID of the {user id}.'
+        example: ducimus
+        required: true
+        schema:
+          type: string
+  '/api/protected/user-savings/{user_id}':
+    get:
+      summary: ''
+      operationId: getApiProtectedUserSavingsUser_id
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: user_id
+        description: 'The ID of the user.'
+        example: praesentium
+        required: true
+        schema:
+          type: string
+  /api/protected/savings/download:
+    get:
+      summary: ''
+      operationId: getApiProtectedSavingsDownload
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  /api/protected/organisation-savings/download:
+    get:
+      summary: ''
+      operationId: getApiProtectedOrganisationSavingsDownload
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  /api/protected/savings:
+    get:
+      summary: ''
+      operationId: getApiProtectedSavings
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  /api/protected/savings/statistics:
+    get:
+      summary: ''
+      operationId: getApiProtectedSavingsStatistics
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  '/api/protected/user-savings/{id}':
+    put:
+      summary: ''
+      operationId: putApiProtectedUserSavingsId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the user saving.'
+        example: asperiores
+        required: true
+        schema:
+          type: string
+  '/api/protected/organisations/{id}/user-savings/approve':
+    get:
+      summary: ''
+      operationId: getApiProtectedOrganisationsIdUserSavingsApprove
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the organisation.'
+        example: harum
+        required: true
+        schema:
+          type: string
+  '/api/protected/organisations/{id}/income-activities':
+    post:
+      summary: ''
+      operationId: postApiProtectedOrganisationsIdIncomeActivities
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: dndpptzxzbzdnsdpxgesm
+                description:
+                  type: string
+                  description: 'Must not be greater than 5000 characters.'
+                  example: 'Voluptatem velit nostrum laboriosam harum reiciendis ea.'
+                venue:
+                  type: string
+                  description: ''
+                  example: omnis
+                date:
+                  type: string
+                  description: 'Must be a valid date.'
+                  example: '2024-10-17T11:31:25'
+                amount:
+                  type: number
+                  description: 'Must be at least 1.'
+                  example: 43
+                payment_item_id:
+                  type: string
+                  description: ''
+                  example: consequatur
+              required:
+                - name
+                - venue
+                - date
+                - amount
+                - payment_item_id
+      security: []
+    get:
+      summary: ''
+      operationId: getApiProtectedOrganisationsIdIncomeActivities
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the organisation.'
+        example: consectetur
+        required: true
+        schema:
+          type: string
+  '/api/protected/income-activities/{id}/update':
+    put:
+      summary: ''
+      operationId: putApiProtectedIncomeActivitiesIdUpdate
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: yngequhomqzjm
+                description:
+                  type: string
+                  description: 'Must not be greater than 5000 characters.'
+                  example: 'Tempore assumenda sit sed saepe fuga necessitatibus et.'
+                venue:
+                  type: string
+                  description: ''
+                  example: earum
+                date:
+                  type: string
+                  description: 'Must be a valid date.'
+                  example: '2024-10-17T11:31:25'
+                amount:
+                  type: number
+                  description: 'Must be at least 1.'
+                  example: 27
+                payment_item_id:
+                  type: string
+                  description: ''
+                  example: molestiae
+              required:
+                - name
+                - venue
+                - date
+                - amount
+                - payment_item_id
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the income activity.'
+        example: ut
+        required: true
+        schema:
+          type: string
+  '/api/protected/income-activities/{id}':
+    get:
+      summary: ''
+      operationId: getApiProtectedIncomeActivitiesId
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    delete:
+      summary: ''
+      operationId: deleteApiProtectedIncomeActivitiesId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the income activity.'
+        example: dolorem
+        required: true
+        schema:
+          type: string
+  /api/protected/organisations/income-activities/search:
+    get:
+      summary: ''
+      operationId: getApiProtectedOrganisationsIncomeActivitiesSearch
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  /api/protected/organisations/income-activities/generate-pdf:
+    get:
+      summary: ''
+      operationId: getApiProtectedOrganisationsIncomeActivitiesGeneratePdf
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  '/api/protected/income-activities/{id}/approve':
+    put:
+      summary: ''
+      operationId: putApiProtectedIncomeActivitiesIdApprove
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the income activity.'
+        example: a
+        required: true
+        schema:
+          type: string
+  '/api/protected/expenditure-items/{id}/details':
+    post:
+      summary: ''
+      operationId: postApiProtectedExpenditureItemsIdDetails
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: vruczllhpwzp
+                amount_given:
+                  type: number
+                  description: 'Must be at least 1.'
+                  example: 26
+                amount_spent:
+                  type: number
+                  description: 'Must be at least 1.'
+                  example: 7
+                comment:
+                  type: string
+                  description: 'Must not be greater than 5000 characters.'
+                  example: xapoklampdasdy
+              required:
+                - name
+                - amount_given
+                - amount_spent
+      security: []
+    get:
+      summary: ''
+      operationId: getApiProtectedExpenditureItemsIdDetails
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the expenditure item.'
+        example: numquam
+        required: true
+        schema:
+          type: string
+  '/api/protected/expenditure-details/{id}/update':
+    put:
+      summary: ''
+      operationId: putApiProtectedExpenditureDetailsIdUpdate
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: qozgttzmvsqcjnggpsqor
+                amount_given:
+                  type: number
+                  description: 'Must be at least 1.'
+                  example: 54
+                amount_spent:
+                  type: number
+                  description: 'Must be at least 1.'
+                  example: 62
+                comment:
+                  type: string
+                  description: 'Must not be greater than 5000 characters.'
+                  example: q
+              required:
+                - name
+                - amount_given
+                - amount_spent
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the expenditure detail.'
+        example: sequi
+        required: true
+        schema:
+          type: string
+  '/api/protected/expenditure-details/{id}':
+    get:
+      summary: ''
+      operationId: getApiProtectedExpenditureDetailsId
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the expenditure detail.'
+        example: ut
+        required: true
+        schema:
+          type: string
+  /api/protected/expenditure-details:
+    get:
+      summary: ''
+      operationId: getApiProtectedExpenditureDetails
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  /api/protected/expenditure-item-details/download:
+    get:
+      summary: ''
+      operationId: getApiProtectedExpenditureItemDetailsDownload
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  /api/protected/expenditures_total:
+    get:
+      summary: ''
+      operationId: getApiProtectedExpenditures_total
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  /api/protected/expenditure_statistics:
+    get:
+      summary: ''
+      operationId: getApiProtectedExpenditure_statistics
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  '/api/protected/expenditure-item-details/{id}':
+    delete:
+      summary: ''
+      operationId: deleteApiProtectedExpenditureItemDetailsId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the expenditure item detail.'
+        example: omnis
+        required: true
+        schema:
+          type: string
+  '/api/protected/expenditure-details/{id}/approve':
+    put:
+      summary: ''
+      operationId: putApiProtectedExpenditureDetailsIdApprove
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the expenditure detail.'
+        example: quod
+        required: true
+        schema:
+          type: string
+  /api/protected/expenditure-details/bulk_approve:
+    put:
+      summary: ''
+      operationId: putApiProtectedExpenditureDetailsBulk_approve
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                row:
+                  type: array
+                  description: ''
+                  example:
+                    - []
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        description: ''
+                        example: error
+                      type:
+                        type: string
+                        description: ''
+                        example: voluptas
+                    required:
+                      - id
+                      - type
+      security: []
+  /api/protected/contributions:
+    post:
+      summary: ''
+      operationId: postApiProtectedContributions
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                amount_deposited:
+                  type: number
+                  description: ''
+                  example: 47.6868714
+                comment:
+                  type: string
+                  description: 'Must not be greater than 4000 characters.'
+                  example: bjzlahk
+                user_id:
+                  type: string
+                  description: ''
+                  example: atque
+                payment_item_id:
+                  type: string
+                  description: ''
+                  example: nisi
+                quarterly_name:
+                  type: string
+                  description: ''
+                  example: null
+                month_name:
+                  type: string
+                  description: ''
+                  example: null
+              required:
+                - amount_deposited
+                - user_id
+                - payment_item_id
+      security: []
+  '/api/protected/contributions/{id}/update':
+    put:
+      summary: ''
+      operationId: putApiProtectedContributionsIdUpdate
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                amount_deposited:
+                  type: number
+                  description: ''
+                  example: 106716.04708499
+                comment:
+                  type: string
+                  description: 'Must not be greater than 5000 characters.'
+                  example: wztdgbfduvkbfplxpjgdo
+              required:
+                - amount_deposited
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the contribution.'
+        example: nemo
+        required: true
+        schema:
+          type: string
+  /api/protected/contributions/bulk-payments:
+    post:
+      summary: ''
+      operationId: postApiProtectedContributionsBulkPayments
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                row:
+                  type: array
+                  description: ''
+                  example:
+                    - []
+                  items:
+                    type: object
+                    properties:
+                      user_id:
+                        type: string
+                        description: ''
+                        example: totam
+                      payment_item_id:
+                        type: string
+                        description: ''
+                        example: dolorem
+                      comment:
+                        type: string
+                        description: ''
+                        example: quaerat
+                      year:
+                        type: string
+                        description: ''
+                        example: ea
+                      amount_deposited:
+                        type: number
+                        description: ''
+                        example: 2.65471669
+                      code:
+                        type: string
+                        description: ''
+                        example: quae
+                      is_compulsory:
+                        type: string
+                        description: ''
+                        example: qui
+                      month_name:
+                        type: string
+                        description: ''
+                        example: null
+                      quarterly_name:
+                        type: string
+                        description: ''
+                        example: null
+                      registration_id:
+                        type: string
+                        description: ''
+                        example: aut
+                    required:
+                      - user_id
+                      - payment_item_id
+                      - comment
+                      - year
+                      - amount_deposited
+                      - code
+                      - is_compulsory
+                      - registration_id
+      security: []
+  '/api/protected/contributions/payment-items/{id}/users/{user_id}':
+    get:
+      summary: ''
+      operationId: getApiProtectedContributionsPaymentItemsIdUsersUser_id
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the payment item.'
+        example: quis
+        required: true
+        schema:
+          type: string
+      -
+        in: path
+        name: user_id
+        description: 'The ID of the user.'
+        example: et
+        required: true
+        schema:
+          type: string
+  '/api/protected/contributions/payment-items/{id}':
+    get:
+      summary: ''
+      operationId: getApiProtectedContributionsPaymentItemsId
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the payment item.'
+        example: quam
+        required: true
+        schema:
+          type: string
+  '/api/protected/contributions/users/{id}':
+    get:
+      summary: ''
+      operationId: getApiProtectedContributionsUsersId
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the user.'
+        example: occaecati
+        required: true
+        schema:
+          type: string
+  '/api/protected/contributions/users/{user_id}/items/{id}':
+    get:
+      summary: ''
+      operationId: getApiProtectedContributionsUsersUser_idItemsId
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: user_id
+        description: 'The ID of the user.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+      -
+        in: path
+        name: id
+        description: 'The ID of the item.'
+        example: voluptas
+        required: true
+        schema:
+          type: string
+  '/api/protected/contributions/{id}':
+    get:
+      summary: ''
+      operationId: getApiProtectedContributionsId
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    delete:
+      summary: ''
+      operationId: deleteApiProtectedContributionsId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the contribution.'
+        example: aut
+        required: true
+        schema:
+          type: string
+  /api/protected/organisations/contributions/search:
+    get:
+      summary: ''
+      operationId: getApiProtectedOrganisationsContributionsSearch
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  /api/protected/download-contributions:
+    get:
+      summary: ''
+      operationId: getApiProtectedDownloadContributions
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  /api/protected/users/contributions/download:
+    get:
+      summary: ''
+      operationId: getApiProtectedUsersContributionsDownload
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  /api/protected/contributions/members/debts:
+    get:
+      summary: ''
+      operationId: getApiProtectedContributionsMembersDebts
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  /api/protected/contributions/members/paid:
+    get:
+      summary: ''
+      operationId: getApiProtectedContributionsMembersPaid
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  /api/protected/contributions/yearly/total:
+    get:
+      summary: ''
+      operationId: getApiProtectedContributionsYearlyTotal
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  /api/protected/contributions_statistics:
+    get:
+      summary: ''
+      operationId: getApiProtectedContributions_statistics
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  /api/protected/contributions/members/debts/download:
+    get:
+      summary: ''
+      operationId: getApiProtectedContributionsMembersDebtsDownload
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  /api/protected/contributions/members/paid_items/download:
+    get:
+      summary: ''
+      operationId: getApiProtectedContributionsMembersPaid_itemsDownload
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  /api/protected/contributions/approve:
+    put:
+      summary: ''
+      operationId: putApiProtectedContributionsApprove
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                payment_item_id:
+                  type: string
+                  description: ''
+                  example: mollitia
+                user_id:
+                  type: string
+                  description: ''
+                  example: nisi
+                session_id:
+                  type: string
+                  description: ''
+                  example: possimus
+                type:
+                  type: string
+                  description: ''
+                  example: iusto
+              required:
+                - payment_item_id
+                - user_id
+                - session_id
+                - type
+      security: []
+  /api/protected/activity-supports:
+    post:
+      summary: ''
+      operationId: postApiProtectedActivitySupports
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                amount_deposited:
+                  type: number
+                  description: ''
+                  example: 6113.2958985
+                comment:
+                  type: string
+                  description: 'Must not be greater than 5000 characters.'
+                  example: kubvlldmf
+                supporter:
+                  type: string
+                  description: ''
+                  example: distinctio
+                payment_item_id:
+                  type: string
+                  description: ''
+                  example: aliquid
+              required:
+                - amount_deposited
+                - supporter
+                - payment_item_id
+      security: []
+  '/api/protected/activity-supports/{id}':
+    put:
+      summary: ''
+      operationId: putApiProtectedActivitySupportsId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                amount_deposited:
+                  type: number
+                  description: ''
+                  example: 1637848.95872
+                comment:
+                  type: string
+                  description: 'Must not be greater than 5000 characters.'
+                  example: uoubzn
+                supporter:
+                  type: string
+                  description: ''
+                  example: commodi
+                payment_item_id:
+                  type: string
+                  description: ''
+                  example: repellendus
+              required:
+                - amount_deposited
+                - supporter
+                - payment_item_id
+      security: []
+    get:
+      summary: ''
+      operationId: getApiProtectedActivitySupportsId
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the activity support.'
+        example: molestiae
+        required: true
+        schema:
+          type: string
+  /api/protected/sponsorships:
+    get:
+      summary: ''
+      operationId: getApiProtectedSponsorships
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  '/api/protected/activity-supports/payment-items/{id}':
+    get:
+      summary: ''
+      operationId: getApiProtectedActivitySupportsPaymentItemsId
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the payment item.'
+        example: aut
+        required: true
+        schema:
+          type: string
+  /api/protected/sponsorships/download:
+    get:
+      summary: ''
+      operationId: getApiProtectedSponsorshipsDownload
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  /api/protected/sponsorships/search:
+    get:
+      summary: ''
+      operationId: getApiProtectedSponsorshipsSearch
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  '/api/protected/sponsorships/{id}/approve':
+    put:
+      summary: ''
+      operationId: putApiProtectedSponsorshipsIdApprove
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the sponsorship.'
+        example: ea
+        required: true
+        schema:
+          type: string
+  '/api/protected/sponsorships/{id}':
+    delete:
+      summary: ''
+      operationId: deleteApiProtectedSponsorshipsId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the sponsorship.'
+        example: libero
+        required: true
+        schema:
+          type: string
+  '/api/protected/activity/{id}/generate-report':
+    get:
+      summary: ''
+      operationId: getApiProtectedActivityIdGenerateReport
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the activity.'
+        example: harum
+        required: true
+        schema:
+          type: string
+  '/api/protected/activity/{id}/report/download':
+    get:
+      summary: ''
+      operationId: getApiProtectedActivityIdReportDownload
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the activity.'
+        example: explicabo
+        required: true
+        schema:
+          type: string
+  /api/protected/generate-quarterly-report:
+    get:
+      summary: ''
+      operationId: getApiProtectedGenerateQuarterlyReport
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  /api/protected/report/quarter/download:
+    get:
+      summary: ''
+      operationId: getApiProtectedReportQuarterDownload
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  /api/protected/report/yearly/generate:
+    get:
+      summary: ''
+      operationId: getApiProtectedReportYearlyGenerate
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  /api/protected/report/yearly/download:
+    get:
+      summary: ''
+      operationId: getApiProtectedReportYearlyDownload
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  /api/protected/members-registration:
+    post:
+      summary: ''
+      operationId: postApiProtectedMembersRegistration
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: string
+                  description: ''
+                  example: illum
+                month_name:
+                  type: string
+                  description: ''
+                  example: null
+              required:
+                - user_id
+      security: []
+  /api/protected/members-registration/update:
+    put:
+      summary: ''
+      operationId: putApiProtectedMembersRegistrationUpdate
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: string
+                  description: ''
+                  example: quaerat
+                month_name:
+                  type: string
+                  description: ''
+                  example: null
+              required:
+                - user_id
+      security: []
+  '/api/protected/registered-members/{id}':
+    delete:
+      summary: ''
+      operationId: deleteApiProtectedRegisteredMembersId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the registered member.'
+        example: repudiandae
+        required: true
+        schema:
+          type: string
+  /api/protected/registered-members:
+    get:
+      summary: ''
+      operationId: getApiProtectedRegisteredMembers
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                year:
+                  type: string
+                  description: ''
+                  example: natus
+                status:
+                  type: string
+                  description: ''
+                  example: omnis
+              required:
+                - year
+      security: []
+  /api/protected/registered-members/download:
+    get:
+      summary: ''
+      operationId: getApiProtectedRegisteredMembersDownload
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                year:
+                  type: string
+                  description: ''
+                  example: ut
+                status:
+                  type: string
+                  description: ''
+                  example: et
+              required:
+                - year
+      security: []
+  /api/protected/members-registration/approve:
+    put:
+      summary: ''
+      operationId: putApiProtectedMembersRegistrationApprove
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+  /api/protected/sessions:
+    post:
+      summary: ''
+      operationId: postApiProtectedSessions
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                year:
+                  type: string
+                  description: ''
+                  example: qui
+                status:
+                  type: string
+                  description: ''
+                  example: impedit
+                0:
+                  type: string
+                  description: ''
+                  example: ACTIVE
+                  enum:
+                    - ACTIVE
+                    - IN_ACTIVE
+              required:
+                - year
+                - status
+      security: []
+    get:
+      summary: ''
+      operationId: getApiProtectedSessions
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  /api/protected/sessions/update:
+    put:
+      summary: ''
+      operationId: putApiProtectedSessionsUpdate
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  description: ''
+                  example: amet
+                id:
+                  type: string
+                  description: ''
+                  example: in
+              required:
+                - status
+                - id
+      security: []
+  '/api/protected/sessions/{id}':
+    delete:
+      summary: ''
+      operationId: deleteApiProtectedSessionsId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the session.'
+        example: quisquam
+        required: true
+        schema:
+          type: string
+  /api/protected/sessions/current:
+    get:
+      summary: ''
+      operationId: getApiProtectedSessionsCurrent
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  /api/protected/paginated_sessions:
+    get:
+      summary: ''
+      operationId: getApiProtectedPaginated_sessions
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  /api/protected/registration_fees:
+    post:
+      summary: ''
+      operationId: postApiProtectedRegistration_fees
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                amount:
+                  type: number
+                  description: ''
+                  example: 1258.224
+                is_compulsory:
+                  type: string
+                  description: ''
+                  example: recusandae
+                frequency:
+                  type: string
+                  description: ''
+                  example: MONTHLY
+                  enum:
+                    - MONTHLY
+                    - YEARLY
+              required:
+                - amount
+                - is_compulsory
+                - frequency
+      security: []
+    get:
+      summary: ''
+      operationId: getApiProtectedRegistration_fees
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  '/api/protected/registration_fees/{id}':
+    put:
+      summary: ''
+      operationId: putApiProtectedRegistration_feesId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                amount:
+                  type: number
+                  description: ''
+                  example: 424.05534
+                is_compulsory:
+                  type: string
+                  description: ''
+                  example: libero
+                frequency:
+                  type: string
+                  description: ''
+                  example: MONTHLY
+                  enum:
+                    - MONTHLY
+                    - YEARLY
+              required:
+                - amount
+                - is_compulsory
+                - frequency
+      security: []
+    delete:
+      summary: ''
+      operationId: deleteApiProtectedRegistration_feesId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the registration fee.'
+        example: similique
+        required: true
+        schema:
+          type: string
+  '/api/protected/registration_fees/{id}/set':
+    put:
+      summary: ''
+      operationId: putApiProtectedRegistration_feesIdSet
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the registration fee.'
+        example: voluptatem
+        required: true
+        schema:
+          type: string
+  /api/protected/registration_fees/current:
+    get:
+      summary: ''
+      operationId: getApiProtectedRegistration_feesCurrent
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  /api/protected/organisation/year/balance_sheet:
+    get:
+      summary: ''
+      operationId: getApiProtectedOrganisationYearBalance_sheet
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  /api/protected/organisation/year/balance_sheet/download:
+    get:
+      summary: ''
+      operationId: getApiProtectedOrganisationYearBalance_sheetDownload
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+tags:
+  -
+    name: Endpoints
+    description: ''
