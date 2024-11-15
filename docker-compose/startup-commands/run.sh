@@ -1,11 +1,6 @@
 #!/bin/sh
 
-cd /var/www
-
-#Install dependencies
-composer install
-
-composer dump-autoload
+composer dump-autoload --no-interaction --no-dev --optimize
 
 # clear cache
 php artisan cache:clear
@@ -27,7 +22,7 @@ php artisan view:cache
 echo "finished cashes"
 
 # Run migrations
-php artisan migrate --force
+php artisan migrate --no-interaction --force
 
 #RUN seeders
 php artisan db:seed

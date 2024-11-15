@@ -19,6 +19,9 @@ RUN apt-get update && apt-get install -y \
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 #Install PHP Extensions
+RUN #apk add --no-cache zip libzip-dev
+RUN docker-php-ext-configure zip
+RUN docker-php-ext-install zip
 RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
 
 #Install Composer
@@ -32,7 +35,10 @@ RUN mkdir -p /home/$user/.composer && \
 
 WORKDIR /var/www
 
+
 COPY . .
+
+RUN composer install --prefer-dist --no-scripts --no-dev --no-autoloader
 
 COPY --chown=$user:www-data . /var/www
 
