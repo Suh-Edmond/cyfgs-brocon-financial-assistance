@@ -156,10 +156,12 @@ trait HelpTrait {
 
         $numbers = explode("/", $telephone);
 
-        if($numbers[1] != "null"){
-            $telephone = $numbers[0]."/".$numbers[1];
-        }else{
-            $telephone =$numbers[0];
+        if (isset($numbers[1])){
+            if($numbers[1] != "null"){
+                $telephone = $numbers[0]."/".$numbers[1];
+            }else{
+                $telephone =$numbers[0];
+            }
         }
 
         return $telephone;
