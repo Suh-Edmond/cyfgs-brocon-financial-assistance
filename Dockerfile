@@ -32,13 +32,11 @@ RUN useradd -G www-data,root -u $uid -d /home/$user $user
 RUN mkdir -p /home/$user/.composer && \
     chown -R $user:$user /home/$user
 
+RUN composer install --prefer-dist --no-scripts --no-dev --no-autoloader
 
 WORKDIR /var/www
 
-
 COPY . .
-
-RUN composer install --prefer-dist --no-scripts --no-dev --no-autoloader
 
 COPY --chown=$user:www-data . /var/www
 
@@ -48,9 +46,5 @@ RUN chmod -R ug+w /var/www/storage
 USER $user
 
 EXPOSE 9000
-
-CMD ["php-fpm"]
-
-RUN ["chmod", "+x", "/var/www/docker-compose/startup-commands/run.sh"]
 
 ENTRYPOINT ["sh", "/var/www/docker-compose/startup-commands/run.sh"]

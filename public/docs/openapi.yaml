@@ -26,15 +26,18 @@ paths:
                 email:
                   type: string
                   description: ''
-                  example: jaskolski.joel@example.net
+                  example: geovanny.huel@example.org
+                  nullable: false
                 telephone:
                   type: string
                   description: ''
-                  example: earum
+                  example: dolore
+                  nullable: false
                 password:
                   type: string
                   description: ''
-                  example: '+nkT6:&>m50+4?4dToE'
+                  example: d5wpJ>OU%.>g8`n!FWe
+                  nullable: false
               required:
                 - password
       security: []
@@ -57,19 +60,23 @@ paths:
                 name:
                   type: string
                   description: 'Must not be greater than 255 characters. Must be at least 4 characters.'
-                  example: fnfacgfpqcsuvnzqbroiaqsjhohtutpzwphqpzakigndqamwtbt
+                  example: cjjcvtgffkd
+                  nullable: false
                 telephone:
                   type: string
                   description: ''
-                  example: et
+                  example: labore
+                  nullable: false
                 password:
                   type: string
                   description: 'Must be at least 8 characters.'
-                  example: ~)92mA!
+                  example: '`sgaISyRhTm'
+                  nullable: false
                 email:
                   type: string
                   description: 'Must be a valid email address.'
-                  example: ethyl.hilpert@example.org
+                  example: dereck.hessel@example.org
+                  nullable: false
               required:
                 - name
                 - telephone
@@ -95,7 +102,8 @@ paths:
                 credential:
                   type: string
                   description: ''
-                  example: libero
+                  example: quae
+                  nullable: false
               required:
                 - credential
       security: []
@@ -118,19 +126,23 @@ paths:
                 telephone:
                   type: string
                   description: ''
-                  example: officiis
+                  example: et
+                  nullable: false
                 email:
                   type: string
                   description: ''
-                  example: dprohaska@example.net
+                  example: mohr.schuyler@example.com
+                  nullable: false
                 password:
                   type: string
                   description: 'Must be at least 8 characters.'
-                  example: "ZpjRe}FB|Xpp?L'K"
+                  example: AdIb2m
+                  nullable: false
                 role:
                   type: string
                   description: ''
-                  example: commodi
+                  example: molestiae
+                  nullable: false
               required:
                 - password
                 - role
@@ -174,15 +186,18 @@ paths:
                 user_id:
                   type: string
                   description: ''
-                  example: architecto
+                  example: qui
+                  nullable: false
                 new_password:
                   type: string
                   description: 'Must be at least 8 characters.'
-                  example: chrrbwcqiynafneymhclzenzmzbwappdpkzjtfbtcmqzgqxxeymvmdfqysjxcywhfwa
+                  example: wwkrtnbcaymvxnftnsehnsdxeqqqqpareszcuijttvghbjujedhoyqpzwlnqtvt
+                  nullable: false
                 token:
                   type: string
                   description: ''
-                  example: et
+                  example: perferendis
+                  nullable: false
               required:
                 - user_id
                 - new_password
@@ -207,11 +222,13 @@ paths:
                 file:
                   type: string
                   description: 'Must not be greater than 2048 characters.'
-                  example: ooqjwuuuzcqnpnzmkonfbhkj
+                  example: fycezsotkj
+                  nullable: false
                 file_category:
                   type: string
                   description: ''
-                  example: quod
+                  example: et
+                  nullable: false
               required:
                 - file_category
       security: []
@@ -256,11 +273,13 @@ paths:
                 user_id:
                   type: string
                   description: ''
-                  example: animi
+                  example: id
+                  nullable: false
                 role:
                   type: string
                   description: ''
-                  example: optio
+                  example: sapiente
+                  nullable: false
               required:
                 - user_id
                 - role
@@ -322,7 +341,7 @@ paths:
         in: path
         name: user_id
         description: 'The ID of the user.'
-        example: nesciunt
+        example: deleniti
         required: true
         schema:
           type: string
@@ -345,15 +364,18 @@ paths:
                 name:
                   type: string
                   description: ''
-                  example: consequuntur
+                  example: dolor
+                  nullable: false
                 term:
                   type: number
                   description: ''
-                  example: 598139984.0
+                  example: 172.0176318
+                  nullable: false
                 number_of_members:
                   type: number
                   description: ''
-                  example: 1.96495637
+                  example: 42879.91
+                  nullable: false
               required:
                 - name
                 - term
@@ -386,7 +408,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the organisation.'
-        example: tempore
+        example: fugit
         required: true
         schema:
           type: string
@@ -417,7 +439,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the user.'
-        example: similique
+        example: pariatur
         required: true
         schema:
           type: string
@@ -536,7 +558,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the payment item.'
-        example: voluptatibus
+        example: aperiam
         required: true
         schema:
           type: string
@@ -559,19 +581,23 @@ paths:
                 user_id:
                   type: string
                   description: ''
-                  example: pariatur
+                  example: natus
+                  nullable: false
                 user_name:
                   type: string
                   description: ''
-                  example: laudantium
+                  example: in
+                  nullable: false
                 user_email:
                   type: string
                   description: 'Must be a valid email address.'
-                  example: fahey.rita@example.com
+                  example: idella14@example.org
+                  nullable: false
                 role:
                   type: string
                   description: ''
-                  example: enim
+                  example: architecto
+                  nullable: false
               required:
                 - user_id
                 - user_name
@@ -615,7 +641,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the get invitation notification.'
-        example: sed
+        example: cumque
         required: true
         schema:
           type: string
@@ -648,31 +674,38 @@ paths:
                 name:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: sljeaezymhvwr
+                  example: fahpdjys
+                  nullable: false
                 email:
                   type: string
                   description: 'Must be a valid email address.'
-                  example: vkoss@example.org
+                  example: grady.izaiah@example.com
+                  nullable: false
                 telephone:
                   type: string
                   description: ''
-                  example: in
+                  example: et
+                  nullable: false
                 password:
                   type: string
                   description: ''
-                  example: 'EsM|CbvS/CeWXr:Jv49P'
+                  example: '?Ud/Txh`X'
+                  nullable: false
                 address:
                   type: string
                   description: ''
-                  example: expedita
+                  example: omnis
+                  nullable: false
                 occupation:
                   type: string
                   description: ''
-                  example: necessitatibus
+                  example: qui
+                  nullable: false
                 gender:
                   type: string
                   description: ''
-                  example: nemo
+                  example: quae
+                  nullable: false
               required:
                 - name
                 - email
@@ -686,7 +719,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the organisation.'
-        example: esse
+        example: quam
         required: true
         schema:
           type: string
@@ -705,7 +738,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the organisation.'
-        example: rerum
+        example: corrupti
         required: true
         schema:
           type: string
@@ -728,7 +761,8 @@ paths:
                 picture:
                   type: string
                   description: ''
-                  example: est
+                  example: minima
+                  nullable: false
               required:
                 - picture
       security: []
@@ -746,7 +780,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the user.'
-        example: molestias
+        example: sint
         required: true
         schema:
           type: string
@@ -769,31 +803,38 @@ paths:
                 name:
                   type: string
                   description: ''
-                  example: id
+                  example: iure
+                  nullable: false
                 email:
                   type: string
                   description: 'Must be a valid email address.'
-                  example: gbogisich@example.com
+                  example: lolson@example.com
+                  nullable: false
                 address:
                   type: string
                   description: ''
-                  example: pariatur
+                  example: aut
+                  nullable: false
                 occupation:
                   type: string
                   description: ''
-                  example: quam
+                  example: et
+                  nullable: false
                 user_id:
                   type: string
                   description: ''
-                  example: qui
+                  example: et
+                  nullable: false
                 gender:
                   type: string
                   description: ''
                   example: null
+                  nullable: false
                 status:
                   type: string
                   description: ''
-                  example: quas
+                  example: pariatur
+                  nullable: false
               required:
                 - name
                 - email
@@ -821,31 +862,38 @@ paths:
                 name:
                   type: string
                   description: ''
-                  example: ratione
+                  example: laudantium
+                  nullable: false
                 email:
                   type: string
                   description: 'Must be a valid email address.'
-                  example: ernser.breana@example.org
+                  example: isabella59@example.com
+                  nullable: false
                 address:
                   type: string
                   description: ''
-                  example: sunt
+                  example: tenetur
+                  nullable: false
                 occupation:
                   type: string
                   description: ''
-                  example: ab
+                  example: saepe
+                  nullable: false
                 user_id:
                   type: string
                   description: ''
-                  example: modi
+                  example: quod
+                  nullable: false
                 gender:
                   type: string
                   description: ''
                   example: null
+                  nullable: false
                 status:
                   type: string
                   description: ''
-                  example: debitis
+                  example: molestiae
+                  nullable: false
               required:
                 - name
                 - email
@@ -873,15 +921,18 @@ paths:
                 user_id:
                   type: string
                   description: ''
-                  example: deleniti
+                  example: nulla
+                  nullable: false
                 old_password:
                   type: string
                   description: ''
-                  example: nihil
+                  example: ut
+                  nullable: false
                 password:
                   type: string
                   description: 'Must be at least 8 characters.'
-                  example: 'G.P_"PVJYmz|'
+                  example: 'I+z"|B&~(fF$TLpXlT$4'
+                  nullable: false
               required:
                 - user_id
                 - old_password
@@ -906,39 +957,48 @@ paths:
                 name:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: navuescvsc
+                  example: fpueqqxdbsmpiarybnv
+                  nullable: false
                 email:
                   type: string
                   description: 'Must be a valid email address.'
-                  example: langworth.adrien@example.org
+                  example: ngislason@example.com
+                  nullable: false
                 address:
                   type: string
                   description: ''
-                  example: non
+                  example: nisi
+                  nullable: false
                 box_number:
                   type: integer
                   description: ''
-                  example: 7
+                  example: 6
+                  nullable: false
                 description:
                   type: string
                   description: 'Must not be greater than 5000 characters.'
-                  example: 'Pariatur velit itaque accusamus accusantium excepturi ullam et.'
+                  example: 'Molestias quis omnis laborum voluptate quis enim et.'
+                  nullable: false
                 salutation:
                   type: string
                   description: ''
-                  example: porro
+                  example: est
+                  nullable: false
                 region:
                   type: string
                   description: ''
-                  example: vel
+                  example: vitae
+                  nullable: false
                 telephone:
                   type: string
                   description: ''
-                  example: ad
+                  example: soluta
+                  nullable: false
                 id:
                   type: string
                   description: ''
                   example: null
+                  nullable: false
               required:
                 - name
                 - address
@@ -985,7 +1045,8 @@ paths:
                 logo:
                   type: string
                   description: ''
-                  example: voluptatem
+                  example: deserunt
+                  nullable: false
               required:
                 - logo
       security: []
@@ -1003,7 +1064,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the organisation.'
-        example: maiores
+        example: unde
         required: true
         schema:
           type: string
@@ -1022,7 +1083,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the organisation.'
-        example: amet
+        example: reiciendis
         required: true
         schema:
           type: string
@@ -1067,19 +1128,23 @@ paths:
                 name:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: ixzp
+                  example: lkuwqnomhjxnt
+                  nullable: false
                 description:
                   type: string
                   description: 'Must not be greater than 5000 characters.'
-                  example: 'Iusto non vel fugiat aut facilis accusamus.'
+                  example: 'Omnis fugit occaecati nemo eum labore voluptas aliquam.'
+                  nullable: false
                 id:
                   type: string
                   description: ''
                   example: null
+                  nullable: false
                 code:
                   type: string
                   description: 'Must not be greater than 100 characters.'
-                  example: fjqvrubzpzdblhjkfbodsy
+                  example: dwimnsszrczphfe
+                  nullable: false
               required:
                 - name
                 - description
@@ -1090,7 +1155,7 @@ paths:
         in: path
         name: organisation_id
         description: 'The ID of the organisation.'
-        example: laboriosam
+        example: culpa
         required: true
         schema:
           type: string
@@ -1113,11 +1178,13 @@ paths:
                 name:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: apgupmbeyofufruoaysxg
+                  example: sbnakcqzsrivqs
+                  nullable: false
                 description:
                   type: string
                   description: 'Must not be greater than 5000 characters.'
-                  example: 'Esse minima temporibus blanditiis illo est molestias consequatur.'
+                  example: 'Quo consectetur qui ducimus voluptatem.'
+                  nullable: false
               required:
                 - name
                 - description
@@ -1157,7 +1224,7 @@ paths:
         in: path
         name: organisation_id
         description: 'The ID of the organisation.'
-        example: voluptates
+        example: sed
         required: true
         schema:
           type: string
@@ -1165,7 +1232,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the payment category.'
-        example: consequatur
+        example: consequuntur
         required: true
         schema:
           type: string
@@ -1254,35 +1321,43 @@ paths:
                 name:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: hadkjfoedhjjcqaoctubywv
+                  example: gufv
+                  nullable: false
                 amount:
                   type: string
                   description: ''
-                  example: qui
+                  example: autem
+                  nullable: false
                 compulsory:
                   type: boolean
                   description: ''
-                  example: false
+                  example: true
+                  nullable: false
                 description:
                   type: string
                   description: 'Must not be greater than 4000 characters.'
-                  example: 'Culpa et mollitia maxime.'
+                  example: 'Dolorem vel consequatur sit libero alias cumque laborum.'
+                  nullable: false
                 type:
                   type: string
                   description: ''
-                  example: reprehenderit
+                  example: deleniti
+                  nullable: false
                 frequency:
                   type: string
                   description: ''
-                  example: ipsam
+                  example: voluptatem
+                  nullable: false
                 reference:
                   type: string
                   description: ''
                   example: null
+                  nullable: false
                 deadline:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2024-10-17T11:31:25'
+                  example: '2025-01-27T14:19:47'
+                  nullable: false
               required:
                 - name
                 - amount
@@ -1317,7 +1392,7 @@ paths:
         in: path
         name: payment_category_id
         description: 'The ID of the payment category.'
-        example: atque
+        example: modi
         required: true
         schema:
           type: string
@@ -1340,35 +1415,43 @@ paths:
                 name:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: pwurtcklicpgbcgfqlnv
+                  example: togecljzdcjirrzfspplk
+                  nullable: false
                 amount:
                   type: string
                   description: ''
-                  example: tempore
+                  example: quae
+                  nullable: false
                 compulsory:
                   type: boolean
                   description: ''
-                  example: false
+                  example: true
+                  nullable: false
                 description:
                   type: string
                   description: 'Must not be greater than 4000 characters.'
-                  example: 'Odio atque vel quos consequuntur.'
+                  example: 'Adipisci voluptatibus exercitationem id et in.'
+                  nullable: false
                 type:
                   type: string
                   description: ''
-                  example: tempora
+                  example: explicabo
+                  nullable: false
                 frequency:
                   type: string
                   description: ''
-                  example: velit
+                  example: tempore
+                  nullable: false
                 reference:
                   type: string
                   description: ''
                   example: null
+                  nullable: false
                 deadline:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2024-10-17T11:31:25'
+                  example: '2025-01-27T14:19:47'
+                  nullable: false
               required:
                 - name
                 - amount
@@ -1412,7 +1495,7 @@ paths:
         in: path
         name: payment_category_id
         description: 'The ID of the payment category.'
-        example: tempore
+        example: ducimus
         required: true
         schema:
           type: string
@@ -1420,7 +1503,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the payment item.'
-        example: dolorum
+        example: est
         required: true
         schema:
           type: string
@@ -1531,11 +1614,13 @@ paths:
                 id:
                   type: string
                   description: ''
-                  example: commodi
+                  example: repudiandae
+                  nullable: false
                 reference_id:
                   type: string
                   description: ''
-                  example: ea
+                  example: ipsam
+                  nullable: false
               required:
                 - id
                 - reference_id
@@ -1567,7 +1652,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the payment item.'
-        example: sint
+        example: voluptatem
         required: true
         schema:
           type: string
@@ -1611,19 +1696,23 @@ paths:
                 name:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: bkcmmiweytozvlufsexiuxrpc
+                  example: diyzaqfztotim
+                  nullable: false
                 description:
                   type: string
                   description: 'Must not be greater than 5000 characters.'
-                  example: 'Aut voluptatem sit eos earum suscipit autem magni iusto.'
+                  example: 'Aut eum eaque in deserunt.'
+                  nullable: false
                 id:
                   type: string
                   description: ''
                   example: null
+                  nullable: false
                 code:
                   type: string
                   description: 'Must not be greater than 100 characters.'
-                  example: xfsosxeyociuaucjpwaanmf
+                  example: cbciifxnyiwjhx
+                  nullable: false
               required:
                 - name
                 - description
@@ -1634,7 +1723,7 @@ paths:
         in: path
         name: organisation_id
         description: 'The ID of the organisation.'
-        example: officiis
+        example: voluptate
         required: true
         schema:
           type: string
@@ -1678,11 +1767,13 @@ paths:
                 name:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: rbivujnkclgbdalgwbdtwinym
+                  example: knxfnhocpxvgykb
+                  nullable: false
                 description:
                   type: string
                   description: 'Must not be greater than 5000 characters.'
-                  example: 'Harum veritatis non est ratione qui consequatur alias.'
+                  example: 'Nobis aspernatur animi amet enim quae.'
+                  nullable: false
               required:
                 - name
                 - description
@@ -1701,7 +1792,7 @@ paths:
         in: path
         name: organisation_id
         description: 'The ID of the organisation.'
-        example: harum
+        example: repellendus
         required: true
         schema:
           type: string
@@ -1709,7 +1800,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the expenditure category.'
-        example: modi
+        example: quo
         required: true
         schema:
           type: string
@@ -1776,27 +1867,33 @@ paths:
                 name:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: vvfjmnihrfysvaivnli
+                  example: dgftqdqdadgf
+                  nullable: false
                 amount:
                   type: number
                   description: ''
-                  example: 6929658.17
+                  example: 722.6056307
+                  nullable: false
                 comment:
                   type: string
                   description: ''
                   example: null
+                  nullable: false
                 venue:
                   type: string
                   description: ''
                   example: null
+                  nullable: false
                 date:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2024-10-17T11:31:25'
+                  example: '2025-01-27T14:19:47'
+                  nullable: false
                 payment_item_id:
                   type: string
                   description: ''
-                  example: et
+                  example: hic
+                  nullable: false
               required:
                 - name
                 - amount
@@ -1838,7 +1935,7 @@ paths:
         in: path
         name: expenditure_category_id
         description: 'The ID of the expenditure category.'
-        example: consequuntur
+        example: occaecati
         required: true
         schema:
           type: string
@@ -1846,7 +1943,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the expenditure item.'
-        example: sint
+        example: dolorum
         required: true
         schema:
           type: string
@@ -1869,27 +1966,33 @@ paths:
                 name:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: ztmbzxetfsqftqff
+                  example: ambhsqoihsuudjb
+                  nullable: false
                 amount:
                   type: number
                   description: ''
-                  example: 643697605.29599
+                  example: 3.14486
+                  nullable: false
                 comment:
                   type: string
                   description: ''
                   example: null
+                  nullable: false
                 venue:
                   type: string
                   description: ''
                   example: null
+                  nullable: false
                 date:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2024-10-17T11:31:25'
+                  example: '2025-01-27T14:19:47'
+                  nullable: false
                 payment_item_id:
                   type: string
                   description: ''
-                  example: tenetur
+                  example: consequatur
+                  nullable: false
               required:
                 - name
                 - amount
@@ -1901,7 +2004,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the expenditure category.'
-        example: minima
+        example: et
         required: true
         schema:
           type: string
@@ -1932,7 +2035,7 @@ paths:
         in: path
         name: expenditure_category_id
         description: 'The ID of the expenditure category.'
-        example: non
+        example: temporibus
         required: true
         schema:
           type: string
@@ -1963,7 +2066,7 @@ paths:
         in: path
         name: expenditure_category_id
         description: 'The ID of the expenditure category.'
-        example: recusandae
+        example: unde
         required: true
         schema:
           type: string
@@ -1994,7 +2097,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the expenditure item.'
-        example: quia
+        example: ut
         required: true
         schema:
           type: string
@@ -2047,7 +2150,7 @@ paths:
         in: path
         name: payment_item_id
         description: 'The ID of the payment item.'
-        example: quo
+        example: voluptatem
         required: true
         schema:
           type: string
@@ -2110,7 +2213,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the expenditure item.'
-        example: molestiae
+        example: officiis
         required: true
         schema:
           type: string
@@ -2133,19 +2236,23 @@ paths:
                 amount_deposited:
                   type: string
                   description: 'Must be at least 1 character.'
-                  example: vdbqvthdu
+                  example: ubgyrwsjwudgufkdvplgleisaaogohnmschtuuevctnow
+                  nullable: false
                 comment:
                   type: string
                   description: ''
                   example: null
+                  nullable: false
                 user_id:
                   type: string
                   description: ''
-                  example: fugiat
+                  example: velit
+                  nullable: false
                 id:
                   type: string
                   description: ''
                   example: null
+                  nullable: false
               required:
                 - amount_deposited
                 - user_id
@@ -2190,11 +2297,13 @@ paths:
                 amount_deposited:
                   type: string
                   description: 'Must be at least 1 character.'
-                  example: fwaoptpkyftvgpjosykkhzooteoyriawl
+                  example: uxsjawpkdonvjtwhjalr
+                  nullable: false
                 comment:
                   type: string
                   description: 'Must not be greater than 5000 characters.'
-                  example: xoigurjowidqtn
+                  example: fk
+                  nullable: false
               required:
                 - amount_deposited
       security: []
@@ -2233,7 +2342,7 @@ paths:
         in: path
         name: user_id
         description: 'The ID of the user.'
-        example: sapiente
+        example: ea
         required: true
         schema:
           type: string
@@ -2241,7 +2350,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the {user id}.'
-        example: ducimus
+        example: reiciendis
         required: true
         schema:
           type: string
@@ -2272,7 +2381,7 @@ paths:
         in: path
         name: user_id
         description: 'The ID of the user.'
-        example: praesentium
+        example: voluptas
         required: true
         schema:
           type: string
@@ -2379,7 +2488,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the user saving.'
-        example: asperiores
+        example: facilis
         required: true
         schema:
           type: string
@@ -2410,7 +2519,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the organisation.'
-        example: harum
+        example: odio
         required: true
         schema:
           type: string
@@ -2433,27 +2542,33 @@ paths:
                 name:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: dndpptzxzbzdnsdpxgesm
+                  example: ph
+                  nullable: false
                 description:
                   type: string
                   description: 'Must not be greater than 5000 characters.'
-                  example: 'Voluptatem velit nostrum laboriosam harum reiciendis ea.'
+                  example: 'Temporibus sed et eligendi accusantium rerum iste ab voluptas.'
+                  nullable: false
                 venue:
                   type: string
                   description: ''
-                  example: omnis
+                  example: est
+                  nullable: false
                 date:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2024-10-17T11:31:25'
+                  example: '2025-01-27T14:19:47'
+                  nullable: false
                 amount:
                   type: number
                   description: 'Must be at least 1.'
-                  example: 43
+                  example: 71
+                  nullable: false
                 payment_item_id:
                   type: string
                   description: ''
-                  example: consequatur
+                  example: et
+                  nullable: false
               required:
                 - name
                 - venue
@@ -2487,7 +2602,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the organisation.'
-        example: consectetur
+        example: nesciunt
         required: true
         schema:
           type: string
@@ -2510,27 +2625,33 @@ paths:
                 name:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: yngequhomqzjm
+                  example: doeslttyowcntwqbjyudkf
+                  nullable: false
                 description:
                   type: string
                   description: 'Must not be greater than 5000 characters.'
-                  example: 'Tempore assumenda sit sed saepe fuga necessitatibus et.'
+                  example: 'Nihil tempore facere architecto deserunt.'
+                  nullable: false
                 venue:
                   type: string
                   description: ''
-                  example: earum
+                  example: est
+                  nullable: false
                 date:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2024-10-17T11:31:25'
+                  example: '2025-01-27T14:19:47'
+                  nullable: false
                 amount:
                   type: number
                   description: 'Must be at least 1.'
-                  example: 27
+                  example: 19
+                  nullable: false
                 payment_item_id:
                   type: string
                   description: ''
-                  example: molestiae
+                  example: doloremque
+                  nullable: false
               required:
                 - name
                 - venue
@@ -2543,7 +2664,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the income activity.'
-        example: ut
+        example: eaque
         required: true
         schema:
           type: string
@@ -2583,7 +2704,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the income activity.'
-        example: dolorem
+        example: sint
         required: true
         schema:
           type: string
@@ -2646,7 +2767,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the income activity.'
-        example: a
+        example: omnis
         required: true
         schema:
           type: string
@@ -2669,19 +2790,23 @@ paths:
                 name:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: vruczllhpwzp
+                  example: izjikvujmtejsnajckz
+                  nullable: false
                 amount_given:
                   type: number
                   description: 'Must be at least 1.'
-                  example: 26
+                  example: 29
+                  nullable: false
                 amount_spent:
                   type: number
                   description: 'Must be at least 1.'
-                  example: 7
+                  example: 52
+                  nullable: false
                 comment:
                   type: string
                   description: 'Must not be greater than 5000 characters.'
-                  example: xapoklampdasdy
+                  example: jlneyuwpkxzllotzwagi
+                  nullable: false
               required:
                 - name
                 - amount_given
@@ -2713,7 +2838,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the expenditure item.'
-        example: numquam
+        example: repellendus
         required: true
         schema:
           type: string
@@ -2736,19 +2861,23 @@ paths:
                 name:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: qozgttzmvsqcjnggpsqor
+                  example: ylxnygpzhimnfjwdj
+                  nullable: false
                 amount_given:
                   type: number
                   description: 'Must be at least 1.'
-                  example: 54
+                  example: 84
+                  nullable: false
                 amount_spent:
                   type: number
                   description: 'Must be at least 1.'
-                  example: 62
+                  example: 47
+                  nullable: false
                 comment:
                   type: string
                   description: 'Must not be greater than 5000 characters.'
-                  example: q
+                  example: yavmyselfrykjkqpftzbx
+                  nullable: false
               required:
                 - name
                 - amount_given
@@ -2759,7 +2888,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the expenditure detail.'
-        example: sequi
+        example: velit
         required: true
         schema:
           type: string
@@ -2790,7 +2919,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the expenditure detail.'
-        example: ut
+        example: doloremque
         required: true
         schema:
           type: string
@@ -2897,7 +3026,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the expenditure item detail.'
-        example: omnis
+        example: qui
         required: true
         schema:
           type: string
@@ -2916,7 +3045,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the expenditure detail.'
-        example: quod
+        example: sunt
         required: true
         schema:
           type: string
@@ -2947,11 +3076,13 @@ paths:
                       id:
                         type: string
                         description: ''
-                        example: error
+                        example: nostrum
+                        nullable: false
                       type:
                         type: string
                         description: ''
-                        example: voluptas
+                        example: perferendis
+                        nullable: false
                     required:
                       - id
                       - type
@@ -2975,27 +3106,33 @@ paths:
                 amount_deposited:
                   type: number
                   description: ''
-                  example: 47.6868714
+                  example: 0.156
+                  nullable: false
                 comment:
                   type: string
                   description: 'Must not be greater than 4000 characters.'
-                  example: bjzlahk
+                  example: prjccurxtrzkftqxjta
+                  nullable: false
                 user_id:
                   type: string
                   description: ''
-                  example: atque
+                  example: ullam
+                  nullable: false
                 payment_item_id:
                   type: string
                   description: ''
-                  example: nisi
+                  example: sequi
+                  nullable: false
                 quarterly_name:
                   type: string
                   description: ''
                   example: null
+                  nullable: false
                 month_name:
                   type: string
                   description: ''
                   example: null
+                  nullable: false
               required:
                 - amount_deposited
                 - user_id
@@ -3020,11 +3157,13 @@ paths:
                 amount_deposited:
                   type: number
                   description: ''
-                  example: 106716.04708499
+                  example: 72693572.41
+                  nullable: false
                 comment:
                   type: string
                   description: 'Must not be greater than 5000 characters.'
-                  example: wztdgbfduvkbfplxpjgdo
+                  example: lyn
+                  nullable: false
               required:
                 - amount_deposited
       security: []
@@ -3033,7 +3172,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the contribution.'
-        example: nemo
+        example: et
         required: true
         schema:
           type: string
@@ -3064,43 +3203,53 @@ paths:
                       user_id:
                         type: string
                         description: ''
-                        example: totam
+                        example: ab
+                        nullable: false
                       payment_item_id:
                         type: string
                         description: ''
-                        example: dolorem
+                        example: quo
+                        nullable: false
                       comment:
                         type: string
                         description: ''
-                        example: quaerat
+                        example: explicabo
+                        nullable: false
                       year:
                         type: string
                         description: ''
-                        example: ea
+                        example: totam
+                        nullable: false
                       amount_deposited:
                         type: number
                         description: ''
-                        example: 2.65471669
+                        example: 9901436.0
+                        nullable: false
                       code:
                         type: string
                         description: ''
-                        example: quae
+                        example: delectus
+                        nullable: false
                       is_compulsory:
                         type: string
                         description: ''
-                        example: qui
+                        example: placeat
+                        nullable: false
                       month_name:
                         type: string
                         description: ''
                         example: null
+                        nullable: false
                       quarterly_name:
                         type: string
                         description: ''
                         example: null
+                        nullable: false
                       registration_id:
                         type: string
                         description: ''
-                        example: aut
+                        example: consequatur
+                        nullable: false
                     required:
                       - user_id
                       - payment_item_id
@@ -3138,7 +3287,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the payment item.'
-        example: quis
+        example: illum
         required: true
         schema:
           type: string
@@ -3146,7 +3295,7 @@ paths:
         in: path
         name: user_id
         description: 'The ID of the user.'
-        example: et
+        example: labore
         required: true
         schema:
           type: string
@@ -3177,7 +3326,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the payment item.'
-        example: quam
+        example: tempore
         required: true
         schema:
           type: string
@@ -3208,7 +3357,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the user.'
-        example: occaecati
+        example: doloremque
         required: true
         schema:
           type: string
@@ -3239,7 +3388,7 @@ paths:
         in: path
         name: user_id
         description: 'The ID of the user.'
-        example: consequatur
+        example: neque
         required: true
         schema:
           type: string
@@ -3247,7 +3396,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the item.'
-        example: voluptas
+        example: autem
         required: true
         schema:
           type: string
@@ -3287,7 +3436,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the contribution.'
-        example: aut
+        example: placeat
         required: true
         schema:
           type: string
@@ -3508,19 +3657,23 @@ paths:
                 payment_item_id:
                   type: string
                   description: ''
-                  example: mollitia
+                  example: aspernatur
+                  nullable: false
                 user_id:
                   type: string
                   description: ''
-                  example: nisi
+                  example: est
+                  nullable: false
                 session_id:
                   type: string
                   description: ''
-                  example: possimus
+                  example: excepturi
+                  nullable: false
                 type:
                   type: string
                   description: ''
-                  example: iusto
+                  example: et
+                  nullable: false
               required:
                 - payment_item_id
                 - user_id
@@ -3546,19 +3699,23 @@ paths:
                 amount_deposited:
                   type: number
                   description: ''
-                  example: 6113.2958985
+                  example: 2640.739
+                  nullable: false
                 comment:
                   type: string
                   description: 'Must not be greater than 5000 characters.'
-                  example: kubvlldmf
+                  example: kejrqzuzidnvwlmb
+                  nullable: false
                 supporter:
                   type: string
                   description: ''
-                  example: distinctio
+                  example: modi
+                  nullable: false
                 payment_item_id:
                   type: string
                   description: ''
-                  example: aliquid
+                  example: eum
+                  nullable: false
               required:
                 - amount_deposited
                 - supporter
@@ -3583,19 +3740,23 @@ paths:
                 amount_deposited:
                   type: number
                   description: ''
-                  example: 1637848.95872
+                  example: 40.563940307
+                  nullable: false
                 comment:
                   type: string
                   description: 'Must not be greater than 5000 characters.'
-                  example: uoubzn
+                  example: pgowbhgncbyfkjohrizlto
+                  nullable: false
                 supporter:
                   type: string
                   description: ''
-                  example: commodi
+                  example: voluptate
+                  nullable: false
                 payment_item_id:
                   type: string
                   description: ''
-                  example: repellendus
+                  example: labore
+                  nullable: false
               required:
                 - amount_deposited
                 - supporter
@@ -3627,7 +3788,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the activity support.'
-        example: molestiae
+        example: corporis
         required: true
         schema:
           type: string
@@ -3680,7 +3841,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the payment item.'
-        example: aut
+        example: et
         required: true
         schema:
           type: string
@@ -3743,7 +3904,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the sponsorship.'
-        example: ea
+        example: quos
         required: true
         schema:
           type: string
@@ -3762,7 +3923,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the sponsorship.'
-        example: libero
+        example: et
         required: true
         schema:
           type: string
@@ -3793,7 +3954,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the activity.'
-        example: harum
+        example: consectetur
         required: true
         schema:
           type: string
@@ -3824,7 +3985,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the activity.'
-        example: explicabo
+        example: ut
         required: true
         schema:
           type: string
@@ -3935,11 +4096,13 @@ paths:
                 user_id:
                   type: string
                   description: ''
-                  example: illum
+                  example: voluptatibus
+                  nullable: false
                 month_name:
                   type: string
                   description: ''
                   example: null
+                  nullable: false
               required:
                 - user_id
       security: []
@@ -3962,11 +4125,13 @@ paths:
                 user_id:
                   type: string
                   description: ''
-                  example: quaerat
+                  example: enim
+                  nullable: false
                 month_name:
                   type: string
                   description: ''
                   example: null
+                  nullable: false
               required:
                 - user_id
       security: []
@@ -3985,7 +4150,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the registered member.'
-        example: repudiandae
+        example: aut
         required: true
         schema:
           type: string
@@ -4020,11 +4185,13 @@ paths:
                 year:
                   type: string
                   description: ''
-                  example: natus
+                  example: fugiat
+                  nullable: false
                 status:
                   type: string
                   description: ''
-                  example: omnis
+                  example: voluptatem
+                  nullable: false
               required:
                 - year
       security: []
@@ -4059,11 +4226,13 @@ paths:
                 year:
                   type: string
                   description: ''
-                  example: ut
+                  example: quis
+                  nullable: false
                 status:
                   type: string
                   description: ''
-                  example: et
+                  example: enim
+                  nullable: false
               required:
                 - year
       security: []
@@ -4096,15 +4265,18 @@ paths:
                 year:
                   type: string
                   description: ''
-                  example: qui
+                  example: beatae
+                  nullable: false
                 status:
                   type: string
                   description: ''
-                  example: impedit
+                  example: sint
+                  nullable: false
                 0:
                   type: string
                   description: ''
                   example: ACTIVE
+                  nullable: false
                   enum:
                     - ACTIVE
                     - IN_ACTIVE
@@ -4152,11 +4324,13 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: amet
+                  example: labore
+                  nullable: false
                 id:
                   type: string
                   description: ''
-                  example: in
+                  example: autem
+                  nullable: false
               required:
                 - status
                 - id
@@ -4176,7 +4350,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the session.'
-        example: quisquam
+        example: tenetur
         required: true
         schema:
           type: string
@@ -4243,15 +4417,18 @@ paths:
                 amount:
                   type: number
                   description: ''
-                  example: 1258.224
+                  example: 952.616296
+                  nullable: false
                 is_compulsory:
                   type: string
                   description: ''
-                  example: recusandae
+                  example: soluta
+                  nullable: false
                 frequency:
                   type: string
                   description: ''
                   example: MONTHLY
+                  nullable: false
                   enum:
                     - MONTHLY
                     - YEARLY
@@ -4300,15 +4477,18 @@ paths:
                 amount:
                   type: number
                   description: ''
-                  example: 424.05534
+                  example: 40172.384337
+                  nullable: false
                 is_compulsory:
                   type: string
                   description: ''
-                  example: libero
+                  example: ullam
+                  nullable: false
                 frequency:
                   type: string
                   description: ''
-                  example: MONTHLY
+                  example: YEARLY
+                  nullable: false
                   enum:
                     - MONTHLY
                     - YEARLY
@@ -4331,7 +4511,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the registration fee.'
-        example: similique
+        example: dolor
         required: true
         schema:
           type: string
@@ -4350,7 +4530,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the registration fee.'
-        example: voluptatem
+        example: hic
         required: true
         schema:
           type: string
