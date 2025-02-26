@@ -26,33 +26,36 @@ endpoints:
         name: email
         description: ''
         required: false
-        example: jaskolski.joel@example.net
+        example: geovanny.huel@example.org
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       telephone:
         name: telephone
         description: ''
         required: false
-        example: earum
+        example: dolore
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       password:
         name: password
         description: ''
         required: true
-        example: '+nkT6:&>m50+4?4dToE'
+        example: d5wpJ>OU%.>g8`n!FWe
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanBodyParameters:
-      email: jaskolski.joel@example.net
-      telephone: earum
-      password: '+nkT6:&>m50+4?4dToE'
+      email: geovanny.huel@example.org
+      telephone: dolore
+      password: d5wpJ>OU%.>g8`n!FWe
     fileParameters: []
     responses: []
     responseFields: []
@@ -86,43 +89,47 @@ endpoints:
         name: name
         description: 'Must not be greater than 255 characters. Must be at least 4 characters.'
         required: true
-        example: fnfacgfpqcsuvnzqbroiaqsjhohtutpzwphqpzakigndqamwtbt
+        example: cjjcvtgffkd
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       telephone:
         name: telephone
         description: ''
         required: true
-        example: et
+        example: labore
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       password:
         name: password
         description: 'Must be at least 8 characters.'
         required: true
-        example: ~)92mA!
+        example: '`sgaISyRhTm'
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       email:
         name: email
         description: 'Must be a valid email address.'
         required: true
-        example: ethyl.hilpert@example.org
+        example: dereck.hessel@example.org
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanBodyParameters:
-      name: fnfacgfpqcsuvnzqbroiaqsjhohtutpzwphqpzakigndqamwtbt
-      telephone: et
-      password: ~)92mA!
-      email: ethyl.hilpert@example.org
+      name: cjjcvtgffkd
+      telephone: labore
+      password: '`sgaISyRhTm'
+      email: dereck.hessel@example.org
     fileParameters: []
     responses: []
     responseFields: []
@@ -156,13 +163,14 @@ endpoints:
         name: credential
         description: ''
         required: true
-        example: libero
+        example: quae
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanBodyParameters:
-      credential: libero
+      credential: quae
     fileParameters: []
     responses: []
     responseFields: []
@@ -196,43 +204,47 @@ endpoints:
         name: telephone
         description: ''
         required: false
-        example: officiis
+        example: et
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       email:
         name: email
         description: ''
         required: false
-        example: dprohaska@example.net
+        example: mohr.schuyler@example.com
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       password:
         name: password
         description: 'Must be at least 8 characters.'
         required: true
-        example: "ZpjRe}FB|Xpp?L'K"
+        example: AdIb2m
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       role:
         name: role
         description: ''
         required: true
-        example: commodi
+        example: molestiae
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanBodyParameters:
-      telephone: officiis
-      email: dprohaska@example.net
-      password: "ZpjRe}FB|Xpp?L'K"
-      role: commodi
+      telephone: et
+      email: mohr.schuyler@example.com
+      password: AdIb2m
+      role: molestiae
     fileParameters: []
     responses: []
     responseFields: []
@@ -326,33 +338,36 @@ endpoints:
         name: user_id
         description: ''
         required: true
-        example: architecto
+        example: qui
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       new_password:
         name: new_password
         description: 'Must be at least 8 characters.'
         required: true
-        example: chrrbwcqiynafneymhclzenzmzbwappdpkzjtfbtcmqzgqxxeymvmdfqysjxcywhfwa
+        example: wwkrtnbcaymvxnftnsehnsdxeqqqqpareszcuijttvghbjujedhoyqpzwlnqtvt
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       token:
         name: token
         description: ''
         required: true
-        example: et
+        example: perferendis
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanBodyParameters:
-      user_id: architecto
-      new_password: chrrbwcqiynafneymhclzenzmzbwappdpkzjtfbtcmqzgqxxeymvmdfqysjxcywhfwa
-      token: et
+      user_id: qui
+      new_password: wwkrtnbcaymvxnftnsehnsdxeqqqqpareszcuijttvghbjujedhoyqpzwlnqtvt
+      token: perferendis
     fileParameters: []
     responses: []
     responseFields: []
@@ -386,23 +401,25 @@ endpoints:
         name: file
         description: 'Must not be greater than 2048 characters.'
         required: false
-        example: ooqjwuuuzcqnpnzmkonfbhkj
+        example: fycezsotkj
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       file_category:
         name: file_category
         description: ''
         required: true
-        example: quod
+        example: et
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanBodyParameters:
-      file: ooqjwuuuzcqnpnzmkonfbhkj
-      file_category: quod
+      file: fycezsotkj
+      file_category: et
     fileParameters: []
     responses: []
     responseFields: []
@@ -475,23 +492,25 @@ endpoints:
         name: user_id
         description: ''
         required: true
-        example: animi
+        example: id
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       role:
         name: role
         description: ''
         required: true
-        example: optio
+        example: sapiente
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanBodyParameters:
-      user_id: animi
-      role: optio
+      user_id: id
+      role: sapiente
     fileParameters: []
     responses: []
     responseFields: []
@@ -560,13 +579,14 @@ endpoints:
         name: user_id
         description: 'The ID of the user.'
         required: true
-        example: nesciunt
+        example: deleniti
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      user_id: nesciunt
+      user_id: deleniti
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -609,13 +629,14 @@ endpoints:
         name: user_id
         description: 'The ID of the user.'
         required: true
-        example: voluptatem
+        example: eum
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      user_id: voluptatem
+      user_id: eum
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -653,33 +674,36 @@ endpoints:
         name: name
         description: ''
         required: true
-        example: consequuntur
+        example: dolor
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       term:
         name: term
         description: ''
         required: true
-        example: 598139984.0
+        example: 172.0176318
         type: number
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       number_of_members:
         name: number_of_members
         description: ''
         required: true
-        example: 1.96495637
+        example: 42879.91
         type: number
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanBodyParameters:
-      name: consequuntur
-      term: 598139984.0
-      number_of_members: 1.96495637
+      name: dolor
+      term: 172.0176318
+      number_of_members: 42879.91
     fileParameters: []
     responses: []
     responseFields: []
@@ -709,13 +733,14 @@ endpoints:
         name: id
         description: 'The ID of the organisation.'
         required: true
-        example: tempore
+        example: fugit
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      id: tempore
+      id: fugit
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -758,13 +783,14 @@ endpoints:
         name: id
         description: 'The ID of the user.'
         required: true
-        example: similique
+        example: pariatur
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      id: similique
+      id: pariatur
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -963,13 +989,14 @@ endpoints:
         name: id
         description: 'The ID of the payment item.'
         required: true
-        example: voluptatibus
+        example: aperiam
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      id: voluptatibus
+      id: aperiam
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -1016,43 +1043,47 @@ endpoints:
         name: user_id
         description: ''
         required: true
-        example: pariatur
+        example: natus
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       user_name:
         name: user_name
         description: ''
         required: true
-        example: laudantium
+        example: in
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       user_email:
         name: user_email
         description: 'Must be a valid email address.'
         required: true
-        example: fahey.rita@example.com
+        example: idella14@example.org
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       role:
         name: role
         description: ''
         required: true
-        example: enim
+        example: architecto
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanBodyParameters:
-      user_id: pariatur
-      user_name: laudantium
-      user_email: fahey.rita@example.com
-      role: enim
+      user_id: natus
+      user_name: in
+      user_email: idella14@example.org
+      role: architecto
     fileParameters: []
     responses: []
     responseFields: []
@@ -1121,13 +1152,14 @@ endpoints:
         name: id
         description: 'The ID of the get invitation notification.'
         required: true
-        example: sed
+        example: cumque
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      id: sed
+      id: cumque
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -1191,13 +1223,14 @@ endpoints:
         name: id
         description: 'The ID of the organisation.'
         required: true
-        example: esse
+        example: quam
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      id: esse
+      id: quam
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters:
@@ -1205,73 +1238,80 @@ endpoints:
         name: name
         description: 'Must not be greater than 255 characters.'
         required: true
-        example: sljeaezymhvwr
+        example: fahpdjys
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       email:
         name: email
         description: 'Must be a valid email address.'
         required: true
-        example: vkoss@example.org
+        example: grady.izaiah@example.com
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       telephone:
         name: telephone
         description: ''
         required: true
-        example: in
+        example: et
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       password:
         name: password
         description: ''
         required: false
-        example: 'EsM|CbvS/CeWXr:Jv49P'
+        example: '?Ud/Txh`X'
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       address:
         name: address
         description: ''
         required: true
-        example: expedita
+        example: omnis
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       occupation:
         name: occupation
         description: ''
         required: true
-        example: necessitatibus
+        example: qui
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       gender:
         name: gender
         description: ''
         required: true
-        example: nemo
+        example: quae
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanBodyParameters:
-      name: sljeaezymhvwr
-      email: vkoss@example.org
-      telephone: in
-      password: 'EsM|CbvS/CeWXr:Jv49P'
-      address: expedita
-      occupation: necessitatibus
-      gender: nemo
+      name: fahpdjys
+      email: grady.izaiah@example.com
+      telephone: et
+      password: '?Ud/Txh`X'
+      address: omnis
+      occupation: qui
+      gender: quae
     fileParameters: []
     responses: []
     responseFields: []
@@ -1301,13 +1341,14 @@ endpoints:
         name: id
         description: 'The ID of the organisation.'
         required: true
-        example: rerum
+        example: corrupti
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      id: rerum
+      id: corrupti
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -1341,13 +1382,14 @@ endpoints:
         name: id
         description: 'The ID of the user.'
         required: true
-        example: molestias
+        example: sint
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      id: molestias
+      id: sint
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters:
@@ -1355,13 +1397,14 @@ endpoints:
         name: picture
         description: ''
         required: true
-        example: est
+        example: minima
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanBodyParameters:
-      picture: est
+      picture: minima
     fileParameters: []
     responses: []
     responseFields: []
@@ -1395,46 +1438,51 @@ endpoints:
         name: name
         description: ''
         required: true
-        example: id
+        example: iure
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       email:
         name: email
         description: 'Must be a valid email address.'
         required: true
-        example: gbogisich@example.com
+        example: lolson@example.com
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       address:
         name: address
         description: ''
         required: true
-        example: pariatur
+        example: aut
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       occupation:
         name: occupation
         description: ''
         required: true
-        example: quam
+        example: et
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       user_id:
         name: user_id
         description: ''
         required: true
-        example: qui
+        example: et
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       gender:
         name: gender
@@ -1444,23 +1492,25 @@ endpoints:
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       status:
         name: status
         description: ''
         required: true
-        example: quas
+        example: pariatur
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanBodyParameters:
-      name: id
-      email: gbogisich@example.com
-      address: pariatur
-      occupation: quam
-      user_id: qui
-      status: quas
+      name: iure
+      email: lolson@example.com
+      address: aut
+      occupation: et
+      user_id: et
+      status: pariatur
     fileParameters: []
     responses: []
     responseFields: []
@@ -1494,46 +1544,51 @@ endpoints:
         name: name
         description: ''
         required: true
-        example: ratione
+        example: laudantium
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       email:
         name: email
         description: 'Must be a valid email address.'
         required: true
-        example: ernser.breana@example.org
+        example: isabella59@example.com
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       address:
         name: address
         description: ''
         required: true
-        example: sunt
+        example: tenetur
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       occupation:
         name: occupation
         description: ''
         required: true
-        example: ab
+        example: saepe
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       user_id:
         name: user_id
         description: ''
         required: true
-        example: modi
+        example: quod
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       gender:
         name: gender
@@ -1543,23 +1598,25 @@ endpoints:
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       status:
         name: status
         description: ''
         required: true
-        example: debitis
+        example: molestiae
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanBodyParameters:
-      name: ratione
-      email: ernser.breana@example.org
-      address: sunt
-      occupation: ab
-      user_id: modi
-      status: debitis
+      name: laudantium
+      email: isabella59@example.com
+      address: tenetur
+      occupation: saepe
+      user_id: quod
+      status: molestiae
     fileParameters: []
     responses: []
     responseFields: []
@@ -1593,33 +1650,36 @@ endpoints:
         name: user_id
         description: ''
         required: true
-        example: deleniti
+        example: nulla
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       old_password:
         name: old_password
         description: ''
         required: true
-        example: nihil
+        example: ut
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       password:
         name: password
         description: 'Must be at least 8 characters.'
         required: true
-        example: 'G.P_"PVJYmz|'
+        example: 'I+z"|B&~(fF$TLpXlT$4'
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanBodyParameters:
-      user_id: deleniti
-      old_password: nihil
-      password: 'G.P_"PVJYmz|'
+      user_id: nulla
+      old_password: ut
+      password: 'I+z"|B&~(fF$TLpXlT$4'
     fileParameters: []
     responses: []
     responseFields: []
@@ -1649,13 +1709,14 @@ endpoints:
         name: id
         description: 'The ID of the user.'
         required: true
-        example: qui
+        example: optio
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      id: qui
+      id: optio
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -1693,73 +1754,81 @@ endpoints:
         name: name
         description: 'Must not be greater than 255 characters.'
         required: true
-        example: navuescvsc
+        example: fpueqqxdbsmpiarybnv
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       email:
         name: email
         description: 'Must be a valid email address.'
         required: false
-        example: langworth.adrien@example.org
+        example: ngislason@example.com
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       address:
         name: address
         description: ''
         required: true
-        example: non
+        example: nisi
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       box_number:
         name: box_number
         description: ''
         required: false
-        example: 7
+        example: 6
         type: integer
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       description:
         name: description
         description: 'Must not be greater than 5000 characters.'
         required: true
-        example: 'Pariatur velit itaque accusamus accusantium excepturi ullam et.'
+        example: 'Molestias quis omnis laborum voluptate quis enim et.'
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       salutation:
         name: salutation
         description: ''
         required: false
-        example: porro
+        example: est
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       region:
         name: region
         description: ''
         required: false
-        example: vel
+        example: vitae
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       telephone:
         name: telephone
         description: ''
         required: true
-        example: ad
+        example: soluta
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       id:
         name: id
@@ -1769,16 +1838,17 @@ endpoints:
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanBodyParameters:
-      name: navuescvsc
-      email: langworth.adrien@example.org
-      address: non
-      box_number: 7
-      description: 'Pariatur velit itaque accusamus accusantium excepturi ullam et.'
-      salutation: porro
-      region: vel
-      telephone: ad
+      name: fpueqqxdbsmpiarybnv
+      email: ngislason@example.com
+      address: nisi
+      box_number: 6
+      description: 'Molestias quis omnis laborum voluptate quis enim et.'
+      salutation: est
+      region: vitae
+      telephone: soluta
     fileParameters: []
     responses: []
     responseFields: []
@@ -1808,13 +1878,14 @@ endpoints:
         name: id
         description: 'The ID of the organisation.'
         required: true
-        example: maiores
+        example: unde
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      id: maiores
+      id: unde
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -1857,13 +1928,14 @@ endpoints:
         name: id
         description: 'The ID of the organisation.'
         required: true
-        example: iusto
+        example: vitae
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      id: iusto
+      id: vitae
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters:
@@ -1871,13 +1943,14 @@ endpoints:
         name: logo
         description: ''
         required: true
-        example: voluptatem
+        example: deserunt
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanBodyParameters:
-      logo: voluptatem
+      logo: deserunt
     fileParameters: []
     responses: []
     responseFields: []
@@ -1907,13 +1980,14 @@ endpoints:
         name: id
         description: 'The ID of the organisation.'
         required: true
-        example: amet
+        example: reiciendis
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      id: amet
+      id: reiciendis
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -1986,13 +2060,14 @@ endpoints:
         name: id
         description: 'The ID of the organisation.'
         required: true
-        example: rerum
+        example: sit
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      id: rerum
+      id: sit
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -2026,13 +2101,14 @@ endpoints:
         name: organisation_id
         description: 'The ID of the organisation.'
         required: true
-        example: laboriosam
+        example: culpa
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      organisation_id: laboriosam
+      organisation_id: culpa
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters:
@@ -2040,19 +2116,21 @@ endpoints:
         name: name
         description: 'Must not be greater than 255 characters.'
         required: true
-        example: ixzp
+        example: lkuwqnomhjxnt
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       description:
         name: description
         description: 'Must not be greater than 5000 characters.'
         required: true
-        example: 'Iusto non vel fugiat aut facilis accusamus.'
+        example: 'Omnis fugit occaecati nemo eum labore voluptas aliquam.'
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       id:
         name: id
@@ -2062,20 +2140,22 @@ endpoints:
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       code:
         name: code
         description: 'Must not be greater than 100 characters.'
         required: true
-        example: fjqvrubzpzdblhjkfbodsy
+        example: dwimnsszrczphfe
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanBodyParameters:
-      name: ixzp
-      description: 'Iusto non vel fugiat aut facilis accusamus.'
-      code: fjqvrubzpzdblhjkfbodsy
+      name: lkuwqnomhjxnt
+      description: 'Omnis fugit occaecati nemo eum labore voluptas aliquam.'
+      code: dwimnsszrczphfe
     fileParameters: []
     responses: []
     responseFields: []
@@ -2105,23 +2185,25 @@ endpoints:
         name: organisation_id
         description: 'The ID of the organisation.'
         required: true
-        example: voluptates
+        example: sed
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       id:
         name: id
         description: 'The ID of the payment category.'
         required: true
-        example: consequatur
+        example: consequuntur
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      organisation_id: voluptates
-      id: consequatur
+      organisation_id: sed
+      id: consequuntur
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters:
@@ -2129,23 +2211,25 @@ endpoints:
         name: name
         description: 'Must not be greater than 255 characters.'
         required: true
-        example: apgupmbeyofufruoaysxg
+        example: sbnakcqzsrivqs
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       description:
         name: description
         description: 'Must not be greater than 5000 characters.'
         required: true
-        example: 'Esse minima temporibus blanditiis illo est molestias consequatur.'
+        example: 'Quo consectetur qui ducimus voluptatem.'
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanBodyParameters:
-      name: apgupmbeyofufruoaysxg
-      description: 'Esse minima temporibus blanditiis illo est molestias consequatur.'
+      name: sbnakcqzsrivqs
+      description: 'Quo consectetur qui ducimus voluptatem.'
     fileParameters: []
     responses: []
     responseFields: []
@@ -2214,23 +2298,25 @@ endpoints:
         name: organisation_id
         description: 'The ID of the organisation.'
         required: true
-        example: saepe
+        example: aut
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       id:
         name: id
         description: 'The ID of the payment category.'
         required: true
-        example: repellat
+        example: rerum
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      organisation_id: saepe
-      id: repellat
+      organisation_id: aut
+      id: rerum
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -2351,23 +2437,25 @@ endpoints:
         name: organisation_id
         description: 'The ID of the organisation.'
         required: true
-        example: pariatur
+        example: sit
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       id:
         name: id
         description: 'The ID of the payment category.'
         required: true
-        example: modi
+        example: eum
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      organisation_id: pariatur
-      id: modi
+      organisation_id: sit
+      id: eum
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -2401,13 +2489,14 @@ endpoints:
         name: payment_category_id
         description: 'The ID of the payment category.'
         required: true
-        example: atque
+        example: modi
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      payment_category_id: atque
+      payment_category_id: modi
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters:
@@ -2415,55 +2504,61 @@ endpoints:
         name: name
         description: 'Must not be greater than 255 characters.'
         required: true
-        example: hadkjfoedhjjcqaoctubywv
+        example: gufv
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       amount:
         name: amount
         description: ''
         required: true
-        example: qui
+        example: autem
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       compulsory:
         name: compulsory
         description: ''
         required: true
-        example: false
+        example: true
         type: boolean
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       description:
         name: description
         description: 'Must not be greater than 4000 characters.'
         required: false
-        example: 'Culpa et mollitia maxime.'
+        example: 'Dolorem vel consequatur sit libero alias cumque laborum.'
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       type:
         name: type
         description: ''
         required: true
-        example: reprehenderit
+        example: deleniti
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       frequency:
         name: frequency
         description: ''
         required: true
-        example: ipsam
+        example: voluptatem
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       reference:
         name: reference
@@ -2473,24 +2568,26 @@ endpoints:
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       deadline:
         name: deadline
         description: 'Must be a valid date.'
         required: true
-        example: '2024-10-17T11:31:25'
+        example: '2025-01-27T14:19:47'
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanBodyParameters:
-      name: hadkjfoedhjjcqaoctubywv
-      amount: qui
-      compulsory: false
-      description: 'Culpa et mollitia maxime.'
-      type: reprehenderit
-      frequency: ipsam
-      deadline: '2024-10-17T11:31:25'
+      name: gufv
+      amount: autem
+      compulsory: true
+      description: 'Dolorem vel consequatur sit libero alias cumque laborum.'
+      type: deleniti
+      frequency: voluptatem
+      deadline: '2025-01-27T14:19:47'
     fileParameters: []
     responses: []
     responseFields: []
@@ -2520,23 +2617,25 @@ endpoints:
         name: payment_category_id
         description: 'The ID of the payment category.'
         required: true
-        example: tempore
+        example: ducimus
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       id:
         name: id
         description: 'The ID of the payment item.'
         required: true
-        example: dolorum
+        example: est
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      payment_category_id: tempore
-      id: dolorum
+      payment_category_id: ducimus
+      id: est
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters:
@@ -2544,55 +2643,61 @@ endpoints:
         name: name
         description: 'Must not be greater than 255 characters.'
         required: true
-        example: pwurtcklicpgbcgfqlnv
+        example: togecljzdcjirrzfspplk
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       amount:
         name: amount
+        description: ''
+        required: true
+        example: quae
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      compulsory:
+        name: compulsory
+        description: ''
+        required: true
+        example: true
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      description:
+        name: description
+        description: 'Must not be greater than 4000 characters.'
+        required: false
+        example: 'Adipisci voluptatibus exercitationem id et in.'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      type:
+        name: type
+        description: ''
+        required: true
+        example: explicabo
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      frequency:
+        name: frequency
         description: ''
         required: true
         example: tempore
         type: string
         enumValues: []
         exampleWasSpecified: false
-        custom: []
-      compulsory:
-        name: compulsory
-        description: ''
-        required: true
-        example: false
-        type: boolean
-        enumValues: []
-        exampleWasSpecified: false
-        custom: []
-      description:
-        name: description
-        description: 'Must not be greater than 4000 characters.'
-        required: false
-        example: 'Odio atque vel quos consequuntur.'
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        custom: []
-      type:
-        name: type
-        description: ''
-        required: true
-        example: tempora
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        custom: []
-      frequency:
-        name: frequency
-        description: ''
-        required: true
-        example: velit
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
+        nullable: false
         custom: []
       reference:
         name: reference
@@ -2602,24 +2707,26 @@ endpoints:
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       deadline:
         name: deadline
         description: 'Must be a valid date.'
         required: true
-        example: '2024-10-17T11:31:25'
+        example: '2025-01-27T14:19:47'
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanBodyParameters:
-      name: pwurtcklicpgbcgfqlnv
-      amount: tempore
-      compulsory: false
-      description: 'Odio atque vel quos consequuntur.'
-      type: tempora
-      frequency: velit
-      deadline: '2024-10-17T11:31:25'
+      name: togecljzdcjirrzfspplk
+      amount: quae
+      compulsory: true
+      description: 'Adipisci voluptatibus exercitationem id et in.'
+      type: explicabo
+      frequency: tempore
+      deadline: '2025-01-27T14:19:47'
     fileParameters: []
     responses: []
     responseFields: []
@@ -2688,13 +2795,14 @@ endpoints:
         name: payment_category_id
         description: 'The ID of the payment category.'
         required: true
-        example: ipsa
+        example: animi
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      payment_category_id: ipsa
+      payment_category_id: animi
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -2737,23 +2845,25 @@ endpoints:
         name: payment_category_id
         description: 'The ID of the payment category.'
         required: true
-        example: illo
+        example: recusandae
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       id:
         name: id
         description: 'The ID of the payment item.'
         required: true
-        example: reprehenderit
+        example: illo
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      payment_category_id: illo
-      id: reprehenderit
+      payment_category_id: recusandae
+      id: illo
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -2917,23 +3027,25 @@ endpoints:
         name: id
         description: ''
         required: true
-        example: commodi
+        example: repudiandae
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       reference_id:
         name: reference_id
         description: ''
         required: true
-        example: ea
+        example: ipsam
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanBodyParameters:
-      id: commodi
-      reference_id: ea
+      id: repudiandae
+      reference_id: ipsam
     fileParameters: []
     responses: []
     responseFields: []
@@ -2963,13 +3075,14 @@ endpoints:
         name: id
         description: 'The ID of the payment item.'
         required: true
-        example: sint
+        example: voluptatem
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      id: sint
+      id: voluptatem
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -3012,23 +3125,25 @@ endpoints:
         name: payment_category_id
         description: 'The ID of the payment category.'
         required: true
-        example: esse
+        example: qui
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       id:
         name: id
         description: 'The ID of the payment item.'
         required: true
-        example: repellat
+        example: omnis
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      payment_category_id: esse
-      id: repellat
+      payment_category_id: qui
+      id: omnis
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -3062,13 +3177,14 @@ endpoints:
         name: organisation_id
         description: 'The ID of the organisation.'
         required: true
-        example: officiis
+        example: voluptate
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      organisation_id: officiis
+      organisation_id: voluptate
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -3111,23 +3227,25 @@ endpoints:
         name: organisation_id
         description: 'The ID of the organisation.'
         required: true
-        example: harum
+        example: repellendus
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       id:
         name: id
         description: 'The ID of the expenditure category.'
         required: true
-        example: modi
+        example: quo
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      organisation_id: harum
-      id: modi
+      organisation_id: repellendus
+      id: quo
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -3248,13 +3366,14 @@ endpoints:
         name: organisation_id
         description: 'The ID of the organisation.'
         required: true
-        example: ipsam
+        example: error
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      organisation_id: ipsam
+      organisation_id: error
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters:
@@ -3262,19 +3381,21 @@ endpoints:
         name: name
         description: 'Must not be greater than 255 characters.'
         required: true
-        example: bkcmmiweytozvlufsexiuxrpc
+        example: diyzaqfztotim
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       description:
         name: description
         description: 'Must not be greater than 5000 characters.'
         required: true
-        example: 'Aut voluptatem sit eos earum suscipit autem magni iusto.'
+        example: 'Aut eum eaque in deserunt.'
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       id:
         name: id
@@ -3284,20 +3405,22 @@ endpoints:
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       code:
         name: code
         description: 'Must not be greater than 100 characters.'
         required: true
-        example: xfsosxeyociuaucjpwaanmf
+        example: cbciifxnyiwjhx
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanBodyParameters:
-      name: bkcmmiweytozvlufsexiuxrpc
-      description: 'Aut voluptatem sit eos earum suscipit autem magni iusto.'
-      code: xfsosxeyociuaucjpwaanmf
+      name: diyzaqfztotim
+      description: 'Aut eum eaque in deserunt.'
+      code: cbciifxnyiwjhx
     fileParameters: []
     responses: []
     responseFields: []
@@ -3327,23 +3450,25 @@ endpoints:
         name: organisation_id
         description: 'The ID of the organisation.'
         required: true
-        example: molestiae
+        example: laboriosam
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       id:
         name: id
         description: 'The ID of the expenditure category.'
         required: true
-        example: asperiores
+        example: aut
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      organisation_id: molestiae
-      id: asperiores
+      organisation_id: laboriosam
+      id: aut
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters:
@@ -3351,23 +3476,25 @@ endpoints:
         name: name
         description: 'Must not be greater than 255 characters.'
         required: true
-        example: rbivujnkclgbdalgwbdtwinym
+        example: knxfnhocpxvgykb
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       description:
         name: description
         description: 'Must not be greater than 5000 characters.'
         required: true
-        example: 'Harum veritatis non est ratione qui consequatur alias.'
+        example: 'Nobis aspernatur animi amet enim quae.'
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanBodyParameters:
-      name: rbivujnkclgbdalgwbdtwinym
-      description: 'Harum veritatis non est ratione qui consequatur alias.'
+      name: knxfnhocpxvgykb
+      description: 'Nobis aspernatur animi amet enim quae.'
     fileParameters: []
     responses: []
     responseFields: []
@@ -3397,23 +3524,25 @@ endpoints:
         name: organisation_id
         description: 'The ID of the organisation.'
         required: true
-        example: consequatur
+        example: et
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       id:
         name: id
         description: 'The ID of the expenditure category.'
         required: true
-        example: ut
+        example: dolore
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      organisation_id: consequatur
-      id: ut
+      organisation_id: et
+      id: dolore
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -3447,23 +3576,25 @@ endpoints:
         name: expenditure_category_id
         description: 'The ID of the expenditure category.'
         required: true
-        example: consequuntur
+        example: occaecati
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       id:
         name: id
         description: 'The ID of the expenditure item.'
         required: true
-        example: sint
+        example: dolorum
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      expenditure_category_id: consequuntur
-      id: sint
+      expenditure_category_id: occaecati
+      id: dolorum
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters:
@@ -3471,19 +3602,21 @@ endpoints:
         name: name
         description: 'Must not be greater than 255 characters.'
         required: true
-        example: vvfjmnihrfysvaivnli
+        example: dgftqdqdadgf
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       amount:
         name: amount
         description: ''
         required: true
-        example: 6929658.17
+        example: 722.6056307
         type: number
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       comment:
         name: comment
@@ -3493,6 +3626,7 @@ endpoints:
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       venue:
         name: venue
@@ -3502,30 +3636,33 @@ endpoints:
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       date:
         name: date
         description: 'Must be a valid date.'
         required: true
-        example: '2024-10-17T11:31:25'
+        example: '2025-01-27T14:19:47'
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       payment_item_id:
         name: payment_item_id
         description: ''
         required: true
-        example: et
+        example: hic
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanBodyParameters:
-      name: vvfjmnihrfysvaivnli
-      amount: 6929658.17
-      date: '2024-10-17T11:31:25'
-      payment_item_id: et
+      name: dgftqdqdadgf
+      amount: 722.6056307
+      date: '2025-01-27T14:19:47'
+      payment_item_id: hic
     fileParameters: []
     responses: []
     responseFields: []
@@ -3555,13 +3692,14 @@ endpoints:
         name: id
         description: 'The ID of the expenditure category.'
         required: true
-        example: minima
+        example: et
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      id: minima
+      id: et
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters:
@@ -3569,19 +3707,21 @@ endpoints:
         name: name
         description: 'Must not be greater than 255 characters.'
         required: true
-        example: ztmbzxetfsqftqff
+        example: ambhsqoihsuudjb
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       amount:
         name: amount
         description: ''
         required: true
-        example: 643697605.29599
+        example: 3.14486
         type: number
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       comment:
         name: comment
@@ -3591,6 +3731,7 @@ endpoints:
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       venue:
         name: venue
@@ -3600,30 +3741,33 @@ endpoints:
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       date:
         name: date
         description: 'Must be a valid date.'
         required: true
-        example: '2024-10-17T11:31:25'
+        example: '2025-01-27T14:19:47'
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       payment_item_id:
         name: payment_item_id
         description: ''
         required: true
-        example: tenetur
+        example: consequatur
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanBodyParameters:
-      name: ztmbzxetfsqftqff
-      amount: 643697605.29599
-      date: '2024-10-17T11:31:25'
-      payment_item_id: tenetur
+      name: ambhsqoihsuudjb
+      amount: 3.14486
+      date: '2025-01-27T14:19:47'
+      payment_item_id: consequatur
     fileParameters: []
     responses: []
     responseFields: []
@@ -3653,13 +3797,14 @@ endpoints:
         name: expenditure_category_id
         description: 'The ID of the expenditure category.'
         required: true
-        example: non
+        example: temporibus
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      expenditure_category_id: non
+      expenditure_category_id: temporibus
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -3702,13 +3847,14 @@ endpoints:
         name: expenditure_category_id
         description: 'The ID of the expenditure category.'
         required: true
-        example: recusandae
+        example: unde
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      expenditure_category_id: recusandae
+      expenditure_category_id: unde
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -3751,23 +3897,25 @@ endpoints:
         name: expenditure_category_id
         description: 'The ID of the expenditure category.'
         required: true
-        example: veniam
+        example: repudiandae
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       id:
         name: id
         description: 'The ID of the expenditure item.'
         required: true
-        example: consectetur
+        example: officiis
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      expenditure_category_id: veniam
-      id: consectetur
+      expenditure_category_id: repudiandae
+      id: officiis
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -3810,13 +3958,14 @@ endpoints:
         name: id
         description: 'The ID of the expenditure item.'
         required: true
-        example: quia
+        example: ut
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      id: quia
+      id: ut
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -3898,13 +4047,14 @@ endpoints:
         name: payment_item_id
         description: 'The ID of the payment item.'
         required: true
-        example: quo
+        example: voluptatem
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      payment_item_id: quo
+      payment_item_id: voluptatem
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -3986,23 +4136,25 @@ endpoints:
         name: expenditure_category_id
         description: 'The ID of the expenditure category.'
         required: true
-        example: distinctio
+        example: et
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       id:
         name: id
         description: 'The ID of the expenditure item.'
         required: true
-        example: non
+        example: sapiente
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      expenditure_category_id: distinctio
-      id: non
+      expenditure_category_id: et
+      id: sapiente
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -4075,13 +4227,14 @@ endpoints:
         name: id
         description: 'The ID of the expenditure item.'
         required: true
-        example: molestiae
+        example: officiis
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      id: molestiae
+      id: officiis
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -4119,10 +4272,11 @@ endpoints:
         name: amount_deposited
         description: 'Must be at least 1 character.'
         required: true
-        example: vdbqvthdu
+        example: ubgyrwsjwudgufkdvplgleisaaogohnmschtuuevctnow
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       comment:
         name: comment
@@ -4132,15 +4286,17 @@ endpoints:
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       user_id:
         name: user_id
         description: ''
         required: true
-        example: fugiat
+        example: velit
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       id:
         name: id
@@ -4150,10 +4306,11 @@ endpoints:
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanBodyParameters:
-      amount_deposited: vdbqvthdu
-      user_id: fugiat
+      amount_deposited: ubgyrwsjwudgufkdvplgleisaaogohnmschtuuevctnow
+      user_id: velit
     fileParameters: []
     responses: []
     responseFields: []
@@ -4183,23 +4340,25 @@ endpoints:
         name: user_id
         description: 'The ID of the user.'
         required: true
-        example: sapiente
+        example: ea
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       id:
         name: id
         description: 'The ID of the {user id}.'
         required: true
-        example: ducimus
+        example: reiciendis
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      user_id: sapiente
-      id: ducimus
+      user_id: ea
+      id: reiciendis
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters:
@@ -4207,23 +4366,25 @@ endpoints:
         name: amount_deposited
         description: 'Must be at least 1 character.'
         required: true
-        example: fwaoptpkyftvgpjosykkhzooteoyriawl
+        example: uxsjawpkdonvjtwhjalr
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       comment:
         name: comment
         description: 'Must not be greater than 5000 characters.'
         required: false
-        example: xoigurjowidqtn
+        example: fk
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanBodyParameters:
-      amount_deposited: fwaoptpkyftvgpjosykkhzooteoyriawl
-      comment: xoigurjowidqtn
+      amount_deposited: uxsjawpkdonvjtwhjalr
+      comment: fk
     fileParameters: []
     responses: []
     responseFields: []
@@ -4253,13 +4414,14 @@ endpoints:
         name: user_id
         description: 'The ID of the user.'
         required: true
-        example: praesentium
+        example: voluptas
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      user_id: praesentium
+      user_id: voluptas
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -4306,19 +4468,21 @@ endpoints:
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       id:
         name: id
         description: 'The ID of the {user id}.'
         required: true
-        example: eum
+        example: earum
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
       user_id: voluptatem
-      id: eum
+      id: earum
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -4517,23 +4681,25 @@ endpoints:
         name: user_id
         description: 'The ID of the user.'
         required: true
-        example: cumque
+        example: ullam
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       id:
         name: id
         description: 'The ID of the {user id}.'
         required: true
-        example: tenetur
+        example: alias
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      user_id: cumque
-      id: tenetur
+      user_id: ullam
+      id: alias
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -4567,13 +4733,14 @@ endpoints:
         name: id
         description: 'The ID of the user saving.'
         required: true
-        example: asperiores
+        example: facilis
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      id: asperiores
+      id: facilis
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -4607,13 +4774,14 @@ endpoints:
         name: id
         description: 'The ID of the organisation.'
         required: true
-        example: harum
+        example: odio
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      id: harum
+      id: odio
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -4695,13 +4863,14 @@ endpoints:
         name: id
         description: 'The ID of the organisation.'
         required: true
-        example: consectetur
+        example: nesciunt
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      id: consectetur
+      id: nesciunt
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters:
@@ -4709,63 +4878,69 @@ endpoints:
         name: name
         description: 'Must not be greater than 255 characters.'
         required: true
-        example: dndpptzxzbzdnsdpxgesm
+        example: ph
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       description:
         name: description
         description: 'Must not be greater than 5000 characters.'
         required: false
-        example: 'Voluptatem velit nostrum laboriosam harum reiciendis ea.'
+        example: 'Temporibus sed et eligendi accusantium rerum iste ab voluptas.'
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       venue:
         name: venue
         description: ''
         required: true
-        example: omnis
+        example: est
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       date:
         name: date
         description: 'Must be a valid date.'
         required: true
-        example: '2024-10-17T11:31:25'
+        example: '2025-01-27T14:19:47'
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       amount:
         name: amount
         description: 'Must be at least 1.'
         required: true
-        example: 43
+        example: 71
         type: number
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       payment_item_id:
         name: payment_item_id
         description: ''
         required: true
-        example: consequatur
+        example: et
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanBodyParameters:
-      name: dndpptzxzbzdnsdpxgesm
-      description: 'Voluptatem velit nostrum laboriosam harum reiciendis ea.'
-      venue: omnis
-      date: '2024-10-17T11:31:25'
-      amount: 43
-      payment_item_id: consequatur
+      name: ph
+      description: 'Temporibus sed et eligendi accusantium rerum iste ab voluptas.'
+      venue: est
+      date: '2025-01-27T14:19:47'
+      amount: 71
+      payment_item_id: et
     fileParameters: []
     responses: []
     responseFields: []
@@ -4795,13 +4970,14 @@ endpoints:
         name: id
         description: 'The ID of the income activity.'
         required: true
-        example: ut
+        example: eaque
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      id: ut
+      id: eaque
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters:
@@ -4809,63 +4985,69 @@ endpoints:
         name: name
         description: 'Must not be greater than 255 characters.'
         required: true
-        example: yngequhomqzjm
+        example: doeslttyowcntwqbjyudkf
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       description:
         name: description
         description: 'Must not be greater than 5000 characters.'
         required: false
-        example: 'Tempore assumenda sit sed saepe fuga necessitatibus et.'
+        example: 'Nihil tempore facere architecto deserunt.'
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       venue:
         name: venue
         description: ''
         required: true
-        example: earum
+        example: est
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       date:
         name: date
         description: 'Must be a valid date.'
         required: true
-        example: '2024-10-17T11:31:25'
+        example: '2025-01-27T14:19:47'
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       amount:
         name: amount
         description: 'Must be at least 1.'
         required: true
-        example: 27
+        example: 19
         type: number
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       payment_item_id:
         name: payment_item_id
         description: ''
         required: true
-        example: molestiae
+        example: doloremque
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanBodyParameters:
-      name: yngequhomqzjm
-      description: 'Tempore assumenda sit sed saepe fuga necessitatibus et.'
-      venue: earum
-      date: '2024-10-17T11:31:25'
-      amount: 27
-      payment_item_id: molestiae
+      name: doeslttyowcntwqbjyudkf
+      description: 'Nihil tempore facere architecto deserunt.'
+      venue: est
+      date: '2025-01-27T14:19:47'
+      amount: 19
+      payment_item_id: doloremque
     fileParameters: []
     responses: []
     responseFields: []
@@ -4895,13 +5077,14 @@ endpoints:
         name: id
         description: 'The ID of the organisation.'
         required: true
-        example: distinctio
+        example: modi
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      id: distinctio
+      id: modi
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -4944,13 +5127,14 @@ endpoints:
         name: id
         description: 'The ID of the income activity.'
         required: true
-        example: dolorem
+        example: sint
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      id: dolorem
+      id: sint
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -5071,13 +5255,14 @@ endpoints:
         name: id
         description: 'The ID of the income activity.'
         required: true
-        example: a
+        example: omnis
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      id: a
+      id: omnis
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -5111,13 +5296,14 @@ endpoints:
         name: id
         description: 'The ID of the income activity.'
         required: true
-        example: ut
+        example: alias
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      id: ut
+      id: alias
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -5151,13 +5337,14 @@ endpoints:
         name: id
         description: 'The ID of the expenditure item.'
         required: true
-        example: numquam
+        example: repellendus
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      id: numquam
+      id: repellendus
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters:
@@ -5165,43 +5352,47 @@ endpoints:
         name: name
         description: 'Must not be greater than 255 characters.'
         required: true
-        example: vruczllhpwzp
+        example: izjikvujmtejsnajckz
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       amount_given:
         name: amount_given
         description: 'Must be at least 1.'
         required: true
-        example: 26
+        example: 29
         type: number
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       amount_spent:
         name: amount_spent
         description: 'Must be at least 1.'
         required: true
-        example: 7
+        example: 52
         type: number
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       comment:
         name: comment
         description: 'Must not be greater than 5000 characters.'
         required: false
-        example: xapoklampdasdy
+        example: jlneyuwpkxzllotzwagi
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanBodyParameters:
-      name: vruczllhpwzp
-      amount_given: 26
-      amount_spent: 7
-      comment: xapoklampdasdy
+      name: izjikvujmtejsnajckz
+      amount_given: 29
+      amount_spent: 52
+      comment: jlneyuwpkxzllotzwagi
     fileParameters: []
     responses: []
     responseFields: []
@@ -5231,13 +5422,14 @@ endpoints:
         name: id
         description: 'The ID of the expenditure detail.'
         required: true
-        example: sequi
+        example: velit
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      id: sequi
+      id: velit
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters:
@@ -5245,43 +5437,47 @@ endpoints:
         name: name
         description: 'Must not be greater than 255 characters.'
         required: true
-        example: qozgttzmvsqcjnggpsqor
+        example: ylxnygpzhimnfjwdj
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       amount_given:
         name: amount_given
         description: 'Must be at least 1.'
         required: true
-        example: 54
+        example: 84
         type: number
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       amount_spent:
         name: amount_spent
         description: 'Must be at least 1.'
         required: true
-        example: 62
+        example: 47
         type: number
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       comment:
         name: comment
         description: 'Must not be greater than 5000 characters.'
         required: false
-        example: q
+        example: yavmyselfrykjkqpftzbx
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanBodyParameters:
-      name: qozgttzmvsqcjnggpsqor
-      amount_given: 54
-      amount_spent: 62
-      comment: q
+      name: ylxnygpzhimnfjwdj
+      amount_given: 84
+      amount_spent: 47
+      comment: yavmyselfrykjkqpftzbx
     fileParameters: []
     responses: []
     responseFields: []
@@ -5311,13 +5507,14 @@ endpoints:
         name: id
         description: 'The ID of the expenditure item.'
         required: true
-        example: itaque
+        example: ut
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      id: itaque
+      id: ut
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -5360,13 +5557,14 @@ endpoints:
         name: id
         description: 'The ID of the expenditure detail.'
         required: true
-        example: ut
+        example: doloremque
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      id: ut
+      id: doloremque
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -5565,13 +5763,14 @@ endpoints:
         name: id
         description: 'The ID of the expenditure item detail.'
         required: true
-        example: omnis
+        example: qui
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      id: omnis
+      id: qui
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -5605,13 +5804,14 @@ endpoints:
         name: id
         description: 'The ID of the expenditure detail.'
         required: true
-        example: quod
+        example: sunt
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      id: quod
+      id: sunt
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -5654,30 +5854,33 @@ endpoints:
         type: 'object[]'
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       'row[].id':
         name: 'row[].id'
         description: ''
         required: true
-        example: error
+        example: nostrum
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       'row[].type':
         name: 'row[].type'
         description: ''
         required: true
-        example: voluptas
+        example: perferendis
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanBodyParameters:
       row:
         -
-          id: error
-          type: voluptas
+          id: nostrum
+          type: perferendis
     fileParameters: []
     responses: []
     responseFields: []
@@ -5711,37 +5914,41 @@ endpoints:
         name: amount_deposited
         description: ''
         required: true
-        example: 47.6868714
+        example: 0.156
         type: number
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       comment:
         name: comment
         description: 'Must not be greater than 4000 characters.'
         required: false
-        example: bjzlahk
+        example: prjccurxtrzkftqxjta
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       user_id:
         name: user_id
         description: ''
         required: true
-        example: atque
+        example: ullam
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       payment_item_id:
         name: payment_item_id
         description: ''
         required: true
-        example: nisi
+        example: sequi
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       quarterly_name:
         name: quarterly_name
@@ -5751,6 +5958,7 @@ endpoints:
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       month_name:
         name: month_name
@@ -5760,12 +5968,13 @@ endpoints:
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanBodyParameters:
-      amount_deposited: 47.6868714
-      comment: bjzlahk
-      user_id: atque
-      payment_item_id: nisi
+      amount_deposited: 0.156
+      comment: prjccurxtrzkftqxjta
+      user_id: ullam
+      payment_item_id: sequi
     fileParameters: []
     responses: []
     responseFields: []
@@ -5795,13 +6004,14 @@ endpoints:
         name: id
         description: 'The ID of the contribution.'
         required: true
-        example: nemo
+        example: et
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      id: nemo
+      id: et
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters:
@@ -5809,23 +6019,25 @@ endpoints:
         name: amount_deposited
         description: ''
         required: true
-        example: 106716.04708499
+        example: 72693572.41
         type: number
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       comment:
         name: comment
         description: 'Must not be greater than 5000 characters.'
         required: false
-        example: wztdgbfduvkbfplxpjgdo
+        example: lyn
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanBodyParameters:
-      amount_deposited: 106716.04708499
-      comment: wztdgbfduvkbfplxpjgdo
+      amount_deposited: 72693572.41
+      comment: lyn
     fileParameters: []
     responses: []
     responseFields: []
@@ -5864,69 +6076,77 @@ endpoints:
         type: 'object[]'
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       'row[].user_id':
         name: 'row[].user_id'
+        description: ''
+        required: true
+        example: ab
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      'row[].payment_item_id':
+        name: 'row[].payment_item_id'
+        description: ''
+        required: true
+        example: quo
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      'row[].comment':
+        name: 'row[].comment'
+        description: ''
+        required: true
+        example: explicabo
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      'row[].year':
+        name: 'row[].year'
         description: ''
         required: true
         example: totam
         type: string
         enumValues: []
         exampleWasSpecified: false
-        custom: []
-      'row[].payment_item_id':
-        name: 'row[].payment_item_id'
-        description: ''
-        required: true
-        example: dolorem
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        custom: []
-      'row[].comment':
-        name: 'row[].comment'
-        description: ''
-        required: true
-        example: quaerat
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        custom: []
-      'row[].year':
-        name: 'row[].year'
-        description: ''
-        required: true
-        example: ea
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
+        nullable: false
         custom: []
       'row[].amount_deposited':
         name: 'row[].amount_deposited'
         description: ''
         required: true
-        example: 2.65471669
+        example: 9901436.0
         type: number
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       'row[].code':
         name: 'row[].code'
         description: ''
         required: true
-        example: quae
+        example: delectus
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       'row[].is_compulsory':
         name: 'row[].is_compulsory'
         description: ''
         required: true
-        example: qui
+        example: placeat
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       'row[].month_name':
         name: 'row[].month_name'
@@ -5936,6 +6156,7 @@ endpoints:
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       'row[].quarterly_name':
         name: 'row[].quarterly_name'
@@ -5945,27 +6166,29 @@ endpoints:
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       'row[].registration_id':
         name: 'row[].registration_id'
         description: ''
         required: true
-        example: aut
+        example: consequatur
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanBodyParameters:
       row:
         -
-          user_id: totam
-          payment_item_id: dolorem
-          comment: quaerat
-          year: ea
-          amount_deposited: 2.65471669
-          code: quae
-          is_compulsory: qui
-          registration_id: aut
+          user_id: ab
+          payment_item_id: quo
+          comment: explicabo
+          year: totam
+          amount_deposited: 9901436.0
+          code: delectus
+          is_compulsory: placeat
+          registration_id: consequatur
     fileParameters: []
     responses: []
     responseFields: []
@@ -5995,23 +6218,25 @@ endpoints:
         name: id
         description: 'The ID of the payment item.'
         required: true
-        example: quis
+        example: illum
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       user_id:
         name: user_id
         description: 'The ID of the user.'
         required: true
-        example: et
+        example: labore
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      id: quis
-      user_id: et
+      id: illum
+      user_id: labore
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -6054,13 +6279,14 @@ endpoints:
         name: id
         description: 'The ID of the payment item.'
         required: true
-        example: quam
+        example: tempore
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      id: quam
+      id: tempore
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -6103,13 +6329,14 @@ endpoints:
         name: id
         description: 'The ID of the user.'
         required: true
-        example: occaecati
+        example: doloremque
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      id: occaecati
+      id: doloremque
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -6152,23 +6379,25 @@ endpoints:
         name: user_id
         description: 'The ID of the user.'
         required: true
-        example: consequatur
+        example: neque
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       id:
         name: id
         description: 'The ID of the item.'
         required: true
-        example: voluptas
+        example: autem
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      user_id: consequatur
-      id: voluptas
+      user_id: neque
+      id: autem
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -6211,13 +6440,14 @@ endpoints:
         name: id
         description: 'The ID of the contribution.'
         required: true
-        example: aut
+        example: placeat
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      id: aut
+      id: placeat
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -6615,43 +6845,47 @@ endpoints:
         name: payment_item_id
         description: ''
         required: true
-        example: mollitia
+        example: aspernatur
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       user_id:
         name: user_id
         description: ''
         required: true
-        example: nisi
+        example: est
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       session_id:
         name: session_id
         description: ''
         required: true
-        example: possimus
+        example: excepturi
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       type:
         name: type
         description: ''
         required: true
-        example: iusto
+        example: et
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanBodyParameters:
-      payment_item_id: mollitia
-      user_id: nisi
-      session_id: possimus
-      type: iusto
+      payment_item_id: aspernatur
+      user_id: est
+      session_id: excepturi
+      type: et
     fileParameters: []
     responses: []
     responseFields: []
@@ -6681,13 +6915,14 @@ endpoints:
         name: id
         description: 'The ID of the contribution.'
         required: true
-        example: harum
+        example: illo
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      id: harum
+      id: illo
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -6725,43 +6960,47 @@ endpoints:
         name: amount_deposited
         description: ''
         required: true
-        example: 6113.2958985
+        example: 2640.739
         type: number
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       comment:
         name: comment
         description: 'Must not be greater than 5000 characters.'
         required: false
-        example: kubvlldmf
+        example: kejrqzuzidnvwlmb
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       supporter:
         name: supporter
         description: ''
         required: true
-        example: distinctio
+        example: modi
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       payment_item_id:
         name: payment_item_id
         description: ''
         required: true
-        example: aliquid
+        example: eum
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanBodyParameters:
-      amount_deposited: 6113.2958985
-      comment: kubvlldmf
-      supporter: distinctio
-      payment_item_id: aliquid
+      amount_deposited: 2640.739
+      comment: kejrqzuzidnvwlmb
+      supporter: modi
+      payment_item_id: eum
     fileParameters: []
     responses: []
     responseFields: []
@@ -6791,13 +7030,14 @@ endpoints:
         name: id
         description: 'The ID of the activity support.'
         required: true
-        example: molestiae
+        example: corporis
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      id: molestiae
+      id: corporis
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters:
@@ -6805,43 +7045,47 @@ endpoints:
         name: amount_deposited
         description: ''
         required: true
-        example: 1637848.95872
+        example: 40.563940307
         type: number
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       comment:
         name: comment
         description: 'Must not be greater than 5000 characters.'
         required: false
-        example: uoubzn
+        example: pgowbhgncbyfkjohrizlto
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       supporter:
         name: supporter
         description: ''
         required: true
-        example: commodi
+        example: voluptate
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       payment_item_id:
         name: payment_item_id
         description: ''
         required: true
-        example: repellendus
+        example: labore
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanBodyParameters:
-      amount_deposited: 1637848.95872
-      comment: uoubzn
-      supporter: commodi
-      payment_item_id: repellendus
+      amount_deposited: 40.563940307
+      comment: pgowbhgncbyfkjohrizlto
+      supporter: voluptate
+      payment_item_id: labore
     fileParameters: []
     responses: []
     responseFields: []
@@ -6910,13 +7154,14 @@ endpoints:
         name: id
         description: 'The ID of the activity support.'
         required: true
-        example: totam
+        example: eos
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      id: totam
+      id: eos
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -6959,13 +7204,14 @@ endpoints:
         name: id
         description: 'The ID of the payment item.'
         required: true
-        example: aut
+        example: et
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      id: aut
+      id: et
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -7086,13 +7332,14 @@ endpoints:
         name: id
         description: 'The ID of the sponsorship.'
         required: true
-        example: ea
+        example: quos
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      id: ea
+      id: quos
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -7126,13 +7373,14 @@ endpoints:
         name: id
         description: 'The ID of the sponsorship.'
         required: true
-        example: libero
+        example: et
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      id: libero
+      id: et
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -7166,13 +7414,14 @@ endpoints:
         name: id
         description: 'The ID of the activity.'
         required: true
-        example: harum
+        example: consectetur
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      id: harum
+      id: consectetur
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -7215,13 +7464,14 @@ endpoints:
         name: id
         description: 'The ID of the activity.'
         required: true
-        example: explicabo
+        example: ut
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      id: explicabo
+      id: ut
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -7424,10 +7674,11 @@ endpoints:
         name: user_id
         description: ''
         required: true
-        example: illum
+        example: voluptatibus
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       month_name:
         name: month_name
@@ -7437,9 +7688,10 @@ endpoints:
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanBodyParameters:
-      user_id: illum
+      user_id: voluptatibus
     fileParameters: []
     responses: []
     responseFields: []
@@ -7473,10 +7725,11 @@ endpoints:
         name: user_id
         description: ''
         required: true
-        example: quaerat
+        example: enim
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       month_name:
         name: month_name
@@ -7486,9 +7739,10 @@ endpoints:
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanBodyParameters:
-      user_id: quaerat
+      user_id: enim
     fileParameters: []
     responses: []
     responseFields: []
@@ -7518,13 +7772,14 @@ endpoints:
         name: id
         description: 'The ID of the registered member.'
         required: true
-        example: repudiandae
+        example: aut
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      id: repudiandae
+      id: aut
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -7562,23 +7817,25 @@ endpoints:
         name: year
         description: ''
         required: true
-        example: natus
+        example: fugiat
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       status:
         name: status
         description: ''
         required: false
-        example: omnis
+        example: voluptatem
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanBodyParameters:
-      year: natus
-      status: omnis
+      year: fugiat
+      status: voluptatem
     fileParameters: []
     responses:
       -
@@ -7621,23 +7878,25 @@ endpoints:
         name: year
         description: ''
         required: true
-        example: ut
+        example: quis
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       status:
         name: status
         description: ''
         required: false
-        example: et
+        example: enim
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanBodyParameters:
-      year: ut
-      status: et
+      year: quis
+      status: enim
     fileParameters: []
     responses:
       -
@@ -7710,19 +7969,21 @@ endpoints:
         name: year
         description: ''
         required: true
-        example: qui
+        example: beatae
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       status:
         name: status
         description: ''
         required: true
-        example: impedit
+        example: sint
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       0:
         name: '0'
@@ -7734,10 +7995,11 @@ endpoints:
           - ACTIVE
           - IN_ACTIVE
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanBodyParameters:
-      year: qui
-      status: impedit
+      year: beatae
+      status: sint
       0: ACTIVE
     fileParameters: []
     responses: []
@@ -7772,23 +8034,25 @@ endpoints:
         name: status
         description: ''
         required: true
-        example: amet
+        example: labore
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       id:
         name: id
         description: ''
         required: true
-        example: in
+        example: autem
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanBodyParameters:
-      status: amet
-      id: in
+      status: labore
+      id: autem
     fileParameters: []
     responses: []
     responseFields: []
@@ -7818,13 +8082,14 @@ endpoints:
         name: id
         description: 'The ID of the session.'
         required: true
-        example: quisquam
+        example: tenetur
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      id: quisquam
+      id: tenetur
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -7979,19 +8244,21 @@ endpoints:
         name: amount
         description: ''
         required: true
-        example: 1258.224
+        example: 952.616296
         type: number
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       is_compulsory:
         name: is_compulsory
         description: ''
         required: true
-        example: recusandae
+        example: soluta
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       frequency:
         name: frequency
@@ -8003,10 +8270,11 @@ endpoints:
           - MONTHLY
           - YEARLY
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanBodyParameters:
-      amount: 1258.224
-      is_compulsory: recusandae
+      amount: 952.616296
+      is_compulsory: soluta
       frequency: MONTHLY
     fileParameters: []
     responses: []
@@ -8037,13 +8305,14 @@ endpoints:
         name: id
         description: 'The ID of the registration fee.'
         required: true
-        example: similique
+        example: dolor
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      id: similique
+      id: dolor
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters:
@@ -8051,35 +8320,38 @@ endpoints:
         name: amount
         description: ''
         required: true
-        example: 424.05534
+        example: 40172.384337
         type: number
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       is_compulsory:
         name: is_compulsory
         description: ''
         required: true
-        example: libero
+        example: ullam
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
       frequency:
         name: frequency
         description: ''
         required: true
-        example: MONTHLY
+        example: YEARLY
         type: string
         enumValues:
           - MONTHLY
           - YEARLY
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanBodyParameters:
-      amount: 424.05534
-      is_compulsory: libero
-      frequency: MONTHLY
+      amount: 40172.384337
+      is_compulsory: ullam
+      frequency: YEARLY
     fileParameters: []
     responses: []
     responseFields: []
@@ -8109,13 +8381,14 @@ endpoints:
         name: id
         description: 'The ID of the registration fee.'
         required: true
-        example: voluptatem
+        example: hic
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      id: voluptatem
+      id: hic
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -8149,13 +8422,14 @@ endpoints:
         name: id
         description: 'The ID of the registration fee.'
         required: true
-        example: deserunt
+        example: hic
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
         custom: []
     cleanUrlParameters:
-      id: deserunt
+      id: hic
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []

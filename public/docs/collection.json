@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "Quick Records App",
-        "_postman_id": "331b74ea-6cf5-4a48-824e-b66e0de88a92",
+        "_postman_id": "8710fded-fe2d-47b5-9650-2a192f278bbd",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -41,7 +41,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"email\":\"jaskolski.joel@example.net\",\"telephone\":\"earum\",\"password\":\"+nkT6:&>m50+4?4dToE\"}"
+                            "raw": "{\"email\":\"geovanny.huel@example.org\",\"telephone\":\"dolore\",\"password\":\"d5wpJ>OU%.>g8`n!FWe\"}"
                         },
                         "description": "",
                         "auth": {
@@ -72,7 +72,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"fnfacgfpqcsuvnzqbroiaqsjhohtutpzwphqpzakigndqamwtbt\",\"telephone\":\"et\",\"password\":\"~)92mA!\",\"email\":\"ethyl.hilpert@example.org\"}"
+                            "raw": "{\"name\":\"cjjcvtgffkd\",\"telephone\":\"labore\",\"password\":\"`sgaISyRhTm\",\"email\":\"dereck.hessel@example.org\"}"
                         },
                         "description": "",
                         "auth": {
@@ -103,7 +103,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"credential\":\"libero\"}"
+                            "raw": "{\"credential\":\"quae\"}"
                         },
                         "description": "",
                         "auth": {
@@ -134,7 +134,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"telephone\":\"officiis\",\"email\":\"dprohaska@example.net\",\"password\":\"ZpjRe}FB|Xpp?L'K\",\"role\":\"commodi\"}"
+                            "raw": "{\"telephone\":\"et\",\"email\":\"mohr.schuyler@example.com\",\"password\":\"AdIb2m\",\"role\":\"molestiae\"}"
                         },
                         "description": "",
                         "auth": {
@@ -221,7 +221,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"user_id\":\"architecto\",\"new_password\":\"chrrbwcqiynafneymhclzenzmzbwappdpkzjtfbtcmqzgqxxeymvmdfqysjxcywhfwa\",\"token\":\"et\"}"
+                            "raw": "{\"user_id\":\"qui\",\"new_password\":\"wwkrtnbcaymvxnftnsehnsdxeqqqqpareszcuijttvghbjujedhoyqpzwlnqtvt\",\"token\":\"perferendis\"}"
                         },
                         "description": "",
                         "auth": {
@@ -252,7 +252,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"file\":\"ooqjwuuuzcqnpnzmkonfbhkj\",\"file_category\":\"quod\"}"
+                            "raw": "{\"file\":\"fycezsotkj\",\"file_category\":\"et\"}"
                         },
                         "description": "",
                         "auth": {
@@ -331,7 +331,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"user_id\":\"animi\",\"role\":\"optio\"}"
+                            "raw": "{\"user_id\":\"id\",\"role\":\"sapiente\"}"
                         },
                         "description": "",
                         "auth": {
@@ -400,7 +400,7 @@
                                 {
                                     "id": "user_id",
                                     "key": "user_id",
-                                    "value": "nesciunt",
+                                    "value": "deleniti",
                                     "description": "The ID of the user."
                                 }
                             ]
@@ -456,7 +456,7 @@
                                 {
                                     "id": "user_id",
                                     "key": "user_id",
-                                    "value": "voluptatem",
+                                    "value": "eum",
                                     "description": "The ID of the user."
                                 }
                             ]
@@ -502,7 +502,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"consequuntur\",\"term\":598139984,\"number_of_members\":1.96495637}"
+                            "raw": "{\"name\":\"dolor\",\"term\":172.0176318,\"number_of_members\":42879.91}"
                         },
                         "description": "",
                         "auth": {
@@ -523,7 +523,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "tempore",
+                                    "value": "fugit",
                                     "description": "The ID of the organisation."
                                 }
                             ]
@@ -579,7 +579,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "similique",
+                                    "value": "pariatur",
                                     "description": "The ID of the user."
                                 }
                             ]
@@ -827,7 +827,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "voluptatibus",
+                                    "value": "aperiam",
                                     "description": "The ID of the payment item."
                                 }
                             ]
@@ -893,7 +893,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"user_id\":\"pariatur\",\"user_name\":\"laudantium\",\"user_email\":\"fahey.rita@example.com\",\"role\":\"enim\"}"
+                            "raw": "{\"user_id\":\"natus\",\"user_name\":\"in\",\"user_email\":\"idella14@example.org\",\"role\":\"architecto\"}"
                         },
                         "description": "",
                         "auth": {
@@ -962,7 +962,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "sed",
+                                    "value": "cumque",
                                     "description": "The ID of the get invitation notification."
                                 }
                             ]
@@ -1026,7 +1026,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "esse",
+                                    "value": "quam",
                                     "description": "The ID of the organisation."
                                 }
                             ]
@@ -1044,7 +1044,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"sljeaezymhvwr\",\"email\":\"vkoss@example.org\",\"telephone\":\"in\",\"password\":\"EsM|CbvS\\\/CeWXr:Jv49P\",\"address\":\"expedita\",\"occupation\":\"necessitatibus\",\"gender\":\"nemo\"}"
+                            "raw": "{\"name\":\"fahpdjys\",\"email\":\"grady.izaiah@example.com\",\"telephone\":\"et\",\"password\":\"?Ud\\\/Txh`X\",\"address\":\"omnis\",\"occupation\":\"qui\",\"gender\":\"quae\"}"
                         },
                         "description": "",
                         "auth": {
@@ -1065,7 +1065,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "rerum",
+                                    "value": "corrupti",
                                     "description": "The ID of the organisation."
                                 }
                             ]
@@ -1101,7 +1101,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "molestias",
+                                    "value": "sint",
                                     "description": "The ID of the user."
                                 }
                             ]
@@ -1119,7 +1119,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"picture\":\"est\"}"
+                            "raw": "{\"picture\":\"minima\"}"
                         },
                         "description": "",
                         "auth": {
@@ -1150,7 +1150,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"id\",\"email\":\"gbogisich@example.com\",\"address\":\"pariatur\",\"occupation\":\"quam\",\"user_id\":\"qui\",\"status\":\"quas\"}"
+                            "raw": "{\"name\":\"iure\",\"email\":\"lolson@example.com\",\"address\":\"aut\",\"occupation\":\"et\",\"user_id\":\"et\",\"status\":\"pariatur\"}"
                         },
                         "description": "",
                         "auth": {
@@ -1181,7 +1181,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"ratione\",\"email\":\"ernser.breana@example.org\",\"address\":\"sunt\",\"occupation\":\"ab\",\"user_id\":\"modi\",\"status\":\"debitis\"}"
+                            "raw": "{\"name\":\"laudantium\",\"email\":\"isabella59@example.com\",\"address\":\"tenetur\",\"occupation\":\"saepe\",\"user_id\":\"quod\",\"status\":\"molestiae\"}"
                         },
                         "description": "",
                         "auth": {
@@ -1212,7 +1212,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"user_id\":\"deleniti\",\"old_password\":\"nihil\",\"password\":\"G.P_\\\"PVJYmz|\"}"
+                            "raw": "{\"user_id\":\"nulla\",\"old_password\":\"ut\",\"password\":\"I+z\\\"|B&~(fF$TLpXlT$4\"}"
                         },
                         "description": "",
                         "auth": {
@@ -1233,7 +1233,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "qui",
+                                    "value": "optio",
                                     "description": "The ID of the user."
                                 }
                             ]
@@ -1279,7 +1279,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"navuescvsc\",\"email\":\"langworth.adrien@example.org\",\"address\":\"non\",\"box_number\":7,\"description\":\"Pariatur velit itaque accusamus accusantium excepturi ullam et.\",\"salutation\":\"porro\",\"region\":\"vel\",\"telephone\":\"ad\"}"
+                            "raw": "{\"name\":\"fpueqqxdbsmpiarybnv\",\"email\":\"ngislason@example.com\",\"address\":\"nisi\",\"box_number\":6,\"description\":\"Molestias quis omnis laborum voluptate quis enim et.\",\"salutation\":\"est\",\"region\":\"vitae\",\"telephone\":\"soluta\"}"
                         },
                         "description": "",
                         "auth": {
@@ -1300,7 +1300,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "maiores",
+                                    "value": "unde",
                                     "description": "The ID of the organisation."
                                 }
                             ]
@@ -1356,7 +1356,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "iusto",
+                                    "value": "vitae",
                                     "description": "The ID of the organisation."
                                 }
                             ]
@@ -1374,7 +1374,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"logo\":\"voluptatem\"}"
+                            "raw": "{\"logo\":\"deserunt\"}"
                         },
                         "description": "",
                         "auth": {
@@ -1395,7 +1395,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "amet",
+                                    "value": "reiciendis",
                                     "description": "The ID of the organisation."
                                 }
                             ]
@@ -1479,7 +1479,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "rerum",
+                                    "value": "sit",
                                     "description": "The ID of the organisation."
                                 }
                             ]
@@ -1515,7 +1515,7 @@
                                 {
                                     "id": "organisation_id",
                                     "key": "organisation_id",
-                                    "value": "laboriosam",
+                                    "value": "culpa",
                                     "description": "The ID of the organisation."
                                 }
                             ]
@@ -1533,7 +1533,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"ixzp\",\"description\":\"Iusto non vel fugiat aut facilis accusamus.\",\"code\":\"fjqvrubzpzdblhjkfbodsy\"}"
+                            "raw": "{\"name\":\"lkuwqnomhjxnt\",\"description\":\"Omnis fugit occaecati nemo eum labore voluptas aliquam.\",\"code\":\"dwimnsszrczphfe\"}"
                         },
                         "description": "",
                         "auth": {
@@ -1554,13 +1554,13 @@
                                 {
                                     "id": "organisation_id",
                                     "key": "organisation_id",
-                                    "value": "voluptates",
+                                    "value": "sed",
                                     "description": "The ID of the organisation."
                                 },
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "consequatur",
+                                    "value": "consequuntur",
                                     "description": "The ID of the payment category."
                                 }
                             ]
@@ -1578,7 +1578,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"apgupmbeyofufruoaysxg\",\"description\":\"Esse minima temporibus blanditiis illo est molestias consequatur.\"}"
+                            "raw": "{\"name\":\"sbnakcqzsrivqs\",\"description\":\"Quo consectetur qui ducimus voluptatem.\"}"
                         },
                         "description": "",
                         "auth": {
@@ -1647,13 +1647,13 @@
                                 {
                                     "id": "organisation_id",
                                     "key": "organisation_id",
-                                    "value": "saepe",
+                                    "value": "aut",
                                     "description": "The ID of the organisation."
                                 },
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "repellat",
+                                    "value": "rerum",
                                     "description": "The ID of the payment category."
                                 }
                             ]
@@ -1805,13 +1805,13 @@
                                 {
                                     "id": "organisation_id",
                                     "key": "organisation_id",
-                                    "value": "pariatur",
+                                    "value": "sit",
                                     "description": "The ID of the organisation."
                                 },
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "modi",
+                                    "value": "eum",
                                     "description": "The ID of the payment category."
                                 }
                             ]
@@ -1847,7 +1847,7 @@
                                 {
                                     "id": "payment_category_id",
                                     "key": "payment_category_id",
-                                    "value": "atque",
+                                    "value": "modi",
                                     "description": "The ID of the payment category."
                                 }
                             ]
@@ -1865,7 +1865,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"hadkjfoedhjjcqaoctubywv\",\"amount\":\"qui\",\"compulsory\":false,\"description\":\"Culpa et mollitia maxime.\",\"type\":\"reprehenderit\",\"frequency\":\"ipsam\",\"deadline\":\"2024-10-17T11:31:25\"}"
+                            "raw": "{\"name\":\"gufv\",\"amount\":\"autem\",\"compulsory\":true,\"description\":\"Dolorem vel consequatur sit libero alias cumque laborum.\",\"type\":\"deleniti\",\"frequency\":\"voluptatem\",\"deadline\":\"2025-01-27T14:19:47\"}"
                         },
                         "description": "",
                         "auth": {
@@ -1886,13 +1886,13 @@
                                 {
                                     "id": "payment_category_id",
                                     "key": "payment_category_id",
-                                    "value": "tempore",
+                                    "value": "ducimus",
                                     "description": "The ID of the payment category."
                                 },
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "dolorum",
+                                    "value": "est",
                                     "description": "The ID of the payment item."
                                 }
                             ]
@@ -1910,7 +1910,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"pwurtcklicpgbcgfqlnv\",\"amount\":\"tempore\",\"compulsory\":false,\"description\":\"Odio atque vel quos consequuntur.\",\"type\":\"tempora\",\"frequency\":\"velit\",\"deadline\":\"2024-10-17T11:31:25\"}"
+                            "raw": "{\"name\":\"togecljzdcjirrzfspplk\",\"amount\":\"quae\",\"compulsory\":true,\"description\":\"Adipisci voluptatibus exercitationem id et in.\",\"type\":\"explicabo\",\"frequency\":\"tempore\",\"deadline\":\"2025-01-27T14:19:47\"}"
                         },
                         "description": "",
                         "auth": {
@@ -1979,7 +1979,7 @@
                                 {
                                     "id": "payment_category_id",
                                     "key": "payment_category_id",
-                                    "value": "ipsa",
+                                    "value": "animi",
                                     "description": "The ID of the payment category."
                                 }
                             ]
@@ -2035,13 +2035,13 @@
                                 {
                                     "id": "payment_category_id",
                                     "key": "payment_category_id",
-                                    "value": "illo",
+                                    "value": "recusandae",
                                     "description": "The ID of the payment category."
                                 },
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "reprehenderit",
+                                    "value": "illo",
                                     "description": "The ID of the payment item."
                                 }
                             ]
@@ -2251,7 +2251,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"id\":\"commodi\",\"reference_id\":\"ea\"}"
+                            "raw": "{\"id\":\"repudiandae\",\"reference_id\":\"ipsam\"}"
                         },
                         "description": "",
                         "auth": {
@@ -2272,7 +2272,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "sint",
+                                    "value": "voluptatem",
                                     "description": "The ID of the payment item."
                                 }
                             ]
@@ -2328,13 +2328,13 @@
                                 {
                                     "id": "payment_category_id",
                                     "key": "payment_category_id",
-                                    "value": "esse",
+                                    "value": "qui",
                                     "description": "The ID of the payment category."
                                 },
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "repellat",
+                                    "value": "omnis",
                                     "description": "The ID of the payment item."
                                 }
                             ]
@@ -2370,7 +2370,7 @@
                                 {
                                     "id": "organisation_id",
                                     "key": "organisation_id",
-                                    "value": "officiis",
+                                    "value": "voluptate",
                                     "description": "The ID of the organisation."
                                 }
                             ]
@@ -2426,13 +2426,13 @@
                                 {
                                     "id": "organisation_id",
                                     "key": "organisation_id",
-                                    "value": "harum",
+                                    "value": "repellendus",
                                     "description": "The ID of the organisation."
                                 },
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "modi",
+                                    "value": "quo",
                                     "description": "The ID of the expenditure category."
                                 }
                             ]
@@ -2584,7 +2584,7 @@
                                 {
                                     "id": "organisation_id",
                                     "key": "organisation_id",
-                                    "value": "ipsam",
+                                    "value": "error",
                                     "description": "The ID of the organisation."
                                 }
                             ]
@@ -2602,7 +2602,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"bkcmmiweytozvlufsexiuxrpc\",\"description\":\"Aut voluptatem sit eos earum suscipit autem magni iusto.\",\"code\":\"xfsosxeyociuaucjpwaanmf\"}"
+                            "raw": "{\"name\":\"diyzaqfztotim\",\"description\":\"Aut eum eaque in deserunt.\",\"code\":\"cbciifxnyiwjhx\"}"
                         },
                         "description": "",
                         "auth": {
@@ -2623,13 +2623,13 @@
                                 {
                                     "id": "organisation_id",
                                     "key": "organisation_id",
-                                    "value": "molestiae",
+                                    "value": "laboriosam",
                                     "description": "The ID of the organisation."
                                 },
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "asperiores",
+                                    "value": "aut",
                                     "description": "The ID of the expenditure category."
                                 }
                             ]
@@ -2647,7 +2647,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"rbivujnkclgbdalgwbdtwinym\",\"description\":\"Harum veritatis non est ratione qui consequatur alias.\"}"
+                            "raw": "{\"name\":\"knxfnhocpxvgykb\",\"description\":\"Nobis aspernatur animi amet enim quae.\"}"
                         },
                         "description": "",
                         "auth": {
@@ -2668,13 +2668,13 @@
                                 {
                                     "id": "organisation_id",
                                     "key": "organisation_id",
-                                    "value": "consequatur",
+                                    "value": "et",
                                     "description": "The ID of the organisation."
                                 },
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "ut",
+                                    "value": "dolore",
                                     "description": "The ID of the expenditure category."
                                 }
                             ]
@@ -2710,13 +2710,13 @@
                                 {
                                     "id": "expenditure_category_id",
                                     "key": "expenditure_category_id",
-                                    "value": "consequuntur",
+                                    "value": "occaecati",
                                     "description": "The ID of the expenditure category."
                                 },
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "sint",
+                                    "value": "dolorum",
                                     "description": "The ID of the expenditure item."
                                 }
                             ]
@@ -2734,7 +2734,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"vvfjmnihrfysvaivnli\",\"amount\":6929658.17,\"date\":\"2024-10-17T11:31:25\",\"payment_item_id\":\"et\"}"
+                            "raw": "{\"name\":\"dgftqdqdadgf\",\"amount\":722.6056307,\"date\":\"2025-01-27T14:19:47\",\"payment_item_id\":\"hic\"}"
                         },
                         "description": "",
                         "auth": {
@@ -2755,7 +2755,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "minima",
+                                    "value": "et",
                                     "description": "The ID of the expenditure category."
                                 }
                             ]
@@ -2773,7 +2773,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"ztmbzxetfsqftqff\",\"amount\":643697605.2959896,\"date\":\"2024-10-17T11:31:25\",\"payment_item_id\":\"tenetur\"}"
+                            "raw": "{\"name\":\"ambhsqoihsuudjb\",\"amount\":3.14486,\"date\":\"2025-01-27T14:19:47\",\"payment_item_id\":\"consequatur\"}"
                         },
                         "description": "",
                         "auth": {
@@ -2794,7 +2794,7 @@
                                 {
                                     "id": "expenditure_category_id",
                                     "key": "expenditure_category_id",
-                                    "value": "non",
+                                    "value": "temporibus",
                                     "description": "The ID of the expenditure category."
                                 }
                             ]
@@ -2850,7 +2850,7 @@
                                 {
                                     "id": "expenditure_category_id",
                                     "key": "expenditure_category_id",
-                                    "value": "recusandae",
+                                    "value": "unde",
                                     "description": "The ID of the expenditure category."
                                 }
                             ]
@@ -2906,13 +2906,13 @@
                                 {
                                     "id": "expenditure_category_id",
                                     "key": "expenditure_category_id",
-                                    "value": "veniam",
+                                    "value": "repudiandae",
                                     "description": "The ID of the expenditure category."
                                 },
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "consectetur",
+                                    "value": "officiis",
                                     "description": "The ID of the expenditure item."
                                 }
                             ]
@@ -2968,7 +2968,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "quia",
+                                    "value": "ut",
                                     "description": "The ID of the expenditure item."
                                 }
                             ]
@@ -3072,7 +3072,7 @@
                                 {
                                     "id": "payment_item_id",
                                     "key": "payment_item_id",
-                                    "value": "quo",
+                                    "value": "voluptatem",
                                     "description": "The ID of the payment item."
                                 }
                             ]
@@ -3176,13 +3176,13 @@
                                 {
                                     "id": "expenditure_category_id",
                                     "key": "expenditure_category_id",
-                                    "value": "distinctio",
+                                    "value": "et",
                                     "description": "The ID of the expenditure category."
                                 },
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "non",
+                                    "value": "sapiente",
                                     "description": "The ID of the expenditure item."
                                 }
                             ]
@@ -3266,7 +3266,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "molestiae",
+                                    "value": "officiis",
                                     "description": "The ID of the expenditure item."
                                 }
                             ]
@@ -3312,7 +3312,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"amount_deposited\":\"vdbqvthdu\",\"user_id\":\"fugiat\"}"
+                            "raw": "{\"amount_deposited\":\"ubgyrwsjwudgufkdvplgleisaaogohnmschtuuevctnow\",\"user_id\":\"velit\"}"
                         },
                         "description": "",
                         "auth": {
@@ -3333,13 +3333,13 @@
                                 {
                                     "id": "user_id",
                                     "key": "user_id",
-                                    "value": "sapiente",
+                                    "value": "ea",
                                     "description": "The ID of the user."
                                 },
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "ducimus",
+                                    "value": "reiciendis",
                                     "description": "The ID of the {user id}."
                                 }
                             ]
@@ -3357,7 +3357,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"amount_deposited\":\"fwaoptpkyftvgpjosykkhzooteoyriawl\",\"comment\":\"xoigurjowidqtn\"}"
+                            "raw": "{\"amount_deposited\":\"uxsjawpkdonvjtwhjalr\",\"comment\":\"fk\"}"
                         },
                         "description": "",
                         "auth": {
@@ -3378,7 +3378,7 @@
                                 {
                                     "id": "user_id",
                                     "key": "user_id",
-                                    "value": "praesentium",
+                                    "value": "voluptas",
                                     "description": "The ID of the user."
                                 }
                             ]
@@ -3440,7 +3440,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "eum",
+                                    "value": "earum",
                                     "description": "The ID of the {user id}."
                                 }
                             ]
@@ -3688,13 +3688,13 @@
                                 {
                                     "id": "user_id",
                                     "key": "user_id",
-                                    "value": "cumque",
+                                    "value": "ullam",
                                     "description": "The ID of the user."
                                 },
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "tenetur",
+                                    "value": "alias",
                                     "description": "The ID of the {user id}."
                                 }
                             ]
@@ -3730,7 +3730,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "asperiores",
+                                    "value": "facilis",
                                     "description": "The ID of the user saving."
                                 }
                             ]
@@ -3766,7 +3766,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "harum",
+                                    "value": "odio",
                                     "description": "The ID of the organisation."
                                 }
                             ]
@@ -3870,7 +3870,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "consectetur",
+                                    "value": "nesciunt",
                                     "description": "The ID of the organisation."
                                 }
                             ]
@@ -3888,7 +3888,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"dndpptzxzbzdnsdpxgesm\",\"description\":\"Voluptatem velit nostrum laboriosam harum reiciendis ea.\",\"venue\":\"omnis\",\"date\":\"2024-10-17T11:31:25\",\"amount\":43,\"payment_item_id\":\"consequatur\"}"
+                            "raw": "{\"name\":\"ph\",\"description\":\"Temporibus sed et eligendi accusantium rerum iste ab voluptas.\",\"venue\":\"est\",\"date\":\"2025-01-27T14:19:47\",\"amount\":71,\"payment_item_id\":\"et\"}"
                         },
                         "description": "",
                         "auth": {
@@ -3909,7 +3909,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "ut",
+                                    "value": "eaque",
                                     "description": "The ID of the income activity."
                                 }
                             ]
@@ -3927,7 +3927,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"yngequhomqzjm\",\"description\":\"Tempore assumenda sit sed saepe fuga necessitatibus et.\",\"venue\":\"earum\",\"date\":\"2024-10-17T11:31:25\",\"amount\":27,\"payment_item_id\":\"molestiae\"}"
+                            "raw": "{\"name\":\"doeslttyowcntwqbjyudkf\",\"description\":\"Nihil tempore facere architecto deserunt.\",\"venue\":\"est\",\"date\":\"2025-01-27T14:19:47\",\"amount\":19,\"payment_item_id\":\"doloremque\"}"
                         },
                         "description": "",
                         "auth": {
@@ -3948,7 +3948,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "distinctio",
+                                    "value": "modi",
                                     "description": "The ID of the organisation."
                                 }
                             ]
@@ -4004,7 +4004,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "dolorem",
+                                    "value": "sint",
                                     "description": "The ID of the income activity."
                                 }
                             ]
@@ -4156,7 +4156,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "a",
+                                    "value": "omnis",
                                     "description": "The ID of the income activity."
                                 }
                             ]
@@ -4192,7 +4192,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "ut",
+                                    "value": "alias",
                                     "description": "The ID of the income activity."
                                 }
                             ]
@@ -4228,7 +4228,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "numquam",
+                                    "value": "repellendus",
                                     "description": "The ID of the expenditure item."
                                 }
                             ]
@@ -4246,7 +4246,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"vruczllhpwzp\",\"amount_given\":26,\"amount_spent\":7,\"comment\":\"xapoklampdasdy\"}"
+                            "raw": "{\"name\":\"izjikvujmtejsnajckz\",\"amount_given\":29,\"amount_spent\":52,\"comment\":\"jlneyuwpkxzllotzwagi\"}"
                         },
                         "description": "",
                         "auth": {
@@ -4267,7 +4267,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "sequi",
+                                    "value": "velit",
                                     "description": "The ID of the expenditure detail."
                                 }
                             ]
@@ -4285,7 +4285,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"qozgttzmvsqcjnggpsqor\",\"amount_given\":54,\"amount_spent\":62,\"comment\":\"q\"}"
+                            "raw": "{\"name\":\"ylxnygpzhimnfjwdj\",\"amount_given\":84,\"amount_spent\":47,\"comment\":\"yavmyselfrykjkqpftzbx\"}"
                         },
                         "description": "",
                         "auth": {
@@ -4306,7 +4306,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "itaque",
+                                    "value": "ut",
                                     "description": "The ID of the expenditure item."
                                 }
                             ]
@@ -4362,7 +4362,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "ut",
+                                    "value": "doloremque",
                                     "description": "The ID of the expenditure detail."
                                 }
                             ]
@@ -4610,7 +4610,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "omnis",
+                                    "value": "qui",
                                     "description": "The ID of the expenditure item detail."
                                 }
                             ]
@@ -4646,7 +4646,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "quod",
+                                    "value": "sunt",
                                     "description": "The ID of the expenditure detail."
                                 }
                             ]
@@ -4692,7 +4692,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"row\":[{\"id\":\"error\",\"type\":\"voluptas\"}]}"
+                            "raw": "{\"row\":[{\"id\":\"nostrum\",\"type\":\"perferendis\"}]}"
                         },
                         "description": "",
                         "auth": {
@@ -4723,7 +4723,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"amount_deposited\":47.6868714,\"comment\":\"bjzlahk\",\"user_id\":\"atque\",\"payment_item_id\":\"nisi\"}"
+                            "raw": "{\"amount_deposited\":0.156,\"comment\":\"prjccurxtrzkftqxjta\",\"user_id\":\"ullam\",\"payment_item_id\":\"sequi\"}"
                         },
                         "description": "",
                         "auth": {
@@ -4744,7 +4744,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "nemo",
+                                    "value": "et",
                                     "description": "The ID of the contribution."
                                 }
                             ]
@@ -4762,7 +4762,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"amount_deposited\":106716.04708499,\"comment\":\"wztdgbfduvkbfplxpjgdo\"}"
+                            "raw": "{\"amount_deposited\":72693572.41,\"comment\":\"lyn\"}"
                         },
                         "description": "",
                         "auth": {
@@ -4793,7 +4793,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"row\":[{\"user_id\":\"totam\",\"payment_item_id\":\"dolorem\",\"comment\":\"quaerat\",\"year\":\"ea\",\"amount_deposited\":2.65471669,\"code\":\"quae\",\"is_compulsory\":\"qui\",\"registration_id\":\"aut\"}]}"
+                            "raw": "{\"row\":[{\"user_id\":\"ab\",\"payment_item_id\":\"quo\",\"comment\":\"explicabo\",\"year\":\"totam\",\"amount_deposited\":9901436,\"code\":\"delectus\",\"is_compulsory\":\"placeat\",\"registration_id\":\"consequatur\"}]}"
                         },
                         "description": "",
                         "auth": {
@@ -4814,13 +4814,13 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "quis",
+                                    "value": "illum",
                                     "description": "The ID of the payment item."
                                 },
                                 {
                                     "id": "user_id",
                                     "key": "user_id",
-                                    "value": "et",
+                                    "value": "labore",
                                     "description": "The ID of the user."
                                 }
                             ]
@@ -4876,7 +4876,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "quam",
+                                    "value": "tempore",
                                     "description": "The ID of the payment item."
                                 }
                             ]
@@ -4932,7 +4932,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "occaecati",
+                                    "value": "doloremque",
                                     "description": "The ID of the user."
                                 }
                             ]
@@ -4988,13 +4988,13 @@
                                 {
                                     "id": "user_id",
                                     "key": "user_id",
-                                    "value": "consequatur",
+                                    "value": "neque",
                                     "description": "The ID of the user."
                                 },
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "voluptas",
+                                    "value": "autem",
                                     "description": "The ID of the item."
                                 }
                             ]
@@ -5050,7 +5050,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "aut",
+                                    "value": "placeat",
                                     "description": "The ID of the contribution."
                                 }
                             ]
@@ -5548,7 +5548,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"payment_item_id\":\"mollitia\",\"user_id\":\"nisi\",\"session_id\":\"possimus\",\"type\":\"iusto\"}"
+                            "raw": "{\"payment_item_id\":\"aspernatur\",\"user_id\":\"est\",\"session_id\":\"excepturi\",\"type\":\"et\"}"
                         },
                         "description": "",
                         "auth": {
@@ -5569,7 +5569,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "harum",
+                                    "value": "illo",
                                     "description": "The ID of the contribution."
                                 }
                             ]
@@ -5615,7 +5615,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"amount_deposited\":6113.2958985,\"comment\":\"kubvlldmf\",\"supporter\":\"distinctio\",\"payment_item_id\":\"aliquid\"}"
+                            "raw": "{\"amount_deposited\":2640.739,\"comment\":\"kejrqzuzidnvwlmb\",\"supporter\":\"modi\",\"payment_item_id\":\"eum\"}"
                         },
                         "description": "",
                         "auth": {
@@ -5636,7 +5636,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "molestiae",
+                                    "value": "corporis",
                                     "description": "The ID of the activity support."
                                 }
                             ]
@@ -5654,7 +5654,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"amount_deposited\":1637848.95872,\"comment\":\"uoubzn\",\"supporter\":\"commodi\",\"payment_item_id\":\"repellendus\"}"
+                            "raw": "{\"amount_deposited\":40.563940307,\"comment\":\"pgowbhgncbyfkjohrizlto\",\"supporter\":\"voluptate\",\"payment_item_id\":\"labore\"}"
                         },
                         "description": "",
                         "auth": {
@@ -5723,7 +5723,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "totam",
+                                    "value": "eos",
                                     "description": "The ID of the activity support."
                                 }
                             ]
@@ -5779,7 +5779,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "aut",
+                                    "value": "et",
                                     "description": "The ID of the payment item."
                                 }
                             ]
@@ -5931,7 +5931,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "ea",
+                                    "value": "quos",
                                     "description": "The ID of the sponsorship."
                                 }
                             ]
@@ -5967,7 +5967,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "libero",
+                                    "value": "et",
                                     "description": "The ID of the sponsorship."
                                 }
                             ]
@@ -6003,7 +6003,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "harum",
+                                    "value": "consectetur",
                                     "description": "The ID of the activity."
                                 }
                             ]
@@ -6059,7 +6059,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "explicabo",
+                                    "value": "ut",
                                     "description": "The ID of the activity."
                                 }
                             ]
@@ -6317,7 +6317,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"user_id\":\"illum\"}"
+                            "raw": "{\"user_id\":\"voluptatibus\"}"
                         },
                         "description": "",
                         "auth": {
@@ -6348,7 +6348,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"user_id\":\"quaerat\"}"
+                            "raw": "{\"user_id\":\"enim\"}"
                         },
                         "description": "",
                         "auth": {
@@ -6369,7 +6369,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "repudiandae",
+                                    "value": "aut",
                                     "description": "The ID of the registered member."
                                 }
                             ]
@@ -6415,7 +6415,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"year\":\"natus\",\"status\":\"omnis\"}"
+                            "raw": "{\"year\":\"fugiat\",\"status\":\"voluptatem\"}"
                         },
                         "description": "",
                         "auth": {
@@ -6466,7 +6466,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"year\":\"ut\",\"status\":\"et\"}"
+                            "raw": "{\"year\":\"quis\",\"status\":\"enim\"}"
                         },
                         "description": "",
                         "auth": {
@@ -6545,7 +6545,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"year\":\"qui\",\"status\":\"impedit\",\"0\":\"ACTIVE\"}"
+                            "raw": "{\"year\":\"beatae\",\"status\":\"sint\",\"0\":\"ACTIVE\"}"
                         },
                         "description": "",
                         "auth": {
@@ -6576,7 +6576,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"status\":\"amet\",\"id\":\"in\"}"
+                            "raw": "{\"status\":\"labore\",\"id\":\"autem\"}"
                         },
                         "description": "",
                         "auth": {
@@ -6597,7 +6597,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "quisquam",
+                                    "value": "tenetur",
                                     "description": "The ID of the session."
                                 }
                             ]
@@ -6787,7 +6787,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"amount\":1258.224,\"is_compulsory\":\"recusandae\",\"frequency\":\"MONTHLY\"}"
+                            "raw": "{\"amount\":952.616296,\"is_compulsory\":\"soluta\",\"frequency\":\"MONTHLY\"}"
                         },
                         "description": "",
                         "auth": {
@@ -6808,7 +6808,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "similique",
+                                    "value": "dolor",
                                     "description": "The ID of the registration fee."
                                 }
                             ]
@@ -6826,7 +6826,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"amount\":424.05534,\"is_compulsory\":\"libero\",\"frequency\":\"MONTHLY\"}"
+                            "raw": "{\"amount\":40172.384337,\"is_compulsory\":\"ullam\",\"frequency\":\"YEARLY\"}"
                         },
                         "description": "",
                         "auth": {
@@ -6847,7 +6847,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "voluptatem",
+                                    "value": "hic",
                                     "description": "The ID of the registration fee."
                                 }
                             ]
@@ -6883,7 +6883,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "deserunt",
+                                    "value": "hic",
                                     "description": "The ID of the registration fee."
                                 }
                             ]
