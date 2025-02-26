@@ -36,7 +36,7 @@ class SessionSeeder extends Seeder
 //            'updated_by' => "Edmond"
 //        ]);
         Session::create([
-            'year' =>  "2024",
+            'year' =>  "2025",
             'status' => SessionStatus::ACTIVE,
             'updated_by' => "Edmond"
         ]);

@@ -19,7 +19,7 @@ class OrganisationSeeder extends Seeder
             'name'          => "Brothers Corner Great Soppo (BROCON)",
             'email'         => "suhedmond11@gmail.com",
             'region'        => "South West",
-            'telephone'     => "+237 6 83 40 42 89",
+            'telephone'     => "+237 683404289",
             'address'       => "Buea",
             'description'   => "The Brothers Corner of the Christian Youth Fellowship Movement of the Presbyterian Church in Cameroon, in Great Soppo",
             'logo'          => "",
