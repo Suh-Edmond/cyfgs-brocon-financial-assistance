@@ -124,7 +124,7 @@ class UserManagementService implements UserManagementInterface
              $total_approved_record  = isset($group_users['APPROVED']) ? count($group_users['APPROVED']) : 0;
              $total_pending = isset($group_users['PENDING']) ? count($group_users['PENDING']) : 0;
              $total_declined = isset($group_users['DECLINED']) ? count($group_users['DECLINED']): 0;
-             $total_unregistered = isset($group_users) ? count($group_users): 0;
+             $total_unregistered = count($group_users);
          }
 
         return [$total_approved_record, $total_pending, $total_declined, $total_unregistered];
