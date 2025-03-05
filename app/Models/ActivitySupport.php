@@ -27,6 +27,10 @@ class ActivitySupport extends Model
         'session_id'
     ];
 
+    protected $with = [
+        'session'
+    ];
+
     public function paymentItem()
     {
         return $this->belongsTo(PaymentItem::class);
