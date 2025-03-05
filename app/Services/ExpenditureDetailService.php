@@ -1,6 +1,7 @@
 <?php
 namespace App\Services;
 
+use App\Constants\Constants;
 use App\Constants\PaymentStatus;
 use App\Exceptions\BusinessValidationException;
 use App\Http\Resources\ExpenditureDetailCollection;
@@ -10,7 +11,6 @@ use App\Models\ExpenditureDetail;
 use App\Models\ExpenditureItem;
 use App\Traits\HelpTrait;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 
 class ExpenditureDetailService implements ExpenditureDetailInterface {
 
@@ -104,14 +104,14 @@ class ExpenditureDetailService implements ExpenditureDetailInterface {
         $detail->save();
     }
 
-    public function filterExpenditureDetail($expenditure_item_id, $status, $request)
+    public function filterExpenditureDetail($item, $status, $request)
     {
 
         $expenditure_item_name = null;
         $expenditure_item_amount = 0;
-        $details = ExpenditureDetail::where('expenditure_item_id', $expenditure_item_id);
+        $details = ExpenditureDetail::where('expenditure_item_id', $item);
 
-        if(!is_null($status) && $status != "ALL"){
+        if(!is_null($status) && $status != Constants::ALL){
             $details = $details->where('approve', $status);
         }
         if(isset($request->filter)){
@@ -161,16 +161,14 @@ class ExpenditureDetailService implements ExpenditureDetailInterface {
 
     public function computeTotalExpendituresByYearly($request)
     {
+        $session_id = $request->session_id;
+        $approveExpenses = ExpenditureItem::where('session_id', $session_id)
+            ->where('approve', PaymentStatus::APPROVED)
+            ->get();
 
-        $expenses =  DB::table('expenditure_details')
-            ->join('expenditure_items', 'expenditure_items.id', '=', 'expenditure_details.expenditure_item_id')
-            ->join('sessions', 'sessions.id', '=', 'expenditure_items.session_id')
-            ->where('sessions.id', $request->session_id)
-            ->where('expenditure_items.approve', PaymentStatus::APPROVED)
-            ->selectRaw('SUM(expenditure_details.amount_spent) as total')
-            ->first();
-
-        return is_null($expenses->total) ? 0 : $expenses->total;
+        return collect($approveExpenses)->map(function ($ex){
+            return $ex->expenditureDetails()->sum('amount_spent');
+        })->sum();
     }
 
     public function getExpenditureStatistics($request)
@@ -193,7 +191,7 @@ class ExpenditureDetailService implements ExpenditureDetailInterface {
                                 ->join('expenditure_items', ['expenditure_items.id' => 'expenditure_details.expenditure_item_id'])
                                 ->where('expenditure_items.id', $id)
                                 ->orderBy('expenditure_details.name', 'ASC');
-        if(isset($status) && $status != "ALL"){
+        if(isset($status) && $status != Constants::ALL){
             $details = $details->Where('expenditure_details.approve', $status);
         }
         return $details;
@@ -202,16 +200,15 @@ class ExpenditureDetailService implements ExpenditureDetailInterface {
     private function getMonthlyExpenditures($session_id)
     {
         $expenditures = [];
-        for ($month = 1; $month <= 12; $month ++){
-            $expenditure = DB::table('expenditure_details')
-                        ->join('expenditure_items', 'expenditure_items.id', '=', 'expenditure_details.expenditure_item_id')
-                        ->join('sessions', 'sessions.id', '=', 'expenditure_items.session_id')
-                        ->where('sessions.id', $session_id)
-                        ->where('expenditure_items.approve', PaymentStatus::APPROVED)
-                        ->whereMonth('expenditure_items.date', $month)
-                        ->selectRaw('SUM(expenditure_details.amount_spent) as total')
-                        ->first();
-            array_push($expenditures, is_null($expenditure->total) ? 0 : $expenditure->total);
+        for ($month = 1; $month <= 12; $month++) {
+            $approveExpenses = ExpenditureItem::where('session_id', $session_id)
+                                            ->where('approve', PaymentStatus::APPROVED)
+                                            ->whereMonth('date', $month)
+                                            ->get();
+            $total = collect($approveExpenses)->map(function ($ex){
+                return $ex->expenditureDetails()->sum('amount_spent');
+            })->sum();
+            $expenditures[] = $total;
         }
 
         return $expenditures;
@@ -221,17 +218,15 @@ class ExpenditureDetailService implements ExpenditureDetailInterface {
     {
         $expenditures = [];
         foreach ($items as $item){
-            $expenditure = DB::table('expenditure_details')
-                            ->join('expenditure_items', 'expenditure_items.id', '=', 'expenditure_details.expenditure_item_id')
-                            ->join('sessions', 'sessions.id', '=', 'expenditure_items.session_id')
-                            ->join('payment_items', 'payment_items.id', '=', 'expenditure_items.payment_item_id')
-                            ->where('sessions.id', $session_id)
-                            ->where('payment_items.id', $item->id)
-                            ->where('expenditure_items.approve', PaymentStatus::APPROVED)
-                            ->selectRaw('SUM(expenditure_details.amount_spent) as total')
-                            ->first();
-            $amount = is_null($expenditure->total) ? 0 : $expenditure->total;
-            array_push($expenditures, ["name" => $item->name, "amount" => $amount]);
+            $approvedPaymentItemExpenditures = ExpenditureItem::where('session_id', $session_id)
+                                                ->where('approve', PaymentStatus::APPROVED)
+                                                ->where('payment_item_id', $item->id)
+                                                ->get();
+            $amount = collect($approvedPaymentItemExpenditures)->map(function ($ex){
+                return $ex->expenditureDetails()->sum('amount_spent');
+            })->sum();
+
+            $expenditures[] = ["name" => $item->name, "amount" => $amount];
         }
 
         return $expenditures;
