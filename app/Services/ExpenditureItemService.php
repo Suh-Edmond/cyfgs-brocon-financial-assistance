@@ -1,6 +1,7 @@
 <?php
 namespace App\Services;
 
+use App\Constants\Constants;
 use App\Constants\PaymentStatus;
 use App\Exceptions\BusinessValidationException;
 use App\Http\Resources\ExpenditureItemCollection;
@@ -10,7 +11,6 @@ use App\Models\ExpenditureCategory;
 use App\Models\ExpenditureItem;
 use App\Models\PaymentItem;
 use App\Traits\HelpTrait;
-use Illuminate\Support\Facades\DB;
 
 class ExpenditureItemService implements ExpenditureItemInterface {
 
@@ -67,7 +67,7 @@ class ExpenditureItemService implements ExpenditureItemInterface {
         return $this->generateExpenditureItemResponse($items);
     }
 
-    public function getExpenditureItem($id, $expenditure_category_id)
+    public function getExpenditureItem($id, $expenditure_category_id): ExpenditureItemResource
     {
         $expenditure_item = $this->findExpenditureItem($id, $expenditure_category_id);
         $amount_given = $this->calculateTotalAmountGiven($expenditure_item->expenditureDetails);
@@ -94,28 +94,20 @@ class ExpenditureItemService implements ExpenditureItemInterface {
 
     private function findExpenditureItem($id, $expenditure_category_id)
     {
-        return ExpenditureItem::select('expenditure_items.*')
-                                        ->join('expenditure_categories', ['expenditure_categories.id' => 'expenditure_items.expenditure_category_id'])
-                                        ->where('expenditure_items.id', $id)
-                                        ->where('expenditure_items.expenditure_category_id', $expenditure_category_id)
-                                        ->firstOrFail();
+        return ExpenditureItem::where('id', $id)->where('expenditure_category_id', $expenditure_category_id)->firstOrFail();
     }
 
     private function findExpenditureItems($expenditure_category_id, $status, $session_id)
     {
-        $data = ExpenditureItem::select('expenditure_items.*')
-                            ->join('expenditure_categories', ['expenditure_categories.id' => 'expenditure_items.expenditure_category_id'])
-                            ->join('sessions', ['sessions.id' => 'expenditure_items.session_id'])
-                            ->where('expenditure_items.expenditure_category_id', $expenditure_category_id);
-        if($status != "ALL"){
-            $data = $data->where('expenditure_items.approve', $status);
+
+        $data = ExpenditureItem::where('expenditure_category_id', $expenditure_category_id);
+        if($status != Constants::ALL){
+            $data = $data->where('approve', $status);
         }
         if(!is_null($session_id)){
-            $data = $data->where('expenditure_items.session_id', $session_id);
+            $data = $data->where('session_id', $session_id);
         }
-        $data = $data->orderBy('expenditure_items.name', 'ASC')->get();
-
-        return $data;
+        return $data->orderBy('name', 'ASC')->get();
     }
 
     private function generateExpenditureItemResponse($items)
@@ -125,7 +117,8 @@ class ExpenditureItemService implements ExpenditureItemInterface {
             $amount_given = $this->calculateTotalAmountGiven($item->expenditureDetails);
             $amount_spent =  $this->calculateTotalAmountSpent($item->expenditureDetails);
             $balance = $this->calculateExpenditureBalanceByExpenditureItem($amount_given, $amount_spent, $item->amount);
-            array_push($expenses, new ExpenditureItemResource($item, $amount_given, $amount_spent, $balance));
+
+            $expenses[] = new ExpenditureItemResource($item, $amount_given, $amount_spent, $balance);
         }
         return ($expenses);
     }
@@ -149,21 +142,17 @@ class ExpenditureItemService implements ExpenditureItemInterface {
 
     public function getExpenditureByCategory($expenditure_category_id, $request)
     {
-
-        $items = ExpenditureItem::select('expenditure_items.*')
-            ->join('expenditure_categories', ['expenditure_categories.id' => 'expenditure_items.expenditure_category_id'])
-            ->join('sessions', ['sessions.id' => 'expenditure_items.session_id'])
-            ->where('expenditure_items.expenditure_category_id', $expenditure_category_id)
-            ->where('expenditure_items.session_id', $request->session_id)
-            ->orderBy('expenditure_items.name', 'ASC');
+        $items = ExpenditureItem::where('expenditure_category_id', $expenditure_category_id)
+                        ->where('session_id', $request->session_id)
+                        ->orderBy('name', 'ASC');
         if(isset($request->payment_item_id)){
-            $items = $items->where('expenditure_items.payment_item_id', $request->payment_item_id);
+            $items = $items->where('payment_item_id', $request->payment_item_id);
         }
-        if(isset($request->status)  && $request->status != "ALL") {
-            $items = $items->where('expenditure_items.approve', $request->status);
+        if(isset($request->status)  && $request->status != Constants::ALL) {
+            $items = $items->where('approve', $request->status);
         }
         if(isset($request->filter)){
-            $items = $items->where('expenditure_items.name', 'LIKE', '%'.$request->filter.'%');
+            $items = $items->where('name', 'LIKE', '%'.$request->filter.'%');
         }
         $paginated_data  = $items->paginate($request->per_page);
         return (new ExpenditureItemCollection($this->generateExpenditureItemResponse($paginated_data), $paginated_data->total(),
@@ -172,34 +161,30 @@ class ExpenditureItemService implements ExpenditureItemInterface {
 
     public function getExpenditureItemsByPaymentItem($item, $request)
     {
-        $items = ExpenditureItem::select('expenditure_items.*')
-            ->join('payment_items', ['payment_items.id' => 'expenditure_items.payment_item_id'])
-            ->where('expenditure_items.payment_item_id', $item);
-        if(!is_null($request->status) && $request->status != "ALL"){
-            $items = $items->where('expenditure_items.approve', $request->status);
+        $items = ExpenditureItem::where('payment_item_id', $item);
+
+        if(!is_null($request->status) && $request->status != Constants::ALL){
+            $items = $items->where('approve', $request->status);
         }
-        $items = $items->orderBy('expenditure_items.name', 'ASC')->get();
+        $items = $items->orderBy('name', 'ASC')->get();
         return $this->generateExpenditureItemResponse($items);
     }
 
     public function filterExpenditureItems($request)
     {
 
-        $items = ExpenditureItem::select('expenditure_items.*')
-            ->join('payment_items', ['payment_items.id' => 'expenditure_items.payment_item_id'])
-            ->join('expenditure_categories', ['expenditure_categories.id' => 'expenditure_items.expenditure_category_id'])
-            ->join('sessions', ['sessions.id' => 'expenditure_items.session_id'])
-            ->where('expenditure_categories.id', $request->expenditure_category_id);
+        $items = ExpenditureItem::where('expenditure_category_id', $request->expenditure_category_id);
         if(isset($request->session_id)){
-            $items = $items->where('expenditure_items.session_id', $request->session_id);
+            $items = $items->where('session_id', $request->session_id);
         }
         if(isset($request->payment_item_id)){
-            $items = $items->where('expenditure_items.payment_item_id', $request->payment_item_id);
+            $items = $items->where('payment_item_id', $request->payment_item_id);
         }
         if(isset($request->filter)){
-            $items = $items->where('expenditure_items.name', 'LIKE', '%'.$request->filter.'%');
+            $items = $items->where('name', 'LIKE', '%'.$request->filter.'%');
         }
-        $items = $items->orderBy('expenditure_items.name', 'ASC');
+        $items = $items->orderBy('name', 'ASC');
+
         $expenditure_items  =isset($request->per_page)? $items->paginate($request->per_page) : $items->get();
 
         $total = isset($request->per_page) ? $expenditure_items->total() : count($expenditure_items);
@@ -217,28 +202,19 @@ class ExpenditureItemService implements ExpenditureItemInterface {
     }
 
     public function getExpensesByCategoryAndQuarter($category_id, $start_quarter, $end_quarter){
-        return  DB::table('expenditure_items')
-                ->join('payment_items', 'payment_items.id', '=', 'expenditure_items.payment_item_id')
-                ->join('expenditure_categories', 'expenditure_categories.id' , '=', 'expenditure_items.expenditure_category_id')
-                ->where('expenditure_items.approve', PaymentStatus::APPROVED)
-                ->where('expenditure_categories.id', $category_id)
-                ->whereBetween('expenditure_items.created_at', [$start_quarter, $end_quarter])
-                ->select( 'expenditure_items.name', 'expenditure_items.amount', 'expenditure_items.id')
-                ->orderBy('name')
-                ->get();
+       return ExpenditureItem::where('expenditure_category_id', $category_id)
+                       ->where('approve', PaymentStatus::APPROVED)
+                       ->whereBetween('created_at', [$start_quarter, $end_quarter])
+                       ->orderBy('name')
+                       ->get();
     }
 
     public function getExpensesByCategoryAndYear($category_id, $year){
-        return  DB::table('expenditure_items')
-            ->join('payment_items', 'payment_items.id', '=', 'expenditure_items.payment_item_id')
-            ->join('expenditure_categories', 'expenditure_categories.id' , '=', 'expenditure_items.expenditure_category_id')
-            ->join('sessions', 'sessions.id' , '=', 'expenditure_items.session_id')
-            ->where('expenditure_items.approve', PaymentStatus::APPROVED)
-            ->where('expenditure_categories.id', $category_id)
-            ->where('expenditure_items.session_id', $year)
-            ->select( 'expenditure_items.name', 'expenditure_items.amount', 'expenditure_items.id')
-            ->orderBy('name')
-            ->get();
+        return ExpenditureItem::where('expenditure_category_id', $category_id)
+                        ->where('approve', PaymentStatus::APPROVED)
+                        ->where('session_id', $year)
+                        ->orderBy('name')
+                        ->get();
     }
 
 

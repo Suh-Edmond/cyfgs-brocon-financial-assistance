@@ -104,21 +104,20 @@ class ExpenditureDetailService implements ExpenditureDetailInterface {
         $detail->save();
     }
 
-    public function filterExpenditureDetail($id, $status, $request)
+    public function filterExpenditureDetail($expenditure_item_id, $status, $request)
     {
 
         $expenditure_item_name = null;
         $expenditure_item_amount = 0;
-        $details = ExpenditureDetail::select('expenditure_details.*', 'expenditure_items.amount as expenditure_item_amount')
-                                    ->join('expenditure_items', ['expenditure_items.id' => 'expenditure_details.expenditure_item_id'])
-                                    ->where('expenditure_items.id', $id);
+        $details = ExpenditureDetail::where('expenditure_item_id', $expenditure_item_id);
+
         if(!is_null($status) && $status != "ALL"){
-            $details = $details->where('expenditure_details.approve', $status);
+            $details = $details->where('approve', $status);
         }
         if(isset($request->filter)){
-            $details = $details->where('expenditure_details.name', 'LIKE', '%'.$request->filter.'%');
+            $details = $details->where('name', 'LIKE', '%'.$request->filter.'%');
         }
-        $details = $details ->orderBy('expenditure_details.name', 'ASC')->get();
+        $details = $details ->orderBy('name', 'ASC')->get();
         $detail_response           = $this->generateResponseForExpenditureDetails($details);
         if(count($details) > 0){
             $expenditure_item_name = $details[0]->expenditureItem->name;
@@ -137,42 +136,32 @@ class ExpenditureDetailService implements ExpenditureDetailInterface {
     }
 
     public function findExpenditureDetailsByItemAndQuarter($item, $start_quarter, $end_quarter){
-        return DB::table('expenditure_details')
-            ->join('expenditure_items', 'expenditure_items.id', '=', 'expenditure_details.expenditure_item_id')
-            ->join('sessions', 'sessions.id', '=', 'expenditure_items.session_id')
-            ->where('expenditure_items.approve', PaymentStatus::APPROVED)
-            ->where('expenditure_details.expenditure_item_id', $item)
-            ->whereBetween('expenditure_items.created_at', [$start_quarter, $end_quarter])
-            ->select( 'expenditure_details.name', 'expenditure_details.amount_spent', 'expenditure_details.id')
-            ->orderBy('name')
-            ->get();
+        return ExpenditureDetail::where('expenditure_item_id', $item)
+                          ->where('approve', PaymentStatus::APPROVED)
+                          ->whereBetween('created_at', [$start_quarter, $end_quarter])
+                          ->orderBy('name')
+                          ->get();
     }
 
     public function findExpenditureDetailsByItemAndYear($item, $year){
-        return DB::table('expenditure_details')
-            ->join('expenditure_items', 'expenditure_items.id', '=', 'expenditure_details.expenditure_item_id')
-            ->join('sessions', 'sessions.id', '=', 'expenditure_items.session_id')
-            ->where('expenditure_items.approve', PaymentStatus::APPROVED)
-            ->where('expenditure_details.expenditure_item_id', $item)
-            ->where('expenditure_items.session_id', $year)
-            ->select( 'expenditure_details.name', 'expenditure_details.amount_spent', 'expenditure_details.id')
-            ->orderBy('name')
-            ->get();
+        return ExpenditureDetail::where('expenditure_item_id', $item)
+                          ->where('approve', PaymentStatus::APPROVED)
+                          ->where('session_id', $year)
+                          ->orderBy('name')
+                          ->get();
     }
 
     public function getExpenditureActivities($payment_activity): Collection
     {
-        return DB::table('expenditure_details')
-            ->join('expenditure_items', 'expenditure_items.id', '=', 'expenditure_details.expenditure_item_id')
-            ->join('payment_items', 'payment_items.id', '=', 'expenditure_items.payment_item_id')
-            ->where('payment_items.id', $payment_activity)
-            ->where('expenditure_details.approve', PaymentStatus::APPROVED)
-            ->select('expenditure_details.name', 'expenditure_details.amount_given', 'expenditure_details.amount_spent')
-            ->orderBy('expenditure_details.name', 'DESC')->get();
+        return ExpenditureDetail::where('payment_item_id', $payment_activity)
+                        ->where('approve', PaymentStatus::APPROVED)
+                        ->orderBy('name', 'DESC')->get();
+
     }
 
     public function computeTotalExpendituresByYearly($request)
     {
+
         $expenses =  DB::table('expenditure_details')
             ->join('expenditure_items', 'expenditure_items.id', '=', 'expenditure_details.expenditure_item_id')
             ->join('sessions', 'sessions.id', '=', 'expenditure_items.session_id')

@@ -87,11 +87,7 @@ class ExpenditureCategoryService implements ExpenditureCategoryInterface {
 
     private function findExpenditureCategory($id, $organisation_id)
     {
-        return ExpenditureCategory::select('expenditure_categories.*')
-                                        ->join('organisations', ['organisations.id' => 'expenditure_categories.organisation_id'])
-                                        ->where('expenditure_categories.id', $id)
-                                        ->where('expenditure_categories.organisation_id', $organisation_id)
-                                        ->firstOrFail();
+        return ExpenditureCategory::where('organisation_id', $organisation_id)->where('id', $id)->firstOrFail();
     }
 
     public function filterExpenditureCategory($request)
