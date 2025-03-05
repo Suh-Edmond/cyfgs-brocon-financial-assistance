@@ -61,6 +61,12 @@ return [
             'options' => extension_loaded('pdo_mysql') ? array_filter([
                 PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
             ]) : [],
+            'dump' => [
+                'excludeTables' => [
+                    'table_to_exclude_from_backup',
+                    'another_table_to_exclude'
+                ]
+            ]
         ],
 
         'pgsql' => [

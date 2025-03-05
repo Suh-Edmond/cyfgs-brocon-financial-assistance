@@ -204,22 +204,22 @@
         </div>
         <!------------------------------End of presenters-------------------------------------->
     </div>
-    <div class="president" style="text-align: center; margin-top: 9rem">
+    <div class="president" style="text-align: center">
         <div>
-            <div class=" " style="font-weight: bold;font-size: .7rem;text-transform: uppercase; margin-bottom: 3px">
+            <div class=" " style="font-weight: bold;font-size: small;text-transform: uppercase; margin-bottom: 3px">
                 President
             </div>
-            <div style="font-weight: bold;font-size: .7rem; text-transform: uppercase">
+            <div style="font-weight: bold;font-size: small; text-transform: uppercase">
                 @isset($president)
                     @foreach($president as $key => $value)
                         <span>{{$value->name}}</span><br>
                     @endforeach
                 @endisset
             </div>
-            <div style="font-weight: bold;text-transform: uppercase;font-size: .7rem; margin-top: 20px">
+            <div style="font-weight: bold;text-transform: uppercase;font-size: small; margin-top: 20px">
                 SIGN
             </div>
-            <div class="border_line" style="border-bottom: 1px solid black; margin-top: 10px;text-align: center; justify-content: center;align-content: center;margin-left: 41rem">
+            <div class="border_line" style="border-bottom: 1px solid black; margin-top: 10px;margin-left:20rem;text-align: center">
             </div>
         </div>
     </div>

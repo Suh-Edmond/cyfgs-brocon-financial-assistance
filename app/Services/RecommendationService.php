@@ -5,10 +5,14 @@ namespace App\Services;
 use App\Interfaces\RecommendationInterface;
 use App\Traits\OpenAIClient;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use League\CommonMark\CommonMarkConverter;
+use League\CommonMark\Exception\CommonMarkException;
 
 class RecommendationService implements RecommendationInterface
 {
     use OpenAIClient;
+
     private UserContributionService $userContributionService;
 
     public function __construct(UserContributionService $userContributionService)
@@ -22,8 +26,22 @@ class RecommendationService implements RecommendationInterface
 
         $response = $this->getRecommendationFromOpenAI($data);
 
-        return $response->body();
+        return $this->formatRecommendationResponse(json_decode($response->body(), true)['choices'][0]['message']['content']);
 
+    }
+
+    private function formatRecommendationResponse($msg)
+    {
+        $msg = str_replace("###", "######", $msg);
+        $msg = str_replace("$", "XAF", $msg);
+        $formattedRecommendation = "";
+        try {
+            $formattedRecommendation =  (new CommonMarkConverter())->convert($msg)->getContent();
+        } catch (CommonMarkException $e) {
+            Log::info($e->getMessage());
+        }
+
+        return $formattedRecommendation;
     }
 
     /**
@@ -39,7 +57,7 @@ class RecommendationService implements RecommendationInterface
 
         return [
             [
-                "payment activity" => $decoded_data['payment_item']['name']
+                "Activity" => $decoded_data['payment_item']['name']
             ],
             [
                 "frequency of payment" => $decoded_data['payment_item']['frequency']

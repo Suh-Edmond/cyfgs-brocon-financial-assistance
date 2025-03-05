@@ -29,6 +29,8 @@ use App\Traits\HelpTrait;
 use App\Traits\ResponseTrait;
 use Carbon\Carbon;
 use Exception;
+
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -39,7 +41,6 @@ use Maatwebsite\Excel\Facades\Excel;
 class UserManagementService implements UserManagementInterface
 {
     use ResponseTrait, HelpTrait;
-
     private RoleService $role_service;
     private SessionService  $session_service;
 
@@ -83,10 +84,10 @@ class UserManagementService implements UserManagementInterface
                 'expire_at'             => Carbon::now()->addHours(24),
                 'has_seen_notification' => false,
                 'role_id'               => $assignedRole->id,
-                'invitation_token'                      => $invitation_token
+                'invitation_token'      => $invitation_token
             ]);
         }catch (Exception $exception){
-            throw new BusinessValidationException("Could not send member's invitation email", 404);
+            throw new BusinessValidationException($exception->getMessage(), 404);
         }
     }
 
@@ -98,11 +99,10 @@ class UserManagementService implements UserManagementInterface
                ->orderBy('name')->get();
     }
 
-    public function getUsersRegistrationStatus($organisation_id, $session_id)
+    public function getUsersRegistrationStatus($session_id)
     {
-        return User::join('organisations', 'organisations.id', '=', 'users.organisation_id')
-            ->leftJoin('member_registrations', 'users.id', '=', 'member_registrations.user_id')
-            ->where('organisations.id', $organisation_id)
+
+        return User::leftJoin('member_registrations', 'users.id', '=', 'member_registrations.user_id')
             ->where('users.status', SessionStatus::ACTIVE)
             ->where('member_registrations.session_id', $session_id)
             ->select('users.*', 'member_registrations.approve')
@@ -113,18 +113,20 @@ class UserManagementService implements UserManagementInterface
     public function getTotalUsersByRegStatus($organisation_id, $session_id)
     {
 
-        $users = $this->getUsersRegistrationStatus($organisation_id, $session_id);
+        $users = $this->getUsersRegistrationStatus($session_id);
         $group_users = collect($users)->groupBy('approve')->toArray();
         $total_approved_record = 0;
         $total_pending = 0;
         $total_declined = 0;
-        $total_unregistered = 0;
+        $total_unregistered = count($users);
+
          if(count($group_users) > 0){
              $total_approved_record  = isset($group_users['APPROVED']) ? count($group_users['APPROVED']) : 0;
              $total_pending = isset($group_users['PENDING']) ? count($group_users['PENDING']) : 0;
              $total_declined = isset($group_users['DECLINED']) ? count($group_users['DECLINED']): 0;
-             $total_unregistered = isset($group_users['']) ? count($group_users['']): 0;
+             $total_unregistered =  count($group_users);
          }
+
         return [$total_approved_record, $total_pending, $total_declined, $total_unregistered];
     }
 
@@ -135,24 +137,23 @@ class UserManagementService implements UserManagementInterface
         for ($month = 1; $month <= 12; $month++){
             $users_by_status = [];
             foreach ($payment_statuses as $payment_status){
-                $users = User::join('organisations', 'organisations.id', '=', 'users.organisation_id')
-                    ->join('member_registrations', 'users.id', '=', 'member_registrations.user_id')
-                    ->where('organisations.id', $organisation_id)
+                $users = User::join('member_registrations', 'users.id', '=', 'member_registrations.user_id')
                     ->where('member_registrations.session_id', $session_id)
                     ->where('member_registrations.approve', $payment_status)
                     ->whereMonth('member_registrations.created_at', $month)
                     ->select('users.*', 'member_registrations.approve', 'member_registrations.session_id')
-                    ->distinct()
-                    ->orderBy('name')->get()->toArray();
-                array_push($users_by_status, count($users));
+                    ->distinct()->get()->toArray();
+
+                $users_by_status[] = count($users);
             }
-            array_push($data, $users_by_status);
+            $data[] = $users_by_status;
         }
         return $data;
     }
 
     public function getUser($user_id)
     {
+
         $user = User::leftJoin('member_registrations', 'users.id', '=', 'member_registrations.user_id')
                    ->where('users.id', $user_id)
                    ->select('users.*', 'member_registrations.approve')
@@ -414,6 +415,7 @@ class UserManagementService implements UserManagementInterface
             ->select('users.name', 'users.updated_at', 'roles.name as role_name', 'member_invitations.id', 'member_invitations.has_seen_notification')
             ->orderBy('member_invitations.created_at','DESC')
             ->get();
+
         return collect($notifications)->map(function ($notification){
             return new MemberInviteNotification($notification->id, $notification->name, $notification->role_name, $notification->updated_at, $notification->has_seen_notification);
         })->toArray();
