@@ -10,7 +10,6 @@ use App\Models\PaymentCategory;
 use App\Models\PaymentItem;
 use App\Traits\HelpTrait;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
 
 class PaymentItemService implements PaymentItemInterface {
 
@@ -120,12 +119,12 @@ class PaymentItemService implements PaymentItemInterface {
         foreach ($session_payment_items as $payment_item){
             if($payment_item->frequency == PaymentItemFrequency::QUARTERLY){
                 $quarters = $this->getPaymentItemQuartersBySession($payment_item->frequency, $payment_item->created_at);
-                array_push($payment_items, new PaymentItemResource($payment_item, $quarters, []));
+                $payment_items[] = new PaymentItemResource($payment_item, $quarters, []);
             }elseif ($payment_item->frequency == PaymentItemFrequency::MONTHLY) {
                 $months = $this->getPaymentItemMonthsBySession($payment_item->frequency, $payment_item->created_at);
-                array_push($payment_items, new PaymentItemResource($payment_item, [], $months));
+                $payment_items[] = new PaymentItemResource($payment_item, [], $months);
             }else {
-                array_push($payment_items, new PaymentItemResource($payment_item, [], []));
+                $payment_items[] = new PaymentItemResource($payment_item, [], []);
             }
         }
 
@@ -162,73 +161,45 @@ class PaymentItemService implements PaymentItemInterface {
     }
 
     public function getPaymentActivitiesByCategoryAndSession($category, $session){
-        return PaymentItem::select('payment_items.id', 'payment_items.name','payment_items.amount')
-            ->join('payment_categories', ['payment_categories.id'  => 'payment_items.payment_category_id'])
-            ->where('payment_items.payment_category_id', $category)
-            ->where('session_id', $session)
-            ->orderBy('payment_items.name', 'ASC')
-            ->get();
-
+        return PaymentItem::where('payment_category_id', $category)
+                    ->where('session_id', $session)
+                    ->orderBy('name', 'ASC')
+                    ->get();
     }
 
     public function getPaymentItemsBySessionAndFrequency($request)
     {
-        return DB::table('payment_items')
-            ->join('payment_categories', 'payment_categories.id', '=', 'payment_items.payment_category_id')
-            ->join('sessions', 'sessions.id', '=', 'payment_items.session_id')
-            ->where('payment_items.session_id', $request->session_id)
-            ->orWhere('payment_items.frequency', PaymentItemFrequency::YEARLY)
-            ->select('payment_items.id', 'payment_items.name', 'payment_items.amount', 'payment_items.session_id')
+        return PaymentItem::where('session_id', $request->session_id)
+            ->orWhere('frequency', PaymentItemFrequency::YEARLY)
             ->distinct()
             ->get()->toArray();
     }
 
     public function getPaymentItemsByFrequency($session_id, $frequency)
     {
-        return DB::table('payment_items')
-            ->join('payment_categories', 'payment_categories.id', '=', 'payment_items.payment_category_id')
-            ->join('sessions', 'sessions.id', '=', 'payment_items.session_id')
-            ->where('payment_items.session_id', $session_id)
-            ->Where('payment_items.frequency', $frequency)
-            ->select('payment_items.id', 'payment_items.name', 'payment_items.amount', 'payment_items.session_id')
+        return PaymentItem::where('session_id', $session_id)
+            ->where('frequency', $frequency)
             ->distinct()
             ->get()->toArray();
     }
 
     public function getPaymentItemsByType($session_id, $type)
     {
-        return DB::table('payment_items')
-            ->join('payment_categories', 'payment_categories.id', '=', 'payment_items.payment_category_id')
-            ->join('sessions', 'sessions.id', '=', 'payment_items.session_id')
-            ->where('payment_items.session_id', $session_id)
-            ->where('payment_items.type', $type)
-            ->select('payment_items.id', 'payment_items.name', 'payment_items.amount', 'payment_items.session_id')
-            ->distinct()
-            ->get()->toArray();
+        return PaymentItem::where('session_id', $session_id)->where('type', $type)->distinct()->get()->toArray();
     }
 
     public function getPaymentItemsForBalanceSheet($session_id)
     {
-        return PaymentItem::join('payment_categories', ['payment_categories.id' => 'payment_items.payment_category_id'])
-                            ->join('sessions', ['sessions.id' => 'payment_items.session_id'])
-                            ->where('sessions.id', $session_id)
-                            ->select('payment_items.*')
-                            ->distinct()
-                            ->orderBy('created_at')->get();
+        return PaymentItem::where('session_id', $session_id)->distinct()->orderBy('created_at')->get();
     }
 
     private function findPaymentItem($id, $payment_category_id)
     {
-        return PaymentItem::select('payment_items.*')->join('payment_categories', ['payment_categories.id' => 'payment_items.payment_category_id'])
-            ->where('payment_items.id', $id)
-            ->where('payment_items.payment_category_id', $payment_category_id)
-            ->firstOrFail();
+        return PaymentItem::where('id', $id)->where('payment_category_id', $payment_category_id)->firstOrFail();
     }
 
     private  function fetchPaymentItems($payment_category_id) {
-        return PaymentItem::select('payment_items.*')
-            ->join('payment_categories', ['payment_categories.id'  => 'payment_items.payment_category_id'])
-            ->where('payment_items.payment_category_id', $payment_category_id);
+        return PaymentItem::where('payment_category_id', $payment_category_id);
     }
 
     private function setPaymentItemReference($reference, $type)

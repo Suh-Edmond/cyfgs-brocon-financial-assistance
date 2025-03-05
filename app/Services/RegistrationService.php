@@ -10,7 +10,6 @@ use App\Interfaces\RegistrationInterface;
 use App\Models\User;
 use App\Models\MemberRegistration;
 use App\Traits\HelpTrait;
-use Illuminate\Support\Facades\DB;
 
 class RegistrationService implements RegistrationInterface
 {
@@ -29,11 +28,7 @@ class RegistrationService implements RegistrationInterface
     {
         $current_session = $this->sessionService->getCurrentSession();
         $user = User::findOrFail($request->user_id);
-        $exist_user = MemberRegistration::join('users', ['users.id' => 'member_registrations.user_id'])
-                    ->join('sessions', ['sessions.id' => 'member_registrations.session_id'])
-                    ->where('session_id', $current_session->id)
-                    ->where('member_registrations.user_id', $user->id)
-                    ->first();
+        $exist_user = MemberRegistration::where('session_id', $current_session->id)->where('user_id', $user->id)->first();
         $reg_fee = $this->registrationFeeService->getCurrentRegistrationFee();
         if(is_null($exist_user)){
             MemberRegistration::create([
@@ -60,13 +55,11 @@ class RegistrationService implements RegistrationInterface
     public function getRegistrations($request)
     {
         $current_session = $this->sessionService->getCurrentSession();
-        $registrations = MemberRegistration::join('users', ['users.id' => 'member_registrations.user_id'])->where('member_registrations.session_id', $current_session->id);
+        $registrations = MemberRegistration::where('session_id', $current_session->id);
         if(!is_null($request->status) && $request->status != "ALL"){
             $registrations = $registrations->where('member_registrations.approve', $request->status);
         }
-        $registrations = $registrations->orderBy('users.name', 'DESC')->get();
-
-        return $registrations;
+        return $registrations->orderBy('users.name', 'DESC')->get();
     }
 
     public function deleteRegistration($id)
@@ -83,40 +76,40 @@ class RegistrationService implements RegistrationInterface
 
     public function getMemberRegistrationPerQuarter($start_quarter,$end_quarter, $code, $session_id)
     {
+        $registrations = MemberRegistration::where('session_id', $session_id)
+                        ->where('approve', PaymentStatus::APPROVED)
+                        ->whereBetween('created_at', [$start_quarter, $end_quarter])
+                        ->get();
 
-        $reg_amount = DB::table('member_registrations')
-            ->join('registrations', 'registrations.id' , '=', 'member_registrations.registration_id')
-            ->join('users', 'users.id', '=', 'member_registrations.user_id')
-            ->join('sessions', 'sessions.id' , '=', 'member_registrations.session_id')
-            ->where('member_registrations.approve', PaymentStatus::APPROVED)
-            ->where('sessions.id', $session_id)
-            ->whereBetween('member_registrations.created_at', [$start_quarter, $end_quarter])
-            ->selectRaw('SUM(registrations.amount) as amount')
-            ->get()[0]->amount;
-        return new QuarterlyIncomeResource($code, "Member's Registration", [], $reg_amount);
+        $totalReg = collect($registrations)->map(function ($e) {
+            return $e->registration->amount;
+        })->sum();
+
+        return new QuarterlyIncomeResource($code, "Member's Registration", [], $totalReg);
     }
 
     public function getMemberRegistrationPerYear($year, $code)
     {
-         $reg_amount = DB::table('member_registrations')
-            ->join('registrations', 'registrations.id' , '=', 'member_registrations.registration_id')
-            ->join('users', 'users.id', '=', 'member_registrations.user_id')
-            ->join('sessions', 'sessions.id' , '=', 'member_registrations.session_id')
-            ->where('member_registrations.approve', PaymentStatus::APPROVED)
-            ->where('member_registrations.session_id', $year)
-            ->selectRaw('SUM(registrations.amount) as amount')
-            ->get()[0]->amount;
-        return new QuarterlyIncomeResource($code, "Member's Registration", [], $reg_amount);
+        $registrations = MemberRegistration::where('session_id', $year)
+            ->where('approve', PaymentStatus::APPROVED)
+            ->get();
+
+        $totalReg = collect($registrations)->map(function ($e) {
+            return $e->registration->amount;
+        })->sum();
+
+        return new QuarterlyIncomeResource($code, "Member's Registration", [], $totalReg);
     }
 
     public function getMemberRegistration($session_id, $user_id){
-        return MemberRegistration::join('registrations', ['registrations.id' => 'member_registrations.registration_id'])
-                            ->join('users', ['users.id' => 'member_registrations.user_id'])
-                            ->join('sessions', ['sessions.id' => 'member_registrations.session_id'])
-                            ->where('member_registrations.approve', PaymentStatus::APPROVED)
-                            ->where('member_registrations.session_id', $session_id)
-                            ->where('user_id', $user_id)
-                            ->select('registrations.amount')->sum('amount');
+        $registrations = MemberRegistration::where('session_id', $session_id)
+            ->where('approve', PaymentStatus::APPROVED)
+            ->where('user_id', $user_id)
+            ->get();
+
+        return collect($registrations)->map(function ($e) {
+            return $e->registration->amount;
+        })->sum();
     }
 
 }
