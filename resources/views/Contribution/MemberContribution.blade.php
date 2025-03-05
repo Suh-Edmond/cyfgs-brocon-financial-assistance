@@ -324,7 +324,7 @@
             <div style="font-weight: bold;text-transform: uppercase;font-size: small; margin-top: 20px">
                 SIGN
             </div>
-            <div class="border_line" style="border-bottom: 1px solid black; margin-top: 10px;text-align: center">
+            <div class="border_line" style="border-bottom: 1px solid black; margin-top: 10px;margin-left:20rem;text-align: center">
             </div>
         </div>
     </div>

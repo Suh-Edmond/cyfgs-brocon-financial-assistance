@@ -106,6 +106,7 @@ class UserSavingController extends Controller
 
     public function download(Request $request)
     {
+
         $organisation      = $request->user()->organisation;
 
         $savings           = $this->user_saving_service->getUserSavingsForDownload($request);
@@ -140,6 +141,7 @@ class UserSavingController extends Controller
         $organisation      = $request->user()->organisation;
 
         $savings = $this->user_saving_service->getOrganisationSavingsForDownload($request);
+
 
         $total = $this->user_saving_service->calculateOrganisationTotalSavings($savings);
 
