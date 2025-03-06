@@ -80,7 +80,6 @@ class RegistrationService implements RegistrationInterface
                         ->where('approve', PaymentStatus::APPROVED)
                         ->whereBetween('created_at', [$start_quarter, $end_quarter])
                         ->get();
-
         $totalReg = collect($registrations)->map(function ($e) {
             return $e->registration->amount;
         })->sum();

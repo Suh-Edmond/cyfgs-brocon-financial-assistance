@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Constants\Constants;
 use App\Constants\PaymentItemType;
 use App\Constants\PaymentStatus;
 use App\Constants\RegistrationStatus;
@@ -282,40 +283,69 @@ class UserManagementService implements UserManagementInterface
 
     public function filterUsers($request)
     {
-        $filter_users = User::join('organisations', 'organisations.id', '=', 'users.organisation_id')
-            ->leftJoin('member_registrations', 'users.id', '=', 'member_registrations.user_id')
-            ->where('organisations.id', $request->organisation_id);
 
-        if(isset($request->has_register) && $request->has_register == RegistrationStatus::REGISTERED){
-            $filter_users = $filter_users->where('member_registrations.session_id', $request->year)->where('member_registrations.approve', PaymentStatus::APPROVED);
+        $filter_users = User::where('organisation_id', $request->organisation_id);
+
+        if(isset($request->has_register) && $request->has_register == RegistrationStatus::REGISTERED) {
+
+            $filter_users = $filter_users->whereHas('registrations', function ($query) use ($request){
+                $query->where('session_id', $request->year)->where('approve', PaymentStatus::APPROVED);
+            });
+
         }
         if(isset($request->has_register) && $request->has_register == RegistrationStatus::NOT_REGISTERED){
-            $filter_users = $filter_users->whereNull('member_registrations.approve')->orWhere('member_registrations.approve', PaymentStatus::PENDING)->orWhere('member_registrations.approve', PaymentStatus::DECLINED);
+
+            $filter_users = $filter_users->whereHas('registrations', function ($query) use ($request){
+                      $query->orWhere('approve', PaymentStatus::PENDING)->orWhere('approve', PaymentStatus::DECLINED);
+            });
+
         }
         if(isset($request->has_register) && $request->has_register == PaymentStatus::PENDING){
-            $filter_users = $filter_users->where('member_registrations.session_id', $request->year)->where('member_registrations.approve', PaymentStatus::PENDING);
+
+            $filter_users = $filter_users->whereHas('registrations', function ($query) use ($request){
+                $query->where('session_id', $request->year)
+                    ->where('approve', PaymentStatus::PENDING);
+            });
+
         }
         if(isset($request->has_register) && $request->has_register == PaymentStatus::DECLINED ){
-            $filter_users = $filter_users->where('member_registrations.session_id', $request->year)->where('member_registrations.approve', PaymentStatus::DECLINED);
+
+            $filter_users = $filter_users->whereHas('registrations', function ($query) use ($request){
+                $query->where('session_id', $request->year)
+                    ->where('approve', PaymentStatus::DECLINED);
+            });
+
         }
         if(isset($request->has_register) && $request->has_register == SessionStatus::ACTIVE ){
+
             $filter_users = $filter_users->where('users.status', SessionStatus::ACTIVE);
+
         }
         if(isset($request->has_register) && $request->has_register == SessionStatus::IN_ACTIVE){
+
             $filter_users = $filter_users->where('users.status', SessionStatus::IN_ACTIVE);
+
         }
-        if(isset($request->gender) && $request->gender != "ALL"){
+        if(isset($request->gender) && $request->gender != Constants::ALL){
+
            $filter_users = $filter_users->where('users.gender', $request->gender);
+
         }
         if(isset($request->filter)){
+
             $filter_users = $filter_users->where('users.name','LIKE', '%'.$request->filter.'%');
+
         }
-        $filter_users = $filter_users->select('users.*','member_registrations.approve','member_registrations.session_id')->distinct();
+        $filter_users = $filter_users->distinct();
 
         $filter_users = !is_null($request->per_page) ? $filter_users->orderBy('users.name')->paginate($request->per_page): $filter_users->orderBy('users.name')->get();
+
         $total = !is_null($request->per_page) ? $filter_users->total() : count($filter_users);
+
         $last_page = !is_null($request->per_page) ? $filter_users->lastPage(): 0;
+
         $per_page = !is_null($request->per_page) ? (int)$filter_users->perPage() : 0;
+
         $current_page = !is_null($request->per_page) ? $filter_users->currentPage() : 0;
 
         return new UserCollection($filter_users, $total, $last_page, $per_page, $current_page);
