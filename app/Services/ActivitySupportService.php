@@ -121,14 +121,26 @@ class ActivitySupportService implements ActivitySupportInterface
 
     public function getSponsorshipIncomePerQuarterly($start_quarter,$end_quarter, $payment_item, $session_id): array
     {
-        return ActivitySupport::where('payment_item_id', $payment_item->id)
-                        ->where('session_id', $session_id)
-                        ->where('approve', PaymentStatus::APPROVED)
-                        ->whereBetween('created_at', [$start_quarter, $end_quarter])
-                        ->select('activity_supports.id', 'activity_supports.supporter as name', 'activity_supports.amount_deposited as amount', 'session_id')
-                        ->orderBy('name')
-                        ->get()
-                        ->toArray();
+
+        return  DB::table('activity_supports')
+            ->join('payment_items', 'payment_items.id', '=', 'activity_supports.payment_item_id')
+            ->join('sessions', 'sessions.id' , '=', 'activity_supports.session_id')
+            ->where('activity_supports.approve', PaymentStatus::APPROVED)
+            ->where('payment_items.id', $payment_item->id)
+            ->where('sessions.id', $session_id)
+            ->whereBetween('activity_supports.created_at', [$start_quarter, $end_quarter])
+            ->select('activity_supports.id', 'activity_supports.supporter as name', 'activity_supports.amount_deposited as amount', 'sessions.year')
+            ->orderBy('name')
+            ->get()
+            ->toArray();
+//        return ActivitySupport::where('payment_item_id', $payment_item->id)
+//                        ->where('session_id', $session_id)
+//                        ->where('approve', PaymentStatus::APPROVED)
+//                        ->whereBetween('created_at', [$start_quarter, $end_quarter])
+//                        ->select('activity_supports.id', 'activity_supports.supporter as name', 'activity_supports.amount_deposited as amount', 'session_id')
+//                        ->orderBy('name')
+//                        ->get()
+//                        ->toArray();
 
     }
 

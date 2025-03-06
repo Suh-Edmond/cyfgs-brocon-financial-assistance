@@ -151,12 +151,22 @@ class IncomeActivityService implements IncomeActivityInterface {
 
     public function getQuarterlyIncomeActivities($start_quarter,$end_quarter, $payment_item, $session_id): array
     {
-        return IncomeActivity::where('payment_item_id', $payment_item->id)
-                    ->where('session_id', $session_id)
-                    ->where('approve', PaymentStatus::APPROVED)
-                    ->whereBetween('created_at', [$start_quarter, $end_quarter])
-                    ->orderBy('name')
-                    ->get()->toArray();
+//        return IncomeActivity::where('payment_item_id', $payment_item->id)
+//                    ->where('session_id', $session_id)
+//                    ->where('approve', PaymentStatus::APPROVED)
+//                    ->whereBetween('created_at', [$start_quarter, $end_quarter])
+//                    ->orderBy('name')
+//                    ->get()->toArray();
+        return  DB::table('income_activities')
+            ->join('payment_items', 'payment_items.id', '=', 'income_activities.payment_item_id')
+            ->join('sessions', 'sessions.id' , '=', 'income_activities.session_id')
+            ->where('income_activities.approve', PaymentStatus::APPROVED)
+            ->where('payment_items.id', $payment_item->id)
+            ->where('sessions.id', $session_id)
+            ->whereBetween('income_activities.created_at', [$start_quarter, $end_quarter])
+            ->select('income_activities.id', 'income_activities.name', 'income_activities.amount', 'sessions.year')
+            ->orderBy('name')
+            ->get()->toArray();
     }
 
     public function getYearIncomeActivities($year, $payment_item): array
