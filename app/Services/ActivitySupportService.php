@@ -125,7 +125,7 @@ class ActivitySupportService implements ActivitySupportInterface
                         ->where('session_id', $session_id)
                         ->where('approve', PaymentStatus::APPROVED)
                         ->whereBetween('created_at', [$start_quarter, $end_quarter])
-                        ->select('activity_supports.id', 'activity_supports.supporter as name', 'activity_supports.amount_deposited as amount', 'sessions.year')
+                        ->select('activity_supports.id', 'activity_supports.supporter as name', 'activity_supports.amount_deposited as amount', 'session_id')
                         ->orderBy('name')
                         ->get()
                         ->toArray();

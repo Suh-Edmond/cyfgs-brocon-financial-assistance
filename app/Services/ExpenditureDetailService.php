@@ -151,11 +151,15 @@ class ExpenditureDetailService implements ExpenditureDetailInterface {
                           ->get();
     }
 
-    public function getExpenditureActivities($payment_activity): Collection
+    public function getExpenditureActivities($payment_activity): array
     {
-        return ExpenditureDetail::where('payment_item_id', $payment_activity)
-                        ->where('approve', PaymentStatus::APPROVED)
-                        ->orderBy('name', 'DESC')->get();
+        $expenditures = ExpenditureItem::where('payment_item_id', $payment_activity)->where('approve', PaymentStatus::APPROVED)->orderBy('name', 'DESC')->get();
+        return collect($expenditures)->map(function ($e){
+            return $e->expenditureDetails;
+        })->toArray();
+//        return ExpenditureDetail::where('payment_item_id', $payment_activity)
+//                        ->where('approve', PaymentStatus::APPROVED)
+//                        ->orderBy('name', 'DESC')->get();
 
     }
 

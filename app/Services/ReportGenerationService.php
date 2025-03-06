@@ -62,11 +62,11 @@ class ReportGenerationService implements ReportGenerationInterface
         $total_members_contributions = count($members_contributions) > 0  ? $members_contributions[0]->amount: 0;
         $incomes = $this->incomeActivityService->getIncomePerActivity($id)->toArray();
         $sponsorship = $this->activitySupportService->getSponsorshipPerActivity($id)->toArray();
-        array_push($income_list, new ActivityReportResource("Members Contributions", $total_members_contributions));
+        $income_list[] = new ActivityReportResource("Members Contributions", $total_members_contributions);
         $data = array_merge($incomes, $sponsorship);
         foreach ($data as $contribution){
             $total_income += $contribution->amount;
-            array_push($income_list, new ActivityReportResource($contribution->name, $contribution->amount));
+            $income_list[] = new ActivityReportResource($contribution->name, $contribution->amount);
         }
         $total_income += $total_members_contributions;
 
@@ -76,7 +76,7 @@ class ReportGenerationService implements ReportGenerationInterface
             $total_amount_spent += $expense->amount_spent;
             $total_amount_given += $expense->amount_given;
             $balance += ($expense->amount_given- $expense->amount_spent);
-            array_push($expenditures, new DetailResource($expense->name, $expense->amount_given, $expense->amount_spent, ($expense->amount_given- $expense->amount_spent)));
+            $expenditures[] = new DetailResource($expense->name, $expense->amount_given, $expense->amount_spent, ($expense->amount_given - $expense->amount_spent));
         }
         $total_balance += $balance > 0 ? ($total_income - $total_amount_spent)  + $balance: ($total_income - $total_amount_spent);
         $admins            = $this->getOrganisationAdministrators();
@@ -172,11 +172,11 @@ class ReportGenerationService implements ReportGenerationInterface
                 $details = $this->expenditureDetailService->findExpenditureDetailsByItemAndQuarter($expenditure_item->id, $start_quarter, $end_quarter);
                 $sub_total = collect($details)->sum('amount_spent');
                 $expenditure = json_encode(new QuarterlyExpenditureResource(($key + 1), $expenditure_item->name, ($details->toArray()), $sub_total));
-                array_push($expenditures_by_cat, json_decode($expenditure));
+                $expenditures_by_cat[] = json_decode($expenditure);
                 $total += $sub_total;
              }
-            array_push($expenses, json_decode(json_encode(new QuarterlyExpenditureResourceCollection($expenditure_category->code, $expenditure_category->name,
-                $expenditures_by_cat, $total))));
+            $expenses[] = json_decode(json_encode(new QuarterlyExpenditureResourceCollection($expenditure_category->code, $expenditure_category->name,
+                $expenditures_by_cat, $total)));
             $exp_total += $total;
         }
         return [$expenses, $exp_total];
@@ -212,13 +212,13 @@ class ReportGenerationService implements ReportGenerationInterface
                 $total = $this->calculateTotal($payment_incomes);
                 $payment_activity = json_encode(new QuarterlyIncomeResource($payment_item_key + 1, $payment_item->name, $payment_incomes, $total));
 
-                array_push($payment_activities, json_decode($payment_activity));
+                $payment_activities[] = json_decode($payment_activity);
 
                 $payment_category_total += $total;
 
             }
             $payment_category_income = json_encode(new IncomeResource($payment_category->code, $payment_activities,  $payment_category->name, $payment_category_total));
-            array_push($incomes, json_decode($payment_category_income));
+            $incomes[] = json_decode($payment_category_income);
             $total_income = $payment_category_total + $total_reg_saving;
             array_push($quarterly_incomes, $incomes, $total_income);
          }
@@ -256,12 +256,12 @@ class ReportGenerationService implements ReportGenerationInterface
 
                 $payment_activity = json_encode(new QuarterlyIncomeResource($payment_item_key + 1, $payment_item->name, $payment_incomes, $total));
 
-                array_push($payment_activities, json_decode($payment_activity));
+                $payment_activities[] = json_decode($payment_activity);
 
                 $payment_category_total += $total;
             }
             $payment_category_income = json_encode(new IncomeResource($payment_category->code, $payment_activities,  $payment_category->name, $payment_category_total));
-            array_push($incomes, json_decode($payment_category_income));
+            $incomes[] = json_decode($payment_category_income);
             $total_income = $payment_category_total + $total_reg_saving;
             array_push($year_incomes, $incomes, $total_income);
         }
@@ -281,11 +281,11 @@ class ReportGenerationService implements ReportGenerationInterface
                 $details = $this->expenditureDetailService->findExpenditureDetailsByItemAndYear($expenditure_item->id, $year_id);
                 $sub_total = collect($details)->sum('amount_spent');
                 $expenditure = json_encode(new QuarterlyExpenditureResource(($k + 1), $expenditure_item->name, ($details->toArray()), $sub_total));
-                array_push($expenditures_by_cat, json_decode($expenditure));
+                $expenditures_by_cat[] = json_decode($expenditure);
                 $total += $sub_total;
             }
-            array_push($expenses, json_decode(json_encode(new QuarterlyExpenditureResourceCollection($expenditure_category->code, $expenditure_category->name,
-                $expenditures_by_cat, $total))));
+            $expenses[] = json_decode(json_encode(new QuarterlyExpenditureResourceCollection($expenditure_category->code, $expenditure_category->name,
+                $expenditures_by_cat, $total)));
             $exp_total += $total;
         }
         return [$expenses, $exp_total];

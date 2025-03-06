@@ -59,10 +59,10 @@ class UserContributionService implements UserContributionInterface {
     public function getUserContributionsByUser($user_id)
     {
         return UserContribution::select('user_contributions.*')
-                                                ->join('users', ['users.id' => 'user_contributions.user_id'])
-                                                ->where('user_contributions.user_id', $user_id)
-                                                ->get()
-                                                ->groupBy('user_contributions.payment_item_id');
+                                ->join('users', ['users.id' => 'user_contributions.user_id'])
+                                ->where('user_contributions.user_id', $user_id)
+                                ->get()
+                                ->groupBy('user_contributions.payment_item_id');
 
     }
 
@@ -118,17 +118,14 @@ class UserContributionService implements UserContributionInterface {
 
     public function approveUserContribution($request)
     {
-          $user_contributions = UserContribution::
-                                 join('payment_items', 'payment_items.id', '=', 'user_contributions.payment_item_id')
-                                ->join('users', 'users.id', '=', 'user_contributions.user_id')
-                                ->join('sessions', 'sessions.id', '=', 'user_contributions.session_id')
-                                ->where('payment_items.id', $request->payment_item_id)
-                                ->where('users.id', $request->user_id)
-                                ->where('sessions.id', $request->session_id)->select('user_contributions.*')->get();
-          for ($counter = 0; $counter < count($user_contributions); $counter++){
-              $user_contributions[$counter]->approve = $request->type;
-              $user_contributions[$counter]->save();
-          }
+        $user_contributions = UserContribution::where('payment_item_id', $request->payment_item_id)
+                                            ->where('user_id', $request->user_id)
+                                            ->where('session_id', $request->session_id)
+                                            ->get();
+        collect($user_contributions)->map(function ($e) use ($request){
+            $e->approve = $request->type;
+            $e->save();
+        });
     }
 
     public function filterContributions($request)
@@ -474,43 +471,33 @@ class UserContributionService implements UserContributionInterface {
     }
 
     private function  getUserContributions($request) {
-        $contributions =  DB::table('user_contributions')
-            ->join('payment_items', 'payment_items.id' ,'=', 'user_contributions.payment_item_id')
-            ->join('users', 'users.id', '=', 'user_contributions.user_id')
-            ->join('sessions', 'sessions.id', '=', 'user_contributions.session_id')
-            ->where('user_contributions.payment_item_id', $request->payment_item_id)
-            ->where('user_contributions.session_id', $request->year);
+        $contributions = UserContribution::where('payment_item_id', $request->payment_item_id)
+                        ->where('session_id', $request->year);
 
         if(!is_null($request->status) && $request->status != "ALL"){
             if($request->status == "PENDING" || $request->status == "APPROVED" || $request->status == "DECLINED"){
-                $contributions = $contributions->where('user_contributions.approve', $request->status);
+                $contributions = $contributions->where('approve', $request->status);
             }else {
-                $contributions = $contributions->where('user_contributions.status', $request->status);
+                $contributions = $contributions->where('status', $request->status);
             }
         }
         if(!is_null($request->month)){
-            $contributions = $contributions->whereMonth('user_contributions.created_at', $request->month);
+            $contributions = $contributions->whereMonth('created_at', $request->month);
         }
         if(!is_null($request->date)){
-            $contributions = $contributions->whereDate('user_contributions.created_at', $request->date);
+            $contributions = $contributions->whereDate('created_at', $request->date);
         }
         return $contributions;
     }
 
     public function getContributionByUserAndPaymentItem($payment_item_id, $user_id) {
-        return UserContribution::join('users', ['users.id' => 'user_contributions.user_id'])
-            ->join('payment_items', ['payment_items.id' => 'user_contributions.payment_item_id'])
-            ->where('users.id', $user_id)
-            ->where('payment_items.id', $payment_item_id)
-            ->whereIn('user_contributions.approve', [PaymentStatus::APPROVED, PaymentStatus::PENDING]);
+        return UserContribution::where('payment_item_id', $payment_item_id)
+                        ->where('user_id', $user_id)
+                        ->whereIn('user_contributions.approve', [PaymentStatus::APPROVED, PaymentStatus::PENDING]);
     }
 
     public function getApprovedContributionByUserAndPaymentItem($payment_item_id, $user_id) {
-        return UserContribution::join('users', ['users.id' => 'user_contributions.user_id'])
-            ->join('payment_items', ['payment_items.id' => 'user_contributions.payment_item_id'])
-            ->where('users.id', $user_id)
-            ->where('payment_items.id', $payment_item_id)
-            ->where('user_contributions.approve', PaymentStatus::APPROVED);
+        return UserContribution::where('payment_item_id', $payment_item_id)->where('user_id', $user_id)->where('approve', PaymentStatus::APPROVED);
     }
 
     private function getMemberOwingItems($user_id, $current_session_id)
@@ -667,12 +654,7 @@ class UserContributionService implements UserContributionInterface {
 
     private function fetchUserContributions($payment_item_id, $user_id)
     {
-        return DB::table('user_contributions')
-            ->join('payment_items', 'payment_items.id', '=', 'user_contributions.payment_item_id')
-            ->join('users', 'users.id', '=', 'user_contributions.user_id')
-            ->join('sessions', 'sessions.id', '=', 'user_contributions.session_id')
-            ->where('payment_items.id', $payment_item_id)
-            ->where('users.id', $user_id);
+        return UserContribution::where('payment_item_id', $payment_item_id)->where('user_id', $user_id);
     }
 
     private function verifyCompleteItemPaymentByYear($payment_item_id, $user_id, $session_id)
@@ -943,6 +925,7 @@ class UserContributionService implements UserContributionInterface {
     private function computeAverageContributionByPaymentFrequency($payment_items, $session_id)
     {
         $contributions_percentages = $this->getPercentageContributionsByItemAndSession($payment_items, $session_id);
+//        collect($contributions_percentages)->avg()
 
         return count($payment_items) > 0 ? round(collect($contributions_percentages)->sum('percentage') / count($payment_items), 2): 0;
 
