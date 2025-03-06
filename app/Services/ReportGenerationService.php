@@ -59,11 +59,18 @@ class ReportGenerationService implements ReportGenerationInterface
         $income_list = [];
         $expenditures = [];
         $members_contributions = $this->userContributionService->getApproveMembersContributionPerActivity($id)->toArray();
+
+
         $total_members_contributions = count($members_contributions) > 0  ? $members_contributions[0]->amount: 0;
+
         $incomes = $this->incomeActivityService->getIncomePerActivity($id)->toArray();
+
         $sponsorship = $this->activitySupportService->getSponsorshipPerActivity($id)->toArray();
+
         $income_list[] = new ActivityReportResource("Members Contributions", $total_members_contributions);
+
         $data = array_merge($incomes, $sponsorship);
+
         foreach ($data as $contribution){
             $total_income += $contribution->amount;
             $income_list[] = new ActivityReportResource($contribution->name, $contribution->amount);
@@ -72,17 +79,25 @@ class ReportGenerationService implements ReportGenerationInterface
 
         $expenses = $this->expenditureDetailService->getExpenditureActivities($id);
 
-        foreach ($expenses as $expense){
-            $total_amount_spent += $expense->amount_spent;
-            $total_amount_given += $expense->amount_given;
-            $balance += ($expense->amount_given- $expense->amount_spent);
-            $expenditures[] = new DetailResource($expense->name, $expense->amount_given, $expense->amount_spent, ($expense->amount_given - $expense->amount_spent));
+        foreach ($expenses[0] as $expense){
+
+            $total_amount_spent += $expense['amount_spent'];
+
+            $total_amount_given += $expense['amount_given'];
+
+            $balance += ($expense['amount_given']- $expense['amount_spent']);
+
+            $expenditures[] = new DetailResource($expense['name'], $expense['amount_given'], $expense['amount_spent'], ($expense['amount_given'] - $expense['amount_spent']));
         }
+
         $total_balance += $balance > 0 ? ($total_income - $total_amount_spent)  + $balance: ($total_income - $total_amount_spent);
+
         $admins            = $this->getOrganisationAdministrators();
 
         return [$income_list, $expenditures, ["total_income" => $total_income], ["total_amount_given" => $total_amount_given],
+
             ["total_amount_spent" => $total_amount_spent], ["balance" => $balance], ["total_balance" => $total_balance],
+
             ["president" => $admins[Roles::PRESIDENT]], ["fin_sec" => $admins[Roles::FINANCIAL_SECRETARY]], ["treasurer" => $admins[Roles::TREASURER]]];
     }
 

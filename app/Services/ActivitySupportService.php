@@ -149,7 +149,7 @@ class ActivitySupportService implements ActivitySupportInterface
                        ->where('approve', PaymentStatus::APPROVED)
                        ->select('supporter as name', 'amount_deposited as amount')
                        ->orderBy('name')
-                      ->get();
+                       ->get();
     }
 
     private function findPaymentItem($payment_item)

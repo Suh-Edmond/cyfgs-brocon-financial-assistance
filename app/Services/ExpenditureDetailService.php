@@ -11,6 +11,7 @@ use App\Models\ExpenditureDetail;
 use App\Models\ExpenditureItem;
 use App\Traits\HelpTrait;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 class ExpenditureDetailService implements ExpenditureDetailInterface {
 
@@ -157,10 +158,6 @@ class ExpenditureDetailService implements ExpenditureDetailInterface {
         return collect($expenditures)->map(function ($e){
             return $e->expenditureDetails;
         })->toArray();
-//        return ExpenditureDetail::where('payment_item_id', $payment_activity)
-//                        ->where('approve', PaymentStatus::APPROVED)
-//                        ->orderBy('name', 'DESC')->get();
-
     }
 
     public function computeTotalExpendituresByYearly($request)
