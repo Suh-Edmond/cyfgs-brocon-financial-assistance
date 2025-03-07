@@ -69,7 +69,7 @@ class SessionService implements SessionInterface
 
     public function getPaginatedSessions($request)
     {
-        $sessions = DB::table('sessions')->orderBy('year')->paginate($request->per_page);
+        $sessions = Session::orderBy('year')->paginate($request->per_page);
 
         return new SessionResourceCollection($sessions, $sessions->total(), $sessions->lastPage(), (int)$sessions->perPage(), $sessions->currentPage());
     }

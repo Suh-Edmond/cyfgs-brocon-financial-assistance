@@ -6,7 +6,6 @@ use App\Http\Resources\PaymentCategoryCollection;
 use App\Interfaces\PaymentCategoryInterface;
 use App\Models\Organisation;
 use App\Models\PaymentCategory;
-use Illuminate\Support\Facades\DB;
 
 
 class PaymentCategoryService implements PaymentCategoryInterface {
@@ -62,9 +61,7 @@ class PaymentCategoryService implements PaymentCategoryInterface {
 
     public function getPaymentCategoriesByOrganisationAndYear($organisation_id, $year)
     {
-        $categories = PaymentCategory::where('organisation_id', $organisation_id);
-        $categories =  $categories->orderBy('name')->get();
-        return $categories;
+        return PaymentCategory::where('organisation_id', $organisation_id)->orderBy('name')->get();
     }
     public function filterPaymentCategory($request){
         return $this->getPaymentCategories($request);
@@ -82,10 +79,6 @@ class PaymentCategoryService implements PaymentCategoryInterface {
 
     private function findPaymentCategory($id, $organisation_id)
     {
-        return PaymentCategory::select('payment_categories.*')
-                            ->join('organisations', ['payment_categories.organisation_id' => 'organisations.id'])
-                            ->where('organisations.id', $organisation_id)
-                            ->where('payment_categories.id', $id)
-                            ->firstOrFail();
+        return PaymentCategory::findOrFail($id);
     }
 }

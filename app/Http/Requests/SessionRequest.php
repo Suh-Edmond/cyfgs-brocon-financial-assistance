@@ -26,7 +26,7 @@ class SessionRequest extends FormRequest
     public function rules()
     {
         return [
-            'year' => 'required|string|unique:sessions,year',
+            'year' => 'required|unique:sessions,year',
             'status' => 'required',Rule::in([SessionStatus::ACTIVE, SessionStatus::IN_ACTIVE])
         ];
     }

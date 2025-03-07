@@ -18,7 +18,7 @@ class User extends Authenticatable
     protected $keyType    = 'string';
 
     protected $with = [
-
+        'registrations'
     ];
 
     /**
