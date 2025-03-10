@@ -24,6 +24,7 @@ class PaymentItemService implements PaymentItemInterface {
     public function createPaymentItem($request, $payment_category_id)
     {
         $current_session = $this->session_service->getCurrentSession();
+
         $payment_category = PaymentCategory::findOrFail($payment_category_id);
         PaymentItem::create([
             'name'                => $request->name,
@@ -165,6 +166,20 @@ class PaymentItemService implements PaymentItemInterface {
                     ->where('session_id', $session)
                     ->orderBy('name', 'ASC')
                     ->get();
+    }
+
+    public function getPaymentActivitiesByCategoryAndSessionAndQuarter($category, $request, $current_year, $type)
+    {
+
+        $quarter_range = $this->getStartQuarter($current_year->year,  $request->quarter, $type);
+        $start_quarter = $quarter_range[0];
+        $end_quarter = $quarter_range[1];
+
+        return PaymentItem::where('payment_category_id', $category)
+            ->where('session_id', $current_year->id)
+            ->whereBetween('created_at', [$start_quarter, $end_quarter])
+            ->orderBy('name', 'ASC')
+            ->get()->toArray();
     }
 
     public function getPaymentItemsBySessionAndFrequency($request)

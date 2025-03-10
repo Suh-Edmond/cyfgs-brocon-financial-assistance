@@ -673,4 +673,7 @@ trait HelpTrait {
         return substr(str_shuffle($pin), 0, $size);
     }
 
+
+
+
 }

@@ -64,13 +64,12 @@ class ExpenditureCategoryService implements ExpenditureCategoryInterface {
     public function getExpenditureCategoriesByOrganisationYear($organisation_id, $year)
     {
         $categories = ExpenditureCategory::where('organisation_id', $organisation_id);
-        if(!is_null($year)){
+        if(isset($year)){
             $categories = $categories->whereYear('created_at', $year);
         }
-        $categories =  $categories->orderBy('name')->get();
-
-        return $categories;
+        return $categories->orderBy('name')->get();
     }
+
 
     public function getExpenditureCategory($id, $organisation_id)
     {

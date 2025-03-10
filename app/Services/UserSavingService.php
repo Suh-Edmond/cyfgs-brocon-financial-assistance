@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Constants\Constants;
 use App\Constants\PaymentStatus;
 use App\Exceptions\BusinessValidationException;
 use App\Http\Resources\QuarterlyIncomeResource;
@@ -120,14 +121,21 @@ class UserSavingService implements UserSavingInterface
         return new UserSavingCollection($savings, $total);
     }
 
-    public function getMemberSavingPerQuarter($start_quarter, $end_quarter, $code, $session_id)
+    public function getMemberSavingPerQuarter($request, $code, $session_id, $type, $current_year)
     {
+        $quarter_range = $this->getStartQuarter($current_year->year,  $request->quarter, $type);
+        $start_quarter = $quarter_range[0];
+        $end_quarter = $quarter_range[1];
+        $total = 0;
         $savings = UserSaving::where('approve', PaymentStatus::APPROVED)
                     ->where('session_id', $session_id)
                     ->whereBetween('created_at', [$start_quarter, $end_quarter])
                     ->selectRaw('SUM(amount_deposited) as amount')
-                    ->get()[0]->amount;
-        return new QuarterlyIncomeResource($code, "Member's Savings", [], $savings);
+                    ->get();
+        if(isset($savings[0]->amount)){
+            $total = $savings[0]->amount;
+        }
+        return new QuarterlyIncomeResource($code, Constants::MEMBERS_SAVINGS, [], $total);
     }
 
     public function getMemberSavingPerYear($year, $code)
@@ -136,7 +144,7 @@ class UserSavingService implements UserSavingInterface
             ->where('session_id', $year)
             ->selectRaw('SUM(amount_deposited) as amount')
             ->get()[0]->amount;
-        return new QuarterlyIncomeResource($code, "Member's Savings", [], $savings);
+        return new QuarterlyIncomeResource($code, Constants::MEMBERS_SAVINGS, [], $savings);
     }
 
 
