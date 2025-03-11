@@ -7,27 +7,23 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class PasswordResetMail extends Mailable
+class PasswordResetConfirmationMailable extends Mailable
 {
     use Queueable, SerializesModels;
     public $data;
-    public $redirectLink;
-    public $organisation_logo;
     public $year;
-    public $token;
 
+    public $organisation_logo;
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($data, $redirectLink, $organisation_logo, $year, $token)
+    public function __construct($data, $organisation_logo, $year)
     {
         $this->data = $data;
-        $this->redirectLink = $redirectLink;
         $this->organisation_logo = $organisation_logo;
         $this->year = $year;
-        $this->token = $token;
     }
 
     /**
@@ -37,6 +33,13 @@ class PasswordResetMail extends Mailable
      */
     public function build()
     {
-        return $this->view('Email.PasswordResetEmail');
+        return $this->markdown('mail.password-reset-confirmation-mailable');
     }
+
+    public function subject($subject)
+    {
+        return "Password Reset Confirmation";
+    }
+
+
 }

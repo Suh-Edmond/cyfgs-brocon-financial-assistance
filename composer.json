@@ -21,6 +21,8 @@
         "laravel/ui": "*",
         "league/commonmark": "^2.6",
         "maatwebsite/excel": "*",
+        "spatie/db-dumper": "^3.8",
+        "spatie/laravel-backup": "*",
         "spatie/laravel-permission": "^5.3"
     },
     "require-dev": {

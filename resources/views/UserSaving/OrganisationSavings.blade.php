@@ -39,9 +39,9 @@
             @foreach ($user_savings as $key => $user_saving)
                 <tr style="border: 1px solid black; font-size: smaller">
                     <td style="padding: 5px;width: 3%">{{ $key + 1 }}</td>
-                    <td style="border: 1px solid black; padding: 3px;">{{  $user_saving->name }}</td>
-                    <td style="border: 1px solid black; padding: 3px;">{{  $user_saving->email }}</td>
-                    <td style="border: 1px solid black; padding: 3px;">{{  $user_saving->telephone }}</td>
+                    <td style="border: 1px solid black; padding: 3px;">{{  $user_saving->user->name }}</td>
+                    <td style="border: 1px solid black; padding: 3px;">{{  $user_saving->user->email }}</td>
+                    <td style="border: 1px solid black; padding: 3px;">{{  $user_saving->user->telephone }}</td>
                     <td style="border: 1px solid black; padding: 3px;">{{ number_format($user_saving->total_amount) }}
                     </td>
                 </tr>
@@ -117,7 +117,7 @@
             <div style="font-weight: bold;text-transform: uppercase;font-size: small; margin-top: 20px">
                 SIGN
             </div>
-            <div class="border_line" style="border-bottom: 1px solid black; margin-top: 10px;text-align: center">
+            <div class="border_line" style="border-bottom: 1px solid black; margin-top: 10px;margin-left:20rem;text-align: center">
             </div>
         </div>
     </div>

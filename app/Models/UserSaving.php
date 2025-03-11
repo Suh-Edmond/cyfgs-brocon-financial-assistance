@@ -27,6 +27,10 @@ class UserSaving extends Model
         'amount_used'
     ];
 
+    protected $with = [
+        'user'
+    ];
+
 
     public function user() {
         return $this->belongsTo(User::class);

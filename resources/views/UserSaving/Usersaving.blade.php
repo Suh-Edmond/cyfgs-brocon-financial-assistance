@@ -33,6 +33,7 @@
                 <th style="padding: 12px; border: 1px solid black;">Amount Deposited(XAF)</th>
                 <th style="padding: 12px; border: 1px solid black;">Amount Used(XAF)</th>
                 <th style="padding: 12px; border: 1px solid black;">Transaction Status</th>
+                <th style="padding: 12px; border: 1px solid black;">Balance</th>
                 <th style="padding: 12px; border: 1px solid black;">Date Collected</th>
             </tr>
             @foreach ($user_savings as $key => $user_saving)
@@ -43,6 +44,8 @@
                     <td style="border: 1px solid black; padding: 3px;text-align: center">{{ number_format($user_saving->amount_used) }}
                     </td>
                     <td style="border: 1px solid black; padding: 3px;text-align: center">{{ $user_saving->approve }}</td>
+                    <td style="border: 1px solid black; padding: 3px;text-align: center">{{ number_format(($user_saving->amount_deposited) - ($user_saving->amount_used))  }}
+                    </td>
                     <td style="border: 1px solid black; padding: 3px;text-align: center">{{ date('d-m-Y', strtotime($user_saving->created_at)) }}</td>
 
                 </tr>
@@ -53,7 +56,7 @@
             @endforeach
             <tr style="border: 1px solid black; font-size: smaller">
                 <td style="border: 1px solid black; padding: 3px;font-weight: bold"  colspan="2"> Total Amount:</td>
-                <td style="border: 1px solid black; padding: 3px;font-weight: bold" colspan="3">{{ number_format($total) }} XAF</td>
+                <td style="border: 1px solid black; padding: 3px;font-weight: bold" colspan="4">{{ number_format($total) }} XAF</td>
             </tr>
         </table>
         </div>
@@ -118,7 +121,7 @@
             <div style="font-weight: bold;text-transform: uppercase;font-size: small; margin-top: 20px">
                 SIGN
             </div>
-            <div class="border_line" style="border-bottom: 1px solid black; margin-top: 10px;text-align: center">
+            <div class="border_line" style="border-bottom: 1px solid black; margin-top: 10px;margin-left:20rem;text-align: center">
             </div>
         </div>
     </div>

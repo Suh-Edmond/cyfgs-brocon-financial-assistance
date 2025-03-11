@@ -276,7 +276,7 @@ trait HelpTrait {
     {
         $total = 0;
         foreach ($data as $income) {
-            $total += $income->amount;
+            $total += $income['amount'];
         }
 
         return $total;
@@ -297,16 +297,16 @@ trait HelpTrait {
         $data = [];
         if(str_contains($references, "/")){
             $reference_array = explode("/", $references);
-            foreach ($reference_array as $reference){
-                if(!empty($reference)){
-                    $resource = User::find($reference);
-                    array_push($data, new UserResource($resource, null, null));
-                }
-            }
+            return collect($reference_array)->filter(function ($el){
+                return !empty($el);
+            })->map(function ($e){
+                $resource = User::find($e);
+                return new UserResource($resource, null, null);
+            })->toArray();
         }else {
            if(!empty($references)){
                $resource = User::find($references);
-               array_push($data, new UserResource($resource, null, null));
+               $data[] = new UserResource($resource, null, null);
            }
         }
         return $data;
@@ -672,5 +672,8 @@ trait HelpTrait {
             . $characters[rand(0, strlen($characters) - 1)];
         return substr(str_shuffle($pin), 0, $size);
     }
+
+
+
 
 }
