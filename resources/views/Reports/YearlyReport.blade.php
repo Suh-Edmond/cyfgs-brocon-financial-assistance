@@ -45,8 +45,8 @@
                 <th style="padding: 5px; border: 1px solid black;">Total (XAF)</th>
             </tr>
             <tr style="padding: 13px;border: 1px solid black; font-size: smaller;">
-                <td style="padding:5px; border: 1px solid black;">BBF</td>
-                <td style="padding: 5px; border: 1px solid black;"> Balance Brought-Forward
+                <td style="padding:5px; border: 1px solid black;font-weight: bold">BBF</td>
+                <td style="padding: 5px; border: 1px solid black;font-weight: bold"> Balance Brought-Forward
                 </td>
                 <td style="padding: 5px; border: 1px solid black;"></td>
                 <td style="padding: 5px; border: 1px solid black;"></td>
@@ -54,9 +54,9 @@
             </tr>
             @foreach($incomes as $key => $income)
             <tr style="padding: 13px;border: 1px solid black; font-size: smaller;">
-                    <td style="padding:5px; border: 1px solid black;"> {{$income->code}}
+                    <td style="padding:5px; border: 1px solid black;font-weight: bold"> {{$income->code}}
                     </td>
-                    <td style="padding: 5px; border: 1px solid black;"> {{$income->name}}
+                    <td style="padding: 5px; border: 1px solid black;font-weight: bold"> {{$income->name}}
                     </td>
                     <td style="padding: 5px; border: 1px solid black;"></td>
                     <td style="padding: 5px; border: 1px solid black;"></td>
@@ -162,9 +162,9 @@
             <?php $p=1 ?>
             @foreach($expenditures as $key => $expenditure)
                 <tr style="padding: 13px;border: 1px solid black; font-size: smaller;">
-                    <td style="padding:5px; border: 1px solid black;">  {{$expenditure->code}}
+                    <td style="padding:5px; border: 1px solid black;font-weight: bold">  {{$expenditure->code}}
                     </td>
-                    <td style="padding: 5px; border: 1px solid black;">  {{$expenditure->name}}
+                    <td style="padding: 5px; border: 1px solid black;font-weight: bold">  {{$expenditure->name}}
                     </td>
                     <td style="padding: 5px; border: 1px solid black;"></td>
                     <td style="padding: 5px; border: 1px solid black;"></td>

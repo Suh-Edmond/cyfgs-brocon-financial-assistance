@@ -10,4 +10,6 @@ class Constants
     public const MEMBERS_SAVINGS = "Member's Savings";
 
     public const MEMBERS_REGISTRATION = "Member's Registration";
+
+    public const SAVINGS = "SAVINGS";
 }
