@@ -56,7 +56,7 @@ class UserResource extends JsonResource
             'session_id'     => $this->session_id,
             'status'         => $this->status,
             'organisation_id' => $this->organisation_id,
-            'registered'       => $this->registrations
+            'registered'       => self::getRegistrationByActiveSession($this->registrations, $this->current_session->id)
           ];
     }
 }
