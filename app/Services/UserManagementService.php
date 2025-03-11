@@ -18,9 +18,9 @@ use App\Http\Resources\UserCollection;
 use App\Http\Resources\UserResource;
 use App\Imports\UsersImport;
 use App\Interfaces\UserManagementInterface;
-use App\Mail\MemberInvitationMail;
-use App\Mail\PasswordResetConfirmationMail;
-use App\Mail\PasswordResetMail;
+use App\Mail\InvitationMail;
+use App\Mail\PasswordResetConfirmationMailable;
+use App\Mail\PasswordResetMailable;
 use App\Models\CustomRole;
 use App\Models\MemberInvitation;
 use App\Models\PasswordReset;
@@ -31,12 +31,11 @@ use App\Traits\ResponseTrait;
 use Carbon\Carbon;
 use Exception;
 
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\Request;
+
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Str;
+
 use Maatwebsite\Excel\Facades\Excel;
 
 class UserManagementService implements UserManagementInterface
@@ -77,7 +76,7 @@ class UserManagementService implements UserManagementInterface
         $organisation_logo = $auth_user->organisation->logo;
         $year = Carbon::now()->year;
         try {
-            Mail::to($request->user_email)->send(new MemberInvitationMail($request->user_name, $request->user_email, $redirectLink,
+            Mail::to($request->user_email)->send(new InvitationMail($request->user_name, $request->user_email, $redirectLink,
                 $organisation_logo, $auth_user->name, $auth_user->organisation->name, $request->role, $year));
             $assignedRole = $this->getAssignedRole($request->role);
             MemberInvitation::create([
@@ -359,11 +358,11 @@ class UserManagementService implements UserManagementInterface
         $user = User::where('email', $request->email)->firstOrFail();
         $this->validateIfUserCanLogin($user);
         $token = $this->generateSecurityToken(7);
-        $redirectLink = env('PASSWORD_RESET_UI_REDIRECT_LINK');
+        $redirectLink = env('PASSWORD_RESET_UI_REDIRECT_LINK').$this->generateSecurityToken(20);
         $organisation_logo = $user->organisation->logo;
         $year = Carbon::now()->year;
         try {
-            Mail::to($user['email'])->send(new PasswordResetMail($user, $redirectLink, $organisation_logo, $year, $token));
+            Mail::to($user['email'])->send(new PasswordResetMailable($user, $redirectLink, $organisation_logo, $year, $token));
             PasswordReset::create([
                 'email' => $user->email,
                 'token' => $token,
@@ -411,7 +410,7 @@ class UserManagementService implements UserManagementInterface
             $year = Carbon::now()->year;
             try {
                 $organisation_logo = $user->organisation->logo;
-                Mail::to($user['email'])->send(new PasswordResetConfirmationMail($user, $organisation_logo, $year));
+                Mail::to($user['email'])->send(new PasswordResetConfirmationMailable($user, $organisation_logo, $year));
             }catch (Exception $exception){
                 throw new EmailException("Could not send reset email link", 550);
             }
