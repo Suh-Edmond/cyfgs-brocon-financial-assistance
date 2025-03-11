@@ -276,7 +276,7 @@ trait HelpTrait {
     {
         $total = 0;
         foreach ($data as $income) {
-            $total += $income->amount;
+            $total += $income['amount'];
         }
 
         return $total;
@@ -672,5 +672,8 @@ trait HelpTrait {
             . $characters[rand(0, strlen($characters) - 1)];
         return substr(str_shuffle($pin), 0, $size);
     }
+
+
+
 
 }

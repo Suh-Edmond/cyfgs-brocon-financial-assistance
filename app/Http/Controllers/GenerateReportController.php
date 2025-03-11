@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\GenerateQuarterlyRequest;
 use App\Services\ReportGenerationService;
 use App\Services\SessionService;
 use App\Traits\HelpTrait;
@@ -69,14 +70,14 @@ class GenerateReportController extends Controller
     }
 
 
-    public function generateQuarterlyReport(Request $request)//query param: ?quarter=example_quarter
+    public function generateQuarterlyReport(GenerateQuarterlyRequest $request)//query param: ?quarter=example_quarter
     {
         $data = $this->report_generation_service->generateQuarterlyReport($request);
 
         return $this->sendResponse($data, 200);
     }
 
-    public function downloadQuarterlyReport(Request $request): Response //query param: ?quarter=example_quarter
+    public function downloadQuarterlyReport(GenerateQuarterlyRequest $request): Response //query param: ?quarter=example_quarter
     {
         $data = $this->report_generation_service->downloadQuarterlyReport($request);
 

@@ -4,6 +4,7 @@
 namespace App\Services;
 
 
+use App\Constants\Constants;
 use App\Constants\PaymentStatus;
 use App\Http\Resources\QuarterlyIncomeResource;
 use App\Interfaces\RegistrationInterface;
@@ -74,8 +75,12 @@ class RegistrationService implements RegistrationInterface
         $reg->save();
     }
 
-    public function getMemberRegistrationPerQuarter($start_quarter,$end_quarter, $code, $session_id)
+    public function getMemberRegistrationPerQuarter($request, $code, $session_id, $current_year, $type)
     {
+        $quarter_range = $this->getStartQuarter($current_year->year,  $request->quarter, $type);
+        $start_quarter = $quarter_range[0];
+        $end_quarter = $quarter_range[1];
+
         $registrations = MemberRegistration::where('session_id', $session_id)
                         ->where('approve', PaymentStatus::APPROVED)
                         ->whereBetween('created_at', [$start_quarter, $end_quarter])
@@ -84,7 +89,7 @@ class RegistrationService implements RegistrationInterface
             return $e->registration->amount;
         })->sum();
 
-        return new QuarterlyIncomeResource($code, "Member's Registration", [], $totalReg);
+        return new QuarterlyIncomeResource($code, Constants::MEMBERS_REGISTRATION, [], $totalReg);
     }
 
     public function getMemberRegistrationPerYear($year, $code)
@@ -97,7 +102,7 @@ class RegistrationService implements RegistrationInterface
             return $e->registration->amount;
         })->sum();
 
-        return new QuarterlyIncomeResource($code, "Member's Registration", [], $totalReg);
+        return new QuarterlyIncomeResource($code, Constants::MEMBERS_REGISTRATION, [], $totalReg);
     }
 
     public function getMemberRegistration($session_id, $user_id){

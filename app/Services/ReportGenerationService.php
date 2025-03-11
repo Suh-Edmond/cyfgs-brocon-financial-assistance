@@ -2,7 +2,9 @@
 
 namespace App\Services;
 
+use App\Constants\Constants;
 use App\Constants\Roles;
+use App\Http\Requests\GenerateQuarterlyRequest;
 use App\Http\Resources\ActivityReportResource;
 use App\Http\Resources\DetailResource;
 use App\Http\Resources\IncomeResource;
@@ -11,7 +13,6 @@ use App\Http\Resources\QuarterlyExpenditureResourceCollection;
 use App\Http\Resources\QuarterlyIncomeResource;
 use App\Interfaces\ReportGenerationInterface;
 use App\Traits\HelpTrait;
-use Carbon\Carbon;
 
 class ReportGenerationService implements ReportGenerationInterface
 {
@@ -101,16 +102,16 @@ class ReportGenerationService implements ReportGenerationInterface
             ["president" => $admins[Roles::PRESIDENT]], ["fin_sec" => $admins[Roles::FINANCIAL_SECRETARY]], ["treasurer" => $admins[Roles::TREASURER]]];
     }
 
-    public function generateQuarterlyReport($request): array
+    public function generateQuarterlyReport(GenerateQuarterlyRequest $request): array
     {
 
         $current_year = $this->sessionService->getCurrentSession();
 
-        $incomes = $this->fetchQuarterlyIncomes($request->organisation_id, $request->quarter, $current_year, self::$INCOME_ONLY);
+        $incomes = $this->fetchQuarterlyIncomes($request, $current_year, self::$INCOME_ONLY);
 
         $expenditures = $this->fetchQuarterlyExpenditures($request->quarter,$current_year, $request->organisation_id, self::$INCOME_ONLY);
 
-        $balance_bf = $request->quarter == 6? 0: $this->computeBalanceBroughtForwardByQuarter($request, $current_year, self::$BALANCE_BROUGHT_FORWARD);
+        $balance_bf = $request->quarter == 6 || $request->quarter == 1? 0: $this->computeBalanceBroughtForwardByQuarter($request, $current_year, self::$BALANCE_BROUGHT_FORWARD);
 
         $income_elements = $incomes[0];
 
@@ -132,27 +133,35 @@ class ReportGenerationService implements ReportGenerationInterface
     }
 
     public function computeBalanceBroughtForwardByQuarter($request, $current_year, $type){
-        $quarter = (int) $request->quarter > 1 && $type == self::$BALANCE_BROUGHT_FORWARD ? ((int) $request->quarter - 1) : ((int) $request->quarter);
 
-        $income = $this->fetchQuarterlyIncomes($request->organisation_id, $quarter, $current_year, $type);
+
+        $quarter = (int) $request->quarter > 1 && $type == self::$BALANCE_BROUGHT_FORWARD ? ((int) $request->quarter - 1) : 0;
+
+
+        $income = $this->fetchQuarterlyIncomes($request, $current_year, $type);
 
         $expenditure = $this->fetchQuarterlyExpenditures($quarter, $current_year, $request->organisation_id, $type);
+
         return $income[1] - $expenditure[1];
     }
 
     public function computeBalanceBroughtForwardByYear($request)
     {
         $balance_brought_forward = 0;
+
         $previous_year_label = (int)$request->year_label - 1;
+
         $previous_year = $this->sessionService->getSessionByLabel($previous_year_label);
+
         if(!isset($previous_year)){
             return $balance_brought_forward;
         }
-        $income = $this->fetchYearIncomes($previous_year->id, $previous_year_label, $request->user()->organisation_id)[1];
 
-        $expenditure = $this->fetchYearlyExpenditures($previous_year->id, $request->user()->organisation_id)[1];
+        $income = $this->fetchYearIncomes($previous_year->id, $previous_year_label, $request->user()->organisation_id);
 
-        return $income - $expenditure;
+        $expenditure = $this->fetchYearlyExpenditures($previous_year->id, $request->user()->organisation_id);
+
+        return $income[1] - $expenditure[1];
     }
 
 
@@ -181,88 +190,107 @@ class ReportGenerationService implements ReportGenerationInterface
     private function fetchQuarterlyExpenditures($quarter,$current_year, $organisation_id, $type): array
     {
         $start_quarter = $this->getStartQuarter($current_year->year, $quarter,$type)[0];
+
         $end_quarter = $this->getStartQuarter($current_year->year, $quarter, $type)[1];
+
         $expenses = [];
+
         $exp_total = 0;
-        $expenditure_categories = $this->expenditureCategoryService->getExpenditureCategoriesByOrganisationYear($organisation_id, $current_year->year);
+
+        $expenditure_categories = $this->expenditureCategoryService->getAllExpenditureCategories($organisation_id);
+
         foreach ($expenditure_categories as $key => $expenditure_category){
             $expenditures_by_cat = array();
+
             $expenditure_items = $this->expenditureItemService->getExpensesByCategoryAndQuarter($expenditure_category->id, $start_quarter, $end_quarter);
+
             $total = 0;
+
             foreach ($expenditure_items as $expenditure_item) {
                 $details = $this->expenditureDetailService->findExpenditureDetailsByItemAndQuarter($expenditure_item->id, $start_quarter, $end_quarter);
+
                 $sub_total = collect($details)->sum('amount_spent');
+
                 $expenditure = json_encode(new QuarterlyExpenditureResource(($key + 1), $expenditure_item->name, ($details->toArray()), $sub_total));
+
                 $expenditures_by_cat[] = json_decode($expenditure);
+
                 $total += $sub_total;
-             }
-            $expenses[] = json_decode(json_encode(new QuarterlyExpenditureResourceCollection($expenditure_category->code, $expenditure_category->name,
-                $expenditures_by_cat, $total)));
-            $exp_total += $total;
+
+            }
+            if(count($expenditure_items) !== 0){
+                $expenses[] = json_decode(json_encode(new QuarterlyExpenditureResourceCollection($expenditure_category->code, $expenditure_category->name, $expenditures_by_cat, $total)));
+
+                $exp_total += $total;
+            }
         }
+
         return [$expenses, $exp_total];
     }
 
 
-    private function fetchQuarterlyIncomes($organisation_id, $quarter, $current_year, $type): array
+    private function fetchQuarterlyIncomes(GenerateQuarterlyRequest $request, $current_year, $type): array
     {
 
-        $start_quarter = $this->getStartQuarter($current_year->year, (int)$quarter, $type)[0];
-
-        $end_quarter = $this->getStartQuarter($current_year->year, (int)$quarter, $type)[1];
-
-        $payment_categories = $this->paymentCategoryService->getPaymentCategoriesByOrganisationAndYear($organisation_id, $current_year->year);
+        $payment_categories = $this->paymentCategoryService->getPaymentCategoriesByOrganisationAndYear($request->organisation_id, $current_year->year);
 
         $incomes = array();
 
         $total_reg_saving = 0;
 
-        $total_income = null;
+        $total_income = 0;
 
-        $member_reg = $this->registrationService->getMemberRegistrationPerQuarter($start_quarter, $end_quarter, "MR", $current_year->id);
+        $quarterly_incomes = array();
 
-        $savings = $this->userSavingService->getMemberSavingPerQuarter($start_quarter, $end_quarter, "MS", $current_year->id);
+        $member_reg = $this->registrationService->getMemberRegistrationPerQuarter($request, Constants::MR, $current_year->id, $current_year, $type);
 
+
+        $savings = $this->userSavingService->getMemberSavingPerQuarter($request, Constants::MS, $current_year->id, $type, $current_year);
 
         array_push($incomes, $member_reg, $savings);
 
         $total_reg_saving += $member_reg->total + $savings->total;
 
-        $quarterly_incomes = array();
-
         foreach ($payment_categories as $key => $payment_category){
-            $payment_items = $this->paymentItemService->getPaymentActivitiesByCategoryAndSession($payment_category->id, $current_year->id);
+
+            $session_payment_items = $this->paymentItemService->getPaymentActivitiesByCategoryAndSessionAndQuarter($payment_category->id, $request, $current_year, $type);
+
             $payment_activities = array();
+
             $payment_category_total = 0;
 
-            foreach ($payment_items as $payment_item_key => $payment_item){
+            for ($i = 0; $i < count($session_payment_items); $i++) {
                 $payment_incomes = array();
+                $supports = $this->activitySupportService->getSponsorshipIncomePerQuarterly($current_year, $request, $type, $session_payment_items[$i]);
 
-                $supports = $this->activitySupportService->getSponsorshipIncomePerQuarterly($start_quarter,$end_quarter, $payment_item, $current_year->id);
+                $activities = $this->incomeActivityService->getQuarterlyIncomeActivities($current_year, $session_payment_items[$i], $request, $type);
 
-                $activities = $this->incomeActivityService->getQuarterlyIncomeActivities($start_quarter,$end_quarter, $payment_item, $current_year->id);
-
-                $user_contribution = $this->userContributionService->getContributionsByItemAndSession($payment_item->id, $start_quarter, $end_quarter, $current_year->id);
+                $user_contribution = $this->userContributionService->getContributionsByItemAndSession($session_payment_items[$i]['id'], $request, $current_year, $type);
 
                 $payment_incomes = array_merge($user_contribution, $payment_incomes, $supports, $activities);
 
-                $total = $this->calculateTotal($payment_incomes);
+                $total = collect($payment_incomes)->sum('amount');
 
-                $payment_activity = json_encode(new QuarterlyIncomeResource($payment_item_key + 1, $payment_item->name, $payment_incomes, $total));
+                $payment_activity = json_encode(new QuarterlyIncomeResource($i + 1, $session_payment_items[$i]['name'], $payment_incomes, $total));
 
                 $payment_activities[] = json_decode($payment_activity);
 
                 $payment_category_total += $total;
 
+
             }
-            $payment_category_income = json_encode(new IncomeResource($payment_category->code, $payment_activities,  $payment_category->name, $payment_category_total));
 
-            $incomes[] = json_decode($payment_category_income);
+            if(count($session_payment_items) !== 0){
 
-            $total_income = $payment_category_total + $total_reg_saving;
+                $payment_category_income = json_encode(new IncomeResource($payment_category->code, $payment_activities,  $payment_category->name, $payment_category_total));
+                $incomes[] = json_decode($payment_category_income);
 
-            array_push($quarterly_incomes, $incomes, $total_income);
-         }
+                $total_income = $payment_category_total + $total_reg_saving;
+            }
+
+        }
+
+        array_push($quarterly_incomes, $incomes, $total_income);
 
         return $quarterly_incomes;
     }
@@ -271,41 +299,62 @@ class ReportGenerationService implements ReportGenerationInterface
     {
 
         $payment_categories = $this->paymentCategoryService->getPaymentCategoriesByOrganisationAndYear($organisation_id, $year_label);
+
         $incomes = array();
+
         $total_reg_saving = 0;
+
         $year_incomes = array();
 
-        $member_reg = $this->registrationService->getMemberRegistrationPerYear($year_id, "MR");
+        $total_income = 0;
 
-        $savings = $this->userSavingService->getMemberSavingPerYear($year_id, "MS");
+        $member_reg = $this->registrationService->getMemberRegistrationPerYear($year_id, Constants::MR);
+
+        $savings = $this->userSavingService->getMemberSavingPerYear($year_id, Constants::MS);
         array_push($incomes, $member_reg, $savings);
+
         $total_reg_saving += $member_reg->total + $savings->total;
 
         foreach ($payment_categories as $key => $payment_category){
+
             $payment_items = $this->paymentItemService->getPaymentActivitiesByCategoryAndSession($payment_category->id, $year_id);
+
             $payment_activities = array();
+
             $payment_category_total = 0;
 
-            foreach ($payment_items as $payment_item_key => $payment_item){
+            for ($i = 0; $i < count($payment_items); $i++) {
                 $payment_incomes = array();
-                $supports = $this->activitySupportService->getSponsorshipIncomePerYear($year_id, $payment_item);
-                $activities = $this->incomeActivityService->getYearIncomeActivities($year_id, $payment_item);
-                $user_contribution = $this->userContributionService->getContributionsByItemAndYear($payment_item->id, $year_id);
+
+                $supports = $this->activitySupportService->getSponsorshipIncomePerYear($year_id, $payment_items[$i]);
+
+                $activities = $this->incomeActivityService->getYearIncomeActivities($year_id, $payment_items[$i]);
+
+                $user_contribution = $this->userContributionService->getContributionsByItemAndYear($payment_items[$i]['id'], $year_id);
+
                 $payment_incomes = array_merge($user_contribution, $payment_incomes, $supports, $activities);
 
-                $total = $this->calculateTotal($payment_incomes);
+                $total = collect($payment_incomes)->sum('amount');
 
-                $payment_activity = json_encode(new QuarterlyIncomeResource($payment_item_key + 1, $payment_item->name, $payment_incomes, $total));
+                $payment_activity = json_encode(new QuarterlyIncomeResource($i + 1, $payment_items[$i]['name'], $payment_incomes, $total));
 
                 $payment_activities[] = json_decode($payment_activity);
 
                 $payment_category_total += $total;
             }
-            $payment_category_income = json_encode(new IncomeResource($payment_category->code, $payment_activities,  $payment_category->name, $payment_category_total));
-            $incomes[] = json_decode($payment_category_income);
-            $total_income = $payment_category_total + $total_reg_saving;
-            array_push($year_incomes, $incomes, $total_income);
+
+            if(count($payment_items) !== 0){
+
+                $payment_category_income = json_encode(new IncomeResource($payment_category->code, $payment_activities,  $payment_category->name, $payment_category_total));
+
+                $incomes[] = json_decode($payment_category_income);
+
+                $total_income = $payment_category_total + $total_reg_saving;
+            }
         }
+
+        array_push($year_incomes, $incomes, $total_income);
+
         return $year_incomes;
     }
 
@@ -314,20 +363,30 @@ class ReportGenerationService implements ReportGenerationInterface
         $expenses = [];
         $exp_total = 0;
         $expenditure_categories = $this->expenditureCategoryService->getExpenditureCategoriesByOrganisationYear($organisation_id, null);
+
         foreach ($expenditure_categories as $key => $expenditure_category){
             $expenditures_by_cat = array();
+
             $expenditure_items = $this->expenditureItemService->getExpensesByCategoryAndYear($expenditure_category->id, $year_id);
+
             $total = 0;
+
             foreach ($expenditure_items as $k => $expenditure_item) {
                 $details = $this->expenditureDetailService->findExpenditureDetailsByItemAndYear($expenditure_item->id, $year_id);
+
                 $sub_total = collect($details)->sum('amount_spent');
+
                 $expenditure = json_encode(new QuarterlyExpenditureResource(($k + 1), $expenditure_item->name, ($details->toArray()), $sub_total));
+
                 $expenditures_by_cat[] = json_decode($expenditure);
+
                 $total += $sub_total;
             }
-            $expenses[] = json_decode(json_encode(new QuarterlyExpenditureResourceCollection($expenditure_category->code, $expenditure_category->name,
-                $expenditures_by_cat, $total)));
-            $exp_total += $total;
+            if(count($expenditure_items->toArray()) !== 0){
+                $expenses[] = json_decode(json_encode(new QuarterlyExpenditureResourceCollection($expenditure_category->code, $expenditure_category->name, $expenditures_by_cat, $total)));
+
+                $exp_total += $total;
+            }
         }
         return [$expenses, $exp_total];
     }

@@ -281,13 +281,17 @@ class UserContributionService implements UserContributionInterface {
     }
 
 
-    public function getContributionsByItemAndSession($item, $start_quarter, $end_quarter, $session_id){
+    public function getContributionsByItemAndSession($item, $request, $current_year, $type){
+        $quarter_range = $this->getStartQuarter($current_year->year,  $request->quarter, $type);
+        $start_quarter = $quarter_range[0];
+        $end_quarter = $quarter_range[1];
+
         return DB::table('user_contributions')
             ->join('payment_items', 'payment_items.id', '=', 'user_contributions.payment_item_id')
             ->join('sessions', 'sessions.id' , '=', 'user_contributions.session_id')
             ->where('payment_items.id', $item)
             ->where('user_contributions.approve', PaymentStatus::APPROVED)
-            ->where('sessions.id', $session_id)
+            ->where('sessions.id', $current_year->id)
             ->whereBetween('user_contributions.created_at', [$start_quarter, $end_quarter])
             ->selectRaw('SUM(user_contributions.amount_deposited) as amount, sessions.year as name, sessions.id, sessions.year')
             ->get()->toArray();

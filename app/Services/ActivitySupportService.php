@@ -119,36 +119,30 @@ class ActivitySupportService implements ActivitySupportInterface
         $sponsorship->save();
     }
 
-    public function getSponsorshipIncomePerQuarterly($start_quarter,$end_quarter, $payment_item, $session_id): array
+    public function getSponsorshipIncomePerQuarterly($current_year, $request, $type, $payment_item): array
     {
+        $quarter_range = $this->getStartQuarter($current_year->year,  $request->quarter, $type);
+        $start_quarter = $quarter_range[0];
+        $end_quarter = $quarter_range[1];
 
         return  DB::table('activity_supports')
             ->join('payment_items', 'payment_items.id', '=', 'activity_supports.payment_item_id')
             ->join('sessions', 'sessions.id' , '=', 'activity_supports.session_id')
             ->where('activity_supports.approve', PaymentStatus::APPROVED)
-            ->where('payment_items.id', $payment_item->id)
-            ->where('sessions.id', $session_id)
+            ->where('payment_items.id', $payment_item['id'])
+            ->where('sessions.id', $current_year->id)
             ->whereBetween('activity_supports.created_at', [$start_quarter, $end_quarter])
             ->select('activity_supports.id', 'activity_supports.supporter as name', 'activity_supports.amount_deposited as amount', 'sessions.year')
             ->orderBy('name')
             ->get()
             ->toArray();
-//        return ActivitySupport::where('payment_item_id', $payment_item->id)
-//                        ->where('session_id', $session_id)
-//                        ->where('approve', PaymentStatus::APPROVED)
-//                        ->whereBetween('created_at', [$start_quarter, $end_quarter])
-//                        ->select('activity_supports.id', 'activity_supports.supporter as name', 'activity_supports.amount_deposited as amount', 'session_id')
-//                        ->orderBy('name')
-//                        ->get()
-//                        ->toArray();
-
     }
 
     public function getSponsorshipIncomePerYear($year, $payment_item): array
     {
         return ActivitySupport::where('approve', PaymentStatus::APPROVED)
                         ->where('session_id', $year)
-                        ->where('payment_item_id', $payment_item->id)
+                        ->where('payment_item_id', $payment_item['id'])
                         ->select('id', 'supporter as name', 'amount_deposited as amount')
                         ->orderBy('name')
                         ->get()
