@@ -142,7 +142,7 @@ class ActivitySupportService implements ActivitySupportInterface
     {
         return ActivitySupport::where('approve', PaymentStatus::APPROVED)
                         ->where('session_id', $year)
-                        ->where('payment_item_id', $payment_item->id)
+                        ->where('payment_item_id', $payment_item['id'])
                         ->select('id', 'supporter as name', 'amount_deposited as amount')
                         ->orderBy('name')
                         ->get()

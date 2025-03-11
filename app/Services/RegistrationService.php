@@ -80,6 +80,7 @@ class RegistrationService implements RegistrationInterface
         $quarter_range = $this->getStartQuarter($current_year->year,  $request->quarter, $type);
         $start_quarter = $quarter_range[0];
         $end_quarter = $quarter_range[1];
+
         $registrations = MemberRegistration::where('session_id', $session_id)
                         ->where('approve', PaymentStatus::APPROVED)
                         ->whereBetween('created_at', [$start_quarter, $end_quarter])

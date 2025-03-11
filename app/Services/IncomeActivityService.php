@@ -170,7 +170,7 @@ class IncomeActivityService implements IncomeActivityInterface {
     public function getYearIncomeActivities($year, $payment_item): array
     {
         return IncomeActivity::where('session_id', $year)
-                    ->where('payment_item_id', $payment_item->id)
+                    ->where('payment_item_id', $payment_item['id'])
                     ->where('approve', PaymentStatus::APPROVED)
                     ->orderBy('name')
                     ->get()

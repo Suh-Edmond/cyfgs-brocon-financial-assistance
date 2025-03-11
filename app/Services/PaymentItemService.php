@@ -165,7 +165,7 @@ class PaymentItemService implements PaymentItemInterface {
         return PaymentItem::where('payment_category_id', $category)
                     ->where('session_id', $session)
                     ->orderBy('name', 'ASC')
-                    ->get();
+                    ->get()->toArray();
     }
 
     public function getPaymentActivitiesByCategoryAndSessionAndQuarter($category, $request, $current_year, $type)
