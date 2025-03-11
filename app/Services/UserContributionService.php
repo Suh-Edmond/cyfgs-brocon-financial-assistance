@@ -272,8 +272,10 @@ class UserContributionService implements UserContributionInterface {
          foreach ($contributions as $contribution){
              $contributedItem = new MemberContributedItemResource($contribution->id, $contribution->payment_item_id,$contribution->payment_item_amount, $contribution->name,
                  $contribution->amount_deposited, $contribution->balance, $contribution->status, $contribution->approve, $contribution->created_at, $contribution->year, $contribution->frequency,
-             $contribution->month_name, $contribution->quarterly_name, $contribution->updated_by, $contribution->code, $contribution->comment, $contribution->compulsory);
-             array_push($paid_debts, $contributedItem);
+
+                 $contribution->month_name, $contribution->quarterly_name, $contribution->updated_by, $contribution->code, $contribution->comment, $contribution->compulsory);
+
+             $paid_debts[] = $contributedItem;
          }
 
           return array_merge( $paid_debts, $reg);
@@ -755,13 +757,13 @@ class UserContributionService implements UserContributionInterface {
             if (count($this->verifyCompleteItemPaymentByQuarter($item->id, $user_id, $quarter)) == 0) {
                  $to_be_paid = new MemberPaymentItemResource($item->id, $item->name, $item->amount,$item->amount, $item->compulsory,
                     $item->type, $item->frequency,"CONTRIBUTION",$current_session, null, $quarter );
-                array_push($debts, $to_be_paid);
+                $debts[] = $to_be_paid;
             }
             $last_payment = $this->verifyIncompleteQuarterItemPayment($item->id, $user_id, $quarter);
             if(!is_null($last_payment) && $last_payment->status != PaymentStatus::COMPLETE){
                  $to_be_paid = new MemberPaymentItemResource($item->id, $item->name, $last_payment->balance, $item->amount, $item->compulsory,
                     $item->type, $item->frequency,"CONTRIBUTION",$current_session, null, $quarter );
-                array_push($debts, $to_be_paid);
+                $debts[] = $to_be_paid;
             }
         }
         return $debts;
@@ -775,13 +777,13 @@ class UserContributionService implements UserContributionInterface {
             if (count($this->verifyCompleteItemPaymentByMonth($item->id, $user_id, $month)) == 0) {
                  $to_be_paid = new MemberPaymentItemResource($item->id, $item->name, $item->amount,$item->amount, $item->compulsory,
                     $item->type, $item->frequency,"CONTRIBUTION",$current_session, $month, null );
-                array_push($debts, $to_be_paid);
+                $debts[] = $to_be_paid;
             }
             $last_payment = $this->verifyIncompleteMonthItemPayment($item->id, $user_id, $month);
             if(!is_null($last_payment) && $last_payment->status != PaymentStatus::COMPLETE){
                 $to_be_paid = new MemberPaymentItemResource($item->id, $item->name, $last_payment->balance,$item->amount, $item->compulsory,
                     $item->type, $item->frequency,"CONTRIBUTION",$current_session, $month, null );
-                array_push($debts, $to_be_paid);
+                $debts[] = $to_be_paid;
             }
         }
 
@@ -802,13 +804,13 @@ class UserContributionService implements UserContributionInterface {
         if (count($this->verifyOneTimeCompleteItemPayment($item->id, $user_id)) == 0) {
              $to_be_paid = new MemberPaymentItemResource($item->id, $item->name, $item->amount,$item->amount, $item->compulsory,
                 $item->type, $item->frequency,"CONTRIBUTION",$current_session, null, null );
-            array_push($debts, $to_be_paid);
+            $debts[] = $to_be_paid;
         }
         $last_payment = $this->verifyOneTimeIncompleteItemPayment($item->id, $user_id);
         if(!is_null($last_payment) && $last_payment->status != PaymentStatus::COMPLETE){
              $to_be_paid = new MemberPaymentItemResource($item->id, $item->name, $last_payment->balance,$item->amount, $item->compulsory,
                 $item->type, $item->frequency,"CONTRIBUTION",$current_session,  null, null );
-            array_push($debts, $to_be_paid);
+            $debts[] = $to_be_paid;
         }
 
 
@@ -823,7 +825,7 @@ class UserContributionService implements UserContributionInterface {
                 ->join('payment_items', 'payment_items.id', '=', 'user_contributions.payment_item_id')
                 ->join('sessions', 'sessions.id', '=', 'user_contributions.session_id')
                 ->where('user_contributions.session_id', $session_id)
-                ->where('user_contributions.payment_item_id', $payment_item->id)
+                ->where('user_contributions.payment_item_id', $payment_item['id'])
                 ->where('user_contributions.approve', PaymentStatus::APPROVED)
                 ->select('user_contributions.*')
                 ->orderBy('payment_items.created_at')
@@ -831,7 +833,7 @@ class UserContributionService implements UserContributionInterface {
                 ->toArray();
             $totalContribution = collect($contributions)->sum('amount_deposited');
             $contributors = count($contributions);
-            array_push($percentages, ["name" => $payment_item->name, "percentage" => $totalContribution, "contributors" => $contributors]);
+            $percentages[] = ["name" => $payment_item['name'], "percentage" => $totalContribution, "contributors" => $contributors];
         }
 
         return $percentages;
@@ -929,7 +931,6 @@ class UserContributionService implements UserContributionInterface {
     private function computeAverageContributionByPaymentFrequency($payment_items, $session_id)
     {
         $contributions_percentages = $this->getPercentageContributionsByItemAndSession($payment_items, $session_id);
-//        collect($contributions_percentages)->avg()
 
         return count($payment_items) > 0 ? round(collect($contributions_percentages)->sum('percentage') / count($payment_items), 2): 0;
 
