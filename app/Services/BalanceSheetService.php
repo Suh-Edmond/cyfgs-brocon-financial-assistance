@@ -45,39 +45,65 @@ class BalanceSheetService implements BalanceSheetInterface {
         $admins            = $this->getOrganisationAdministrators();
 
         $session = $this->sessionService->getSessionById($request->session_id);
+
         $registration = $this->registrationFeeService->getCurrentRegistrationFee();
+
         $members = $this->userManagementService->getUsers($request->organisation_id);
+
         $membersYearlyPayments = array();
+
         $payment_items = $this->paymentItemService->getPaymentItemsForBalanceSheet($session->id);
+
         $total_year_contributions = 0;
+
         $total_year_balance = 0;
+
         $total_year_expected_amount = 0;
+
         $column_names = array();
-        $test = 0;
+
+
         foreach ($members as $key => $member){
             $memberPayments = array();
+
             $total_member_year_contribution = 0;
+
             $registration_amount = $this->registrationService->getMemberRegistration($session->id, $member->id);
+
             $savings = $this->userSavingService->getTotalYearlyMemberSavings($session->id, $member->id)->balance_saving;
+
             $balance_saving = $savings ?? 0;
+
             $total_member_year_contribution += ($registration_amount);
+
             $memberPayments[] = new MemberPaymentItemContributionResource($registration, $registration->id, "Registration", $registration_amount, $registration->amount, ($registration->amount - $registration_amount), "MR", $registration->is_compulsory,
                 PaymentItemType::ALL_MEMBERS, $registration->frequency, $this->getPaymentDurations($registration, "REGISTRATION"), $registration->created_at, "" );
+
             $memberPayments[] = new MemberPaymentItemContributionResource($registration, $member->id, "Savings", $balance_saving, 0, 0, "MS", false, "SAVINGS", "None", [], Carbon::now(), "");
+
             foreach ($payment_items as $k => $payment_item){
+
                 $amount_per_item = $this->userContributionService->getApprovedContributionByUserAndPaymentItem($payment_item->id, $member->id)->sum('user_contributions.amount_deposited');
+
                     $memberPayments[] = new MemberPaymentItemContributionResource($payment_item, $payment_item->id, $payment_item->name, $amount_per_item, $payment_item->amount, ($payment_item->amount - $amount_per_item),
                         $payment_item->paymentCategory->code . '.' . $k, $payment_item->compulsory, $payment_item->type, $payment_item->frequency, $this->getPaymentDurations($payment_item, "PAYMENTS"), $payment_item->created_at, $payment_item->reference);
-                $total_member_year_contribution += $amount_per_item;
+
+                    $total_member_year_contribution += $amount_per_item;
             }
             $total_year_contributions += $total_member_year_contribution;
+
             $perMemberExpectedAmount = $this->computeTotalExpectedAmountByMemberAndPaymentItem($payment_items, $member);
+
             $total_member_year_balance = $perMemberExpectedAmount - $total_member_year_contribution;
+
             $total_year_balance += $total_member_year_balance;
+
             $total_year_expected_amount += $perMemberExpectedAmount;
+
             $membersYearlyPayments[] =  (new MemberYearlyPaymentResource($member, $memberPayments, $total_member_year_contribution, $total_member_year_balance, new MemberInfoResource($member, $member->id, $member->name, $member->email), $perMemberExpectedAmount));
         }
         $column_names = $this->getColumnNameForBalanceSheet($membersYearlyPayments);
+
         return new BalanceSheetResource(null, $membersYearlyPayments, $total_year_expected_amount,
             $total_year_contributions, $total_year_balance, new SessionResource($session), $column_names, $admins[Roles::PRESIDENT], $admins[Roles::TREASURER], $admins[Roles::FINANCIAL_SECRETARY]);
     }

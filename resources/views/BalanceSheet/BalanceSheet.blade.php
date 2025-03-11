@@ -94,6 +94,9 @@
                 <th style="padding: 3px; border: 1px solid black;">Type</th>
                 <th style="padding: 3px; border: 1px solid black;">Frequency</th>
                 <th style="padding: 3px; border: 1px solid black;">Amount</th>
+                <th style="padding: 3px; border: 1px solid black;">Expected Amount</th>
+                <th style="padding: 3px; border: 1px solid black;">Amount Deposited</th>
+                <th style="padding: 3px; border: 1px solid black;">Balance</th>
                 <th style="padding: 3px; border: 1px solid black;">Payment Durations</th>
             </tr>
             @foreach($columns as $colum)
@@ -121,7 +124,16 @@
                     {{$colum->frequency}}
                 </td>
                 <td style="padding: 3px; border: 1px solid black;">
-                    {{number_format($colum->amount)}}
+                    {{number_format($colum->amount)}} XAF
+                </td>
+                <td style="padding: 3px; border: 1px solid black;">
+                    {{\App\Constants\Constants::SAVINGS == $colum->type ? 0 : number_format($colum->total_expect_amount)}} XAF
+                </td>
+                <td style="padding: 3px; border: 1px solid black;">
+                    {{\App\Constants\Constants::SAVINGS == $colum->type ? 0 : number_format($colum->total_amount_deposited)}}  XAF
+                </td>
+                <td style="padding: 3px; border: 1px solid black;">
+                    {{\App\Constants\Constants::SAVINGS == $colum->type ? 0 : number_format(($colum->total_expect_amount - $colum->total_amount_deposited))}} XAF
                 </td>
                 <td style="padding: 3px; border: 1px solid black;">
                     @foreach($colum->payment_durations as $duration)
