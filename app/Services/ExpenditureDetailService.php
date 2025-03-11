@@ -224,13 +224,13 @@ class ExpenditureDetailService implements ExpenditureDetailInterface {
         foreach ($items as $item){
             $approvedPaymentItemExpenditures = ExpenditureItem::where('session_id', $session_id)
                                                 ->where('approve', PaymentStatus::APPROVED)
-                                                ->where('payment_item_id', $item->id)
+                                                ->where('payment_item_id', $item['id'])
                                                 ->get();
             $amount = collect($approvedPaymentItemExpenditures)->map(function ($ex){
                 return $ex->expenditureDetails()->sum('amount_spent');
             })->sum();
 
-            $expenditures[] = ["name" => $item->name, "amount" => $amount];
+            $expenditures[] = ["name" => $item['name'], "amount" => $amount];
         }
 
         return $expenditures;
