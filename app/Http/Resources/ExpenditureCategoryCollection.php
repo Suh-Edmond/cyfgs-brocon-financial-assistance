@@ -25,7 +25,7 @@ class ExpenditureCategoryCollection extends ResourceCollection
     public function toArray($request)
     {
         return [
-            'data'           =>$this->collection,
+            'data'           => $this->collection,
             'total'          => $this->total,
             'last_page'      => $this->lastPage,
             'per_page'       => $this->perPage,

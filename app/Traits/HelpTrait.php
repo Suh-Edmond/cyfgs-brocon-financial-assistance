@@ -673,7 +673,12 @@ trait HelpTrait {
         return substr(str_shuffle($pin), 0, $size);
     }
 
+    public function getRegistrationByActiveSession($registrations, $session){
+        $currentReg = collect($registrations)->filter(function ($e) use ($session){
+            return $e->session_id === $session;
+        })->first();
 
-
+        return $currentReg ?? null;
+    }
 
 }

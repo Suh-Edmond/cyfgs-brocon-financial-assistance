@@ -99,35 +99,28 @@ class UserManagementService implements UserManagementInterface
                ->orderBy('name')->get();
     }
 
-    public function getUsersRegistrationStatus($session_id)
+    private function getAllUsersNotRegistered($session_id){
+        return  User::whereDoesntHave('registrations', function ($e) use ($session_id){
+            return $e->where('session_id', $session_id);
+        })->get()->toArray();
+    }
+    public function getUsersRegistrationStatus($session_id, $paymentStatus)
     {
-
-        return User::leftJoin('member_registrations', 'users.id', '=', 'member_registrations.user_id')
-            ->where('users.status', SessionStatus::ACTIVE)
-            ->where('member_registrations.session_id', $session_id)
-            ->select('users.*', 'member_registrations.approve')
-            ->distinct()
-            ->orderBy('name')->get();
+        return User::whereHas('registrations', function ($e) use ($session_id, $paymentStatus){
+                  return $e->where('session_id', $session_id)->where('approve', $paymentStatus);
+        })->get()->toArray();
     }
 
     public function getTotalUsersByRegStatus($organisation_id, $session_id)
     {
 
-        $users = $this->getUsersRegistrationStatus($session_id);
-        $group_users = collect($users)->groupBy('approve')->toArray();
-        $total_approved_record = 0;
-        $total_pending = 0;
-        $total_declined = 0;
-        $total_unregistered = count($users);
+        $approvedUsers = count($this->getUsersRegistrationStatus($session_id, PaymentStatus::APPROVED));
+        $pendingUsers =  count($this->getUsersRegistrationStatus($session_id, PaymentStatus::PENDING));
+        $declinedUsers = count($this->getUsersRegistrationStatus($session_id, PaymentStatus::DECLINED));
+        $notRegistered = count($this->getAllUsersNotRegistered($session_id));
+        $totalUsers = $approvedUsers + $pendingUsers + $declinedUsers + $notRegistered;
 
-         if(count($group_users) > 0){
-             $total_approved_record  = isset($group_users['APPROVED']) ? count($group_users['APPROVED']) : 0;
-             $total_pending = isset($group_users['PENDING']) ? count($group_users['PENDING']) : 0;
-             $total_declined = isset($group_users['DECLINED']) ? count($group_users['DECLINED']): 0;
-             $total_unregistered =  count($group_users);
-         }
-
-        return [$total_approved_record, $total_pending, $total_declined, $total_unregistered];
+        return ["approvedUsers" => ($approvedUsers), "pendingUsers" => ($pendingUsers), "declinedUsers" => ($declinedUsers), "notRegistered" =>($notRegistered), "allUsers" => $totalUsers];
     }
 
     public function getRegMemberByMonths($organisation_id, $session_id)
@@ -286,7 +279,6 @@ class UserManagementService implements UserManagementInterface
         $filter_users = User::where('organisation_id', $request->organisation_id);
 
         if(isset($request->has_register) && $request->has_register == RegistrationStatus::REGISTERED) {
-
             $filter_users = $filter_users->whereHas('registrations', function ($query) use ($request){
                 $query->where('session_id', $request->year)->where('approve', PaymentStatus::APPROVED);
             });
@@ -294,8 +286,8 @@ class UserManagementService implements UserManagementInterface
         }
         if(isset($request->has_register) && $request->has_register == RegistrationStatus::NOT_REGISTERED){
 
-            $filter_users = $filter_users->whereHas('registrations', function ($query) use ($request){
-                      $query->orWhere('approve', PaymentStatus::PENDING)->orWhere('approve', PaymentStatus::DECLINED);
+            $filter_users = User::whereDoesntHave('registrations', function ($e) use ($request){
+                return $e->where('session_id', $request->year);
             });
 
         }
@@ -317,29 +309,33 @@ class UserManagementService implements UserManagementInterface
         }
         if(isset($request->has_register) && $request->has_register == SessionStatus::ACTIVE ){
 
-            $filter_users = $filter_users->where('users.status', SessionStatus::ACTIVE);
+            $filter_users = $filter_users->where('status', SessionStatus::ACTIVE);
 
         }
         if(isset($request->has_register) && $request->has_register == SessionStatus::IN_ACTIVE){
 
-            $filter_users = $filter_users->where('users.status', SessionStatus::IN_ACTIVE);
+            $filter_users = $filter_users->where('status', SessionStatus::IN_ACTIVE);
 
         }
         if(isset($request->gender) && $request->gender != Constants::ALL){
 
-           $filter_users = $filter_users->where('users.gender', $request->gender);
+           $filter_users = $filter_users->where('gender', $request->gender);
 
         }
         if(isset($request->filter)){
 
-            $filter_users = $filter_users->where('users.name','LIKE', '%'.$request->filter.'%');
+            $filter_users = $filter_users->where('name','LIKE', '%'.$request->filter.'%');
 
         }
         $filter_users = $filter_users->distinct();
 
-        $filter_users = !is_null($request->per_page) ? $filter_users->orderBy('users.name')->paginate($request->per_page): $filter_users->orderBy('users.name')->get();
+        $perPage = $request->input('per_page', 10);
 
-        $total = !is_null($request->per_page) ? $filter_users->total() : count($filter_users);
+        $currentPage = $request->input('page', 1);
+
+        $filter_users =  $filter_users->orderBy('users.name')->paginate($perPage, ['*'], 'page', $currentPage);
+
+        $total = $filter_users->total();
 
         $last_page = !is_null($request->per_page) ? $filter_users->lastPage(): 0;
 
