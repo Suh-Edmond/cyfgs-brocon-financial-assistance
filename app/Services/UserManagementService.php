@@ -286,7 +286,6 @@ class UserManagementService implements UserManagementInterface
         $filter_users = User::where('organisation_id', $request->organisation_id);
 
         if(isset($request->has_register) && $request->has_register == RegistrationStatus::REGISTERED) {
-
             $filter_users = $filter_users->whereHas('registrations', function ($query) use ($request){
                 $query->where('session_id', $request->year)->where('approve', PaymentStatus::APPROVED);
             });
@@ -294,8 +293,8 @@ class UserManagementService implements UserManagementInterface
         }
         if(isset($request->has_register) && $request->has_register == RegistrationStatus::NOT_REGISTERED){
 
-            $filter_users = $filter_users->whereHas('registrations', function ($query) use ($request){
-                      $query->orWhere('approve', PaymentStatus::PENDING)->orWhere('approve', PaymentStatus::DECLINED);
+            $filter_users = User::whereDoesntHave('registrations', function ($e) use ($request){
+                return $e->where('session_id', $request->year);
             });
 
         }
@@ -317,29 +316,33 @@ class UserManagementService implements UserManagementInterface
         }
         if(isset($request->has_register) && $request->has_register == SessionStatus::ACTIVE ){
 
-            $filter_users = $filter_users->where('users.status', SessionStatus::ACTIVE);
+            $filter_users = $filter_users->where('status', SessionStatus::ACTIVE);
 
         }
         if(isset($request->has_register) && $request->has_register == SessionStatus::IN_ACTIVE){
 
-            $filter_users = $filter_users->where('users.status', SessionStatus::IN_ACTIVE);
+            $filter_users = $filter_users->where('status', SessionStatus::IN_ACTIVE);
 
         }
         if(isset($request->gender) && $request->gender != Constants::ALL){
 
-           $filter_users = $filter_users->where('users.gender', $request->gender);
+           $filter_users = $filter_users->where('gender', $request->gender);
 
         }
         if(isset($request->filter)){
 
-            $filter_users = $filter_users->where('users.name','LIKE', '%'.$request->filter.'%');
+            $filter_users = $filter_users->where('name','LIKE', '%'.$request->filter.'%');
 
         }
         $filter_users = $filter_users->distinct();
 
-        $filter_users = !is_null($request->per_page) ? $filter_users->orderBy('users.name')->paginate($request->per_page): $filter_users->orderBy('users.name')->get();
+        $perPage = $request->input('per_page', 10);
 
-        $total = !is_null($request->per_page) ? $filter_users->total() : count($filter_users);
+        $currentPage = $request->input('page', 1);
+
+        $filter_users =  $filter_users->orderBy('users.name')->paginate($perPage, ['*'], 'page', $currentPage);
+
+        $total = $filter_users->total();
 
         $last_page = !is_null($request->per_page) ? $filter_users->lastPage(): 0;
 
