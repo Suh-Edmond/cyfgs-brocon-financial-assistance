@@ -99,35 +99,28 @@ class UserManagementService implements UserManagementInterface
                ->orderBy('name')->get();
     }
 
-    public function getUsersRegistrationStatus($session_id)
+    private function getAllUsersNotRegistered($session_id){
+        return  User::whereDoesntHave('registrations', function ($e) use ($session_id){
+            return $e->where('session_id', $session_id);
+        })->get()->toArray();
+    }
+    public function getUsersRegistrationStatus($session_id, $paymentStatus)
     {
-
-        return User::leftJoin('member_registrations', 'users.id', '=', 'member_registrations.user_id')
-            ->where('users.status', SessionStatus::ACTIVE)
-            ->where('member_registrations.session_id', $session_id)
-            ->select('users.*', 'member_registrations.approve')
-            ->distinct()
-            ->orderBy('name')->get();
+        return User::whereHas('registrations', function ($e) use ($session_id, $paymentStatus){
+                  return $e->where('session_id', $session_id)->where('approve', $paymentStatus);
+        })->get()->toArray();
     }
 
     public function getTotalUsersByRegStatus($organisation_id, $session_id)
     {
 
-        $users = $this->getUsersRegistrationStatus($session_id);
-        $group_users = collect($users)->groupBy('approve')->toArray();
-        $total_approved_record = 0;
-        $total_pending = 0;
-        $total_declined = 0;
-        $total_unregistered = count($users);
+        $approvedUsers = count($this->getUsersRegistrationStatus($session_id, PaymentStatus::APPROVED));
+        $pendingUsers =  count($this->getUsersRegistrationStatus($session_id, PaymentStatus::PENDING));
+        $declinedUsers = count($this->getUsersRegistrationStatus($session_id, PaymentStatus::DECLINED));
+        $notRegistered = count($this->getAllUsersNotRegistered($session_id));
+        $totalUsers = $approvedUsers + $pendingUsers + $declinedUsers + $notRegistered;
 
-         if(count($group_users) > 0){
-             $total_approved_record  = isset($group_users['APPROVED']) ? count($group_users['APPROVED']) : 0;
-             $total_pending = isset($group_users['PENDING']) ? count($group_users['PENDING']) : 0;
-             $total_declined = isset($group_users['DECLINED']) ? count($group_users['DECLINED']): 0;
-             $total_unregistered =  count($group_users);
-         }
-
-        return [$total_approved_record, $total_pending, $total_declined, $total_unregistered];
+        return ["approvedUsers" => ($approvedUsers), "pendingUsers" => ($pendingUsers), "declinedUsers" => ($declinedUsers), "notRegistered" =>($notRegistered), "allUsers" => $totalUsers];
     }
 
     public function getRegMemberByMonths($organisation_id, $session_id)
