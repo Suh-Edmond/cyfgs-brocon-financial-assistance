@@ -80,15 +80,17 @@ class ReportGenerationService implements ReportGenerationInterface
 
         $expenses = $this->expenditureDetailService->getExpenditureActivities($id);
 
-        foreach ($expenses[0] as $expense){
+        if(count($expenses) !== 0){
+            foreach ($expenses[0] as $expense){
 
-            $total_amount_spent += $expense['amount_spent'];
+                $total_amount_spent += $expense['amount_spent'];
 
-            $total_amount_given += $expense['amount_given'];
+                $total_amount_given += $expense['amount_given'];
 
-            $balance += ($expense['amount_given']- $expense['amount_spent']);
+                $balance += ($expense['amount_given']- $expense['amount_spent']);
 
-            $expenditures[] = new DetailResource($expense['name'], $expense['amount_given'], $expense['amount_spent'], ($expense['amount_given'] - $expense['amount_spent']));
+                $expenditures[] = new DetailResource($expense['name'], $expense['amount_given'], $expense['amount_spent'], ($expense['amount_given'] - $expense['amount_spent']));
+            }
         }
 
         $total_balance += $balance > 0 ? ($total_income - $total_amount_spent)  + $balance: ($total_income - $total_amount_spent);
