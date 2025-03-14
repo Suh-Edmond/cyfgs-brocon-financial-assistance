@@ -4,10 +4,10 @@
 DB_NAME="financial_assistant_db"
 DB_USER="quickrec_user"
 DB_PASSWORD="Summer123!"
-BACKUP_DIR="https://drive.google.com/drive/folders/1rlQwx4cqaaNH9RgQMr4Uz7lNtJsgXymf"
+BACKUP_DIR="drive/folders/1rlQwx4cqaaNH9RgQMr4Uz7lNtJsgXymf"
 DATE=$(date +"%Y%m%d_%H%M%S")
 BACKUP_FILE="$BACKUP_DIR/db_backup_$DATE.sql"
-RCLONE_REMOTE="quickrecord_db_backup:https://drive.google.com/drive/folders/1rlQwx4cqaaNH9RgQMr4Uz7lNtJsgXymf" # Replace 'gdrive' with your rclone remote name
+RCLONE_REMOTE="quickrecord_db_backup:1rlQwx4cqaaNH9RgQMr4Uz7lNtJsgXymf" # Replace 'gdrive' with your rclone remote name
 
 # Create backup directory if it doesn't exist
 mkdir -p "$BACKUP_DIR"
@@ -41,4 +41,4 @@ fi
 echo "Upload successful!"
 
 # Optional: Clean up local backup file (uncomment if desired)
-# rm "$BACKUP_FILE"
+ rm "$BACKUP_FILE"
