@@ -21,3 +21,24 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 echo "Database backup successful: $BACKUP_FILE"
+
+# Check if backup file exists
+if [ -f "$BACKUP_FILE" ]; then
+    echo "Backup file exists: $BACKUP_FILE"
+else
+    echo "Backup file does not exist!"
+    exit 1
+fi
+
+# Step 2: Upload the backup to Google Drive
+echo "Uploading backup to Google Drive..."
+rclone copy "$BACKUP_FILE" "$RCLONE_REMOTE/" --verbose
+
+if [ $? -ne 0 ]; then
+    echo "Upload to Google Drive failed!"
+    exit 1
+fi
+echo "Upload successful!"
+
+# Optional: Clean up local backup file (uncomment if desired)
+# rm "$BACKUP_FILE"
