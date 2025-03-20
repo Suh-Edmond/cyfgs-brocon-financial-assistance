@@ -282,15 +282,17 @@ class ReportGenerationService implements ReportGenerationInterface
 
             }
 
+
             if(count($session_payment_items) !== 0){
 
-                $payment_category_income = json_encode(new IncomeResource($payment_category->code, $payment_activities,  $payment_category->name, $payment_category_total));
-                $incomes[] = json_decode($payment_category_income);
 
-                $total_income = $payment_category_total + $total_reg_saving;
+                $payment_category_income = json_encode(new IncomeResource($payment_category->code, $payment_activities,  $payment_category->name, $payment_category_total));
+
+                $incomes[] = json_decode($payment_category_income);
             }
 
         }
+        $total_income = collect($incomes)->sum('total');
 
         array_push($quarterly_incomes, $incomes, $total_income);
 
@@ -351,9 +353,10 @@ class ReportGenerationService implements ReportGenerationInterface
 
                 $incomes[] = json_decode($payment_category_income);
 
-                $total_income = $payment_category_total + $total_reg_saving;
             }
         }
+
+        $total_income = collect($incomes)->sum('total');
 
         array_push($year_incomes, $incomes, $total_income);
 
