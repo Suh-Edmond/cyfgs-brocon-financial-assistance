@@ -12,6 +12,7 @@ use App\Http\Resources\QuarterlyExpenditureResource;
 use App\Http\Resources\QuarterlyExpenditureResourceCollection;
 use App\Http\Resources\QuarterlyIncomeResource;
 use App\Interfaces\ReportGenerationInterface;
+use App\Models\StoreYearlyBalance;
 use App\Traits\HelpTrait;
 
 class ReportGenerationService implements ReportGenerationInterface
@@ -136,9 +137,7 @@ class ReportGenerationService implements ReportGenerationInterface
 
     public function computeBalanceBroughtForwardByQuarter($request, $current_year, $type){
 
-
         $quarter = (int) $request->quarter > 1 && $type == self::$BALANCE_BROUGHT_FORWARD ? ((int) $request->quarter - 1) : 0;
-
 
         $income = $this->fetchQuarterlyIncomes($request, $current_year, $type);
 
@@ -159,11 +158,17 @@ class ReportGenerationService implements ReportGenerationInterface
             return $balance_brought_forward;
         }
 
-        $income = $this->fetchYearIncomes($previous_year->id, $previous_year_label, $request->user()->organisation_id);
+        $income = $this->fetchYearIncomes($previous_year->id, $previous_year->year, $request->user()->organisation_id);
 
         $expenditure = $this->fetchYearlyExpenditures($previous_year->id, $request->user()->organisation_id);
 
         return $income[1] - $expenditure[1];
+    }
+
+    public function computeTotalBalanceBroughtForward($request){
+        $income = $this->fetchYearIncomes($request->year_id, $request->year_label, $request->user()->organisation_id);
+
+        $bal_brought_forward = $this->computeBalanceBroughtForwardByYear($request);
     }
 
 
@@ -175,11 +180,18 @@ class ReportGenerationService implements ReportGenerationInterface
         $expenditures = $this->fetchYearlyExpenditures($request->year_id, $request->user()->organisation_id);
 
         $bal_brought_forward = $this->computeBalanceBroughtForwardByYear($request);
+
         $admins            = $this->getOrganisationAdministrators();
+
         $income_list = $income[0];
+
         $total_income = $income[1] + $bal_brought_forward;
+
         $expenditure_list = $expenditures[0];
+
         $total_expenditure = $expenditures[1];
+
+//        $this->saveYearlyBalance($request->year_id, $total_income, $total_expenditure);
 
         return [$income_list, $expenditure_list, ["total_income" => $total_income], ["total_expenditure" => $total_expenditure],["bal_brought_forward" => $bal_brought_forward],
             ["president" => $admins[Roles::PRESIDENT]], ["treasurer" => $admins[Roles::TREASURER]], ["fin_sec" => $admins[Roles::FINANCIAL_SECRETARY]]];
@@ -262,7 +274,9 @@ class ReportGenerationService implements ReportGenerationInterface
             $payment_category_total = 0;
 
             for ($i = 0; $i < count($session_payment_items); $i++) {
+
                 $payment_incomes = array();
+
                 $supports = $this->activitySupportService->getSponsorshipIncomePerQuarterly($current_year, $request, $type, $session_payment_items[$i]);
 
                 $activities = $this->incomeActivityService->getQuarterlyIncomeActivities($current_year, $session_payment_items[$i], $request, $type);
@@ -279,9 +293,7 @@ class ReportGenerationService implements ReportGenerationInterface
 
                 $payment_category_total += $total;
 
-
             }
-
 
             if(count($session_payment_items) !== 0){
 
@@ -315,6 +327,7 @@ class ReportGenerationService implements ReportGenerationInterface
         $member_reg = $this->registrationService->getMemberRegistrationPerYear($year_id, Constants::MR);
 
         $savings = $this->userSavingService->getMemberSavingPerYear($year_id, Constants::MS);
+
         array_push($incomes, $member_reg, $savings);
 
         $total_reg_saving += $member_reg->total + $savings->total;
@@ -394,5 +407,29 @@ class ReportGenerationService implements ReportGenerationInterface
             }
         }
         return [$expenses, $exp_total];
+    }
+
+
+    private function saveYearlyBalance($session, $total_income, $total_expenditure)
+    {
+        $balance = $total_income - $total_expenditure;
+        $sessionBal = StoreYearlyBalance::where('session_id', $session)->first();
+        if(isset($sessionBal)){
+            if($sessionBal->balance != $balance){
+                $sessionBal->balance = $balance;
+                $sessionBal->save();
+            }
+        }else{
+            StoreYearlyBalance::create([
+                'session_id' => $session,
+                'balance'    => $balance
+            ]);
+        }
+    }
+
+
+    private function fetchSessionBalance($session_id)
+    {
+        return StoreYearlyBalance::where('session_id', $session_id)->first();
     }
 }

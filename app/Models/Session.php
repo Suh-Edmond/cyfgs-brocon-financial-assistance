@@ -56,4 +56,9 @@ class Session extends Model
     {
         return $this->hasMany(UserSaving::class);
     }
+
+    public function yearlyBalance()
+    {
+        return $this->hasOne(StoreYearlyBalance::class);
+    }
 }
