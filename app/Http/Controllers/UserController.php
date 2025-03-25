@@ -156,7 +156,9 @@ class UserController extends Controller
             'organisation_logo'      => $organisation->logo
         ];
 
-        $pdf = PDF::loadView('User.Users', $data);
+
+
+        $pdf = PDF::loadView('User.Users', $data)->setPaper('a3', 'landscape');
         $pdf->output();
         $domPdf = $pdf->getDomPDF();
         $canvas = $domPdf->getCanvas();

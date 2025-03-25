@@ -126,7 +126,7 @@ class ExpenditureItemController extends Controller
             'organisation_logo'   => $organisation->logo
         ];
 
-        $pdf = PDF::loadView('ExpenditureItem.ExpenditureItems', $data);
+        $pdf = PDF::loadView('ExpenditureItem.ExpenditureItems', $data)->setPaper('a3', 'landscape');
         $pdf->output();
         $domPdf = $pdf->getDomPDF();
         $canvas = $domPdf->getCanvas();
