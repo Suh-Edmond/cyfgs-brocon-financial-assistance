@@ -127,7 +127,7 @@ class UserSavingController extends Controller
             'fin_secretary'       => $fin_sec,
             'organisation_logo'   => $organisation->logo
         ];
-        $pdf = PDF::loadView('UserSaving.Usersaving', $data);
+        $pdf = PDF::loadView('UserSaving.Usersaving', $data)->setPaper('a3', 'landscape');
         $pdf->output();
         $domPdf = $pdf->getDomPDF();
         $canvas = $domPdf->getCanvas();
@@ -162,7 +162,7 @@ class UserSavingController extends Controller
             'fin_secretary'       => $fin_sec,
             'organisation_logo'   => $organisation->logo
         ];
-        $pdf = PDF::loadView('UserSaving.OrganisationSavings', $data);
+        $pdf = PDF::loadView('UserSaving.OrganisationSavings', $data)->setPaper('a3', 'landscape');
         $pdf->output();
         $domPdf = $pdf->getDomPDF();
         $canvas = $domPdf->getCanvas();
