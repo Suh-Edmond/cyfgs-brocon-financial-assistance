@@ -240,6 +240,29 @@
         clear: both;
     }
 
+    .column_10 {
+        float: left;
+        width: 10%;
+    }
+    .column_30 {
+        float: left;
+        width: 30%;
+    }
+    .column_15 {
+        float: left;
+        width: 20%;
+    }
+
+    .column_35 {
+        float: left;
+        width: 35%;
+    }
+    .column_20:after {
+        width: 20%;
+        content: "";
+        clear: both;
+    }
+
 </style>
 <body>
     @yield('section')
