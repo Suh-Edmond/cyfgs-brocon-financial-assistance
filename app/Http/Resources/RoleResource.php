@@ -29,7 +29,7 @@ class RoleResource extends JsonResource
             'updated_by'    => $this->updated_by,
             'term'          => $this->term,
             'number_of_members' => $this->number_of_members,
-            'permissions'    => isset($this->permissions) ? $this->permissions:[]
+            'permissions'    => $this->permissions()->orderBy('name')->get() ?? []
         ];
     }
 }

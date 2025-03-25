@@ -151,20 +151,20 @@ trait HelpTrait {
         ]);
     }
 
-    public function setOrganisationTelephone($telephone): string
+    public function setOrganisationTelephone($telephone): array
     {
 
-        $numbers = explode("/", $telephone);
+       return explode("/", $telephone);
 
-        if (isset($numbers[1])){
-            if($numbers[1] != "null"){
-                $telephone = $numbers[0]."/".$numbers[1];
-            }else{
-                $telephone =$numbers[0];
-            }
-        }
+//        if (isset($numbers[1])){
+//            if($numbers[1] != "null"){
+//                $telephone = $numbers[0]."/".$numbers[1];
+//            }else{
+//                $telephone =$numbers[0];
+//            }
+//        }
 
-        return $telephone;
+//        return $telephone;
     }
 
     public function  convertStatusToNumber($status): int
