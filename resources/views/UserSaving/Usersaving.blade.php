@@ -55,7 +55,16 @@
             </div>
         </div>
     </div>
-    <hr style="border-bottom: 5px solid #c97a7e; margin-bottom: 4rem"/>
+    <hr style="border-bottom: 5px solid #213c65; margin-top: 2rem"/>
+    <div class="column_100" style="margin-bottom: 3.5rem">
+        <div class="column_90">
+
+        </div>
+        <div class="column_10">
+            <label style="font-size: small;">Printed date: {{ $date }}</label>
+        </div>
+    </div>
+
 
     <div style="margin-bottom: 2rem;">
         <h3 style="font-weight: bold;font-size: medium; text-align:center;text-transform: capitalize;border-bottom:3px solid black;">{{$title}}</h3>

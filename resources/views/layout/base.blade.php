@@ -257,10 +257,20 @@
         float: left;
         width: 35%;
     }
+
+    .column_30 {
+        float: left;
+        width: 30%;
+    }
     .column_20:after {
         width: 20%;
         content: "";
         clear: both;
+    }
+
+    .column_90 {
+        float: left;
+        width: 90%;
     }
 
 </style>

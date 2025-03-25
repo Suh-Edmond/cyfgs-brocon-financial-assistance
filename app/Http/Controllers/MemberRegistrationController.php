@@ -90,7 +90,7 @@ class MemberRegistrationController extends Controller
             'fin_secretary'       => $fin_sec,
             'organisation_logo'   => $organisation->logo
         ];
-        $pdf = PDF::loadView('MemberRegistration.RegisteredMembers', $data);
+        $pdf = PDF::loadView('MemberRegistration.RegisteredMembers', $data)->setPaper('a3', 'landscape');
 
         return $pdf->download('RegisteredMembers.pdf');
     }

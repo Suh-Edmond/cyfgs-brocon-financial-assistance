@@ -110,7 +110,7 @@ class IncomeActivityController extends Controller
             'organisation_logo'    => $organisation->logo
         ];
 
-        $pdf = PDF::loadView('IncomeActivities.IncomeActivities', $data);
+        $pdf = PDF::loadView('IncomeActivities.IncomeActivities', $data)->setPaper('a3', 'landscape');
         $pdf->output();
         $domPdf = $pdf->getDomPDF();
         $canvas = $domPdf->getCanvas();
