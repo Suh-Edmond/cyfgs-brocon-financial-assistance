@@ -22,7 +22,7 @@
                     {{ $organisation->name }} - {{ $organisation->address }}</label><br />
             </div>
             <div class="column_25" style="margin-left: 15rem">
-                <img src="{{public_path($organisation_logo)}}" alt="organisation logo" width="100px;" height="100px;"
+                <img src="{{public_path("/uploads/images/azure.png")}}" alt="organisation logo" width="100px;" height="100px;"
                      style="border-radius: 2px">
             </div>
         </div>

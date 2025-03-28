@@ -25,18 +25,22 @@ class FileService implements FileServiceInterface {
                 'image' => 'required|image|mimes:jpg,jpeg,png'
             ]);
 
-            $request->file('image')->storeAs(FileStorageConstants::FILE_STORAGE_BASE_DIRECTORY.$directory, $fileName, 'public');
-            $filePath = FileStorageConstants::FETCH_FILE_BASE_DIRECTORY.$directory."/".$fileName;
+//            $request->file('image')->storeAs(FileStorageConstants::FILE_STORAGE_BASE_DIRECTORY.$directory, $fileName, 'public');
+//             $path = $request->file('image')->storeAs(FileStorageConstants::FILE_STORAGE_BASE_DIRECTORY, $fileName, 'public');
+             $path = $request->file('image')->storeAs('images', $fileName, 'public_uploads');
+
+//             $savePath = public_path(FileStorageConstants::FILE_STORAGE_BASE_DIRECTORY."/".$fileName);
+//            $filePath = FileStorageConstants::FILE_STORAGE_BASE_DIRECTORY.$directory."/".$fileName;
 
 //            $this->removeStoredFile($request, $filePath);
 
-            $this->saveFile($filePath, $request);
+            $this->saveFile($path, $request);
 
         }catch (\Exception $exception){
             throw new BusinessValidationException("Could not upload file", 400);
         }
 
-        return $filePath;
+        return $path;
     }
 
     public function getUploadedFile($request)
@@ -49,7 +53,7 @@ class FileService implements FileServiceInterface {
         $organisation   = $request->user()->organisation;
         $organisationName = str_replace(" ", "", $organisation->name);
         $directory      = $organisationName."/".$request->file_category;
-        return FileStorageConstants::FETCH_FILE_BASE_DIRECTORY.$directory."/".$request->file;
+        return FileStorageConstants::FILE_STORAGE_BASE_DIRECTORY.$directory."/".$request->file;
     }
 
     private function saveFile($filePath, $request)
