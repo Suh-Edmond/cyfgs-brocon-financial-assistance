@@ -43,11 +43,11 @@ return [
 
     'disks' => [
 
-        'public_uploads' => [
-            'driver' => 'local',
-            'root'   => public_path() . '/uploads',
-            'url' => url('uploads'),
-        ],
+//        'public_uploads' => [
+//            'driver' => 'local',
+//            'root'   => public_path() . '/uploads',
+//            'url' => url('uploads'),
+//        ],
 
         'local' => [
             'driver' => 'local',
