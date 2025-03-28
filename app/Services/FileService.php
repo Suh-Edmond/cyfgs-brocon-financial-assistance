@@ -25,22 +25,22 @@ class FileService implements FileServiceInterface {
                 'image' => 'required|image|mimes:jpg,jpeg,png'
             ]);
 
-//            $request->file('image')->storeAs(FileStorageConstants::FILE_STORAGE_BASE_DIRECTORY.$directory, $fileName, 'public');
+            $request->file('image')->storeAs(FileStorageConstants::FILE_STORAGE_BASE_DIRECTORY.$directory, $fileName, 'public');
 //             $path = $request->file('image')->storeAs(FileStorageConstants::FILE_STORAGE_BASE_DIRECTORY, $fileName, 'public');
-             $path = $request->file('image')->storeAs('images', $fileName, 'public_uploads');
+//             $path = $request->file('image')->storeAs('images', $fileName, 'public_uploads');
 
 //             $savePath = public_path(FileStorageConstants::FILE_STORAGE_BASE_DIRECTORY."/".$fileName);
-//            $filePath = FileStorageConstants::FILE_STORAGE_BASE_DIRECTORY.$directory."/".$fileName;
+            $filePath = FileStorageConstants::FILE_STORAGE_BASE_DIRECTORY.$directory."/".$fileName;
 
 //            $this->removeStoredFile($request, $filePath);
 
-            $this->saveFile($path, $request);
+            $this->saveFile($filePath, $request);
 
         }catch (\Exception $exception){
             throw new BusinessValidationException("Could not upload file", 400);
         }
 
-        return $path;
+        return $filePath;
     }
 
     public function getUploadedFile($request)
