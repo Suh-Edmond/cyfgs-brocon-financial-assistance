@@ -21,7 +21,7 @@ class UserSavingSeeder extends Seeder
         {
             UserSaving::create([
                 'amount_deposited'  => $faker->numberBetween(1000, 100000),
-                'approve'           => $faker->randomElement(['PENDING', 'APPROVED', 'DECLINED']),
+                'approve'           => \App\Constants\PaymentStatus::APPROVED,
                 'comment'           => $faker->sentence,
                 'user_id'           => $faker->randomElement($this->users),
                 'updated_by'        => $faker->name

@@ -111,7 +111,7 @@ class ActivitySupportController extends Controller
             'total'                => $supports->total_amount,
             'organisation_logo'    => $organisation->logo
         ];
-        $pdf = PDF::loadView('ActivitySupport.Support', $data);
+        $pdf = PDF::loadView('ActivitySupport.Support', $data)->setPaper('a3', 'landscape');
         $pdf->output();
         $domPdf = $pdf->getDomPDF();
         $canvas = $domPdf->getCanvas();

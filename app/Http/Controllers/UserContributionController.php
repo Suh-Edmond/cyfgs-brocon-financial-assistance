@@ -137,7 +137,7 @@ class UserContributionController extends Controller
             'member_size'       => $contributions->member_size
         ];
 
-        $pdf = PDF::loadView('Contribution.UsersContribution', $data);
+        $pdf = PDF::loadView('Contribution.UsersContribution', $data)->setPaper('a3', 'landscape');
         $pdf->output();
         $domPdf = $pdf->getDomPDF();
         $canvas = $domPdf->getCanvas();

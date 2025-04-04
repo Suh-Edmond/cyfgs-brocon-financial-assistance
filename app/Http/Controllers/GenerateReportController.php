@@ -60,7 +60,7 @@ class GenerateReportController extends Controller
 
         ];
 
-        $pdf = PDF::loadView('Reports.ActivityReport', $data);
+        $pdf = PDF::loadView('Reports.ActivityReport', $data)->setPaper('a3', 'landscape');
         $pdf->output();
         $domPdf = $pdf->getDomPDF();
         $canvas = $domPdf->getCanvas();
