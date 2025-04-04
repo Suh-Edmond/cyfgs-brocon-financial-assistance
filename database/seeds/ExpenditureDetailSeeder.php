@@ -1,5 +1,6 @@
 <?php
 
+use App\Constants\PaymentStatus;
 use App\Models\ExpenditureDetail;
 use App\Models\ExpenditureItem;
 use Illuminate\Database\Seeder;
@@ -24,7 +25,7 @@ class ExpenditureDetailSeeder extends Seeder
                 'amount_spent'          => $faker->numberBetween(5000, 40000),
                 'amount_given'          => $faker->numberBetween(10000, 50000),
                 'comment'               => $faker->sentence,
-                'approve'               => $faker->randomElement(['PENDING', 'APPROVED', 'DECLINED']),
+                'approve'               => PaymentStatus::APPROVED,
                 'expenditure_item_id'   => $faker->randomElement($this->expenditure_items),
                 'updated_by'            => $faker->name,
             ]);
