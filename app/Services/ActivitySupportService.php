@@ -7,14 +7,17 @@ namespace App\Services;
 use App\Constants\PaymentStatus;
 use App\Http\Resources\ActivitySupportCollection;
 use App\Interfaces\ActivitySupportInterface;
+use App\Interfaces\TransactionDataGroupMgt;
 use App\Models\ActivitySupport;
 use App\Models\PaymentItem;
+use App\Models\TransactionHistory;
 use App\Traits\HelpTrait;
 use Illuminate\Support\Facades\DB;
 
-class ActivitySupportService implements ActivitySupportInterface
+class ActivitySupportService implements ActivitySupportInterface, TransactionDataGroupMgt
 {
     use HelpTrait;
+
     private SessionService $sessionService;
 
     public function __construct(SessionService $sessionService)
@@ -27,14 +30,14 @@ class ActivitySupportService implements ActivitySupportInterface
         $current_session = $this->sessionService->getCurrentSession();
         $payment_item = $this->findPaymentItem($request->payment_item_id);
         ActivitySupport::create([
-            'code'              => $this->generateCode(10),
-            'amount_deposited'  => $request->amount_deposited,
-            'comment'           => $request->comment,
-            'supporter'         => $request->supporter,
-            'payment_item_id'   => $payment_item->id,
-            'scan_picture'      => $request->scan_picture,
-            'updated_by'        => $request->user()->name,
-            'session_id'           => $current_session->id
+            'code' => $this->generateCode(10),
+            'amount_deposited' => $request->amount_deposited,
+            'comment' => $request->comment,
+            'supporter' => $request->supporter,
+            'payment_item_id' => $payment_item->id,
+            'scan_picture' => $request->scan_picture,
+            'updated_by' => $request->user()->name,
+            'session_id' => $current_session->id
         ]);
     }
 
@@ -43,19 +46,19 @@ class ActivitySupportService implements ActivitySupportInterface
         $payment_item = $this->findPaymentItem($request->payment_item_id);
         $support = $this->findActivitySupport($id);
         $support->update([
-            'amount_deposited'  => $request->amount_deposited,
-            'comment'           => $request->comment,
-            'supporter'         => $request->supporter,
-            'payment_item_id'   => $payment_item->id,
-            'scan_picture'      => $request->scan_picture,
-            'updated_by'        => $request->user()->name,
+            'amount_deposited' => $request->amount_deposited,
+            'comment' => $request->comment,
+            'supporter' => $request->supporter,
+            'payment_item_id' => $payment_item->id,
+            'scan_picture' => $request->scan_picture,
+            'updated_by' => $request->user()->name,
         ]);
     }
 
     public function getActivitySupportsByPaymentItem($id)
     {
         $current_session = $this->sessionService->getCurrentSession();
-        return ActivitySupport::where('payment_item_id', $id)->where('session_id',$current_session->id)->orderBy('created_at', 'DESC')->get();
+        return ActivitySupport::where('payment_item_id', $id)->where('session_id', $current_session->id)->orderBy('created_at', 'DESC')->get();
 
     }
 
@@ -73,15 +76,15 @@ class ActivitySupportService implements ActivitySupportInterface
     public function filterActivitySupport($request)
     {
         $current_session = $this->sessionService->getCurrentSession();
-        $supports = ActivitySupport::where('session_id',$current_session->id);
-        if(!is_null($request->payment_item_id)){
+        $supports = ActivitySupport::where('session_id', $current_session->id);
+        if (!is_null($request->payment_item_id)) {
             $supports = $supports->where('payment_item_id', $request->payment_item_id);
         }
-        if(!is_null($request->status) && $request->status != "ALL"){
+        if (!is_null($request->status) && $request->status != "ALL") {
             $supports = $supports->where('approve', $request->status);
         }
-        if(isset($request->filter)){
-            $supports = $supports->where('activity_supports.supporter', 'LIKE', '%'.$request->filter.'%');
+        if (isset($request->filter)) {
+            $supports = $supports->where('activity_supports.supporter', 'LIKE', '%' . $request->filter . '%');
         }
         return $supports->orderBy('created_at', 'DESC')->get();
     }
@@ -89,25 +92,25 @@ class ActivitySupportService implements ActivitySupportInterface
     public function fetchAllActivitySupport($request)
     {
         $current_session = $this->sessionService->getCurrentSession();
-        $sponsorships =  !isset($request->session_id) ? ActivitySupport::where('session_id',$current_session->id): null;
-        if(isset($request->session_id)){
+        $sponsorships = !isset($request->session_id) ? ActivitySupport::where('session_id', $current_session->id) : null;
+        if (isset($request->session_id)) {
             $sponsorships = ActivitySupport::where('session_id', $request->session_id);
         }
-        if(!is_null($request->payment_item_id)){
+        if (!is_null($request->payment_item_id)) {
             $sponsorships = $sponsorships->where('payment_item_id', $request->payment_item_id);
         }
-        if(!is_null($request->status) && $request->status != "ALL"){
+        if (!is_null($request->status) && $request->status != "ALL") {
             $sponsorships = $sponsorships->where('approve', $request->status);
         }
-        if(isset($request->filter)){
-            $sponsorships = $sponsorships->where('activity_supports.supporter', 'LIKE', '%'.$request->filter.'%');
+        if (isset($request->filter)) {
+            $sponsorships = $sponsorships->where('activity_supports.supporter', 'LIKE', '%' . $request->filter . '%');
         }
         $sponsorships = $sponsorships->orderBy('created_at', 'DESC');
         $total_sponsorship = $this->computeTotalSponsorship($sponsorships->get());
-        $paginated_data    = $sponsorships->paginate($request->per_page);
+        $paginated_data = $sponsorships->paginate($request->per_page);
 
         return new ActivitySupportCollection($paginated_data, $total_sponsorship, $paginated_data->total(),
-        $paginated_data->lastPage(), (int)$paginated_data->perPage(), $paginated_data->currentPage());
+            $paginated_data->lastPage(), (int)$paginated_data->perPage(), $paginated_data->currentPage());
     }
 
     public function changeActivityState($id, $request)
@@ -119,15 +122,12 @@ class ActivitySupportService implements ActivitySupportInterface
         $sponsorship->save();
     }
 
-    public function getSponsorshipIncomePerQuarterly($current_year, $request, $type, $payment_item): array
+    public function getSponsorshipIncomePerQuarterly($current_year, $payment_item, $start_quarter, $end_quarter): array
     {
-        $quarter_range = $this->getStartQuarter($current_year->year,  $request->quarter, $type);
-        $start_quarter = $quarter_range[0];
-        $end_quarter = $quarter_range[1];
 
-        return  DB::table('activity_supports')
+        return DB::table('activity_supports')
             ->join('payment_items', 'payment_items.id', '=', 'activity_supports.payment_item_id')
-            ->join('sessions', 'sessions.id' , '=', 'activity_supports.session_id')
+            ->join('sessions', 'sessions.id', '=', 'activity_supports.session_id')
             ->where('activity_supports.approve', PaymentStatus::APPROVED)
             ->where('payment_items.id', $payment_item['id'])
             ->where('sessions.id', $current_year->id)
@@ -141,28 +141,45 @@ class ActivitySupportService implements ActivitySupportInterface
     public function getSponsorshipIncomePerYear($year, $payment_item): array
     {
         return ActivitySupport::where('approve', PaymentStatus::APPROVED)
-                        ->where('session_id', $year)
-                        ->where('payment_item_id', $payment_item['id'])
-                        ->select('id', 'supporter as name', 'amount_deposited as amount')
-                        ->orderBy('name')
-                        ->get()
-                        ->toArray();
+            ->where('session_id', $year)
+            ->where('payment_item_id', $payment_item['id'])
+            ->select('id', 'supporter as name', 'amount_deposited as amount')
+            ->orderBy('name')
+            ->get()
+            ->toArray();
     }
 
     public function getSponsorshipPerActivity($id)
     {
         return ActivitySupport::where('payment_item_id', $id)
-                       ->where('approve', PaymentStatus::APPROVED)
-                       ->select('supporter as name', 'amount_deposited as amount')
-                       ->orderBy('name')
-                       ->get();
+            ->where('approve', PaymentStatus::APPROVED)
+            ->select('supporter as name', 'amount_deposited as amount')
+            ->orderBy('name')
+            ->get();
     }
+
+    public function getTransactionData($id)
+    {
+        return $this->findActivitySupport($id);
+    }
+
 
     private function findPaymentItem($payment_item)
     {
         return PaymentItem::findOrFail($payment_item);
     }
-    private function findActivitySupport($id) {
+
+    private function findActivitySupport($id)
+    {
         return ActivitySupport::findOrFail($id);
     }
+
+    public function saveTransactionData(TransactionHistory $transactionHistory, $updatedTransactionData)
+    {
+        $updatedTransactionData->amount_deposited = $transactionHistory['new_amount_deposited'];
+        $updatedTransactionData->approve          = $transactionHistory['approve'];
+
+        return $updatedTransactionData->save();
+    }
+
 }

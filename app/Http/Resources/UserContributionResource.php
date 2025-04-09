@@ -24,6 +24,7 @@ class UserContributionResource extends JsonResource
             'approve'                  => $this->approve,
             'user_id'                  => $this->user_id,
             'user_name'                => $user->name,
+            'date'                     => $this->date,
             'user_telephone'           => $user->telephone,
             'user_email'               => $user->email,
             'payment_item_id'          => $payment_item->id,

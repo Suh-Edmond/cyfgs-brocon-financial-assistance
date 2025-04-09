@@ -29,7 +29,8 @@ class UserContribution extends Model
         'balance',
         'session_id',
         'quarterly_name',
-        'month_name'
+        'month_name',
+        'date'
     ];
 
 

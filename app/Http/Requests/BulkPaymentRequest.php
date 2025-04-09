@@ -33,7 +33,8 @@ class BulkPaymentRequest extends FormRequest
                 'row.*.is_compulsory'   => 'required|string',
                 'row.*.month_name'      => '',
                 'row.*.quarterly_name'  => '',
-                'row.*.registration_id' => 'required|string'
+                'row.*.registration_id' => 'required|string',
+                'row.*.date'            => 'required|string'
         ];
     }
 }

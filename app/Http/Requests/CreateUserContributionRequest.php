@@ -29,7 +29,8 @@ class CreateUserContributionRequest extends FormRequest
             'user_id'                   => 'required|string',
             'payment_item_id'           => 'required|string',
             'quarterly_name'            => '',
-            'month_name'                => ''
+            'month_name'                => '',
+            'date'                      => 'required|date'
         ];
     }
 }

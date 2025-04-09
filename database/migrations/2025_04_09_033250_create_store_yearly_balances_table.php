@@ -16,9 +16,16 @@ class CreateStoreYearlyBalancesTable extends Migration
         Schema::create('store_yearly_balances', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('session_id');
-            $table->double('amount');
+            $table->double('balance');
+            $table->string('updated_by');
             $table->timestamps();
         });
+
+        \App\Models\StoreYearlyBalance::create([
+            'session_id' => '8015d366-baf8-4a72-bec2-d473ca3ad0f8',
+            'balance'     => 340400,
+            'updated_by' => 'default'
+        ]);
     }
 
     /**

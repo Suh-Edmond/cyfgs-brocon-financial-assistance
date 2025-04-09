@@ -9,10 +9,12 @@ use App\Exceptions\BusinessValidationException;
 use App\Http\Resources\MemberContributedItemResource;
 use App\Http\Resources\MemberPaymentItemResource;
 use App\Http\Resources\SessionResource;
+use App\Interfaces\TransactionDataGroupMgt;
 use App\Interfaces\UserContributionInterface;
 use App\Models\MemberRegistration;
 use App\Models\PaymentItem;
 use App\Models\Registration;
+use App\Models\TransactionHistory;
 use App\Models\User;
 use App\Models\UserContribution;
 use App\Traits\HelpTrait;
@@ -21,7 +23,7 @@ use App\Constants\PaymentStatus;
 use App\Http\Resources\UserContributionCollection;
 
 
-class UserContributionService implements UserContributionInterface {
+class UserContributionService implements UserContributionInterface, TransactionDataGroupMgt {
 
     use HelpTrait;
     private SessionService $sessionService;
@@ -273,7 +275,7 @@ class UserContributionService implements UserContributionInterface {
              $contributedItem = new MemberContributedItemResource($contribution->id, $contribution->payment_item_id,$contribution->payment_item_amount, $contribution->name,
                  $contribution->amount_deposited, $contribution->balance, $contribution->status, $contribution->approve, $contribution->created_at, $contribution->year, $contribution->frequency,
 
-                 $contribution->month_name, $contribution->quarterly_name, $contribution->updated_by, $contribution->code, $contribution->comment, $contribution->compulsory);
+                 $contribution->month_name, $contribution->quarterly_name, $contribution->updated_by, $contribution->code, $contribution->comment, $contribution->compulsory, $contribution->date);
 
              $paid_debts[] = $contributedItem;
          }
@@ -283,11 +285,7 @@ class UserContributionService implements UserContributionInterface {
     }
 
 
-    public function getContributionsByItemAndSession($item, $request, $current_year, $type){
-        $quarter_range = $this->getStartQuarter($current_year->year,  $request->quarter, $type);
-        $start_quarter = $quarter_range[0];
-        $end_quarter = $quarter_range[1];
-
+    public function getContributionsByItemAndSession($item, $current_year, $start_quarter, $end_quarter){
         return DB::table('user_contributions')
             ->join('payment_items', 'payment_items.id', '=', 'user_contributions.payment_item_id')
             ->join('sessions', 'sessions.id' , '=', 'user_contributions.session_id')
@@ -439,7 +437,8 @@ class UserContributionService implements UserContributionInterface {
                 'balance'           => $balance_contribution,
                 'session_id'        => $current_session,
                 'quarterly_name'    => !is_null($request->quarterly_name) ? ($request->quarterly_name) :"",
-                'month_name'        => $request->month_name
+                'month_name'        => $request->month_name,
+                'date'              => $request->date,
             ]);
         }
 
@@ -636,7 +635,7 @@ class UserContributionService implements UserContributionInterface {
             ->orderBy('member_registrations.created_at', 'DESC')->get();
         foreach ($reg as $value){
            $registrations[] = new MemberContributedItemResource($value->id, $value->registration_id, $value->amount, "Registration", $value->amount, 0.0,
-               PaymentStatus::COMPLETE, $value->approve, $value->created_at, $value->year, $value->frequency, null, null, $value->updated_by, null, "", $value->is_compulsory);
+               PaymentStatus::COMPLETE, $value->approve, $value->created_at, $value->year, $value->frequency, null, null, $value->updated_by, null, "", $value->is_compulsory, $value->created_at);
         }
         return $registrations;
     }
@@ -967,6 +966,38 @@ class UserContributionService implements UserContributionInterface {
         return collect($payable_months)->filter(function ($month) use ($paid_months){
             return !in_array($month, $paid_months);
         })->toArray();
+    }
+
+    public function getTransactionData($id)
+    {
+        return UserContribution::findOrFail($id);
+    }
+
+    /**
+     * @throws BusinessValidationException
+     */
+    public function saveTransactionData(TransactionHistory $transactionHistory, $updatedTransactionData)
+    {
+        $savedRecord = $updatedTransactionData;
+        $totalContribution =  $this->getContributionByUserAndPaymentItem($updatedTransactionData['payment_item_id'], $updatedTransactionData['user_id'])->sum('user_contributions.amount_deposited');
+
+        $payment_item_amount = $this->findPaymentItem($updatedTransactionData['payment_item_id'])['amount'];
+
+        $this->validateAmountDeposited($payment_item_amount, ($totalContribution + $transactionHistory['new_amount_deposited']));
+
+        $status = $this->getUserContributionStatus($payment_item_amount, ($totalContribution + $transactionHistory['new_amount_deposited']));
+
+        $hasCompleted = $this->verifyExcessUserContribution($totalContribution, $payment_item_amount);
+
+        if (! $hasCompleted){
+            $updatedTransactionData->amount_deposited = $transactionHistory['new_amount_deposited'];
+            $updatedTransactionData->status = $status;
+            $updatedTransactionData->balance = ($payment_item_amount - ($totalContribution + $transactionHistory['new_amount_deposited']));
+            $updatedTransactionData->approve = $transactionHistory['approve'];
+            $savedRecord = $updatedTransactionData->save();
+        }
+
+        return $savedRecord;
     }
 }
 

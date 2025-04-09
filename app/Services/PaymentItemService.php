@@ -168,12 +168,8 @@ class PaymentItemService implements PaymentItemInterface {
                     ->get()->toArray();
     }
 
-    public function getPaymentActivitiesByCategoryAndSessionAndQuarter($category, $request, $current_year, $type)
+    public function getPaymentActivitiesByCategoryAndSessionAndQuarter($category, $current_year, $start_quarter, $end_quarter)
     {
-
-        $quarter_range = $this->getStartQuarter($current_year->year,  $request->quarter, $type);
-        $start_quarter = $quarter_range[0];
-        $end_quarter = $quarter_range[1];
 
         return PaymentItem::where('payment_category_id', $category)
             ->where('session_id', $current_year->id)

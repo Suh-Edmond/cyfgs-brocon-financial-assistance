@@ -107,14 +107,19 @@ class ReportGenerationService implements ReportGenerationInterface
 
     public function generateQuarterlyReport(GenerateQuarterlyRequest $request): array
     {
-
         $current_year = $this->sessionService->getCurrentSession();
 
-        $incomes = $this->fetchQuarterlyIncomes($request, $current_year, self::$INCOME_ONLY);
+        $quarter_range = $this->getStartQuarter($current_year->year,  $request->quarter, self::$INCOME_ONLY);
 
-        $expenditures = $this->fetchQuarterlyExpenditures($request->quarter,$current_year, $request->organisation_id, self::$INCOME_ONLY);
+        $start_quarter = $quarter_range[0];
 
-        $balance_bf = $request->quarter == 6 || $request->quarter == 1? 0: $this->computeBalanceBroughtForwardByQuarter($request, $current_year, self::$BALANCE_BROUGHT_FORWARD);
+        $end_quarter = $quarter_range[1];
+
+        $incomes = $this->fetchQuarterlyIncomes($request, $current_year, $start_quarter, $end_quarter);
+
+        $expenditures = $this->fetchQuarterlyExpenditures($request->organisation_id, $start_quarter, $end_quarter);
+
+        $balance_bf = $request->quarter == 6 || $request->quarter == 1 ? 0 : $this->computeBalanceBroughtForwardByQuarter($request, $current_year, $request->quarter);
 
         $income_elements = $incomes[0];
 
@@ -135,13 +140,16 @@ class ReportGenerationService implements ReportGenerationInterface
         return $this->generateQuarterlyReport($request);
     }
 
-    public function computeBalanceBroughtForwardByQuarter($request, $current_year, $type){
+    public function computeBalanceBroughtForwardByQuarter($request, $current_year, $quarter){
+        $quarter_range = $this->getStartQuarter($current_year->year,  ($quarter - 1), self::$INCOME_ONLY);
 
-        $quarter = (int) $request->quarter > 1 && $type == self::$BALANCE_BROUGHT_FORWARD ? ((int) $request->quarter - 1) : 0;
+        $start_quarter = $quarter_range[0];
 
-        $income = $this->fetchQuarterlyIncomes($request, $current_year, $type);
+        $end_quarter = $quarter_range[1];
 
-        $expenditure = $this->fetchQuarterlyExpenditures($quarter, $current_year, $request->organisation_id, $type);
+        $income = $this->fetchQuarterlyIncomes($request, $current_year, $start_quarter, $end_quarter);
+
+        $expenditure = $this->fetchQuarterlyExpenditures($request->organisation_id, $start_quarter, $end_quarter);
 
         return $income[1] - $expenditure[1];
     }
@@ -165,13 +173,6 @@ class ReportGenerationService implements ReportGenerationInterface
         return $income[1] - $expenditure[1];
     }
 
-    public function computeTotalBalanceBroughtForward($request){
-        $income = $this->fetchYearIncomes($request->year_id, $request->year_label, $request->user()->organisation_id);
-
-        $bal_brought_forward = $this->computeBalanceBroughtForwardByYear($request);
-    }
-
-
     public function generateYearlyReport($request): array
     {
 
@@ -179,7 +180,7 @@ class ReportGenerationService implements ReportGenerationInterface
 
         $expenditures = $this->fetchYearlyExpenditures($request->year_id, $request->user()->organisation_id);
 
-        $bal_brought_forward = $this->computeBalanceBroughtForwardByYear($request);
+        $bal_brought_forward = $this->getYearlyBalance($request);
 
         $admins            = $this->getOrganisationAdministrators();
 
@@ -191,7 +192,7 @@ class ReportGenerationService implements ReportGenerationInterface
 
         $total_expenditure = $expenditures[1];
 
-//        $this->saveYearlyBalance($request->year_id, $total_income, $total_expenditure);
+        $this->saveYearlyBalance($request->year_id, $total_income, $total_expenditure, $request);
 
         return [$income_list, $expenditure_list, ["total_income" => $total_income], ["total_expenditure" => $total_expenditure],["bal_brought_forward" => $bal_brought_forward],
             ["president" => $admins[Roles::PRESIDENT]], ["treasurer" => $admins[Roles::TREASURER]], ["fin_sec" => $admins[Roles::FINANCIAL_SECRETARY]]];
@@ -201,12 +202,8 @@ class ReportGenerationService implements ReportGenerationInterface
     {
         return $this->generateYearlyReport($request);
     }
-    private function fetchQuarterlyExpenditures($quarter,$current_year, $organisation_id, $type): array
+    private function fetchQuarterlyExpenditures($organisation_id, $start_quarter, $end_quarter): array
     {
-        $start_quarter = $this->getStartQuarter($current_year->year, $quarter,$type)[0];
-
-        $end_quarter = $this->getStartQuarter($current_year->year, $quarter, $type)[1];
-
         $expenses = [];
 
         $exp_total = 0;
@@ -243,7 +240,7 @@ class ReportGenerationService implements ReportGenerationInterface
     }
 
 
-    private function fetchQuarterlyIncomes(GenerateQuarterlyRequest $request, $current_year, $type): array
+    private function fetchQuarterlyIncomes(GenerateQuarterlyRequest $request, $current_year, $start_quarter, $end_quarter): array
     {
 
         $payment_categories = $this->paymentCategoryService->getPaymentCategoriesByOrganisationAndYear($request->organisation_id, $current_year->year);
@@ -256,18 +253,17 @@ class ReportGenerationService implements ReportGenerationInterface
 
         $quarterly_incomes = array();
 
-        $member_reg = $this->registrationService->getMemberRegistrationPerQuarter($request, Constants::MR, $current_year->id, $current_year, $type);
+        $member_reg = $this->registrationService->getMemberRegistrationPerQuarter( Constants::MR, $current_year->id, $start_quarter, $end_quarter);
 
-
-        $savings = $this->userSavingService->getMemberSavingPerQuarter($request, Constants::MS, $current_year->id, $type, $current_year);
+        $savings = $this->userSavingService->getMemberSavingPerQuarter(Constants::MS, $current_year->id, $start_quarter, $end_quarter);
 
         array_push($incomes, $member_reg, $savings);
 
-        $total_reg_saving += $member_reg->total + $savings->total;
+//        $total_reg_saving += $member_reg->total + $savings->total;
 
         foreach ($payment_categories as $key => $payment_category){
 
-            $session_payment_items = $this->paymentItemService->getPaymentActivitiesByCategoryAndSessionAndQuarter($payment_category->id, $request, $current_year, $type);
+            $session_payment_items = $this->paymentItemService->getPaymentActivitiesByCategoryAndSessionAndQuarter($payment_category->id, $current_year, $start_quarter, $end_quarter);
 
             $payment_activities = array();
 
@@ -277,11 +273,11 @@ class ReportGenerationService implements ReportGenerationInterface
 
                 $payment_incomes = array();
 
-                $supports = $this->activitySupportService->getSponsorshipIncomePerQuarterly($current_year, $request, $type, $session_payment_items[$i]);
+                $supports = $this->activitySupportService->getSponsorshipIncomePerQuarterly($current_year, $session_payment_items[$i], $start_quarter, $end_quarter);
 
-                $activities = $this->incomeActivityService->getQuarterlyIncomeActivities($current_year, $session_payment_items[$i], $request, $type);
+                $activities = $this->incomeActivityService->getQuarterlyIncomeActivities($current_year, $session_payment_items[$i], $start_quarter, $end_quarter);
 
-                $user_contribution = $this->userContributionService->getContributionsByItemAndSession($session_payment_items[$i]['id'], $request, $current_year, $type);
+                $user_contribution = $this->userContributionService->getContributionsByItemAndSession($session_payment_items[$i]['id'],$current_year, $start_quarter, $end_quarter);
 
                 $payment_incomes = array_merge($user_contribution, $payment_incomes, $supports, $activities);
 
@@ -296,7 +292,6 @@ class ReportGenerationService implements ReportGenerationInterface
             }
 
             if(count($session_payment_items) !== 0){
-
 
                 $payment_category_income = json_encode(new IncomeResource($payment_category->code, $payment_activities,  $payment_category->name, $payment_category_total));
 
@@ -410,10 +405,11 @@ class ReportGenerationService implements ReportGenerationInterface
     }
 
 
-    private function saveYearlyBalance($session, $total_income, $total_expenditure)
+    private function saveYearlyBalance($session, $total_income, $total_expenditure, $request)
     {
         $balance = $total_income - $total_expenditure;
         $sessionBal = StoreYearlyBalance::where('session_id', $session)->first();
+
         if(isset($sessionBal)){
             if($sessionBal->balance != $balance){
                 $sessionBal->balance = $balance;
@@ -422,14 +418,26 @@ class ReportGenerationService implements ReportGenerationInterface
         }else{
             StoreYearlyBalance::create([
                 'session_id' => $session,
-                'balance'    => $balance
+                'balance'    => $balance,
+                'updated_by' => $request->user()->name
             ]);
         }
     }
 
 
-    private function fetchSessionBalance($session_id)
-    {
-        return StoreYearlyBalance::where('session_id', $session_id)->first();
+
+    private function getYearlyBalance($request) {
+        $bal = 0;
+        $previous_year_label = (int)$request->year_label - 1;
+
+        $session = $this->sessionService->getSessionByLabel($previous_year_label);
+
+        if(isset($session)){
+            $storedBal =  StoreYearlyBalance::where('session_id', $session->id)->first();
+
+            $bal = $storedBal->balance ?? 0;
+        }
+
+        return $bal;
     }
 }
