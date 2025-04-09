@@ -16,6 +16,7 @@ use App\Http\Controllers\RecommendationController;
 use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SessionController;
+use App\Http\Controllers\TransactionHistoryController;
 use App\Http\Controllers\UserContributionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserSavingController;
@@ -359,7 +360,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('make-contribution-recommendation',[RecommendationController::class, 'makeRecommendationOnContributions'])->name('api.make-recommendation');
     });
 
-
+    Route::prefix('protected')->middleware('IsPresidentOrIsAdmin')->group(function (){
+        Route::post('/transactions/update', [TransactionHistoryController::class, 'createTransactionHistory'])->name("api.change_transaction_record");
+    });
 
  });
 

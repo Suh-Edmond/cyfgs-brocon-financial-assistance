@@ -5,15 +5,17 @@ use App\Constants\PaymentStatus;
 use App\Exceptions\BusinessValidationException;
 use App\Http\Resources\IncomeActivityCollection;
 use App\Interfaces\IncomeActivityInterface;
+use App\Interfaces\TransactionDataGroupMgt;
 use App\Models\IncomeActivity;
 use App\Models\Organisation;
 use App\Models\PaymentItem;
+use App\Models\TransactionHistory;
 use App\Traits\HelpTrait;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 
-class IncomeActivityService implements IncomeActivityInterface {
+class IncomeActivityService implements IncomeActivityInterface, TransactionDataGroupMgt {
 
     use HelpTrait;
     private SessionService $sessionService;
@@ -184,6 +186,19 @@ class IncomeActivityService implements IncomeActivityInterface {
     private function getPaymentItemId($id){
         $item = PaymentItem::findOrFail($id);
         return $item->id;
+    }
+
+    public function getTransactionData($id)
+    {
+        return $this->findIncomeActivity($id);
+    }
+
+    public function saveTransactionData(TransactionHistory $transactionHistory, $updatedTransactionData)
+    {
+        $updatedTransactionData->amount = $transactionHistory['new_amount_deposited'];
+        $updatedTransactionData->approve = $transactionHistory['approve'];
+
+        return $updatedTransactionData->save();
     }
 }
 

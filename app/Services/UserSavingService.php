@@ -7,13 +7,15 @@ use App\Constants\PaymentStatus;
 use App\Exceptions\BusinessValidationException;
 use App\Http\Resources\QuarterlyIncomeResource;
 use App\Http\Resources\UserSavingCollection;
+use App\Interfaces\TransactionDataGroupMgt;
 use App\Interfaces\UserSavingInterface;
+use App\Models\TransactionHistory;
 use App\Models\User;
 use App\Models\UserSaving;
 use App\Traits\HelpTrait;
 use Illuminate\Support\Facades\DB;
 
-class UserSavingService implements UserSavingInterface
+class UserSavingService implements UserSavingInterface, TransactionDataGroupMgt
 {
     use HelpTrait;
     private SessionService  $sessionService;
@@ -323,5 +325,18 @@ class UserSavingService implements UserSavingInterface
         }
 
         return $savings_by_status;
+    }
+
+    public function getTransactionData($id)
+    {
+        return UserSaving::findOrFail($id);
+    }
+
+    public function saveTransactionData(TransactionHistory $transactionHistory, $updatedTransactionData)
+    {
+        $updatedTransactionData->amount_deposited = $transactionHistory['new_amount_deposited'];
+        $updatedTransactionData->approve          = $transactionHistory['approve'];
+
+        return $updatedTransactionData->save();
     }
 }

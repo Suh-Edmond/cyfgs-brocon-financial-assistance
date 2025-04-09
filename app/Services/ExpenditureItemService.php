@@ -7,12 +7,14 @@ use App\Exceptions\BusinessValidationException;
 use App\Http\Resources\ExpenditureItemCollection;
 use App\Http\Resources\ExpenditureItemResource;
 use App\Interfaces\ExpenditureItemInterface;
+use App\Interfaces\TransactionDataGroupMgt;
 use App\Models\ExpenditureCategory;
 use App\Models\ExpenditureItem;
 use App\Models\PaymentItem;
+use App\Models\TransactionHistory;
 use App\Traits\HelpTrait;
 
-class ExpenditureItemService implements ExpenditureItemInterface {
+class ExpenditureItemService implements ExpenditureItemInterface, TransactionDataGroupMgt {
 
     use HelpTrait;
     private SessionService $session_service;
@@ -218,4 +220,16 @@ class ExpenditureItemService implements ExpenditureItemInterface {
     }
 
 
+    public function getTransactionData($id)
+    {
+        return $this->getItem($id);
+    }
+
+    public function saveTransactionData(TransactionHistory $transactionHistory, $updatedTransactionData)
+    {
+        $updatedTransactionData->amount = $transactionHistory['new_amount_deposited'];
+        $updatedTransactionData->approve = $transactionHistory['approve'];
+
+        return $updatedTransactionData->save();
+    }
 }

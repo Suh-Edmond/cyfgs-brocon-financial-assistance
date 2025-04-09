@@ -9,10 +9,12 @@ use App\Exceptions\BusinessValidationException;
 use App\Http\Resources\MemberContributedItemResource;
 use App\Http\Resources\MemberPaymentItemResource;
 use App\Http\Resources\SessionResource;
+use App\Interfaces\TransactionDataGroupMgt;
 use App\Interfaces\UserContributionInterface;
 use App\Models\MemberRegistration;
 use App\Models\PaymentItem;
 use App\Models\Registration;
+use App\Models\TransactionHistory;
 use App\Models\User;
 use App\Models\UserContribution;
 use App\Traits\HelpTrait;
@@ -21,7 +23,7 @@ use App\Constants\PaymentStatus;
 use App\Http\Resources\UserContributionCollection;
 
 
-class UserContributionService implements UserContributionInterface {
+class UserContributionService implements UserContributionInterface, TransactionDataGroupMgt {
 
     use HelpTrait;
     private SessionService $sessionService;
@@ -964,6 +966,38 @@ class UserContributionService implements UserContributionInterface {
         return collect($payable_months)->filter(function ($month) use ($paid_months){
             return !in_array($month, $paid_months);
         })->toArray();
+    }
+
+    public function getTransactionData($id)
+    {
+        return UserContribution::findOrFail($id);
+    }
+
+    /**
+     * @throws BusinessValidationException
+     */
+    public function saveTransactionData(TransactionHistory $transactionHistory, $updatedTransactionData)
+    {
+        $savedRecord = $updatedTransactionData;
+        $totalContribution =  $this->getContributionByUserAndPaymentItem($updatedTransactionData['payment_item_id'], $updatedTransactionData['user_id'])->sum('user_contributions.amount_deposited');
+
+        $payment_item_amount = $this->findPaymentItem($updatedTransactionData['payment_item_id'])['amount'];
+
+        $this->validateAmountDeposited($payment_item_amount, ($totalContribution + $transactionHistory['new_amount_deposited']));
+
+        $status = $this->getUserContributionStatus($payment_item_amount, ($totalContribution + $transactionHistory['new_amount_deposited']));
+
+        $hasCompleted = $this->verifyExcessUserContribution($totalContribution, $payment_item_amount);
+
+        if (! $hasCompleted){
+            $updatedTransactionData->amount_deposited = $transactionHistory['new_amount_deposited'];
+            $updatedTransactionData->status = $status;
+            $updatedTransactionData->balance = ($payment_item_amount - ($totalContribution + $transactionHistory['new_amount_deposited']));
+            $updatedTransactionData->approve = $transactionHistory['approve'];
+            $savedRecord = $updatedTransactionData->save();
+        }
+
+        return $savedRecord;
     }
 }
 
