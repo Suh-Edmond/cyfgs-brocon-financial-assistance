@@ -273,7 +273,7 @@ class UserContributionService implements UserContributionInterface {
              $contributedItem = new MemberContributedItemResource($contribution->id, $contribution->payment_item_id,$contribution->payment_item_amount, $contribution->name,
                  $contribution->amount_deposited, $contribution->balance, $contribution->status, $contribution->approve, $contribution->created_at, $contribution->year, $contribution->frequency,
 
-                 $contribution->month_name, $contribution->quarterly_name, $contribution->updated_by, $contribution->code, $contribution->comment, $contribution->compulsory);
+                 $contribution->month_name, $contribution->quarterly_name, $contribution->updated_by, $contribution->code, $contribution->comment, $contribution->compulsory, $contribution->date);
 
              $paid_debts[] = $contributedItem;
          }
@@ -637,7 +637,7 @@ class UserContributionService implements UserContributionInterface {
             ->orderBy('member_registrations.created_at', 'DESC')->get();
         foreach ($reg as $value){
            $registrations[] = new MemberContributedItemResource($value->id, $value->registration_id, $value->amount, "Registration", $value->amount, 0.0,
-               PaymentStatus::COMPLETE, $value->approve, $value->created_at, $value->year, $value->frequency, null, null, $value->updated_by, null, "", $value->is_compulsory);
+               PaymentStatus::COMPLETE, $value->approve, $value->created_at, $value->year, $value->frequency, null, null, $value->updated_by, null, "", $value->is_compulsory, $value->created_at);
         }
         return $registrations;
     }
