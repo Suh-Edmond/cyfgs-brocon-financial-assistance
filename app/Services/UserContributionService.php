@@ -283,11 +283,7 @@ class UserContributionService implements UserContributionInterface {
     }
 
 
-    public function getContributionsByItemAndSession($item, $request, $current_year, $type){
-        $quarter_range = $this->getStartQuarter($current_year->year,  $request->quarter, $type);
-        $start_quarter = $quarter_range[0];
-        $end_quarter = $quarter_range[1];
-
+    public function getContributionsByItemAndSession($item, $current_year, $start_quarter, $end_quarter){
         return DB::table('user_contributions')
             ->join('payment_items', 'payment_items.id', '=', 'user_contributions.payment_item_id')
             ->join('sessions', 'sessions.id' , '=', 'user_contributions.session_id')

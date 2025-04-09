@@ -149,12 +149,8 @@ class IncomeActivityService implements IncomeActivityInterface {
 
     }
 
-    public function getQuarterlyIncomeActivities($current_year, $payment_item, $request, $type): array
+    public function getQuarterlyIncomeActivities($current_year, $payment_item, $start_quarter, $end_quarter): array
     {
-        $quarter_range = $this->getStartQuarter($current_year->year,  $request->quarter, $type);
-        $start_quarter = $quarter_range[0];
-        $end_quarter = $quarter_range[1];
-
         return  DB::table('income_activities')
             ->join('payment_items', 'payment_items.id', '=', 'income_activities.payment_item_id')
             ->join('sessions', 'sessions.id' , '=', 'income_activities.session_id')

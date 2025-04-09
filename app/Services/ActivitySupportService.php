@@ -119,11 +119,8 @@ class ActivitySupportService implements ActivitySupportInterface
         $sponsorship->save();
     }
 
-    public function getSponsorshipIncomePerQuarterly($current_year, $request, $type, $payment_item): array
+    public function getSponsorshipIncomePerQuarterly($current_year, $payment_item, $start_quarter, $end_quarter): array
     {
-        $quarter_range = $this->getStartQuarter($current_year->year,  $request->quarter, $type);
-        $start_quarter = $quarter_range[0];
-        $end_quarter = $quarter_range[1];
 
         return  DB::table('activity_supports')
             ->join('payment_items', 'payment_items.id', '=', 'activity_supports.payment_item_id')

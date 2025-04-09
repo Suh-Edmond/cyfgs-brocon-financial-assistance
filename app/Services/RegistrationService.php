@@ -71,15 +71,14 @@ class RegistrationService implements RegistrationInterface
     public function approveRegisteredMember($request)
     {
         $reg = MemberRegistration::where('user_id', $request->user_id)->where('session_id', $request->session_id)->firstOrFail();
+
         $reg->approve = $request->status;
+
         $reg->save();
     }
 
-    public function getMemberRegistrationPerQuarter($request, $code, $session_id, $current_year, $type)
+    public function getMemberRegistrationPerQuarter($code, $session_id, $start_quarter, $end_quarter)
     {
-        $quarter_range = $this->getStartQuarter($current_year->year,  $request->quarter, $type);
-        $start_quarter = $quarter_range[0];
-        $end_quarter = $quarter_range[1];
 
         $registrations = MemberRegistration::where('session_id', $session_id)
                         ->where('approve', PaymentStatus::APPROVED)
