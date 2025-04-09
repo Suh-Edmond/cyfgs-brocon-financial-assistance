@@ -132,7 +132,7 @@ class UserContributionController extends Controller
             'total_deposited_users' => $this->computeTotalAmountByUser($contributions->data),
             'total_balance_users' => $this->computeBalanceByUser($contributions->data),
             'total_amount_payable' => $contributions->total_amount_payable,
-            'paymentItem' => $paymentItem,
+            'paymentItem'           => $paymentItem,
             'payment_durations' => $contributions->payment_durations,
             'member_size'       => $contributions->member_size
         ];

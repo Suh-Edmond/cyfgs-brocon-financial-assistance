@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddRangePaymentItemType extends Migration
+class AddDateToUserContributions extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,9 @@ class AddRangePaymentItemType extends Migration
      */
     public function up()
     {
-//        Schema::table('payment_items', function (Blueprint $table){
-//           $table->boolean("is_range")->default(false);
-//           $table->double("start_amount")->default(0);
-//           $table->double("end_amount")->default(0);
-//        });
+        Schema::table('user_contributions', function (Blueprint $table) {
+            $table->date('date');
+        });
     }
 
     /**
@@ -27,6 +25,8 @@ class AddRangePaymentItemType extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('user_contributions', function (Blueprint $table) {
+            //
+        });
     }
 }

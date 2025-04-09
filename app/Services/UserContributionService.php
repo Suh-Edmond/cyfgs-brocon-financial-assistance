@@ -439,7 +439,8 @@ class UserContributionService implements UserContributionInterface {
                 'balance'           => $balance_contribution,
                 'session_id'        => $current_session,
                 'quarterly_name'    => !is_null($request->quarterly_name) ? ($request->quarterly_name) :"",
-                'month_name'        => $request->month_name
+                'month_name'        => $request->month_name,
+                'date'              => $request->date,
             ]);
         }
 
