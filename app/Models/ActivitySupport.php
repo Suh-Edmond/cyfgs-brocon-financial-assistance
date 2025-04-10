@@ -40,4 +40,9 @@ class ActivitySupport extends Model
     {
         return $this->belongsTo(Session::class);
     }
+
+    public function transactionHistory()
+    {
+        return $this->hasOne(TransactionHistory::class, 'reference_data');
+    }
 }

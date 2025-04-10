@@ -28,5 +28,8 @@ class ExpenditureDetail extends Model
         return $this->belongsTo(ExpenditureItem::class);
     }
 
-
+    public function transactionHistory()
+    {
+        return $this->hasOne(TransactionHistory::class, "reference_data");
+    }
 }

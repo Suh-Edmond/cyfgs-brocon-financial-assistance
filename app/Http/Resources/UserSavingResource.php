@@ -29,6 +29,7 @@ class UserSavingResource extends JsonResource
             'session_id'             => $this->session_id,
             'amount_used'            => $this->amount_used,
             'total_amount'           => isset($this->total_amount) ? $this->total_amount: 0,
+            'userSaving'             => $this->userSaving
 //            'session'                => $this->session,
 //            'session_status'         => $this->session_status
         ];

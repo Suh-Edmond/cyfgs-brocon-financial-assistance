@@ -39,4 +39,9 @@ class MemberRegistration extends Model
     {
         return $this->belongsTo(Registration::class);
     }
+
+    public function transactionHistory()
+    {
+        return $this->hasOne(TransactionHistory::class, "reference_data");
+    }
 }

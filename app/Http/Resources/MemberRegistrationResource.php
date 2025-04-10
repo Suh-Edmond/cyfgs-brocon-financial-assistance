@@ -25,6 +25,7 @@ class MemberRegistrationResource extends JsonResource
             'updated_by'      => $this->updated_by,
             'month_name'      => $this->month_name,
             'registration'    => $this->registration,
+            'memberRegistration' => $this->memberRegistration
         ];
     }
 }

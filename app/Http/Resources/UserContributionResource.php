@@ -40,7 +40,8 @@ class UserContributionResource extends JsonResource
             'total_amount_deposited'   => $this->total_amount_deposited == null ? 0: $this->total_amount_deposited,
             'session_id'               => $this->session_id,
             'quarterly_name'           => $this->quarterly_name,
-            'month_name'               => $this->month_name
+            'month_name'               => $this->month_name,
+            'userContribution'         => $this->userContribution
         ];
     }
 }
