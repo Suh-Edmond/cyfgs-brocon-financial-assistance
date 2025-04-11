@@ -47,15 +47,47 @@ class UserContributionService implements UserContributionInterface, TransactionD
 
     }
 
-    public function getContributionsByItem($payment_item_id)
+    public function getContributionsByItem($payment_item)
     {
+        $payment_item_durations = [];
+        $unpaid_durations = [];
         $user_contributions = UserContribution::select('user_contributions.*')
                                                 ->join('payment_items', ['payment_items.id' => 'user_contributions.payment_item_id'])
-                                                ->where('user_contributions.payment_item_id', $payment_item_id)
+                                                ->where('user_contributions.payment_item_id', $payment_item)
+                                                ->select('user_contributions.*')
                                                 ->orderBy('user_contributions.created_at', 'DESC')
                                                 ->get();
 
-        return new UserContributionCollection($user_contributions, 0);
+        $paginated_contribution = isset($request->per_page) ? $user_contributions->paginate($request->per_page): $user_contributions->paginate(10);
+
+        $total = $paginated_contribution->total() ;
+        $last_page = $paginated_contribution->lastPage();
+        $per_page = (int)$paginated_contribution->perPage();
+        $current_page = $paginated_contribution->currentPage();
+
+        $total_contribution =  collect($user_contributions->get())->sum('amount_deposited');
+
+        $total_amount_payable = $this->getTotalPaymentItemAmountByQuarters($payment_item);
+
+        $total_balance = $total_contribution != 0 ? $total_amount_payable - $total_contribution : 0;
+
+        $percentage = $this->computePercentageContributed($total_contribution, $total_amount_payable);
+
+        if($payment_item->frequency == PaymentItemFrequency::QUARTERLY){
+            $unpaid_durations = $this->getMemberUnPayQuarters($payment_item->frequency, $payment_item->created_at, $user_contributions->get());
+        }
+        if ($payment_item->frequency == PaymentItemFrequency::MONTHLY){
+            $unpaid_durations =  $this->getMemberUnPayMonths($payment_item->frequency, $payment_item->created_at, $user_contributions->get());
+        }
+        if ($payment_item->frequency == PaymentItemFrequency::QUARTERLY){
+            $payment_item_durations = $this->getPaymentItemQuartersBySession($payment_item->frequency, $payment_item->created_at);
+        }
+        if ($payment_item->frequency == PaymentItemFrequency::MONTHLY){
+            $payment_item_durations = $this->getPaymentItemMonthsBySession($payment_item->frequency, $payment_item->created_at);
+        }
+
+        return new UserContributionCollection($paginated_contribution, $total_contribution, $total_balance, $unpaid_durations, $total_amount_payable,  $total, $last_page,
+            $per_page, $current_page, $percentage, $payment_item_durations, 1, $payment_item);
     }
 
     public function getUserContributionsByUser($user_id)
@@ -70,12 +102,14 @@ class UserContributionService implements UserContributionInterface, TransactionD
 
     public function getContributionByUserAndItem($payment_item_id, $user_id, $request)
     {
+
         $payment_item_durations = array();
         $unpaid_durations = array();
         $payment_item = PaymentItem::find($payment_item_id);
         $contributions =  $this->getContributionByUserAndPaymentItem($payment_item_id, $user_id)
                                     ->select(  'user_contributions.*')
                                     ->orderBy('user_contributions.created_at', 'DESC');
+
         if(!is_null($request->transaction_status) && $request->transaction_status !== "ALL"){
             $contributions = $contributions->where('user_contributions.status', $request->transaction_status);
         }
@@ -414,7 +448,7 @@ class UserContributionService implements UserContributionInterface, TransactionD
 
         $total_amount_contributed = $this->getTotalAmountPaidByUserForTheItem($user_id, $request->payment_item_id, $request->month_name, $request->quarterly_name, $payment_item->frequency);
 
-        $this->validateAmountDeposited($payment_item_amount, ($total_amount_contributed + $request->amount_deposited));
+        $validAmount = $this->validateAmountDeposited($payment_item_amount, ($total_amount_contributed + $request->amount_deposited));
 
         $status = $this->getUserContributionStatus($payment_item_amount, ($total_amount_contributed + $request->amount_deposited));
 
@@ -434,7 +468,7 @@ class UserContributionService implements UserContributionInterface, TransactionD
                 'status'            => $status,
                 'scan_picture'      => null,
                 'updated_by'        => $auth_user,
-                'balance'           => $balance_contribution,
+                'balance'           => $validAmount ? 0 : $balance_contribution,
                 'session_id'        => $current_session,
                 'quarterly_name'    => !is_null($request->quarterly_name) ? ($request->quarterly_name) :"",
                 'month_name'        => $request->month_name,
@@ -458,10 +492,11 @@ class UserContributionService implements UserContributionInterface, TransactionD
     }
 
     private function validateAmountDeposited($payment_item_amount, $amount_deposited) {
-        if($amount_deposited > $payment_item_amount) {
-            throw new BusinessValidationException("Amount Deposited must not be more than the amount for the payment item", 403);
-        }
-        return true;
+//        if($amount_deposited > $payment_item_amount) {
+//            throw new BusinessValidationException("Amount Deposited must not be more than the amount for the payment item", 400);
+//        }
+//        return true;
+        return $amount_deposited > $payment_item_amount;
     }
 
     private function getUserLastContributionByPaymentItem($user_id, $payment_item_id , $month_name, $quarterly_name, $frequency) {
@@ -978,26 +1013,29 @@ class UserContributionService implements UserContributionInterface, TransactionD
      */
     public function saveTransactionData(TransactionHistory $transactionHistory, $updatedTransactionData)
     {
-        $savedRecord = $updatedTransactionData;
-        $totalContribution =  $this->getContributionByUserAndPaymentItem($updatedTransactionData['payment_item_id'], $updatedTransactionData['user_id'])->sum('user_contributions.amount_deposited');
+
+        $totalContribution   =  $this->getContributionByUserAndPaymentItem($updatedTransactionData['payment_item_id'], $updatedTransactionData['user_id'])->sum('user_contributions.amount_deposited');
 
         $payment_item_amount = $this->findPaymentItem($updatedTransactionData['payment_item_id'])['amount'];
 
-        $this->validateAmountDeposited($payment_item_amount, ($totalContribution + $transactionHistory['new_amount_deposited']));
+        $totalAmountContributedWithoutOldDeposition = $totalContribution - $updatedTransactionData->amount_deposited;
 
-        $status = $this->getUserContributionStatus($payment_item_amount, ($totalContribution + $transactionHistory['new_amount_deposited']));
+        $new_total_amount_contributed = ($totalAmountContributedWithoutOldDeposition + $transactionHistory['new_amount_deposited']);
 
-        $hasCompleted = $this->verifyExcessUserContribution($totalContribution, $payment_item_amount);
+        $offsetBalance = $payment_item_amount - $new_total_amount_contributed;
 
-        if (! $hasCompleted){
-            $updatedTransactionData->amount_deposited = $transactionHistory['new_amount_deposited'];
-            $updatedTransactionData->status = $status;
-            $updatedTransactionData->balance = ($payment_item_amount - ($totalContribution + $transactionHistory['new_amount_deposited']));
-            $updatedTransactionData->approve = $transactionHistory['approve'];
-            $savedRecord = $updatedTransactionData->save();
-        }
+        $validAmount = $this->validateAmountDeposited($payment_item_amount, ($totalAmountContributedWithoutOldDeposition + $transactionHistory['new_amount_deposited']));
 
-        return $savedRecord;
+        $status = $this->getUserContributionStatus($payment_item_amount, $new_total_amount_contributed);
+
+
+        $updatedTransactionData->amount_deposited = $transactionHistory['new_amount_deposited'];
+        $updatedTransactionData->status = $status;
+        $updatedTransactionData->balance = $validAmount ? 0 : $offsetBalance;
+        $updatedTransactionData->approve = $transactionHistory['approve'];
+        $updatedTransactionData->save();
+
+        return $updatedTransactionData->save();
     }
 }
 

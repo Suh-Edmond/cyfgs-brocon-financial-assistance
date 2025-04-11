@@ -360,8 +360,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('make-contribution-recommendation',[RecommendationController::class, 'makeRecommendationOnContributions'])->name('api.make-recommendation');
     });
 
-    Route::prefix('protected')->middleware('IsPresidentOrIsAdmin')->group(function (){
-        Route::post('/transactions/update', [TransactionHistoryController::class, 'createTransactionHistory'])->name("api.change_transaction_record");
+    Route::prefix('protected')->middleware('isPresidentOrIsAdmin')->group(function (){
+        Route::post('/transactions/update-history', [TransactionHistoryController::class, 'createTransactionHistory'])->name("api.change_transaction_record");
     });
 
  });

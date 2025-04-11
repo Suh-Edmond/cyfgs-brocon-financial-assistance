@@ -17,7 +17,6 @@ class UserSaving extends Model
     public $incrementing  = false;
     protected $keyType    = 'string';
 
-
     protected $fillable = [
         'amount_deposited',
         'comment',
@@ -40,5 +39,9 @@ class UserSaving extends Model
         return $this->hasMany(Session::class);
     }
 
+    public function transactionHistory()
+    {
+        return $this->hasOne(TransactionHistory::class, "reference_data");
+    }
 
 }

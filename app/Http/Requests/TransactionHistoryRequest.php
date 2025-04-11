@@ -27,8 +27,8 @@ class TransactionHistoryRequest extends FormRequest
     public function rules()
     {
         return [
-            'old_amount_deposited'   => 'required|numeric',
-            'new_amount_deposited'   => 'required|numeric',
+            'old_amount_deposited'   => 'required',
+            'new_amount_deposited'   => 'required',
             'reason'                 => 'required|string|max:1000',
             'reference_data'         => 'required|string',
             'transaction_data_group' => ['required', Rule::in([TransactionDataGroup::EXPENDITURE_ITEM_DETAILS, TransactionDataGroup::EXPENDITURE_ITEMS, TransactionDataGroup::INCOME_ACTIVITY, TransactionDataGroup::SPONSORSHIP,

@@ -256,14 +256,15 @@ class ExpenditureDetailService implements ExpenditureDetailInterface, Transactio
 
     public function getTransactionData($id)
     {
-        return $this->getExpenditureDetail($id);
+        return ExpenditureDetail::findOrFail($id);
     }
 
     public function saveTransactionData(TransactionHistory $transactionHistory, $updatedTransactionData)
     {
-        $oldAmountDeposited = explode("/", $transactionHistory['new_amount_deposited']);
-        $updatedTransactionData->amount_spent = $oldAmountDeposited[0];
-        $updatedTransactionData->amount_given = $oldAmountDeposited[1];
+        $newAmountDeposited = explode("/", $transactionHistory['new_amount_deposited']);
+
+        $updatedTransactionData->amount_given = (int)$newAmountDeposited[0];
+        $updatedTransactionData->amount_spent = (int)$newAmountDeposited[1];
         $updatedTransactionData->approve      = $transactionHistory['approve'];
 
         return $updatedTransactionData->save();

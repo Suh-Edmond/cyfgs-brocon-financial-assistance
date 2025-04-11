@@ -44,22 +44,31 @@ class TransactionHistoryImpl implements TransactionHistoryInterface
 
     public function createTransactionHistory($request)
     {
-       $savedTransactionHistory = TransactionHistory::create([
-           'old_amount_deposited'     => $request['old_amount_deposited'],
-           'new_amount_deposited'     => $request['new_amount_deposited'],
-           'reason'                   => $request['reason'],
-           'reference_data'           => $request['reference_data'],
-           'updated_by'               => $request->user()->name,
-           'approve'                  => $request['approve'],
-           'code'                     => $this->generateCode(10),
-       ]);
+        $existHistory = TransactionHistory::where('reference_data', $request['reference_data'])->first();
+        if(isset($existHistory)){
+            $existHistory->old_amount_deposited = $request['old_amount_deposited'];
+            $existHistory->new_amount_deposited = $request['new_amount_deposited'];
+            $existHistory->reason               = $request['reason'];
+            $existHistory->approve              = $request['approve'];
+            $existHistory->updated_by           = $request['updated_by'];
+        }else {
+            $existHistory = TransactionHistory::create([
+                'old_amount_deposited'     => $request['old_amount_deposited'],
+                'new_amount_deposited'     => $request['new_amount_deposited'],
+                'reason'                   => $request['reason'],
+                'reference_data'           => $request['reference_data'],
+                'updated_by'               => $request->user()->name,
+                'approve'                  => $request['approve'],
+                'code'                     => $this->generateCode(10),
+            ]);
+        }
 
        $updatedTransactionData = $this->getTransactionDataGroup($request['transaction_data_group'], $request['reference_data']);
 
-       return $this->saveTransactionData($savedTransactionHistory, $request['transaction_data_group'], $updatedTransactionData);
+       return $this->saveTransactionData($existHistory, $request['transaction_data_group'], $updatedTransactionData);
     }
 
-    private function getTransactionDataGroup(TransactionDataGroup $transactionDataGroup, $id){
+    private function getTransactionDataGroup($transactionDataGroup, $id){
         $transaction = null;
         switch ($transactionDataGroup){
             case TransactionDataGroup::USER_SAVING:
@@ -88,7 +97,7 @@ class TransactionHistoryImpl implements TransactionHistoryInterface
         return $transaction;
     }
 
-    private function saveTransactionData(TransactionHistory $saveTransactionHistory, TransactionDataGroup $transactionDataGroup, $updatedTransactionData){
+    private function saveTransactionData($saveTransactionHistory, $transactionDataGroup, $updatedTransactionData){
         $savedData = null;
         switch ($transactionDataGroup){
             case TransactionDataGroup::EXPENDITURE_ITEM_DETAILS:

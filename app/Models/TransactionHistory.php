@@ -25,4 +25,39 @@ class TransactionHistory extends Model
         'approve',
         'code',
     ];
+
+    public function activitySupport()
+    {
+        return $this->belongsTo(ActivitySupport::class);
+    }
+
+    public function expenditureDetail()
+    {
+        return $this->belongsTo(ExpenditureDetail::class);
+    }
+
+    public function expenditureItem()
+    {
+        return $this->belongsTo(ExpenditureItem::class);
+    }
+
+    public function incomeActivity()
+    {
+        return $this->belongsTo(IncomeActivity::class);
+    }
+
+    public function memberRegistration()
+    {
+        return $this->belongsTo(MemberRegistration::class);
+    }
+
+    public function userContribution()
+    {
+        return $this->belongsTo(UserContribution::class);
+    }
+
+    public function userSaving()
+    {
+        return $this->belongsTo(UserSaving::class);
+    }
 }
