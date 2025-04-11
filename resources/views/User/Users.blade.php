@@ -102,7 +102,7 @@
                 </tr>
 
                 @if ( $n % 25 == 0 )
-                    <div style="page-break-before:always;page-break-inside: auto;"> </div>
+                    <div style="page-break-before:always;page-break-inside: auto;margin-bottom: 50px"> </div>
                 @endif
                 <?php $n++ ?>
             @endforeach
@@ -111,12 +111,12 @@
 
 
     <!------------------------------------------------------DETAILS OF PRESENTERS--------------------------------------------------------------------------------------------->
-    <div style="margin-top: 40px;margin-bottom: 60px">
+    <div style="margin-top: 40px;">
         <h3 style="font-weight: bold;font-size: small; text-align:center;text-transform: uppercase;text-decoration: underline"><span style="padding-right: 5px"></span> Prepared By:
         </h3>
     </div>
 
-    <div class="detail">
+    <div class="detail" style="margin-bottom: 50px">
         <!------------------------------Names of presenters------------------------------------>
         <div style="float: left" class="fin_sec">
             <div class=" " style="font-weight: bold;font-size: small;text-transform: uppercase; margin-bottom: 3px;text-align: center">
@@ -155,7 +155,7 @@
         </div>
         <!------------------------------End of presenters-------------------------------------->
     </div>
-    <div class="president" style="text-align: center;margin-top: 30px">
+    <div class="president" style="text-align: center;margin-top: 50px">
         <div>
             <div class=" " style="font-weight: bold;font-size: small;text-transform: uppercase; margin-bottom: 3px">
                 President
