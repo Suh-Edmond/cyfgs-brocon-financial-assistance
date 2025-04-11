@@ -19,6 +19,7 @@ class StoreYearlyBalance extends Model
     protected $fillable = [
         'session_id',
         'balance',
+        'updated_by'
     ];
 
     public function session()

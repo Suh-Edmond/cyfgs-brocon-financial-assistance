@@ -88,9 +88,9 @@ class MemberRegistrationController extends Controller
             'organisation_telephone'   => $this->setOrganisationTelephone($organisation->telephone),
             'treasurer'           => $treasurer,
             'fin_secretary'       => $fin_sec,
-            'organisation_logo'   => $organisation->logo
+            'organisation_logo'   => $organisation->logo,
         ];
-        $pdf = PDF::loadView('MemberRegistration.RegisteredMembers', $data)->setPaper('a3', 'landscape');
+        $pdf = PDF::loadView('MemberRegistration.RegisteredMembers', $data)->setPaper('a4', 'portrait');
 
         return $pdf->download('RegisteredMembers.pdf');
     }

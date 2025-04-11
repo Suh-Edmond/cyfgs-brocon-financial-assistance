@@ -7,13 +7,15 @@ use App\Exceptions\BusinessValidationException;
 use App\Http\Resources\ExpenditureDetailCollection;
 use App\Http\Resources\ExpenditureDetailResource;
 use App\Interfaces\ExpenditureDetailInterface;
+use App\Interfaces\TransactionDataGroupMgt;
 use App\Models\ExpenditureDetail;
 use App\Models\ExpenditureItem;
+use App\Models\TransactionHistory;
 use App\Traits\HelpTrait;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
-class ExpenditureDetailService implements ExpenditureDetailInterface {
+class ExpenditureDetailService implements ExpenditureDetailInterface, TransactionDataGroupMgt {
 
     use HelpTrait;
     private PaymentItemService $paymentItemService;
@@ -250,5 +252,21 @@ class ExpenditureDetailService implements ExpenditureDetailInterface {
                 $detail->save();
             }
         }
+    }
+
+    public function getTransactionData($id)
+    {
+        return ExpenditureDetail::findOrFail($id);
+    }
+
+    public function saveTransactionData(TransactionHistory $transactionHistory, $updatedTransactionData)
+    {
+        $newAmountDeposited = explode("/", $transactionHistory['new_amount_deposited']);
+
+        $updatedTransactionData->amount_given = (int)$newAmountDeposited[0];
+        $updatedTransactionData->amount_spent = (int)$newAmountDeposited[1];
+        $updatedTransactionData->approve      = $transactionHistory['approve'];
+
+        return $updatedTransactionData->save();
     }
 }

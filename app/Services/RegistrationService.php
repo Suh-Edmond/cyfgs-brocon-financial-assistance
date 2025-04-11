@@ -8,11 +8,13 @@ use App\Constants\Constants;
 use App\Constants\PaymentStatus;
 use App\Http\Resources\QuarterlyIncomeResource;
 use App\Interfaces\RegistrationInterface;
+use App\Interfaces\TransactionDataGroupMgt;
+use App\Models\TransactionHistory;
 use App\Models\User;
 use App\Models\MemberRegistration;
 use App\Traits\HelpTrait;
 
-class RegistrationService implements RegistrationInterface
+class RegistrationService implements RegistrationInterface, TransactionDataGroupMgt
 {
     use HelpTrait;
     private SessionService $sessionService;
@@ -71,15 +73,14 @@ class RegistrationService implements RegistrationInterface
     public function approveRegisteredMember($request)
     {
         $reg = MemberRegistration::where('user_id', $request->user_id)->where('session_id', $request->session_id)->firstOrFail();
+
         $reg->approve = $request->status;
+
         $reg->save();
     }
 
-    public function getMemberRegistrationPerQuarter($request, $code, $session_id, $current_year, $type)
+    public function getMemberRegistrationPerQuarter($code, $session_id, $start_quarter, $end_quarter)
     {
-        $quarter_range = $this->getStartQuarter($current_year->year,  $request->quarter, $type);
-        $start_quarter = $quarter_range[0];
-        $end_quarter = $quarter_range[1];
 
         $registrations = MemberRegistration::where('session_id', $session_id)
                         ->where('approve', PaymentStatus::APPROVED)
@@ -116,4 +117,15 @@ class RegistrationService implements RegistrationInterface
         })->sum();
     }
 
+    public function getTransactionData($id)
+    {
+        return MemberRegistration::findOrFail($id);
+    }
+
+    public function saveTransactionData(TransactionHistory $transactionHistory, $updatedTransactionData)
+    {
+        $updatedTransactionData->approve = $transactionHistory['approve'];
+
+        return $updatedTransactionData->save();
+    }
 }

@@ -105,7 +105,7 @@ class PaymentItemController extends Controller
             'organisation_telephone' => $this->setOrganisationTelephone($organisation->telephone),
         ];
 
-        $pdf = PDF::loadView('PaymentItem.PaymentItems', $data)->setPaper('a3', 'landscape');
+        $pdf = PDF::loadView('PaymentItem.PaymentItems', $data)->setPaper('a4', 'portrait');
         $pdf->output();
         $domPdf = $pdf->getDomPDF();
         $canvas = $domPdf->getCanvas();

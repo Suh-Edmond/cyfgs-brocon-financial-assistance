@@ -42,12 +42,8 @@ class RoleService implements RoleInterface {
 
     public function getUserRoles($user_id)
     {
-        $user_roles = DB::table('model_has_roles')
-            ->join('users', 'users.id', '=', 'model_has_roles.model_id')
-            ->join('roles', 'roles.id', '=', 'model_has_roles.role_id')
-            ->where('model_id', $user_id)
-            ->select('roles.*')->get();
-        return RoleResource::collection($user_roles);
+        $user = User::findOrFail($user_id);
+        return RoleResource::collection($user->roles);
     }
 
 

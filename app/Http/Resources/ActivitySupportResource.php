@@ -31,6 +31,7 @@ class ActivitySupportResource extends JsonResource
             'created_at'               => $this->created_at,
             'updated_at'               => $this->updated_at,
             'session'                  => $this->session,
+            'transactionHistory'       => $this->transactionHistory
         ];
     }
 }

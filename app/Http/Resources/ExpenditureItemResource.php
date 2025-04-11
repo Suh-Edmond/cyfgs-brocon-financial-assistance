@@ -44,6 +44,7 @@ class ExpenditureItemResource extends JsonResource
             'payment_item'                  => $this->paymentItem,
             'session'                       => $this->session,
             'has_no_pending_details'        => count($this->expenditureDetails) > 0 && is_null($this->checkExpenditureItemCanBeApproveDeclined($this->expenditureDetails)),
+            'expenditureItem'               => $this->expenditureItem
         ];
     }
 }

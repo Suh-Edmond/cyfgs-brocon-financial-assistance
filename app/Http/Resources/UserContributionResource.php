@@ -24,6 +24,7 @@ class UserContributionResource extends JsonResource
             'approve'                  => $this->approve,
             'user_id'                  => $this->user_id,
             'user_name'                => $user->name,
+            'date'                     => $this->date,
             'user_telephone'           => $user->telephone,
             'user_email'               => $user->email,
             'payment_item_id'          => $payment_item->id,
@@ -39,7 +40,8 @@ class UserContributionResource extends JsonResource
             'total_amount_deposited'   => $this->total_amount_deposited == null ? 0: $this->total_amount_deposited,
             'session_id'               => $this->session_id,
             'quarterly_name'           => $this->quarterly_name,
-            'month_name'               => $this->month_name
+            'month_name'               => $this->month_name,
+            'userContribution'         => $this->userContribution
         ];
     }
 }

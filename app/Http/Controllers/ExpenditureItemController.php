@@ -123,10 +123,10 @@ class ExpenditureItemController extends Controller
             'treasurer'           => $treasurer,
             'fin_secretary'       => $fin_sec,
             'total'               => $this->computeTotalAmountByPaymentCategory($expenditure_items->data),
-            'organisation_logo'   => $organisation->logo
+            'organisation_logo'   => $organisation->logo,
         ];
 
-        $pdf = PDF::loadView('ExpenditureItem.ExpenditureItems', $data)->setPaper('a3', 'landscape');
+        $pdf = PDF::loadView('ExpenditureItem.ExpenditureItems', $data)->setPaper('a4', 'portrait');
         $pdf->output();
         $domPdf = $pdf->getDomPDF();
         $canvas = $domPdf->getCanvas();

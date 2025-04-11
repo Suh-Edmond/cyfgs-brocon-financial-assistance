@@ -29,7 +29,8 @@ class UserContribution extends Model
         'balance',
         'session_id',
         'quarterly_name',
-        'month_name'
+        'month_name',
+        'date'
     ];
 
 
@@ -46,6 +47,11 @@ class UserContribution extends Model
     public function session()
     {
         return $this->belongsTo(Session::class);
+    }
+
+    public function transactionHistory()
+    {
+        return $this->hasOne(TransactionHistory::class, "reference_data");
     }
 
 }

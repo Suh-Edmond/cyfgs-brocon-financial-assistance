@@ -56,7 +56,7 @@ class GenerateReportController extends Controller
             'total_amount_spent'  => $data[4]['total_amount_spent'],
             'balance'             => $data[5]['balance'],
             'total_balance'       => $data[6]['total_balance'],
-            'organisation_logo'   => $organisation->logo
+            'organisation_logo'   => $organisation->logo,
 
         ];
 
@@ -100,7 +100,7 @@ class GenerateReportController extends Controller
             'fin_secretary'          => $data[7]['fin_sec'],
             'balance'                => $data[2]['total_income'] - $data[3]['total_expenditure'],
             'year'                   => $this->session_service->getCurrentSession()->year,
-            'organisation_logo'      => $organisation->logo
+            'organisation_logo'      => ($organisation->logo)
         ];
         $pdf = PDF::loadView('Reports.QuarterReport', $payload)->setPaper('a3', 'landscape');
         $pdf->output();
@@ -141,7 +141,7 @@ class GenerateReportController extends Controller
             'fin_secretary'          => $data[7]['fin_sec'],
             'balance'                => $data[2]['total_income'] - $data[3]['total_expenditure'],
             'year'                   => $request->year_label,
-            'organisation_logo'      => $organisation->logo
+            'organisation_logo'      => ($organisation->logo)
         ];
         $pdf = PDF::loadView('Reports.YearlyReport', $payload)->setPaper('a3', 'landscape');
         $pdf->output();
