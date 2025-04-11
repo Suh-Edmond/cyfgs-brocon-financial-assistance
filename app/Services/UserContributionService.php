@@ -448,7 +448,7 @@ class UserContributionService implements UserContributionInterface, TransactionD
 
         $total_amount_contributed = $this->getTotalAmountPaidByUserForTheItem($user_id, $request->payment_item_id, $request->month_name, $request->quarterly_name, $payment_item->frequency);
 
-        $this->validateAmountDeposited($payment_item_amount, ($total_amount_contributed + $request->amount_deposited));
+        $validAmount = $this->validateAmountDeposited($payment_item_amount, ($total_amount_contributed + $request->amount_deposited));
 
         $status = $this->getUserContributionStatus($payment_item_amount, ($total_amount_contributed + $request->amount_deposited));
 
@@ -468,7 +468,7 @@ class UserContributionService implements UserContributionInterface, TransactionD
                 'status'            => $status,
                 'scan_picture'      => null,
                 'updated_by'        => $auth_user,
-                'balance'           => $balance_contribution,
+                'balance'           => $validAmount ? 0 : $balance_contribution,
                 'session_id'        => $current_session,
                 'quarterly_name'    => !is_null($request->quarterly_name) ? ($request->quarterly_name) :"",
                 'month_name'        => $request->month_name,
@@ -492,10 +492,11 @@ class UserContributionService implements UserContributionInterface, TransactionD
     }
 
     private function validateAmountDeposited($payment_item_amount, $amount_deposited) {
-        if($amount_deposited > $payment_item_amount) {
-            throw new BusinessValidationException("Amount Deposited must not be more than the amount for the payment item", 400);
-        }
-        return true;
+//        if($amount_deposited > $payment_item_amount) {
+//            throw new BusinessValidationException("Amount Deposited must not be more than the amount for the payment item", 400);
+//        }
+//        return true;
+        return $amount_deposited > $payment_item_amount;
     }
 
     private function getUserLastContributionByPaymentItem($user_id, $payment_item_id , $month_name, $quarterly_name, $frequency) {
@@ -1030,7 +1031,7 @@ class UserContributionService implements UserContributionInterface, TransactionD
 
         $updatedTransactionData->amount_deposited = $transactionHistory['new_amount_deposited'];
         $updatedTransactionData->status = $status;
-        $updatedTransactionData->balance = $offsetBalance;
+        $updatedTransactionData->balance = $validAmount ? 0 : $offsetBalance;
         $updatedTransactionData->approve = $transactionHistory['approve'];
         $updatedTransactionData->save();
 
