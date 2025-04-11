@@ -8,9 +8,9 @@ class TransactionDataGroup
 
     public const SPONSORSHIP = "SPONSORSHIP";
 
-    public const USER_CONTRIBUTIONS = "USER_CONTRIBUTION";
+    public const USER_CONTRIBUTIONS = "USER_CONTRIBUTIONS";
 
-    public const EXPENDITURE_ITEMS = "EXPENDITURE_ITEM";
+    public const EXPENDITURE_ITEMS = "EXPENDITURE_ITEMS";
 
     public const EXPENDITURE_ITEM_DETAILS = "EXPENDITURE_ITEM_DETAILS";
 

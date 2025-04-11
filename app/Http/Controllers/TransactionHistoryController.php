@@ -4,15 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\TransactionHistoryRequest;
 use App\Interfaces\TransactionHistoryInterface;
+use App\Services\TransactionHistoryImpl;
 use App\Traits\HelpTrait;
 use App\Traits\ResponseTrait;
 
 class TransactionHistoryController extends Controller
 {
     use ResponseTrait, HelpTrait;
-    private TransactionHistoryInterface $transactionHistory;
+    private TransactionHistoryImpl $transactionHistory;
 
-    public function __construct(TransactionHistoryInterface $transactionHistory)
+    public function __construct(TransactionHistoryImpl $transactionHistory)
     {
         $this->transactionHistory = $transactionHistory;
     }
