@@ -58,8 +58,8 @@
         </div>
     </div>
 
-    <div style="margin-bottom: 2rem;">
-        <h3 style="font-weight: bold;font-size: medium; text-align:center;text-transform: capitalize;border-bottom: 3px solid black;">{{ $title }}
+    <div style="margin-bottom: 2rem;border-bottom: 3px solid black; width: 25%; margin-left: 36rem">
+        <h3 style="font-weight: bold;font-size: 1rem; text-align:center;text-transform: capitalize;">{{ $title }}
         </h3>
     </div>
     <?php $n=1 ?>

@@ -54,7 +54,7 @@
 
         </div>
         <div class="column_10">
-            <label style="font-size: small;">Printed date {{ $date }}</label>
+            <label style="font-size: small;">Printed date: {{ $date }}</label>
         </div>
     </div>
 
