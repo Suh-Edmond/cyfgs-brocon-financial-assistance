@@ -90,10 +90,10 @@ class PaymentCategoryController extends Controller
             'president'         => $president,
             'treasurer'         => $treasurer,
             'fin_secretary'     => $fin_sec,
-            'organisation_logo' => $organisation->logo
+            'organisation_logo' => $organisation->logo,
         ];
 
-        $pdf = PDF::loadView('PaymentCategory.PaymentCategories', $data)->setPaper('a3', 'landscape');
+        $pdf = PDF::loadView('PaymentCategory.PaymentCategories', $data)->setPaper('a4', 'portrait');
         $pdf->output();
         $domPdf = $pdf->getDomPDF();
         $canvas = $domPdf->getCanvas();

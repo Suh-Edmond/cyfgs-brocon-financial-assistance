@@ -4,8 +4,7 @@
     <div style="margin-bottom:30px;">
         <div class="column_100" style="margin-left: 30px">
             <div class="column_25">
-                <img src="{{public_path("/images/pcc_logo.png")}}" alt="organisation logo" width="100px;" height="100px;"
-                     style="border-radius: 2px">
+                <img src="{{public_path("/images/pcc_logo.png")}}" alt="organisation logo" width="100px;" height="100px;" style="border-radius: 2px">
             </div>
             <div class="column_50" style="text-align: center;">
                 <label for="organisation"style="font-weight: bold; text-transform: uppercase; font-size: small;">
@@ -21,9 +20,8 @@
                 <label for="organisation"style="font-weight: bold; text-transform: uppercase; font-size: small;">
                     {{ $organisation->name }} - {{ $organisation->address }}</label><br />
             </div>
-            <div class="column_25" style="margin-left: 15rem">
-                <img src="{{public_path($organisation_logo)}}" alt="organisation logo" width="100px;" height="100px;"
-                     style="border-radius: 2px">
+            <div class="column_25">
+                <img src="{{public_path($organisation_logo)}}" alt="organisation logo" width="100px;" height="100px;" style="border-radius: 2px">
             </div>
         </div>
         <div class="column_100" style="margin-left: 30px">

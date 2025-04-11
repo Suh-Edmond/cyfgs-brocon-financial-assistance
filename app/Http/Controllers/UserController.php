@@ -137,7 +137,7 @@ class UserController extends Controller
     public function downloadUsers(Request $request)
     {
 
-        $organisation      =$request->user()->organisation;
+        $organisation      = $request->user()->organisation;
         $users             = $this->user_management_service->filterUsers($request);
         $admins            = $this->getOrganisationAdministrators();
         $president         = $admins[Roles::PRESIDENT];
@@ -153,12 +153,10 @@ class UserController extends Controller
             'president'              => $president,
             'treasurer'              => $treasurer,
             'fin_secretary'          => $fin_sec,
-            'organisation_logo'      => $organisation->logo
+            'organisation_logo'      => $organisation->logo,
         ];
 
-
-
-        $pdf = PDF::loadView('User.Users', $data)->setPaper('a3', 'landscape');
+        $pdf = PDF::loadView('User.Users', $data)->setPaper('a4', 'portrait');
         $pdf->output();
         $domPdf = $pdf->getDomPDF();
         $canvas = $domPdf->getCanvas();

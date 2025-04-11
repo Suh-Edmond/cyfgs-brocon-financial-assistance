@@ -137,7 +137,7 @@ class UserContributionController extends Controller
             'member_size'       => $contributions->member_size
         ];
 
-        $pdf = PDF::loadView('Contribution.UsersContribution', $data)->setPaper('a3', 'landscape');
+        $pdf = PDF::loadView('Contribution.UsersContribution', $data)->setPaper('a4', 'portrait');
         $pdf->output();
         $domPdf = $pdf->getDomPDF();
         $canvas = $domPdf->getCanvas();
@@ -184,7 +184,7 @@ class UserContributionController extends Controller
             'organisation_logo' => $organisation->logo,
         ];
 
-        $pdf = PDF::loadView('Contribution.MemberDebts', $data)->setPaper('a3', 'landscape');
+        $pdf = PDF::loadView('Contribution.MemberDebts', $data)->setPaper('a4', 'portrait');
 
         $pdf->output();
         $domPdf = $pdf->getDomPDF();
@@ -217,7 +217,7 @@ class UserContributionController extends Controller
             'organisation_logo' => $organisation->logo,
         ];
 
-        $pdf = PDF::loadView('Contribution.MemberPaidItems', $data)->setPaper('a3', 'landscape');
+        $pdf = PDF::loadView('Contribution.MemberPaidItems', $data)->setPaper('a4', 'portrait');
 
         $pdf->output();
         $domPdf = $pdf->getDomPDF();
@@ -264,7 +264,7 @@ class UserContributionController extends Controller
             'member_size'       => $contributions->member_size
         ];
 
-        $pdf = PDF::loadView('Contribution.MemberContribution', $data)->setPaper('a3', 'landscape');
+        $pdf = PDF::loadView('Contribution.MemberContribution', $data)->setPaper('a4', 'portrait');
 
         $pdf->output();
         $domPdf = $pdf->getDomPDF();

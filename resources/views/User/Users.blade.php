@@ -22,10 +22,8 @@
                 <label for="organisation"style="font-weight: bold; text-transform: uppercase; font-size: small;">
                     {{ $organisation->name }} - {{ $organisation->address }}</label><br />
             </div>
-            <div class="column_25" style="margin-left: 15rem">
-                <img src="{{ public_path($organisation_logo) }}" alt="organisation logo" width="100px;" height="100px;"
-                     style="border-radius: 2px">
-
+            <div class="column_25">
+                <img src="{{public_path($organisation_logo)}}" alt="organisation logo" width="100px;" height="100px;" style="border-radius: 2px">
             </div>
         </div>
         <div class="column_100" style="margin-left: 30px">
@@ -117,6 +115,7 @@
         <h3 style="font-weight: bold;font-size: small; text-align:center;text-transform: uppercase;text-decoration: underline"><span style="padding-right: 5px"></span> Prepared By:
         </h3>
     </div>
+
     <div class="detail" style="margin-top: 30px;margin-bottom: 150px">
         <!------------------------------Names of presenters------------------------------------>
         <div style="float: left" class="fin_sec">

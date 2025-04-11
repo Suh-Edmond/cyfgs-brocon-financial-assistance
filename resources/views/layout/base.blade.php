@@ -14,8 +14,8 @@
     }
 
     body {
-        margin-right: 20px;
-        margin-left: 17px;
+        margin-right: 15px;
+        margin-left: 15px;
         margin-top: 20px;
         padding: 0;
     }
@@ -122,6 +122,15 @@
     }
 
     .row::after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+
+    .detail{
+        width: 100%;
+    }
+    .detail::after{
         content: "";
         display: table;
         clear: both;
@@ -233,6 +242,13 @@
     .column_50 {
         float: left;
         width: 50%;
+    }
+    .column_50_detail {
+        width: 50%;
+    }
+
+    .column_100 {
+        width: 100%;
     }
     .column_100:after {
         content: "";

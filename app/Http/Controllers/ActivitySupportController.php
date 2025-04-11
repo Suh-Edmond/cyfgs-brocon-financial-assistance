@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Constants\FileStorageConstants;
 use App\Constants\Roles;
 use App\Http\Requests\CreateUpdateActivitySupportRequest;
 use App\Http\Resources\ActivitySupportResource;
@@ -111,7 +112,7 @@ class ActivitySupportController extends Controller
             'total'                => $supports->total_amount,
             'organisation_logo'    => $organisation->logo
         ];
-        $pdf = PDF::loadView('ActivitySupport.Support', $data)->setPaper('a3', 'landscape');
+        $pdf = PDF::loadView('ActivitySupport.Support', $data)->setPaper('a4', 'portrait');
         $pdf->output();
         $domPdf = $pdf->getDomPDF();
         $canvas = $domPdf->getCanvas();
@@ -129,5 +130,16 @@ class ActivitySupportController extends Controller
 
        return $title;
     }
+
+    private function getFilePath($organisation)
+    {
+        $organisationName = str_replace(" ", "", $organisation->name);
+
+        $directory      = $organisationName."/"."LOGOS"."/"."Picture1.png";
+
+        return FileStorageConstants::FETCH_FILE_BASE_DIRECTORY.$directory;
+    }
+
+
 
 }

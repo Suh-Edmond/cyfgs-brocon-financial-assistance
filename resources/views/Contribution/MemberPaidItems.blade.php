@@ -21,9 +21,8 @@
                 <label for="organisation"style="font-weight: bold; text-transform: uppercase; font-size: small;">
                     {{ $organisation->name }} - {{ $organisation->address }}</label><br />
             </div>
-            <div class="column_25" style="margin-left: 15rem">
-                <img src="{{public_path($organisation_logo)}}" alt="organisation logo" width="100px;" height="100px;"
-                     style="border-radius: 2px">
+            <div class="column_25">
+                <img src="{{public_path($organisation_logo)}}" alt="organisation logo" width="100px;" height="100px;" style="border-radius: 2px">
             </div>
         </div>
         <div class="column_100" style="margin-left: 30px">

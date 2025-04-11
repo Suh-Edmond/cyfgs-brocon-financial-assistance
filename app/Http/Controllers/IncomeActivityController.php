@@ -107,10 +107,10 @@ class IncomeActivityController extends Controller
             'treasurer'           => $treasurer,
             'fin_secretary'       => $fin_sec,
             'organisation_telephone'   => $this->setOrganisationTelephone($organisation->telephone),
-            'organisation_logo'    => $organisation->logo
+            'organisation_logo'    => $organisation->logo,
         ];
 
-        $pdf = PDF::loadView('IncomeActivities.IncomeActivities', $data)->setPaper('a3', 'landscape');
+        $pdf = PDF::loadView('IncomeActivities.IncomeActivities', $data)->setPaper('a4', 'portrait');
         $pdf->output();
         $domPdf = $pdf->getDomPDF();
         $canvas = $domPdf->getCanvas();
