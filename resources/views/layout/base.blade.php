@@ -132,7 +132,7 @@
     }
     .detail::after{
         content: "";
-        display: table;
+        /*display: table;*/
         clear: both;
     }
     .summary_num {
@@ -212,6 +212,7 @@
         text-transform: capitalize;
         font-size: medium;
     }
+
 
     .fin_sec {
         min-width: 27%;
