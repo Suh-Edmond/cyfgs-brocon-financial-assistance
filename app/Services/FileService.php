@@ -16,8 +16,7 @@ class FileService implements FileServiceInterface {
     public function uploadFile($request)
     {
         $organisation   = $request->user()->organisation;
-        $organisationName = str_replace(" ", "", $organisation->name);
-        $directory      = $organisationName."/".$request->file_category;
+        $directory      = $organisation->id."/".$request->file_category;
         $fileName = $request->file('image')->getClientOriginalName();
         $fileName = str_replace(' ', '', $fileName);
          try {
@@ -25,19 +24,14 @@ class FileService implements FileServiceInterface {
                 'image' => 'required|image|mimes:jpg,jpeg,png'
             ]);
 
-            $request->file('image')->storeAs(FileStorageConstants::FILE_STORAGE_BASE_DIRECTORY.$directory, $fileName, 'public');
-//             $path = $request->file('image')->storeAs(FileStorageConstants::FILE_STORAGE_BASE_DIRECTORY, $fileName, 'public');
-//             $path = $request->file('image')->storeAs('images', $fileName, 'public_uploads');
+             $request->file('image')->storeAs(FileStorageConstants::FILE_STORAGE_BASE_DIRECTORY.$directory, $fileName, 'public');
 
-//             $savePath = public_path(FileStorageConstants::FILE_STORAGE_BASE_DIRECTORY."/".$fileName);
-            $filePath = FileStorageConstants::FILE_STORAGE_BASE_DIRECTORY.$directory."/".$fileName;
+             $filePath = FileStorageConstants::FILE_STORAGE_BASE_DIRECTORY.$directory."/".$fileName;
 
-//            $this->removeStoredFile($request, $filePath);
-
-            $this->saveFile($filePath, $request);
+             $this->saveFile($filePath, $request);
 
         }catch (\Exception $exception){
-            throw new BusinessValidationException("Could not upload file", 400);
+            throw new BusinessValidationException($exception->getMessage(), 400);
         }
 
         return $filePath;
@@ -51,9 +45,12 @@ class FileService implements FileServiceInterface {
     private function getFilePath($request)
     {
         $organisation   = $request->user()->organisation;
+
         $organisationName = str_replace(" ", "", $organisation->name);
-        $directory      = $organisationName."/".$request->file_category;
-        return FileStorageConstants::FILE_STORAGE_BASE_DIRECTORY.$directory."/".$request->file;
+
+        $directory      = $organisationName."/"."LOGOS"."/"."Picture1.png";
+
+        return FileStorageConstants::FILE_STORAGE_BASE_DIRECTORY.$directory;
     }
 
     private function saveFile($filePath, $request)

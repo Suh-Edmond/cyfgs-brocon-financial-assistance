@@ -125,9 +125,9 @@ class UserSavingController extends Controller
             'organisation_telephone'   => $this->setOrganisationTelephone($organisation->telephone),
             'treasurer'           => $treasurer,
             'fin_secretary'       => $fin_sec,
-            'organisation_logo'   => $organisation->logo
+            'organisation_logo'   => $organisation->logo,
         ];
-        $pdf = PDF::loadView('UserSaving.Usersaving', $data)->setPaper('a3', 'landscape');
+        $pdf = PDF::loadView('UserSaving.Usersaving', $data);
         $pdf->output();
         $domPdf = $pdf->getDomPDF();
         $canvas = $domPdf->getCanvas();
@@ -160,9 +160,9 @@ class UserSavingController extends Controller
             'organisation_telephone'   => $this->setOrganisationTelephone($organisation->telephone),
             'treasurer'           => $treasurer,
             'fin_secretary'       => $fin_sec,
-            'organisation_logo'   => $organisation->logo
+            'organisation_logo'   => $organisation->logo,
         ];
-        $pdf = PDF::loadView('UserSaving.OrganisationSavings', $data)->setPaper('a3', 'landscape');
+        $pdf = PDF::loadView('UserSaving.OrganisationSavings', $data)->setPaper('a4', 'portrait');
         $pdf->output();
         $domPdf = $pdf->getDomPDF();
         $canvas = $domPdf->getCanvas();

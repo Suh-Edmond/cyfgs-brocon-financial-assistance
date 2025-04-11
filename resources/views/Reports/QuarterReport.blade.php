@@ -4,7 +4,7 @@
     <div style="margin-bottom:30px;">
         <div class="column_100" style="margin-left: 30px">
             <div class="column_25">
-                <img src="{{public_path("/images/pcc_logo.png")}}" alt="organisation logo" width="100px;" height="100px;"
+                <img src="{{public_path("/images/pcc_logo.png")}}" alt="pcc logo" width="100px;" height="100px;"
                      style="border-radius: 2px">
             </div>
             <div class="column_50" style="text-align: center;">
@@ -21,51 +21,42 @@
                 <label for="organisation"style="font-weight: bold; text-transform: uppercase; font-size: small;">
                     {{ $organisation->name }} - {{ $organisation->address }}</label><br />
             </div>
-            <div class="column_25" style="margin-left: 15rem">
-                <img src="{{public_path($organisation_logo)}}" alt="organisation logo" width="100px;" height="100px;"
-                     style="border-radius: 2px">
+            <div class="column_25">
+                <img src="{{public_path($organisation_logo)}}" alt="organisation logo" width="100px;" height="100px;" style="border-radius: 2px">
             </div>
         </div>
-        <div class="column_100" style="margin-left: 30px">
+        <div class="column_100" style="margin-left: 30px;margin-top: 20px">
             <div class="column_10">
             </div>
             <div class="column_25">
                 <label style="font-weight: bold; text-transform: uppercase; font-size: small;">P.O Box {{ $organisation->box_number }}, {{ $organisation->address }}</label><br />
                 <label style="font-size: small;font-weight: bold">Email: {{ $organisation->email }}</label><br />
             </div>
-            <div class="column_35">
+            <div class="column_25">
 
             </div>
-            <div class="column_20">
-                <div class="column_10">
-                    <label style="font-weight: bold; text-transform: uppercase; font-size: small;margin-right: 10rem;">Mobile:
-                    </label>
-                </div>
-                <div class="column_10">
-                    <label>
-                        <ul style="">
-                            @foreach($organisation_telephone as $phone)
-                                <li style="font-size: small;font-weight: bold;list-style-type: none;">{{ $phone }}</li>
-                            @endforeach
-                        </ul>
-                    </label>
-                </div>
-            </div>
             <div class="column_10">
+                <label style="font-weight: bold; text-transform: uppercase; font-size: small;margin-right: 10rem;">Mobile:
+                </label>
+            </div>
+            <div class="column_30">
+                <ul>
+                    @foreach($organisation_telephone as $phone)
+                        <li style="font-size: small;font-weight: bold;list-style-type: none;">{{ $phone }}</li><br>
+                    @endforeach
+                </ul>
             </div>
         </div>
     </div>
-    <hr style="border-bottom: 5px solid #213c65; margin-bottom: 2rem"/>
-    <div class="column_100" style="margin-bottom: 3.5rem">
+    <hr style="border-bottom: 5px solid #213c65;margin-top: 2rem"/>
+    <div class="column_100" style="margin-bottom: 3.5rem" >
         <div class="column_90">
 
         </div>
         <div class="column_10">
-            <label style="font-size: small;">Printed date: {{ $date }}</label>
+            <label style="font-size: small;">Printed date {{ $date }}</label>
         </div>
     </div>
-
-
 
     <div style="margin-bottom: 2rem;border-bottom: 3px solid black; width: 25%; margin-left: 36rem">
         <h3 style="font-weight: bold;font-size: 1rem; text-align:center;text-transform: capitalize;">{{ $title }}
@@ -320,65 +311,66 @@
 
 
     <!------------------------------------------------------DETAILS OF PRESENTERS--------------------------------------------------------------------------------------------->
-    <div style="margin-top: 40px;text-align: center;border-bottom: 1px solid black; width: 15%; margin-left: 43rem">
-        <h3 style="font-weight: bold;font-size: small; text-align:center;text-transform: uppercase;"><span style="padding-right: 5px"></span> Prepared By
+    <div style="margin-top: 40px;margin-bottom: 50px">
+        <h3 style="font-weight: bold;font-size: small; text-align:center;text-transform: uppercase;text-decoration: underline"><span style="padding-right: 5px"></span> Prepared By:
         </h3>
     </div>
+
     <div class="detail">
         <!------------------------------Names of presenters------------------------------------>
-        <div style="float: left;margin-top: 10px" class="fin_sec">
-            <div class=" " style="font-weight: bold;font-size: .7rem;text-transform: uppercase; margin-bottom: 3px;text-align: center;">
+        <div style="float: left" class="fin_sec">
+            <div class=" " style="font-weight: bold;font-size: small;text-transform: uppercase; margin-bottom: 3px;text-align: center">
                 FINANCIAL SECRETARY
             </div>
-            <div style="font-weight: bold;text-transform: uppercase;text-align: center;font-size: .7rem">
+            <div style="font-weight: normal;font-size: small; text-transform: capitalize;text-align: center">
                 @isset($fin_secretary)
                     @foreach($fin_secretary as $key => $value)
                         <span>{{$value->name}}</span><br>
                     @endforeach
                 @endisset
             </div>
-            <div style="font-weight: bold;text-transform: uppercase;font-size: .7rem; margin-top: 20px;text-align: center">
+            <div style="font-weight: bold;text-transform: uppercase;font-size: small; margin-top: 20px;text-align: center">
                 SIGN
             </div>
-            <div class="border_line_2" style="border-bottom: 1px solid black; margin-top: 10px;text-align: center; justify-content: center;align-content: center;margin-left: 8rem">
+            <div  style="border-bottom: 1px solid black; margin-top: 10px">
             </div>
         </div>
 
         <div style="float: right" class="treasurer">
-            <div  class=" " style="text-align: center;font-weight: bold;font-size: .7rem;text-transform: uppercase; margin-bottom: 3px">
+            <div  class=" " style="text-align: center;font-weight: bold;font-size: small;text-transform: uppercase; margin-bottom: 3px">
                 Treasurer
             </div>
-            <div style="font-weight: bold;text-transform: uppercase;text-align: center;font-size: .7rem">
+            <div style="font-weight: normal;text-transform: capitalize;text-align: center">
                 @isset($treasurer)
                     @foreach($treasurer as $key => $value)
                         <span>{{$value->name}}</span><br>
                     @endforeach
                 @endisset
             </div>
-            <div style="font-weight: bold;text-transform: uppercase;font-size: .7rem; margin-top: 20px;text-align: center">
+            <div style="font-weight: bold;text-transform: uppercase;font-size: small; margin-top: 20px;text-align: center">
                 SIGN
             </div>
-            <div class="border_line_2" style="border-bottom: 1px solid black; margin-top: 10px;text-align: center; justify-content: center;align-content: center;margin-left: 8rem">
+            <div  style="border-bottom: 1px solid black; margin-top: 10px">
             </div>
         </div>
         <!------------------------------End of presenters-------------------------------------->
     </div>
-    <div class="president" style="text-align: center; margin-top: 9rem">
+    <div class="president" style="text-align: center;margin-top: 40px">
         <div>
-            <div class=" " style="font-weight: bold;font-size: .7rem;text-transform: uppercase; margin-bottom: 3px">
+            <div class=" " style="font-weight: bold;font-size: small;text-transform: uppercase; margin-bottom: 3px">
                 President
             </div>
-            <div style="font-weight: bold;font-size: .7rem; text-transform: uppercase">
+            <div style="font-weight: normal;font-size: small; text-transform: capitalize">
                 @isset($president)
                     @foreach($president as $key => $value)
                         <span>{{$value->name}}</span><br>
                     @endforeach
                 @endisset
             </div>
-            <div style="font-weight: bold;text-transform: uppercase;font-size: .7rem; margin-top: 20px">
+            <div style="font-weight: bold;text-transform: uppercase;font-size: small; margin-top: 20px">
                 SIGN
             </div>
-            <div class="border_line" style="border-bottom: 1px solid black; margin-top: 10px;text-align: center; justify-content: center;align-content: center;margin-left: 41rem">
+            <div class="border_line" style="border-bottom: 1px solid black; margin-top: 10px;margin-left:20rem;text-align: center">
             </div>
         </div>
     </div>
