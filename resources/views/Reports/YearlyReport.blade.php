@@ -54,10 +54,9 @@
 
         </div>
         <div class="column_10">
-            <label style="font-size: small;">Printed date {{ $date }}</label>
+            <label style="font-size: small;">Printed date : {{ $date }}</label>
         </div>
     </div>
-
 
     <div style="margin-bottom: 2rem;border-bottom: 3px solid black; width: 25%; margin-left: 36rem">
         <h3 style="font-weight: bold;font-size: 1rem; text-align:center;text-transform: capitalize;">{{ $title }}
@@ -316,7 +315,7 @@
         </h3>
     </div>
 
-    <div class="detail">
+    <div class="detail" style="clear: both">
         <!------------------------------Names of presenters------------------------------------>
         <div style="float: left" class="fin_sec">
             <div class=" " style="font-weight: bold;font-size: small;text-transform: uppercase; margin-bottom: 3px;text-align: center">
@@ -370,7 +369,7 @@
             <div style="font-weight: bold;text-transform: uppercase;font-size: small; margin-top: 20px">
                 SIGN
             </div>
-            <div class="border_line" style="border-bottom: 1px solid black; margin-top: 10px;margin-left:20rem;text-align: center">
+            <div class="border_line" style="border-bottom: 1px solid black; margin-top: 10px;margin-left:35rem;text-align: center">
             </div>
         </div>
     </div>

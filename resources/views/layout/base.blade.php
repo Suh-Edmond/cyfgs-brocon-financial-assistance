@@ -221,8 +221,8 @@
         min-width: 27%;
     }
     .border_line {
-        width: 15px;
-        min-width: 15%;
+        width: 30px;
+        min-width: 30%;
     }
 
     .border_line_2 {

@@ -54,7 +54,7 @@
 
         </div>
         <div class="column_10">
-            <label style="font-size: small;">Printed date {{ $date }}</label>
+            <label style="font-size: small;">Printed date : {{ $date }}</label>
         </div>
     </div>
 
@@ -370,7 +370,7 @@
             <div style="font-weight: bold;text-transform: uppercase;font-size: small; margin-top: 20px">
                 SIGN
             </div>
-            <div class="border_line" style="border-bottom: 1px solid black; margin-top: 10px;margin-left:20rem;text-align: center">
+            <div class="border_line" style="border-bottom: 1px solid black; margin-top: 10px;margin-left:35rem;text-align: center">
             </div>
         </div>
     </div>

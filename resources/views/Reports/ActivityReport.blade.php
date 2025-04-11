@@ -54,13 +54,12 @@
 
         </div>
         <div class="column_10">
-            <label style="font-size: small;">Printed date {{ $date }}</label>
+            <label style="font-size: small;">Printed date : {{ $date }}</label>
         </div>
     </div>
 
-
-    <div style="margin-bottom: 2rem;">
-        <h3 style="font-weight: bold;font-size: medium; text-align:center;text-transform: capitalize;border-bottom: 3px solid black;">{{ $title }}
+    <div style="margin-bottom: 2rem;border-bottom: 3px solid black; width: 25%; margin-left: 36rem">
+        <h3 style="font-weight: bold;font-size: 1rem; text-align:center;text-transform: capitalize;">{{ $title }}
         </h3>
     </div>
 
@@ -92,7 +91,7 @@
             <tr style="border: 1px solid black; font-size: smaller;">
                 <td style="padding: 5px;font-weight: bold;"></td>
                 <td style="padding: 5px;font-weight: bold;">Total</td>
-                <td style="padding: 5px;font-weight: bold;border-left: 1px solid black">{{$total_income}}</td>
+                <td style="padding: 5px;font-weight: bold;border-left: 1px solid black">{{number_format($total_income)}}</td>
             </tr>
         </table>
     </div>
@@ -135,9 +134,9 @@
             <tr style="border: 1px solid black; font-size: smaller;">
                 <td style="padding: 5px;font-weight: bold;border-right: 1px solid black;"></td>
                 <td style="padding: 5px;font-weight: bold;border-right: 1px solid black;">Total</td>
-                <td style="padding: 5px;font-weight: bold;border-right: 1px solid black;">{{$total_amount_given}}</td>
-                <td style="padding: 5px;font-weight: bold;border-right: 1px solid black;">{{$total_amount_spent}}</td>
-                <td style="padding: 5px;font-weight: bold;">{{$balance}}</td>
+                <td style="padding: 5px;font-weight: bold;border-right: 1px solid black;">{{number_format($total_amount_given)}}</td>
+                <td style="padding: 5px;font-weight: bold;border-right: 1px solid black;">{{number_format($total_amount_spent)}}</td>
+                <td style="padding: 5px;font-weight: bold;">{{number_format($balance)}}</td>
             </tr>
         </table>
     </div>
