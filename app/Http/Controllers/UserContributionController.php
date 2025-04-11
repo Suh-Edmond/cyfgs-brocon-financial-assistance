@@ -136,8 +136,9 @@ class UserContributionController extends Controller
             'payment_durations' => $contributions->payment_durations,
             'member_size'       => $contributions->member_size
         ];
-
+ 
         $pdf = PDF::loadView('Contribution.UsersContribution', $data)->setPaper('a4', 'portrait');
+
         $pdf->output();
         $domPdf = $pdf->getDomPDF();
         $canvas = $domPdf->getCanvas();
