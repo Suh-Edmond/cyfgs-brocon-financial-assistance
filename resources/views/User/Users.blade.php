@@ -26,7 +26,7 @@
                 <img src="{{public_path($organisation_logo)}}" alt="organisation logo" width="100px;" height="100px;" style="border-radius: 2px">
             </div>
         </div>
-        <div class="column_100" style="margin-left: 30px">
+        <div class="column_100" style="margin-left: 30px;margin-top: 20px">
             <div class="column_10">
             </div>
             <div class="column_25">
@@ -55,7 +55,7 @@
 
         </div>
         <div class="column_10">
-            <label style="font-size: small;">Printed date: {{ $date }}</label>
+            <label style="font-size: small;">Printed date {{ $date }}</label>
         </div>
     </div>
 
@@ -111,7 +111,7 @@
 
 
     <!------------------------------------------------------DETAILS OF PRESENTERS--------------------------------------------------------------------------------------------->
-    <div style="margin-top: 40px;margin-bottom: 50px">
+    <div style="margin-top: 40px;margin-bottom: 60px">
         <h3 style="font-weight: bold;font-size: small; text-align:center;text-transform: uppercase;text-decoration: underline"><span style="padding-right: 5px"></span> Prepared By:
         </h3>
     </div>
@@ -155,7 +155,7 @@
         </div>
         <!------------------------------End of presenters-------------------------------------->
     </div>
-    <div class="president" style="text-align: center;margin-top: 40px">
+    <div class="president" style="text-align: center;margin-top: 30px">
         <div>
             <div class=" " style="font-weight: bold;font-size: small;text-transform: uppercase; margin-bottom: 3px">
                 President

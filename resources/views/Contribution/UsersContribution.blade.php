@@ -4,7 +4,7 @@
     <div style="margin-bottom:30px;">
         <div class="column_100" style="margin-left: 30px">
             <div class="column_25">
-                <img src="{{public_path("/images/pcc_logo.png")}}" alt="organisation logo" width="100px;" height="100px;"
+                <img src="{{public_path("/images/pcc_logo.png")}}" alt="pcc logo" width="100px;" height="100px;"
                      style="border-radius: 2px">
             </div>
             <div class="column_50" style="text-align: center;">
@@ -25,44 +25,38 @@
                 <img src="{{public_path($organisation_logo)}}" alt="organisation logo" width="100px;" height="100px;" style="border-radius: 2px">
             </div>
         </div>
-        <div class="column_100" style="margin-left: 30px">
+        <div class="column_100" style="margin-left: 30px;margin-top: 20px">
             <div class="column_10">
             </div>
             <div class="column_25">
                 <label style="font-weight: bold; text-transform: uppercase; font-size: small;">P.O Box {{ $organisation->box_number }}, {{ $organisation->address }}</label><br />
                 <label style="font-size: small;font-weight: bold">Email: {{ $organisation->email }}</label><br />
             </div>
-            <div class="column_35">
+            <div class="column_25">
 
             </div>
-            <div class="column_20">
-                <div class="column_10">
-                    <label style="font-weight: bold; text-transform: uppercase; font-size: small;margin-right: 10rem;">Mobile:
-                    </label>
-                </div>
-                <div class="column_10">
-                    <ul style="">
-                        @foreach($organisation_telephone as $phone)
-                            <li style="font-size: small;font-weight: bold;list-style-type: none;">{{ $phone }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            </div>
             <div class="column_10">
+                <label style="font-weight: bold; text-transform: uppercase; font-size: small;margin-right: 10rem;">Mobile:
+                </label>
+            </div>
+            <div class="column_30">
+                <ul>
+                    @foreach($organisation_telephone as $phone)
+                        <li style="font-size: small;font-weight: bold;list-style-type: none;">{{ $phone }}</li><br>
+                    @endforeach
+                </ul>
             </div>
         </div>
     </div>
-    <hr style="border-bottom: 5px solid #213c65; margin-top: 2rem"/>
-    <div class="column_100" style="margin-bottom: 3.5rem">
+    <hr style="border-bottom: 5px solid #213c65;margin-top: 2rem"/>
+    <div class="column_100" style="margin-bottom: 3.5rem" >
         <div class="column_90">
 
         </div>
         <div class="column_10">
-            <label style="font-size: small;">Printed date: {{ $date }}</label>
+            <label style="font-size: small;">Printed date {{ $date }}</label>
         </div>
     </div>
-
-
 
     <div style="margin-bottom: 2rem;">
         <h3 style="font-weight: bold;font-size: medium; text-align:center;text-transform: capitalize;border-bottom: 3px solid black;">{{ $title }}
