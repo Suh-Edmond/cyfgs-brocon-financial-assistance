@@ -287,17 +287,18 @@
 
 
     <!------------------------------------------------------DETAILS OF PRESENTERS--------------------------------------------------------------------------------------------->
-    <div style="margin-top: 40px;">
-        <h3 style="font-weight: bold;font-size: small; text-align:center;text-transform: uppercase;text-decoration: underline"><span style="padding-right: 5px"></span> Prepared By
+    <div style="margin-top: 40px;margin-bottom: 50px">
+        <h3 style="font-weight: bold;font-size: small; text-align:center;text-transform: uppercase;text-decoration: underline"><span style="padding-right: 5px"></span> Prepared By:
         </h3>
     </div>
-    <div class="detail" style="margin-top: 30px;margin-bottom: 150px">
+
+    <div class="detail">
         <!------------------------------Names of presenters------------------------------------>
         <div style="float: left" class="fin_sec">
             <div class=" " style="font-weight: bold;font-size: small;text-transform: uppercase; margin-bottom: 3px;text-align: center">
                 FINANCIAL SECRETARY
             </div>
-            <div style="font-weight: bold;font-size: small; text-transform: uppercase;text-align: center">
+            <div style="font-weight: normal;font-size: small; text-transform: capitalize;text-align: center">
                 @isset($fin_secretary)
                     @foreach($fin_secretary as $key => $value)
                         <span>{{$value->name}}</span><br>
@@ -315,7 +316,7 @@
             <div  class=" " style="text-align: center;font-weight: bold;font-size: small;text-transform: uppercase; margin-bottom: 3px">
                 Treasurer
             </div>
-            <div style="font-weight: bold;text-transform: uppercase;text-align: center">
+            <div style="font-weight: normal;text-transform: capitalize;text-align: center">
                 @isset($treasurer)
                     @foreach($treasurer as $key => $value)
                         <span>{{$value->name}}</span><br>
@@ -330,12 +331,12 @@
         </div>
         <!------------------------------End of presenters-------------------------------------->
     </div>
-    <div class="president" style="text-align: center">
+    <div class="president" style="text-align: center;margin-top: 40px">
         <div>
             <div class=" " style="font-weight: bold;font-size: small;text-transform: uppercase; margin-bottom: 3px">
                 President
             </div>
-            <div style="font-weight: bold;font-size: small; text-transform: uppercase">
+            <div style="font-weight: normal;font-size: small; text-transform: capitalize">
                 @isset($president)
                     @foreach($president as $key => $value)
                         <span>{{$value->name}}</span><br>
