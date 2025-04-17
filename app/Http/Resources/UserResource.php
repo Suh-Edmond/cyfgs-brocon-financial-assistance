@@ -34,7 +34,7 @@ class UserResource extends JsonResource
      */
     public function toArray($request)
     {
-
+        $registration = self::getRegistrationByActiveSession($this->registrations, $this->current_session->id);
         return [
             'id'             => $this->id,
             'name'           => $this->name,
@@ -48,15 +48,15 @@ class UserResource extends JsonResource
             'picture'        => $this->picture,
             'roles'          => $this->roles,
             'token'          => $this->hasLoginBefore ? $this->token: "",
-            'has_register'   => !is_null($this->approve) && $this->approve == PaymentStatus::APPROVED && $this->current_session->id == $this->session_id ? RegistrationStatus::REGISTERED : RegistrationStatus::NOT_REGISTERED,
+            'has_register'   => !is_null($registration) && $registration->approve == PaymentStatus::APPROVED && $this->current_session->id == $this->session_id ? RegistrationStatus::REGISTERED : RegistrationStatus::NOT_REGISTERED,
             'hasLoginBefore' => $this->hasLoginBefore,
-            'has_paid'       => !is_null($this->approve) && $this->current_session->id == $this->session_id,
-            'approve'        => !is_null($this->approve) && $this->current_session->id == $this->session_id? $this->approve : '',
+            'has_paid'       => !is_null($registration),
+            'approve'        => !is_null($registration) ? $registration->approve : '',
             'year'           => !is_null(Session::find($this->session_id)) ? Session::find($this->session_id)->year : null,
             'session_id'     => $this->session_id,
             'status'         => $this->status,
             'organisation_id' => $this->organisation_id,
-            'registered'       => self::getRegistrationByActiveSession($this->registrations, $this->current_session->id)
+            'registered'       => $registration
           ];
     }
 }
