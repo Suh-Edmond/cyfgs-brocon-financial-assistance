@@ -16,7 +16,7 @@ class ActivitySupportController extends Controller
 {
     use ResponseTrait, HelpTrait;
 
-    private ActivitySupportService  $activity_support_service;
+    private  ActivitySupportService  $activity_support_service;
 
     public function __construct(ActivitySupportService  $activity_support_service)
     {
