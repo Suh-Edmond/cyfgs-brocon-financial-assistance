@@ -48,7 +48,7 @@ class FileService implements FileServiceInterface {
 
         $organisationName = str_replace(" ", "", $organisation->name);
 
-        $directory      = $organisationName."/"."LOGOS"."/"."Picture1.png";
+        $directory      = $organisationName."/".$request['file_category']."/".$request['image'];
 
         return FileStorageConstants::FILE_STORAGE_BASE_DIRECTORY.$directory;
     }
