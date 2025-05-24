@@ -28,7 +28,7 @@ class DatabaseSeeder extends Seeder
 //        $this->call(PaymentItemSeeder::class);
 //        $this->call(UserContributionSeeder::class);
 //        $this->call(UserSavingSeeder::class);
-//        $this->call(SessionSeeder::class);
+        $this->call(SessionSeeder::class);
 //        $this->call(ActivitySupportSeeder::class);
 
     }
