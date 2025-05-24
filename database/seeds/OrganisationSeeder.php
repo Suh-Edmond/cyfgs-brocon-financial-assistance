@@ -17,15 +17,15 @@ class OrganisationSeeder extends Seeder
         Organisation::create([
             'id'            => Str::uuid()->toString(),
             'name'          => "Brothers Corner Great Soppo (BROCON)",
-            'email'         => "suhedmond11@gmail.com",
+            'email'         => "brocon@gmail.com",
             'region'        => "South West",
-            'telephone'     => "+237 683404289",
+            'telephone'     => "+237683404289",
             'address'       => "Buea",
             'description'   => "The Brothers Corner of the Christian Youth Fellowship Movement of the Presbyterian Church in Cameroon, in Great Soppo",
             'logo'          => "",
             'salutation'    => "Brothers we lead the way. In Christ we Head the Trail",
             'box_number'    => 1523,
-            'updated_by'    => "Edmond"
+            'updated_by'    => "Admin"
         ]);
 
     }
