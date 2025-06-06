@@ -9,15 +9,13 @@
             </div>
             <div class="column_50" style="text-align: center;">
                 <label for="organisation"style="font-weight: bold; text-transform: uppercase; font-size: small;">
-                    PRESBYTERIAN CHURCH IN CAMEROON (PCC)</label><br />
-                <label for="organisation"style="font-weight: bold; text-transform: uppercase; font-size: small;">
-                    YOUTH WORK DEPARTMENT </label><br />
-                <label for="organisation"style="font-weight: bold; text-transform: uppercase; font-size: small;">
                     CHRISTIAN YOUTH FELLOWSHIP (C.Y.F)</label><br />
                 <label for="organisation"style="font-weight: bold; text-transform: uppercase; font-size: small;">
                     FAKO NORTH PRESBYTERY</label><br />
                 <label for="organisation"style="font-weight: bold; text-transform: uppercase; font-size: small;">
                     BUEA ZONE</label><br />
+                <label for="organisation"style="font-weight: bold; text-transform: uppercase; font-size: small;">
+                CHRISTIAN YOUTH FELLOWSHIP - GREAT SOPPO </label><br />
                 <label for="organisation"style="font-weight: bold; text-transform: uppercase; font-size: small;">
                     {{ $organisation->name }} - {{ $organisation->address }}</label><br />
             </div>
@@ -59,8 +57,8 @@
     </div>
 
 
-    <div style="margin-bottom: 2rem;">
-        <h3 style="font-weight: bold;font-size: medium; text-align:center;text-transform: uppercase;border-bottom: 3px solid black;">{{ $title }}
+    <div style="margin-bottom: 2rem;border-bottom: 3px solid black;">
+        <h3 style="font-weight: bold;font-size: medium; text-align:center;text-transform: capitalize;">{{ $title }}
         </h3>
     </div>
     <?php $n=1 ?>

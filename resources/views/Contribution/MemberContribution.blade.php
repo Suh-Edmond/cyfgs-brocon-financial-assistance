@@ -9,15 +9,13 @@
             </div>
             <div class="column_50" style="text-align: center;">
                 <label for="organisation"style="font-weight: bold; text-transform: uppercase; font-size: small;">
-                    PRESBYTERIAN CHURCH IN CAMEROON (PCC)</label><br />
-                <label for="organisation"style="font-weight: bold; text-transform: uppercase; font-size: small;">
-                    YOUTH WORK DEPARTMENT </label><br />
-                <label for="organisation"style="font-weight: bold; text-transform: uppercase; font-size: small;">
                     CHRISTIAN YOUTH FELLOWSHIP (C.Y.F)</label><br />
                 <label for="organisation"style="font-weight: bold; text-transform: uppercase; font-size: small;">
                     FAKO NORTH PRESBYTERY</label><br />
                 <label for="organisation"style="font-weight: bold; text-transform: uppercase; font-size: small;">
                     BUEA ZONE</label><br />
+                <label for="organisation"style="font-weight: bold; text-transform: uppercase; font-size: small;">
+                CHRISTIAN YOUTH FELLOWSHIP - GREAT SOPPO </label><br />
                 <label for="organisation"style="font-weight: bold; text-transform: uppercase; font-size: small;">
                     {{ $organisation->name }} - {{ $organisation->address }}</label><br />
             </div>
@@ -57,9 +55,8 @@
             <label style="font-size: small;">Printed date {{ $date }}</label>
         </div>
     </div>
-
-    <div style="margin-bottom: 2rem;border-bottom: 3px solid black; width: 25%; margin-left: 36rem">
-        <h3 style="font-weight: bold;font-size: 1rem; text-align:center;text-transform: capitalize;">{{ $title }}
+     <div style="margin-bottom: 2rem;border-bottom: 3px solid black;">
+        <h3 style="font-weight: bold;font-size: medium; text-align:center;text-transform: capitalize;">{{ $title }}
         </h3>
     </div>
     <?php $n=1 ?>
@@ -83,7 +80,7 @@
                     @elseif($contribution->payment_item_frequency == \App\Constants\PaymentItemFrequency::MONTHLY)
                         <td style="border: 1px solid black; padding: 3px; text-align: center" >{{ $contribution->month_name }}</td>
                     @else
-                        <td style="border: 1px solid black; padding: 3px; text-align: center" >{{ $contribution->payment_item_frequency }}</td>
+                        <td style="border: 1px solid black; padding: 3px; text-align: center" >{{ str_replace('_', ' ', $contribution->payment_item_frequency) }}</td>
                     @endif
                     <td style="border: 1px solid black; padding: 3px; text-align: center">
                         {{ number_format($contribution->amount_deposited) }}</td>
@@ -121,7 +118,7 @@
                     Payment Frequency
                 </div>
                 <div class="activity_summary_end">
-                    {{$paymentItem->frequency}}
+                    {{ str_replace('_', ' ', $paymentItem->frequency) }}
                 </div>
             </div>
             <div class="row" style="border: 1px solid black">
@@ -132,7 +129,7 @@
                     Payment Type
                 </div>
                 <div class="activity_summary_end">
-                    {{$paymentItem->type}}
+                    {{ str_replace('_', ' ', $paymentItem->type) }} 
                 </div>
             </div>
             <div class="row" style="border: 1px solid black">

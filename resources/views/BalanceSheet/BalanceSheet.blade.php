@@ -9,15 +9,13 @@
             </div>
             <div class="column_50" style="text-align: center;">
                 <label for="organisation"style="font-weight: bold; text-transform: uppercase; font-size: small;">
-                    PRESBYTERIAN CHURCH IN CAMEROON (PCC)</label><br />
-                <label for="organisation"style="font-weight: bold; text-transform: uppercase; font-size: small;">
-                    YOUTH WORK DEPARTMENT </label><br />
-                <label for="organisation"style="font-weight: bold; text-transform: uppercase; font-size: small;">
                     CHRISTIAN YOUTH FELLOWSHIP (C.Y.F)</label><br />
                 <label for="organisation"style="font-weight: bold; text-transform: uppercase; font-size: small;">
                     FAKO NORTH PRESBYTERY</label><br />
                 <label for="organisation"style="font-weight: bold; text-transform: uppercase; font-size: small;">
                     BUEA ZONE</label><br />
+                <label for="organisation"style="font-weight: bold; text-transform: uppercase; font-size: small;">
+                CHRISTIAN YOUTH FELLOWSHIP - GREAT SOPPO </label><br />
                 <label for="organisation"style="font-weight: bold; text-transform: uppercase; font-size: small;">
                     {{ $organisation->name }} - {{ $organisation->address }}</label><br />
             </div>
@@ -58,7 +56,7 @@
         </div>
     </div>
 
-    <div style="margin-bottom: 2rem;border-bottom: 3px solid black; width: 25%; margin-left: 36rem">
+    <div style="margin-bottom: 2rem;border-bottom: 3px solid black;">
         <h3 style="font-weight: bold;font-size: medium; text-align:center;text-transform: capitalize;">{{ $title }}
         </h3>
     </div>
@@ -267,8 +265,9 @@
             <div style="font-weight: bold;text-transform: uppercase;font-size: small; margin-top: 20px">
                 SIGN
             </div>
-            <div class="border_line" style="border-bottom: 1px solid black; margin-top: 10px;margin-left:20rem;text-align: center">
+           <div class="border_line" style="border-bottom: 1px solid black; margin-top: 10px;margin-left:35rem;text-align: center">
             </div>
+            
         </div>
     </div>
     <!------------------------------------------------------END OF PRESENTERS-------------------------------------------------------------------------------------->
