@@ -18,8 +18,8 @@ class IncomeActivitySeeder extends Seeder
     public function __construct()
     {
         $this->oragnisations = Organisation::all()->pluck('id');
-        $this->session = Session::where('status', SessionStatus::ACTIVE)->first()->pluck('id');
-        $this->paymentItem = PaymentItem::where('session_id', $this->session)->get()->pluck('id');
+        $this->session = Session::where('status', SessionStatus::ACTIVE)->first();
+        $this->paymentItem = PaymentItem::where('session_id', $this->session->id)->get()->pluck('id');
     }
 
 
@@ -36,7 +36,7 @@ class IncomeActivitySeeder extends Seeder
                 'approve'           => PaymentStatus::APPROVED,
                 'organisation_id'   => $this->oragnisations[0],
                 'updated_by'        => $faker->name,
-                'session_id'        => $this->session,
+                'session_id'        => $this->session->id,
                 'payment_item_id'   => $faker->randomElement($this->paymentItem)
             ]);
         }

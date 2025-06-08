@@ -17,8 +17,8 @@ class ActivitySupportSeeder extends Seeder
 
     public function __construct()
     {
-        $this->session = Session::where('status', SessionStatus::ACTIVE)->first()->pluck('id');
-        $this->paymentItems = PaymentItem::where('session_id', $this->session)->get()->pluck('id');
+        $this->session = Session::where('status', SessionStatus::ACTIVE)->first();
+        $this->paymentItems = PaymentItem::where('session_id', $this->session->id)->get()->pluck('id');
     }
 
     /**
@@ -38,7 +38,7 @@ class ActivitySupportSeeder extends Seeder
                 'scan_picture' => '',
                 'updated_by' => "default",
                 'approve' => PaymentStatus::APPROVED,
-                'session_id'  => $this->session
+                'session_id'  => $this->session->id
             ]);
         }
     }

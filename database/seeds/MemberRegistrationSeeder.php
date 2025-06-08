@@ -37,9 +37,9 @@ class MemberRegistrationSeeder extends Seeder
                 'approve' => PaymentStatus::APPROVED,
                 'user_id'  => $faker->randomElement($this->users),
                 'updated_by' => 'default',
-                'session_id' => $this->session,
+                'session_id' => $faker->randomElement($this->session),
                 'month_name' => 'default',
-                'registration_id' => $this->registrations
+                'registration_id' => $faker->randomElement($this->registrations)
             ]);
         }
     }
