@@ -18,7 +18,7 @@ class OrganisationSeeder extends Seeder
             'id'            => Str::uuid()->toString(),
             'name'          => "Brothers Corner Great Soppo (BROCON)",
             'email'         => "brocon@gmail.com",
-            'region'        => "South West",
+            'region'        => "Southwest",
             'telephone'     => "+237683404289",
             'address'       => "Buea",
             'description'   => "The Brothers Corner of the Christian Youth Fellowship Movement of the Presbyterian Church in Cameroon, in Great Soppo",
