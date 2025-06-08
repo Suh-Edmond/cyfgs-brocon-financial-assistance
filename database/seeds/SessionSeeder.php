@@ -42,12 +42,12 @@ class SessionSeeder extends Seeder
             'updated_by' => "Admin"
         ]);
 
-        Registration::create([
-            'amount' => 500,
-            'status'  => 'ACTIVE',
-            'updated_by' => 'default',
-            'is_compulsory' => true,
-            'frequency'  => 'YEARLY'
-        ]);
+        // Registration::create([
+        //     'amount' => 500,
+        //     'status'  => 'ACTIVE',
+        //     'updated_by' => 'default',
+        //     'is_compulsory' => true,
+        //     'frequency'  => 'YEARLY'
+        // ]);
     }
 }
