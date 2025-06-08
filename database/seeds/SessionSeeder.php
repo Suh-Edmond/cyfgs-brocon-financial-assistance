@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Constants\SessionStatus;
+use App\Models\Registration;
 use App\Models\Session;
 use Illuminate\Database\Seeder;
 
@@ -39,6 +40,14 @@ class SessionSeeder extends Seeder
             'year' =>  "2025",
             'status' => SessionStatus::ACTIVE,
             'updated_by' => "Admin"
+        ]);
+
+        Registration::create([
+            'amount' => 500,
+            'status'  => 'ACTIVE',
+            'updated_by' => 'default',
+            'is_compulsory' => true,
+            'frequency'  => 'YEARLY'
         ]);
     }
 }

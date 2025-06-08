@@ -8,10 +8,12 @@ use Faker\Generator as Faker;
 class UserSavingSeeder extends Seeder
 {
     private $users;
+    private $session;
 
     public function __construct()
     {
         $this->users = User::all()->pluck('id');
+        $this->session       = \App\Models\Session::where('status', \App\Constants\SessionStatus::ACTIVE)->first();
     }
 
 
@@ -24,7 +26,9 @@ class UserSavingSeeder extends Seeder
                 'approve'           => \App\Constants\PaymentStatus::APPROVED,
                 'comment'           => $faker->sentence,
                 'user_id'           => $faker->randomElement($this->users),
-                'updated_by'        => $faker->name
+                'updated_by'        => $faker->name,
+                'session_id'        => $this->session->id,
+                'amount_used'       => 1000
             ]);
         }
     }

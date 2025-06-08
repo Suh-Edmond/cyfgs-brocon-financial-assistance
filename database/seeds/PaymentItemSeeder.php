@@ -13,12 +13,12 @@ class PaymentItemSeeder extends Seeder
     public function __construct()
     {
         $this->payment_categories = PaymentCategory::all()->pluck('id');
-        $this->session = \App\Models\Session::where('status', \App\Constants\SessionStatus::ACTIVE)->first()->pluck('id');
+        $this->session = \App\Models\Session::where('status', \App\Constants\SessionStatus::ACTIVE)->first();
     }
 
     public function run(Faker $faker)
     {
-        for($i = 0; $i < 400; $i++)
+        for($i = 0; $i < 100; $i++)
         {
             PaymentItem::create([
                 'name'                  => $faker->name,
@@ -28,7 +28,7 @@ class PaymentItemSeeder extends Seeder
                 'updated_by'            => $faker->name,
                 'type'                 => \App\Constants\PaymentItemType::ALL_MEMBERS,
                 'frequency'             => \App\Constants\PaymentItemFrequency::ONE_TIME,
-                'session_id'            => $this->session,
+                'session_id'            => $this->session->id,
                 'reference'             => "",
                 'deadline'              => \Carbon\Carbon::now()->addMonths(3),
                 'is_range'              => false,

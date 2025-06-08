@@ -18,9 +18,9 @@ class ExpenditureItemSeeder extends Seeder
 
     public function __construct()
     {
-        $this->session = Session::where('status', SessionStatus::ACTIVE)->first()->pluck('id');
+        $this->session = Session::where('status', SessionStatus::ACTIVE)->first();
         $this->expenditure_categories = ExpenditureCategory::all()->pluck('id');
-        $this->paymentItems = PaymentItem::where('session', $this->session)->get()->pluck('id');
+        $this->paymentItems = PaymentItem::where('session_id', $this->session->id)->get()->pluck('id');
     }
 
     public function run(Faker $faker)
@@ -36,7 +36,7 @@ class ExpenditureItemSeeder extends Seeder
                 'expenditure_category_id'   => $faker->randomElement($this->expenditure_categories),
                 'date'                      => $faker->date(),
                 'updated_by'                => $faker->name,
-                'session_id'                => $this->session,
+                'session_id'                => $this->session->id,
                 'payment_item_id'           => $faker->randomElement($this->paymentItems)
             ]);
         }

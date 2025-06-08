@@ -13,11 +13,11 @@ class AddRangePaymentItemType extends Migration
      */
     public function up()
     {
-//        Schema::table('payment_items', function (Blueprint $table){
-//           $table->boolean("is_range")->default(false);
-//           $table->double("start_amount")->default(0);
-//           $table->double("end_amount")->default(0);
-//        });
+       Schema::table('payment_items', function (Blueprint $table){
+          $table->boolean("is_range")->default(false);
+          $table->double("start_amount")->default(0);
+          $table->double("end_amount")->default(0);
+       });
     }
 
     /**
