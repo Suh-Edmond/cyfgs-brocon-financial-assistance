@@ -30,22 +30,22 @@ class UserSeeder extends Seeder
      */
     public function run(Faker $faker)
     {
-//        for($i = 0; $i < 90; $i++){
-//            $created =  User::create([
-//                'name'            => $faker->name,
-//                'email'           => $faker->email,
-//                'telephone'       => $faker->phoneNumber,
-//                'gender'          => $faker->randomElement(['MALE', 'FEMALE']),
-//                'address'         => $faker->address,
-//                'occupation'      => $faker->randomElement(['Teacher', 'Accountant', 'Software Engineer', 'Banker', 'Devops Engineer', 'Nurse', 'Electrician', 'Plumber']),
-//                'organisation_id' => $this->organisation[0],
-//                'updated_by'      => "James Mark",
-//                'status'          => SessionStatus::ACTIVE
-//            ]);
-//
-//            $role = CustomRole::findByName(Roles::MEMBER, 'api');
-//            $this->saveUserRole($created, $role,  "James Mark");
-//        }
+       for($i = 0; $i < 90; $i++){
+           $created =  User::create([
+               'name'            => $faker->name,
+               'email'           => $faker->email,
+               'telephone'       => $faker->phoneNumber,
+               'gender'          => $faker->randomElement(['MALE', 'FEMALE']),
+               'address'         => $faker->address,
+               'occupation'      => $faker->randomElement(['Teacher', 'Accountant', 'Software Engineer', 'Banker', 'Devops Engineer', 'Nurse', 'Electrician', 'Plumber']),
+               'organisation_id' => $this->organisation[0],
+               'updated_by'      => "James Mark",
+               'status'          => SessionStatus::ACTIVE
+           ]);
+
+           $role = CustomRole::findByName(Roles::MEMBER, 'api');
+           $this->saveUserRole($created, $role,  "James Mark");
+       }
         $created =  User::create([
             'name'            => "Suh Edmond Neba",
             'email'           => "suhedmond25@yahoo.com",
