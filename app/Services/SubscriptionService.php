@@ -194,6 +194,12 @@ class SubscriptionService implements SubscriptionInterface
         return SubscriptionResource::collection($subscriptions);
     }
 
+    public function getSubscriptionsByClient($request)
+    {
+        $subscriptions = Subscription::where('organisation_id', $request->organisation_id)->orderBy('created_at', 'desc')->get();
+        return SubscriptionResource::collection($subscriptions);
+    }
+
     private function getTrailDuration()
     {
         $start = \Carbon\Carbon::now();

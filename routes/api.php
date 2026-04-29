@@ -413,6 +413,7 @@ Route::prefix('protected/system-admin')->middleware(['auth:sanctum', 'isSystemAd
     Route::delete('/subscriptions/{id}/delete', [SubscriptionController::class, 'destroy']);
     Route::get('/subscriptions/filter', [SubscriptionController::class, 'filterClientSubscription']);
     Route::get('/fetch-organisations', [OrganisationController::class, 'getOrganisations']);
+    Route::get('/clients/{id}/subscriptions', [SubscriptionController::class, 'getSubscriptionsByClient']);
     Route::get('/subscriptions/payments/filter', [UserController::class, 'filterPayments']);
     Route::get('/subscriptions/payments/{id}', [UserController::class, 'showPayment']);
 });
