@@ -92,4 +92,10 @@ class SubscriptionController extends Controller
 
         return $this->sendResponse($data, 'successfully');
     }
+
+    public function getSubscriptionByClient(Request $request)
+    {
+        $subscriptions = $this->subscriptionService->getSubscriptionsByClient($request);
+        return $this->sendResponse($subscriptions, 'success');
+    }
 }
