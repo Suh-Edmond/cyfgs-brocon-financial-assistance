@@ -30,47 +30,54 @@ class UserSeeder extends Seeder
      */
     public function run(Faker $faker)
     {
-        $admin =  User::create([
-            'name'            => "Suh Edmond Neba",
-            'email'           => "suhedmond25@yahoo.com",
-            'telephone'       => "+2376736622071",
-            'gender'          => "MALE",
-            'address'         => "Buea, Cameroon",
-            'occupation'      => 'Software Engineer',
-            'organisation_id' => $this->organisation[0],
-            'updated_by'      => "Edmond",
-            'status'          => SessionStatus::ACTIVE,
-            'password'        => Hash::make("Summer123!"),
-            "email_verified_at" => Carbon::now(),
-            'username'        => "suhedmond25"
+        // $admin =  User::create([
+        //     'name'            => "Suh Edmond Neba",
+        //     'email'           => "suhedmond25@yahoo.com",
+        //     'telephone'       => "+2376736622071",
+        //     'gender'          => "MALE",
+        //     'address'         => "Buea, Cameroon",
+        //     'occupation'      => 'Software Engineer',
+        //     'organisation_id' => $this->organisation[0],
+        //     'updated_by'      => "Edmond",
+        //     'status'          => SessionStatus::ACTIVE,
+        //     'password'        => Hash::make("Summer123!"),
+        //     "email_verified_at" => Carbon::now(),
+        //     'username'        => "suhedmond25"
+        // ]);
+
+        // $admin_role = CustomRole::findByName(Roles::MEMBER, 'api');
+        // $admin_role2 = CustomRole::findByName(Roles::ADMIN, 'api');
+        // $this->saveUserRole($admin, $admin_role,  "Admin");
+        // $this->saveUserRole($admin, $admin_role2,  "Admin");
+
+
+        // $sys_admin =  User::create([
+        //     'name'            => "Test User1",
+        //     'email'           => "testuser1@gmail.com",
+        //     'telephone'       => "+237674667771",
+        //     'gender'          => "MALE",
+        //     'address'         => "Buea, Cameroon",
+        //     'occupation'      => 'Software Engineer',
+        //     'organisation_id' => $this->organisation[0],
+        //     'updated_by'      => "Edmond",
+        //     'status'          => SessionStatus::ACTIVE,
+        //     'password'        => Hash::make("Summer123!"),
+        //     "email_verified_at" => Carbon::now(),
+        //     'username'          => "testuser1"
+
+        // ]);
+        $organisation = Organisation::where('email', 'testuserorganisation@gmail.com')->first();
+
+        $user = User::where('username', "testuser")->first();
+        $user->update([
+            'email_verified_at' => Carbon::now()
         ]);
 
-        $admin_role = CustomRole::findByName(Roles::MEMBER, 'api');
-        $admin_role2 = CustomRole::findByName(Roles::ADMIN, 'api');
-        $this->saveUserRole($admin, $admin_role,  "Admin");
-        $this->saveUserRole($admin, $admin_role2,  "Admin");
+        // $sys_admin_role = CustomRole::findByName(Roles::MEMBER, 'api');
+        $sys_admin = CustomRole::findByName(Roles::SYSTEM_ADMIN, 'api');
+        $this->saveUserRole($user, $sys_admin,  "SYSTEM_ADMIN", $organisation->id);
 
-
-        $sys_admin =  User::create([
-            'name'            => "Test User1",
-            'email'           => "testuser1@gmail.com",
-            'telephone'       => "+237674667771",
-            'gender'          => "MALE",
-            'address'         => "Buea, Cameroon",
-            'occupation'      => 'Software Engineer',
-            'organisation_id' => $this->organisation[0],
-            'updated_by'      => "Edmond",
-            'status'          => SessionStatus::ACTIVE,
-            'password'        => Hash::make("Summer123!"),
-            "email_verified_at" => Carbon::now(),
-            'username'          => "testuser1"
-
-        ]);
-
-        $sys_admin_role = CustomRole::findByName(Roles::MEMBER, 'api');
-        $sys_admin_role2 = CustomRole::findByName(Roles::SYSTEM_ADMIN, 'api');
-        $this->saveUserRole($sys_admin, $sys_admin_role,  "Admin");
-        $this->saveUserRole($sys_admin, $sys_admin_role2,  "Admin");
+        // $this->saveUserRole($sys_admin, $sys_admin_role2,  "Admin");
 
 
 
@@ -92,13 +99,14 @@ class UserSeeder extends Seeder
     //    }
     }
 
-    public function  saveUserRole($user, $role, $updated_by)
+    public function  saveUserRole($user, $role, $updated_by, $organisation_id = null)
     {
         DB::table('model_has_roles')->insert([
             'role_id'       => $role->id,
             'model_id'      => $user->id,
             'model_type'    => 'App\Models\User',
-            'updated_by'    => $updated_by
+            'updated_by'    => $updated_by,
+            'organisation_id' => $organisation_id
         ]);
     }
 }
