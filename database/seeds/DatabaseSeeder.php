@@ -9,6 +9,7 @@ use Database\Seeders\RegistrationSeeder;
 use Database\Seeders\SessionSeeder;
 use Database\Seeders\SubscriptionPlanSeeder;
 use Database\Seeders\SubscriptionSeeder;
+use Database\Seeders\UpdateOrganisationAccountSeeder;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -23,7 +24,7 @@ class DatabaseSeeder extends Seeder
         // $this->call(RoleAndPermissionSeeder::class);
         // $this->call(\Database\Seeders\SubscriptionPlanSeeder::class);
         // $this->call(OrganisationSeeder::class);
-        $this->call(UserSeeder::class);
+        // $this->call(UserSeeder::class);
         // $this->call(SessionSeeder::class);
         // // $this->call(RegistrationSeeder::class);
         // $this->call(MemberRegistrationSeeder::class);
@@ -39,6 +40,7 @@ class DatabaseSeeder extends Seeder
 
         // $this->call(SubscriptionSeeder::class);
         // $this->call(PaymentSeeder::class);
+        $this->call(UpdateOrganisationAccountSeeder::class);
 
     }
 }
