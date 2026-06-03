@@ -16,9 +16,7 @@ use Illuminate\Support\Facades\Broadcast;
 
 
 
-logger()->info('Channels file loaded');
 
-logger()->info('Start Channel execution');
 Broadcast::channel('payments.{subscriptionId}.{paymentId}', function ($user, $subscriptionId, $paymentId) {
 
     logger()->info('enter execution');
