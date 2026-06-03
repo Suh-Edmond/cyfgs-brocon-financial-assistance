@@ -38,11 +38,7 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::post('/broadcasting/auth', function (Request $request) {
-    logger()->info('Auth User Check:', ['user' => auth('sanctum')->user()]);
-    return Broadcast::auth($request);
-})->middleware('auth:sanctum');
-
+ 
 
 Route::prefix('public/auth')->group(function () {
     Route::post('/login', [UserController::class, 'logInUser'])->middleware('canAuthenticate');
