@@ -38,13 +38,13 @@ use Illuminate\Http\Request;
 |
 */
 
- 
+
 
 Route::prefix('public/auth')->group(function () {
     Route::post('/login', [UserController::class, 'logInUser'])->middleware('canAuthenticate');
     Route::post('/signup', [UserController::class, 'createAccount']);
-    Route::post('/check-user', [UserController::class, 'checkUserExist'])->middleware('canAuthenticate');
-    Route::post('/set-password', [UserController::class, 'setPassword'])->middleware('canAuthenticate');
+    Route::post('/check-user', [UserController::class, 'checkUserExist']);
+    Route::post('/set-password', [UserController::class, 'setPassword']);
     Route::post('/reset-password-token', [UserController::class, 'setPasswordResetToken']);
     Route::post('/validate/password-reset', [UserController::class, 'validateResetToken']);
     Route::post('/reset-password', [UserController::class, 'resetPassword'])->middleware('canAuthenticate');
