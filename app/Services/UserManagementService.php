@@ -64,7 +64,9 @@ class UserManagementService implements UserManagementInterface
             'occupation'      => $request->occupation,
             'organisation_id' => $id,
             'updated_by'      => $request->user()->name,
-            'status'          => SessionStatus::ACTIVE
+            'status'          => SessionStatus::ACTIVE,
+            'username'        => str_replace(" ", "", $request->name),
+            'email_verified_at' => Carbon::now()->toDateTimeString()
         ]);
 
         $role = CustomRole::findByName(Roles::MEMBER, 'api');
