@@ -22,7 +22,7 @@ class MemberInvitation extends Model
         'has_seen_notification',
         'role_id',
         'invitation_token',
-        'organisation'
+        'organisation_id'
     ];
 
      public function organisation()
