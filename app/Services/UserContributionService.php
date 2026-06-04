@@ -57,6 +57,7 @@ class UserContributionService implements UserContributionInterface, TransactionD
         $user_contributions = UserContribution::select('user_contributions.*')
             ->join('payment_items', ['payment_items.id' => 'user_contributions.payment_item_id'])
             ->where('user_contributions.payment_item_id', $payment_item)
+            ->where('user_contributions.approve', PaymentStatus::APPROVED)
             ->select('user_contributions.*')
             ->orderBy('user_contributions.created_at', 'DESC')
             ->get();
