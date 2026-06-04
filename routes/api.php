@@ -92,7 +92,7 @@ Route::middleware(['auth:sanctum', 'isAuthorizedToAccessPlatform'])->group(funct
     Route::prefix('protected/roles')->group(function () {
         Route::post('', [RoleController::class, 'addUserRole'])->middleware('isPresidentOrIsAdmin');
         Route::get('', [RoleController::class, 'getAllRoles'])->middleware('isPresidentOrIsAdmin');
-        Route::get('/users/{user_id}', [RoleController::class, 'getUserRoles'])->middleware('isUser');
+        Route::get('/users/{user_id}', [RoleController::class, 'getUserRoles'])->middleware('isPresidentOrIsAdmin');
         Route::delete('/users/{user_id}', [RoleController::class, 'removeUserRole'])->middleware('isPresidentOrIsAdmin');
         Route::put('/update', [RoleController::class, 'updateRole'])->middleware('isPresidentOrIsAdmin');
     });
