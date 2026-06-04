@@ -43,7 +43,7 @@
             </div>
             <div class="column_25">
                 <label style="font-weight: bold; text-transform: uppercase; font-size: small;">
-                   Address:{{ $organisation->address }}, {{ $organisation->region }}</label><br />
+                    Address:{{ $organisation->address }}, {{ $organisation->region }}</label><br />
                 <label style="font-size: small;font-weight: bold">Email: {{ $organisation->email }}</label><br />
             </div>
             <div class="column_25">
@@ -96,20 +96,10 @@
                     @else
                         <td style="border: 1px solid black; padding: 5px;">M</td>
                     @endif
-                    @if (!is_null($user->email))
-                        <td style="border: 1px solid black; padding: 5px;">{{ $user->email }}</td>
-                    @endif
-                    <td style="border: 1px solid black; padding: 5px;">{{ $user->telephone }}</td>
-                    @if (!is_null($user->address))
-                        <td style="border: 1px solid black; padding: 5px;">{{ $user->address }}</td>
-                    @else
-                        <td style="border: 1px solid black; padding: 5px;"></td>
-                    @endif
-                    @if (!is_null($user->occupation))
-                        <td style="border: 1px solid black; padding: 5px;">{{ $user->occupation }}</td>
-                    @else
-                        <td style="border: 1px solid black; padding: 5px;"></td>
-                    @endif
+                    <td style="border: 1px solid black; padding: 5px;">{{ $user->email ?? '' }}</td>
+                    <td style="border: 1px solid black; padding: 5px;">{{ $user->telephone ?? '' }}</td>
+                    <td style="border: 1px solid black; padding: 5px;">{{ $user->address ?? '' }}</td>
+                    <td style="border: 1px solid black; padding: 5px;">{{ $user->occupation ?? '' }}</td>
                 </tr>
 
                 @if ($n % 25 == 0)
