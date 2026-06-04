@@ -24,7 +24,7 @@ class UpdateOrganisationRequest extends FormRequest
     public function rules()
     {
         return [
-           'logo'          => 'required|string',
+           'logo'          => 'nullable|string',
         ];
     }
 }
